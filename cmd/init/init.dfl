@@ -1,0 +1,4 @@
+
+#ident	"@(#)init:init.dfl	1.1"
+#
+PANICBOOT=NO
