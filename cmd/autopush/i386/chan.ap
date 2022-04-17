@@ -1,0 +1,10 @@
+#ident	"@(#)chan.ap	1.2	92/10/02	JPB"
+#ident	"@(#)autopush:i386/chan.ap	1.1.1.1"
+
+# /dev/console and /dev/contty autopush setup
+#
+# major minor   lastminor       modules
+
+    5      -1        0          char ansi ldterm ttcompat
+    3       0        5          ldterm ttcompat
+    3     128      133          ldterm ttcompat
