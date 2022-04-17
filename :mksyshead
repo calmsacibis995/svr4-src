@@ -1,0 +1,71 @@
+#ident	"@(#)mk::mksyshead	1.25.1.1"
+#
+#	Install UNIX System 'sys' header files
+#
+SRCDIR=${SRC:-$ROOT/usr/src}/uts
+TARGDIR=$ROOT/usr/include
+SUBDIRS="sys vm fs net netinet nfs rpc des klm"
+if [ ! -d $TARGDIR ]
+then
+	mkdir $TARGDIR
+fi
+	
+trap "cd $TARGDIR; rm -fr $SUBDIRS ; exit 1" 1 2 3 15
+if vax
+then
+	MACH=vax
+elif i286
+then
+	MACH=i286
+elif i386
+then
+	MACH=i386
+elif pdp11
+then
+	MACH=pdp11
+elif u3b
+then
+	MACH=3b
+elif u3b2
+then
+	MACH=3b2
+elif u3b5
+then
+	MACH=3b5
+fi
+#
+for DIR in $SUBDIRS
+do
+	if [ -d $SRCDIR/$MACH/$DIR ]
+	then (
+		cd $SRCDIR/$MACH
+		echo "Installing $SRCDIR/$MACH/$DIR into $TARGDIR/$DIR:" 
+		find $DIR -type f -name "*.h" -print | cpio -pduv $TARGDIR
+
+	) fi
+done
+
+#
+#	Copy system-dependent sysent table file
+echo "$TARGDIR/sys/sys.s"
+[ -d $TARGDIR/sys ] || mkdir $TARGDIR/sys
+if u3b5 || u3b2
+then
+	cp $SRCDIR/${MACH}/sys/sys.u3b5 $TARGDIR/sys/sys.s
+else
+	cp $SRCDIR/${MACH}/sys/sys.${MACH} $TARGDIR/sys/sys.s
+fi
+
+#	Set file and directory permissions
+#       Arg list too long for chmod 755 *
+cd $TARGDIR
+find $SUBDIRS -type d -print | xargs chmod 755
+find $SUBDIRS -type f -print | xargs chmod 664
+
+#	If native build then set owner and group
+if [ "$ROOT" = "" ]
+then
+   find $SUBDIRS -print | xargs chgrp bin
+   find $SUBDIRS -print | xargs chown bin
+fi
+exit 0

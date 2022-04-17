@@ -1,0 +1,94 @@
+cat << END_COPYRIGHT
+
+		Copyright (c) 1984, 1986, 1987, 1988 AT&T
+		  All Rights Reserved
+
+          THIS IS UNPUBLISHED PROPRIETARY SOURCE CODE OF AT&T
+       The copyright notice above does not evidence any actual or
+               intended publication of such source code.
+
+
+
+END_COPYRIGHT
+
+#ident	"@(#)mk::mklib	1.8.3.1"
+#
+#	Build UNIX System libraries
+#	For each directory build the library by invoking its
+#	makefile (<dir>.mk).
+#
+
+trap "exit 1" 1 2 3 15
+
+# Need these directories for creation of libcurses
+if [ "$ROOT" ] && echo $* | grep libcurses >/dev/null 
+then
+	for dir in usr/tmp usr/bin etc
+	do
+		if [ ! -d $ROOT/$dir ] ; then 
+			rm -f $ROOT/$dir
+			mkdir $ROOT/$dir
+		fi
+	done
+fi
+
+# Check that target directories exist in case build libraries don't.
+# Paths should be independent of the cross-environment.
+for dir in /lib /usr/lib /usr/lib/libp usr/include shlib
+do
+	if [ ! -d $ROOT/$dir ]
+		then rm -f $ROOT/$dir
+		mkdir $ROOT/$dir
+	fi
+done
+
+# check out the BUS type.
+BTYPE="BUS=AT386"
+ATYPE="ARCH=AT386"
+VPIX=-DVPIX;
+MERGE386=-DMERGE386;
+while [ $# -ge 1 ]
+do
+case "$1" in
+BUS*) BTYPE="$1"; shift;;
+ARC*) ATYPE="$1"; shift;;
+vpix|VPIX) VPIX=-DVPIX; shift;;
+novpix|NOVPIX) VPIX=""; shift;;
+merge386|MERGE386) MERGE386=-DMERGE386; shift;;
+nomerge386|NOMERGE386) MERGE386=""; shift;;
+*) break;;
+esac
+done
+DFLGS="$VPIX $MERGE386"; export DFLGS
+export BTYPE ATYPE
+
+MAKE=${MAKE:-make}
+SRCDIR=${SRC:-$ROOT/usr/src}/lib
+cd $SRCDIR
+#
+for ARG in $*
+do
+	LIB=`basename $ARG`
+	if [ -d $LIB ]
+	then (
+		echo "======== $LIB"
+		cd $LIB
+		if [ -f $LIB.mk ]
+		then
+			$MAKE -b -f $LIB.mk ${BTYPE} ${ATYPE} DFLGS="${DFLGS}" install  \
+					I="install -i -n $ROOT/lib $ROOT/usr/lib"
+			if [ $? -ne 0 ] ; then
+				echo ":mklib: *** $MAKE failed using $LIB.mk"
+			fi
+			$MAKE -b -f $LIB.mk ${BTYPE} ${ATYPE} DFLGS="${DFLGS}" clobber
+		else
+			echo ":mklib: *** no $LIB.mk file in $SRCDIR/$LIB"
+		fi
+	) else
+		if [ $LIB != lib.mk -a $LIB != libmk.template -a $LIB != libmk.templa ]
+		then
+			echo ":mklib: *** no directory found for $LIB under $SRCDIR"
+		fi
+	fi
+done
+exit 0

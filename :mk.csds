@@ -1,0 +1,156 @@
+echo ""
+echo ""
+echo "			Copyright (c) 1984, 1986, 1987, 1988, 1989 AT&T"
+echo "			  All Rights Reserved"
+echo ""
+echo "          THIS IS UNPUBLISHED PROPRIETARY SOURCE CODE OF AT&T"
+echo "       The copyright notice above does not evidence any actual or"
+echo "               intended publication of such source code."
+echo ""
+echo ""
+echo ""
+
+#ident	"@(#)mk::mk.csds	1.1.1.1"
+#
+#   Shell script for the rebuilding of the CSDS part of the UNIX System V/386 Release 4.0
+#
+
+if [ "$ROOT" = "" ]
+then  echo "$0: You must specify a \$ROOT directory, other than '/', \
+as the root of the source and output tree."
+      exit 1
+fi
+if [ "$ROOT" = "/" ]
+then  echo "$0: You must specify a \$ROOT directory, other than '/', \
+as the root of the source and output tree."
+      exit 1
+fi
+if [ ! -d ${ROOT} ]
+then  echo "$0: You must specify a \$ROOT directory, other than '/', \
+as the root of the source and output tree."
+      exit 1
+fi
+PATH=$ROOT/xenv:/usr/ccs/bin:/usr/bin:/usr/sbin:/etc; export PATH
+#
+
+echo $0 started at `date`
+trap "exit 1" 1 2 3 15
+SHELL="/bin/sh"
+export SHELL
+CH=`id | sed '/uid=0[^0-9].*/!s|.*|#|;/#/!d'`
+export CH
+CCSTYPE=${CCSTYPE:-ELF}; export CCSTYPE
+if [ "$ROOT" = "" ]
+then
+	PATH=/usr/ccs/bin:/usr/bin:/usr/sbin:/etc; export PATH
+else
+	# Cross-makes may not have all the directories needed
+	for dir in /bin /lib /usr/include /usr/include/sys /shlib /tmp /xenv
+	do	if [ ! -d $ROOT/$dir ]
+		then rm -f $ROOT/$dir
+			mkdir $ROOT/$dir
+		fi
+	done
+fi
+
+echo "uname -a = \c"; uname -a
+
+echo 'MAKEOPTS="MAKE=make AS=as CC=cc LD=ld ROOT=$ROOT INC=$ROOT/usr/include"
+export MAKEOPTS
+if [ -x $ROOT/usr/ccs/bin/make ]
+then ${ROOT}/usr/ccs/bin/make ${MAKEOPTS} "$@"
+else /usr/ccs/bin/make ${MAKEOPTS} "$@"
+fi ' > $ROOT/xenv/make
+chmod +x ${ROOT}/xenv/make
+
+echo '/usr/ccs/bin/cc "$@" -I$ROOT/usr/include' > $ROOT/xenv/cc
+chmod +x ${ROOT}/xenv/cc
+
+cd $ROOT/usr/src
+
+if [ $# -eq 1 ]
+then
+case "$1" in
+at386|AT386|at|AT) BUS=AT386; ARCH=AT386;;
+mca|MCA) BUS=MCA; ARCH=MCA;;
+mb1|MB1|mbus1|MBUS1) BUS=MB1; ARCH=MBUS;;
+mb2|MB2|mbus2|MBUS2) BUS=MB2; ARCH=MBUS;;
+eisa|EISA) BUS=EISA; ARCH=AT386;;
+ev\-at|EV\-AT) BUS=EV-AT; ARCH=EV-AT;;
+i860|I860|860) ;;
+mbus|MBUS) ;;
+*) BUS="$1"; ARCH="$1";;
+esac
+elif [ $# -gt 1 ]
+then echo "Usage ${0} [AT386|MB1|MB2|MCA]"
+	   exit 2
+else
+	BUS=AT386
+	ARCH=AT386
+fi
+export BUS ARCH
+
+#	install /usr/include and /usr/include/sys header files
+sh ./:mkhead
+sh ./:mksyshead
+
+cd cmd/sgs/xenv/i386
+sh pathedit << !
+y
+y
+y
+!
+
+if [ ! -f makefile.1 ]
+then mv makefile makefile.1
+fi
+grep -v unix_conv makefile.1 > makefile
+
+cd ../../../..
+
+#	Build the C Compilation tools, fltused changes
+sh ./:mkcmd BUS=${BUS} ARCH=${ARCH} sgs
+
+echo '${ROOT}/usr/ccs/bin/cc -Y 0,${ROOT}/usr/ccs/lib -Y 2,${ROOT}/usr/ccs/lib -Y a,${ROOT}/usr/ccs/bin -Y l,${ROOT}/usr/ccs/bin "$@" -Y I,${ROOT}/usr/include' > $ROOT/xenv/cc
+cp ${ROOT}/usr/ccs/bin/ar ${ROOT}/xenv/ar
+cp ${ROOT}/usr/ccs/bin/as ${ROOT}/xenv/as
+cp ${ROOT}/usr/ccs/bin/ld ${ROOT}/xenv/ld
+#	build the C library
+
+sh ./:mklib BUS=${BUS} ARCH=${ARCH} libc
+
+echo '${ROOT}/usr/ccs/bin/cc -Y 0,${ROOT}/usr/ccs/lib -Y 2,${ROOT}/usr/ccs/lib -Y a,${ROOT}/usr/ccs/bin -Y l,${ROOT}/usr/ccs/bin  -Y S,${ROOT}/usr/ccs/lib -L $ROOT/usr/ccs/lib -L $ROOT/usr/lib -Y L,/usr/lib -Y U,/usr/ccs/lib "$@" -Y I,${ROOT}/usr/include' > $ROOT/xenv/cc
+chmod +x ${ROOT}/xenv/cc
+
+#	Build the C Compilation tools
+cd cmd/sgs/xenv/i386
+mv makefile.1 makefile
+cd ../../../..
+
+sh ./:mkcmd BUS=${BUS} ARCH=${ARCH} sgs
+cp ${ROOT}/usr/ccs/bin/ar ${ROOT}/xenv/ar
+cp ${ROOT}/usr/ccs/bin/as ${ROOT}/xenv/as
+cp ${ROOT}/usr/ccs/bin/ld ${ROOT}/xenv/ld
+
+#	Build the Libraries
+sh ./:mklib BUS=${BUS} ARCH=${ARCH} libc libcrypt libdl libgen libl libm libmalloc liby rtld xlibcurses zlibeti zlibetitam
+cp $ROOT/usr/ccs/bin/tic $ROOT/xenv/tic
+
+echo '${ROOT}/usr/ccs/bin/cc -Y 0,${ROOT}/usr/ccs/lib -Y 2,${ROOT}/usr/ccs/lib -Y a,${ROOT}/usr/ccs/bin -Y l,${ROOT}/usr/ccs/bin  -Y S,${ROOT}/usr/ccs/lib -Y L,${ROOT}/usr/ccs/lib -Y U,${ROOT}/usr/lib "$@" -Y I,${ROOT}/usr/include' > $ROOT/xenv/cc
+chmod +x ${ROOT}/xenv/cc
+
+#	build all the CSDS commands
+sh ./:mkcmd BUS=${BUS} ARCH=${ARCH} cb cflow cscope ctrace cxref ldd make prof regcmp sccs sdb sgs
+cp $ROOT/usr/ccs/lib/llib-lcrypt $ROOT/usr/lib/llib-crypt
+cp $ROOT/usr/ccs/lib/llib-lcrypt.ln $ROOT/usr/lib/llib-crypt.ln
+
+cp ${ROOT}/usr/ccs/bin/ar ${ROOT}/usr/bin/ar
+cp ${ROOT}/usr/ccs/bin/captoinfo ${ROOT}/usr/bin/captoinfo
+cp ${ROOT}/usr/ccs/bin/infocmp ${ROOT}/usr/bin/infocmp
+cp ${ROOT}/usr/ccs/bin/mcs ${ROOT}/usr/bin/mcs
+cp ${ROOT}/usr/ccs/bin/tic ${ROOT}/usr/bin/tic
+cp ${ROOT}/usr/ccs/bin/tput ${ROOT}/usr/bin/tput
+cp ${ROOT}/usr/ccs/bin/what ${ROOT}/usr/bin/what
+
+echo $0 done at `date`
+exit 0

@@ -1,0 +1,212 @@
+#ident	"@(#)mk::mkoam	1.1.4.1"
+
+#
+# Similar to :mk.addon but deals w/ OA&M style packages
+#
+
+echo ""
+echo ""
+echo "			Copyright (c) 1987, 1988, 1989 AT&T"
+echo "			  All Rights Reserved"
+echo ""
+echo "          THIS IS UNPUBLISHED PROPRIETARY SOURCE CODE OF AT&T"
+echo "       The copyright notice above does not evidence any actual or"
+echo "               intended publication of such source code."
+echo ""
+echo ""
+echo ""
+echo ${0}: started at `date`
+
+SLBASE=${ROOT}
+export SLBASE
+
+#	If we are in a cross compilation environment then use cross compiler
+if [ "$ROOT" != "" ]
+then
+	if u3b2 || u3b5
+	then
+		AS=m32as	export AS
+		CC=m32cc	export CC
+		LD=m32ld	export LD
+	fi
+	if i386
+	then
+		AS=i386as	export AS
+		CC=i386cc	export CC
+		LD=i386ld	export LD
+	fi
+	echo "You are in a cross compilation environment."
+	PATH=$ROOT/xenv:/usr/ccs/bin:/usr/bin:/usr/sbin:/etc:$PATH
+	echo ROOT="${ROOT}"
+else
+	AS=as	export AS
+	CC=cc	export CC
+	LD=ld	export LD
+fi
+
+#
+# Perform object stamping if MCS variable is set in shell env
+#
+
+case "${MCS}" in
+
+	mcs)
+		MCS=mcs		export MCS
+		if i386
+		then
+			TARGET=${TARGET:=i386}		export TARGET
+			RELEASE=${RELEASE:=unk}		export RELEASE
+			LOAD="${LOAD}"			export LOAD
+			COMMENT="UNIX System V/386 Release 4.0 $LOAD"
+			export COMMENT
+		else
+			echo "The proper variables have not been set in ${0}."
+			echo "No mcs will be performed."
+			MCS=""
+		fi
+		echo "Comment sections will be modified using ${MCS}."
+		echo "The following string will replace the existing contents:"
+		echo "${COMMENT} <name of add-on>"
+		break
+		;;
+
+	pstamp)
+		if i386
+		then
+			PRODUCT=${PRODUCT:=386unix}	export PRODUCT
+			TARGET=${TARGET:=i386}		export TARGET
+			RELEASE=${RELEASE:=unk}		export RELEASE
+			LOAD="${LOAD}"			export LOAD
+			if [ -z "${LOAD}" ]
+			then
+				echo "The LOAD variable was not set."
+				echo "No pstamping will be performed."
+				MCS=""
+			else
+				LOAD=`echo ${LOAD} | tr "[a-z]" "[A-Z]"`
+				COMMENT="-p ${PRODUCT} -t ${TARGET} -r ${RELEASE} -l ${LOAD}"
+				export COMMENT
+				echo "PRODUCT=${PRODUCT}"
+				echo "RELEASE=${RELEASE}"
+				echo "TARGET=${TARGET}"
+				echo "LOAD=${LOAD}"
+				echo "Objects will be pstamped."
+			fi
+		else
+			echo "The proper variables have not been set in ${0}."
+			echo "No pstamping will be performed."
+			MCS=""
+		fi
+		break
+		;;
+
+	*)
+		echo "Null or unknown MCS variable passed to ${0}."
+		echo "Object comment sections will remain unchanged."
+		break
+		;;
+esac
+
+
+#	Insure that only one machine type is valid
+#	Note: the redirection is needed to handle the possibility
+#	      of a nonexistent file in the $MACH machine list
+
+MACH="vax pdp11 u3b2 u3b u3b5 i286 i386"
+(truecnt=0
+for mach in $MACH
+do
+	`$mach`
+	if [ $? -eq 0 ]
+	then
+		truecnt=`expr $truecnt + 1`
+	fi
+done
+if [ $truecnt -ne 1 ]
+then
+	echo ":${0}: **** Only one of the following machine types can"
+	echo "		be true: $MACH"
+	exit 1
+fi ) 2>/dev/null
+
+#
+# check out the BUS type
+while [ $# -ge 1 ]
+do
+case "$1" in
+BUS*) shift;;
+ARC*) shift;;
+*) break;;
+esac
+done
+BUS=${BUS:-AT386}; export BUS
+ARCH=${ARCH:-AT386}; export ARCH
+BTYPE="BUS=$BUS"; export BTYPE
+ATYPE="ARCH=$ARCH"; export ATYPE
+
+for dir in add-on pkg
+do
+cd $ROOT/usr/src/$dir
+
+if [ $# = 0 ]
+then
+	ADDONS="*"
+else
+	ADDONS="$*"
+fi
+
+for addon in ${ADDONS}
+do
+   if [ -f ${addon}/prototype ]
+   then
+	cd ${addon}
+	echo "======== ${addon}"
+
+	if [ ! -z "${MCS}" ]
+	then
+		grep "^![ 	]include" prototype > /dev/null 2>&1
+		if [ "$?" = "0" ]
+		then cat prototype > t.prototype
+		     grep "^![ 	]include" prototype | awk '{print $3}' | while read i
+		     do cat $i >> t.prototype
+		     done
+		else cat prototype > t.prototype
+		fi
+
+		grep "^!" t.prototype | cut -c2- | grep '=' |
+		(
+		while read i; do eval $i; done
+		bfile=`grep "^[fv][ 	]" t.prototype | awk '{print $3}' | cut -f2- -d=`
+		for file in $bfile `grep "^[i][ 	]" t.prototype | awk '{print $2}' | cut -f2- -d=`
+		do
+			file=`eval echo $file`
+			if [ ! -f $ROOT/$file ]
+			then file=usr/src/$dir/$addon/$file
+			fi
+			if [ "${MCS}" = "mcs" ]
+			then
+				echo mcs -d -a "@(#)${COMMENT} ${addon}:${file}" ${ROOT}/${file}
+				mcs -d -a "@(#)${COMMENT} ${addon}:${file}" ${ROOT}/${file} > /dev/null 2>&1
+				if ` file ${ROOT}/${file} | grep "archive" >/dev/null 2>&1 `
+				then
+					AR=${AR:=ar}		export AR
+					echo "${AR} ts ${ROOT}/${file} > /dev/null 2>&1"
+					${AR} ts ${ROOT}/${file} > /dev/null 2>&1
+				fi
+			fi
+			if [ "${MCS}" = "pstamp" ]
+			then
+				echo pstamp ${COMMENT} ${ROOT}/${file}
+				pstamp ${COMMENT} ${ROOT}/${file}
+			fi
+		done
+		)
+		rm -f t.prototype
+	fi
+	cd ..
+    fi
+done
+
+done
+
+echo ${0}: done at `date`

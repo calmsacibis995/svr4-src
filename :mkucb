@@ -1,0 +1,55 @@
+#ident	"@(#)mk::mkucb	1.1.4.1"
+#
+#	Shell script for rebuilding the UNIX System Compatibility Package
+#
+trap "exit 1" 1 2 3 15
+if [ "$ROOT" = "" ]
+then
+	PATH=/usr/ccs/bin:/sbin:/usr/sbin:/usr/bin:/etc ; export PATH
+else
+	PATH=$ROOT/xenv:/usr/ccs/bin:/sbin:/usr/sbin:/usr/bin:/etc:$PATH; export PATH
+fi
+
+UID_NAME=`id|sed 's/[()]/ /gp'|awk '{print $2}'`
+CCSTYPE=${CCSTYPE:-ELF}; export CCSTYPE
+
+# Check for the existance of target directories
+test -d ${ROOT:-"/"} || mkdir -p $ROOT
+cat -s ucb.dirs	|	# print contents of the target directory list
+egrep -v "^$|^#"	|	# get rid of blank lines and comments
+while read TARGETDIR MODE OWNER GROUP
+do
+	if [ ! -d ${ROOT}/$TARGETDIR ]
+	then
+		mkdir ${ROOT}/$TARGETDIR
+		if [ ! -d ${ROOT}/$TARGETDIR ]
+		then
+			echo "$0: stop: make of directory ${ROOT}/$TARGETDIR failed"
+			exit 1
+		fi
+			
+	fi
+	if [ "$UID_NAME" = "root" ]
+	then
+		if [ ! -z "$MODE" -a "$MODE" != "-" ]
+		then
+			chmod $MODE ${ROOT}/$TARGETDIR
+		fi
+		if [ ! -z "$OWNER" -a "$OWNER" != "-" ]
+		then
+			chown $OWNER ${ROOT}/$TARGETDIR
+		fi
+		if [ ! -z "$GROUP" -a "$GROUP" != "-" ]
+		then
+			chgrp $GROUP ${ROOT}/$TARGETDIR
+		fi
+	fi
+done
+
+#	install /usr/ucbinclude and /usr/ucbinclude/sys header files
+sh ./:mkucbhead
+#	build and install the Compatibility Package library
+sh ./:mkucblib  \*
+#	build all the Compatibility Package commands
+sh ./:mkucbcmd $* \*
+exit 0

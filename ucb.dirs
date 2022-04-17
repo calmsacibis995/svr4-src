@@ -1,0 +1,10 @@
+#ident	"@(#)mk:ucb.dirs	1.1.2.1"
+
+# The format of this file is:
+#	DIRECTORY	[MODE	OWNER	GROUP]
+# The MODE/OWNER/GROUP may be left blank or else 
+# dashes may be used as place holders.
+/usr/ucb
+/usr/ucbinclude
+/usr/ucblib
+/usr/ucblib/reftools

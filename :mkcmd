@@ -1,0 +1,426 @@
+#ident	"@(#)mk::mkcmd	1.31"
+
+if i386
+then
+echo 
+echo
+echo
+echo "                Copyright (c) 1984, 1986, 1987, 1988, 1989 AT&T"
+echo "                              All Rights Reserved"
+echo 
+echo "              THIS IS UNPUBLISHED PROPRIETARY SOURCE CODE OF AT&T"
+echo "          The copyright notice above  does not evidence any actual or"
+echo "                    intended publication of such source code."
+echo 
+echo "                 Copyright (c) 1987, 1988 Microsoft Corporation"
+echo "                               All Rights Reserved"
+echo 
+echo "            This Module contains Proprietary Information of Microsoft"
+echo "                Corporation and should be treated as Confidential."
+echo 
+echo 
+echo 
+echo $0 started at `date`
+fi
+
+MAKE=${MAKE:-make}
+CLOBBER=${CLOBBER:-"ON"}
+#	If we are in a cross compilation environment then use cross compiler
+if [ "$ROOT" != "" ]
+then
+	if u3b2 || u3b15
+	then
+		AS=m32as	export AS
+		CC=m32cc	export CC
+		LD=m32ld	export LD
+	fi
+	if i386
+	then
+		AS=i386as	export AS
+		CC=i386cc	export CC
+		LD=i386ld	export LD
+	fi
+else
+	AS=as	export AS
+	CC=cc	export CC
+	LD=ld	export LD
+fi
+
+if i386
+then
+	if [ ! -d $ROOT/etc ] ; then mkdir $ROOT/etc ; fi
+	if [ ! -d $ROOT/etc/default ] ; then mkdir $ROOT/etc/default ; fi
+	if [ ! -d $ROOT/etc/cron.d ] ; then mkdir $ROOT/etc/cron.d ; fi
+
+	if [ ! -d $ROOT/usr/bin ] ; then mkdir $ROOT/usr/bin ; fi
+	if [ ! -d $ROOT/usr/sbin ] ; then mkdir $ROOT/usr/sbin ; fi
+	if [ ! -d $ROOT/sbin ] ; then mkdir $ROOT/sbin ; fi
+
+	if [ ! -d $ROOT/var ] ; then mkdir $ROOT/var ; fi
+	if [ ! -d $ROOT/var/spool ] ; then mkdir $ROOT/var/spool ; fi
+
+	if [ ! -d $ROOT/usr/lbin ]; then mkdir $ROOT/usr/lbin; fi
+	if [ ! -d $ROOT/usr/ucb ]; then mkdir $ROOT/usr/ucb; fi
+
+	if [ ! -d $ROOT/usr/share ]; then mkdir $ROOT/usr/share; fi
+	if [ ! -d $ROOT/usr/share/lib ]; then mkdir $ROOT/usr/share/lib; fi
+
+	if [ ! -d $ROOT/usr/lib/class ]; then mkdir $ROOT/usr/lib/class; fi
+
+	if [ ! -d $ROOT/usr/lib/fs ]; then mkdir $ROOT/usr/lib/fs; fi
+	if [ ! -d $ROOT/etc/fs ]; then mkdir $ROOT/etc/fs; fi
+fi
+
+#	Insure that only one machine type is valid
+#	Note: the redirection is needed to handle the possibility
+#		of a nonexistent file in the $MACH machine list
+MACH="vax pdp11 u3b2 u3b u3b15 i386"
+(truecnt=0
+for mach in $MACH
+do
+	`$mach`
+	if [ $? -eq 0 ]
+	then
+		truecnt=`expr $truecnt + 1`
+	fi
+done
+if [ $truecnt -ne 1 ]
+then
+	echo ":mkcmd: **** Only one of the following machine types can"
+	echo "		be true: $MACH"
+	exit 1
+fi ) 2>/dev/null
+#
+places=${places-$ROOT/etc/places}
+if [ -r $places ]
+then
+	. $places
+else
+	SRC=${SRC-$ROOT/usr/src}
+	LSRC=${LSRC-$ROOT/usr/lsrc}
+	BIN=${BIN-$ROOT/bin}
+	UBIN=${UBIN-$ROOT/usr/bin}
+	LBIN=${LBIN-$ROOT/usr/lbin}
+fi
+LDFILE=${LDFILE-${SRC}/ldflags}
+# Initialize default flag values:
+#	fflag	- controls the FFLAG varible. It is set to either null
+#		(use hardware floating point) or '-f' (use software
+#		simulation floating point).
+#	sflag	- shared text, turns off the -i and -n loader options.
+#		Saves the intermediate .c file from a yacc or lex in
+#		<filename>.x for later :mkcmd runs.
+#	ldlibs	- shared library flag. It is either "-lnsl_s" (build w/the
+#		shared libnsl_s.a) or "-lc_s -lnsl_s" (build w/both 
+#		shared libc_s.a and libnsl_s.a). Default is both.
+#	iflag	- seperate I&D space. It is either set to '-i' (when building
+#		certain commands on a 16-bit machine (e.g. PDP11/70)
+#		or null (for all other cases).
+#	symlink -variable to pass symbolic links to makefiles
+fflag=
+sflag=
+iflag=
+CCSTYPE=${CCSTYPE:-ELF}; export CCSTYPE
+if [ x$CCSTYPE = xCOFF ]
+then
+	shlibs=${SHLIBS:-"-lc_s"}
+	noshlibs=${NOSHLIBS:-""}
+	perflibs=${PERFLIBS:-$shlibs}
+	rootlibs=${ROOTLIBS:-$shlibs}
+else
+	shlibs=${SHLIBS:-""}
+	noshlibs=${NOSHLIBS:-"-dn"}
+	perflibs=${PERFLIBS:-$shlibs}
+	rootlibs=${ROOTLIBS:-$noshlibs}
+fi
+ldflags=
+if [ "$SYMLINK" = "" ]
+then
+	RELEASE=`uname -r | cut -c1-3`
+	if [ $RELEASE -lt 4.0 ]
+	then
+		SYMLINK=":"
+	fi
+fi
+symlink=${SYMLINK:-"ln -s"}
+
+for opt in $*
+do
+	case $opt in
+
+	-f)	fflag="-f"
+		;;
+
+	-s)	sflag=-s
+		yaccrm="YACCRM=:"
+		iflag=
+		;;
+
+	-*)	echo ":mkcmd; **** unknown option '$opt' - ignored"
+		;;
+
+	*)	break
+		;;
+	esac
+	shift
+done
+#
+#	Process remaining arguments as source that needs to be built.
+#	The three interesting variables are:
+#	B	- basename of each argument
+#	BASE	- basename of each option with its dot suffix removed
+#	OBJ	- file to be installed if the build is successful
+#
+cd $SRC/cmd
+
+if i386
+then
+	#
+	# check out the BUS type.
+	BTYPE="BUS=AT386"
+	ATYPE="ARCH=AT386"
+	VPIX=-DVPIX;
+	MERGE386=-DMERGE386;
+	while [ $# -ge 1 ]
+	do
+		case "$1" in
+			BUS*) BTYPE="$1"; shift;;
+			ARC*) ATYPE="$1"; shift;;
+			vpix|VPIX) VPIX=-DVPIX; shift;;
+			novpix|NOVPIX) VPIX=""; shift;;
+			merge386|MERGE386) MERGE386=-DMERGE386; shift;;
+			nomerge386|NOMERGE386) MERGE386=""; shift;;
+			*) break;;
+		esac
+	done
+	DFLGS="$VPIX $MERGE386"; export DFLGS
+	export BTYPE ATYPE
+	#
+	# for now, just always make libcmd.a
+	#
+	if [ "$ldflags" ]
+	then	CMD="$CMD LDFLAGS='$ldflags'"
+	fi
+	echo "$CMD"
+	if eval $CMD
+	then	ret=0
+	else	ret=1
+	fi
+	if [ $ret -ne 0 ]
+	then	echo "**** Build of libcmd failed ($MAKE)"
+	fi
+	cd ..
+fi
+
+arguments=$*
+for arg in $arguments
+do(
+#	Local version takes precedence over official version
+	if [ -f $LSRC/cmd/$arg -o -d $LSRC/cmd/$arg ]
+	then	source=$LSRC
+	else	source=$SRC
+	fi
+	cd ${source}/cmd
+	OBJ=
+	B=`basename $arg`
+#	Is this an aberrant file with its makefile in the $SRC/cmd directory?
+#	If so then skip this file since it will handled by the makefile
+##(not in subdir)	case $B in
+##(not in subdir)		*.c | *.s)
+##(not in subdir)			b=`basename $B ".[cs]"`
+##(not in subdir)			if [ -f $b.mk ]
+##(not in subdir)			then	continue
+##(not in subdir)			fi
+##(not in subdir)			;;
+##(not in subdir)	esac
+	echo "\n======== $B"
+	BASE=$B
+#	if not a directory then remove suffix and determine the file type
+##(not in subdir)	if [ ! -d $B ] 
+##(not in subdir)	then	BASE=`echo $B | sed -e 's/\(.*\)\..*/\1/'`
+##(not in subdir)		if [ -f ${BASE}.mk -o -f $LSRC/cmd/${BASE}.mk ]
+##(not in subdir)		then	B=${BASE}.mk
+##(not in subdir)		elif [ -f ${BASE}.rc -o -f $LSRC/cmd/${BASE}.rc ]
+##(not in subdir)		then	B=${BASE}.rc
+##(not in subdir)		elif [ -f ${BASE}.c  -o -f $LSRC/cmd/${BASE}.c ] 
+##(not in subdir)		then	B=${BASE}.c
+##(not in subdir)		elif [ -f ${BASE}.sh -o -f $LSRC/cmd/${BASE}.sh ] 
+##(not in subdir)		then	B=${BASE}.sh
+##(not in subdir)		elif [ -f ${BASE}.y -o -f $LSRC/cmd/${BASE}.y ]
+##(not in subdir)		then	B=${BASE}.y
+##(not in subdir)		elif [ -f ${BASE}.l -o -f $LSRC/cmd/${BASE}.l ] 
+##(not in subdir)		then	B=${BASE}.l
+##(not in subdir)		elif [ -f ${BASE}.s -o -f $LSRC/cmd/${BASE}.s ] 
+##(not in subdir)		then	B=${BASE}.s
+##(not in subdir)		elif [ -f ${BASE}.o -o -f $LSRC/cmd/${BASE}.o ] 
+##(not in subdir)		then	B=${BASE}.o
+##(not in subdir)		fi
+##(not in subdir)	fi
+#
+	if [ "$source" = "$SRC" -a -f $LSRC/cmd/$B ]
+	then	source=$LSRC
+		cd ${source}/cmd
+	fi
+#
+	if [ -r $LDFILE ]
+	then	ldflags=`grep "^${BASE} " $LDFILE | sed -e "s/${BASE} //"`
+		if [ -z "$fflag" ]
+		then	ldflags=`echo $ldflags | sed -e 's/-f//'`
+		fi
+		if [ "$sflag" = "-s" ]
+		then	ldflags=`echo $ldflags | sed -e 's/-i//'`
+		else	if [ `expr x$ldflags : '.*-i'` != 0 ] 
+			then	ldflags=`echo $ldflags | sed -e 's/-n//'`
+			fi
+		fi
+	else	ldflags=""
+	fi
+#
+#	Now build the command according to its file type
+##(not in subdir)	case $B in
+##(not in subdir)
+##(not in subdir)	*.mk)
+##(not in subdir)		CMD="$MAKE -b -f ${BASE}.mk LDLIBS='$ldlibs' IFLAG=\"$iflag\" FFLAG=\"$fflag\" install"
+##(not in subdir)		if [ "$ldflags" ]
+##(not in subdir)		then	CMD="$CMD LDFLAGS='$ldflags'"
+##(not in subdir)		fi
+##(not in subdir)		echo "$CMD"
+##(not in subdir)		if eval $CMD
+##(not in subdir)		then	ret=0
+##(not in subdir)		else	ret=1
+##(not in subdir)		fi
+##(not in subdir)		CMD="$MAKE -b -f ${BASE}.mk LDLIBS='$ldlibs' IFLAG=\"$iflag\" FFLAG=\"$fflag\" $yaccrm clobber"
+##(not in subdir)		test "$CLOBBER" != "OFF" && ( echo "$CMD" ; eval $CMD )
+##(not in subdir)		if [ $ret -ne 0 ]
+##(not in subdir)		then	echo "**** Build of ${BASE} failed ($MAKE)"
+##(not in subdir)		fi
+##(not in subdir)		;;
+##(not in subdir)
+##(not in subdir)	*.rc)	sh -x $B
+##(not in subdir)		if [ $? -ne 0 ]
+##(not in subdir)		then	echo "**** Build of $B failed (sh)"
+##(not in subdir)		fi
+##(not in subdir)		;;
+##(not in subdir)
+##(not in subdir)	*.c)
+##(not in subdir)		CMD="$CC -O $ldflags -s -o ./${BASE} $B $lib"
+##(not in subdir)		echo "$CMD"
+##(not in subdir)		if eval $CMD
+##(not in subdir)		then	OBJ=${BASE}
+##(not in subdir)		else	echo "**** Build of ${BASE} failed ($CC)"
+##(not in subdir)			rm -f ./${BASE}.o ./${BASE}
+##(not in subdir)		fi
+##(not in subdir)		lib=
+##(not in subdir)		;;
+##(not in subdir)
+##(not in subdir)	*.sh)	echo "cp $B ${BASE}"
+##(not in subdir)		if cp $B ${BASE}
+##(not in subdir)		then	OBJ=${BASE}
+##(not in subdir)		else	echo "**** Build of ${BASE} failed (cp)"
+##(not in subdir)		fi
+##(not in subdir)		;;
+##(not in subdir)
+##(not in subdir)	*.s)	CMD="$CC -s -o ./${BASE} $B"
+##(not in subdir)		echo "$CMD"
+##(not in subdir)		if eval $CMD
+##(not in subdir)		then	OBJ=${BASE}
+##(not in subdir)		else	echo "**** Build of ${BASE} failed ($CC)"
+##(not in subdir)			rm -f ./${BASE}.o ./{BASE}
+##(not in subdir)		fi
+##(not in subdir)		;;
+##(not in subdir)
+##(not in subdir)	*.y)	if [ "$sflag" != "-s" ]
+##(not in subdir)		then	echo "yacc $B"
+##(not in subdir)			if yacc $B
+##(not in subdir)			then	echo "mv y.tab.c ${BASE}.c"
+##(not in subdir)				mv y.tab.c ${BASE}.c
+##(not in subdir)				lib=-ly places=$places LDFILE=$LDFILE sh $SRC/:mkcmd $sflag $fflag ${BASE}.c
+##(not in subdir)			else	echo "**** Build of ${BASE} failed (yacc)"
+##(not in subdir)			fi
+##(not in subdir)			rm -f ${BASE}.c
+##(not in subdir)		else
+##(not in subdir)			mv ${BASE}.x ${BASE}.c
+##(not in subdir)			lib=-ly places=$places LDFILE=$LDFILE sh $SRC/:mkcmd $sflag $fflag ${BASE}.c
+##(not in subdir)			mv ${BASE}.c ${BASE}.x
+##(not in subdir)		fi
+##(not in subdir)		;;
+##(not in subdir)
+##(not in subdir)	*.l)	if [ "$sflag" != "-s" ]
+##(not in subdir)		then	echo "lex $B"
+##(not in subdir)			if lex $B
+##(not in subdir)			then	echo "mv lex.yy.c ${BASE}.c"
+##(not in subdir)				mv lex.yy.c ${BASE}.c
+##(not in subdir)				lib=-ll places=$places LDFILE=$LDFILE sh $SRC/:mkcmd $sflag ${BASE}.c
+##(not in subdir)			else	echo "**** Build of ${BASE} failed (lex)"
+##(not in subdir)			fi
+##(not in subdir)			rm -f ${BASE}.c
+##(not in subdir)		else
+##(not in subdir)			mv ${BASE}.x ${BASE}.c
+##(not in subdir)			lib=-ll places=$places LDFILE=$LDFILE sh $SRC/:mkcmd $sflag ${BASE}.c
+##(not in subdir)			mv ${BASE}.c ${BASE}.x
+##(not in subdir)		fi
+##(not in subdir)		;;
+##(not in subdir)
+##(not in subdir)	*.x)	continue
+##(not in subdir)		;;
+##(not in subdir)
+##(not in subdir)	*.o)	rm -f $B 
+##(not in subdir)		;;
+##(not in subdir)
+##(not in subdir)	*)
+if [ -d $B ]
+then	echo "cd $B"
+	cd $B
+	if [ -f $B.mk ]
+	then
+		if i386
+		then	CMD="$MAKE -b -f $B.mk ${BTYPE} ${ATYPE} ARGS=\"${ARGS}\" SYMLINK='$symlink' SHLIBS='$shlibs' NOSHLIBS='$noshlibs' PERFLIBS='$perflibs' ROOTLIBS='$rootlibs' IFLAG=\"$iflag\" FFLAG=\"$fflag\" DFLGS=\"${DFLGS}\" install"
+		else
+			CMD="$MAKE -b -f $B.mk ARGS=\"${ARGS}\" SYMLINK='$symlink' SHLIBS='$shlibs' NOSHLIBS='$noshlibs' PERFLIBS='$perflibs' ROOTLIBS='$rootlibs' IFLAG=\"$iflag\" FFLAG=\"$fflag\" install"
+		fi
+
+		if [ "$ldflags" ]
+		then	CMD="$CMD LDFLAGS='$ldflags'"
+		fi
+		echo "$CMD"
+		if eval $CMD
+		then	ret=0
+		else	ret=1
+		fi
+
+		if i386
+		then
+			CMD="$MAKE -b -f $B.mk ${BTYPE} ${ATYPE} SYMLINK='$symlink' SHLIBS='$shlibs' NOSHLIBS='$noshlibs' PERFLIBS='$perflibs' ROOTLIBS='$rootlibs' IFLAG=\"$iflag\" FFLAG=\"$fflag\" DFLGS=\"${DFLGS}\" $yaccrm clobber"
+			echo "$CMD"
+			eval "$CMD"
+		else
+			CMD="$MAKE -b -f $B.mk SYMLINK='$symlink' SHLIBS='$shlibs' NOSHLIBS='$noshlibs' PERFLIBS='$perflibs' ROOTLIBS='$rootlibs' IFLAG=\"$iflag\" FFLAG=\"$fflag\" $yaccrm clobber"
+			test "$CLOBBER" != "OFF" &&
+				(echo "$CMD" ; eval $CMD)
+		fi
+
+		if [ $ret -ne 0 ]
+		then	echo "**** Build of ${BASE} failed ($MAKE)"
+		fi
+##(not in subdir)	elif [ -f $B.rc ]
+##(not in subdir)	then	sh -x $B.rc
+	else	echo "**** Build of $B failed (no makefile found in directory)"
+	fi
+	rm -f *.o
+else	echo ":mkcmd: *** no directory found for $B under $source"
+fi
+
+##(not in subdir)	esac
+#
+#	If build was successful install new object in appropriate bin
+##(not in subdir)	if [ -n "$OBJ" ]
+##(not in subdir)	then
+##(not in subdir)		if [ "$source" = "$LSRC" ]
+##(not in subdir)		then	echo "install -n $LBIN $OBJ"
+##(not in subdir)			install -n $LBIN $OBJ
+##(not in subdir)		else	echo "install -n $UBIN $OBJ"
+##(not in subdir)			install -n $UBIN $OBJ
+##(not in subdir)		fi
+##(not in subdir)		rm -f $OBJ
+##(not in subdir)	fi
+);done

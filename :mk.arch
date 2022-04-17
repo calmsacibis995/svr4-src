@@ -1,0 +1,154 @@
+#ident	"@(#)mk::mk.arch	1.1.3.1"
+
+echo ""
+echo ""
+echo "			Copyright (c) 1988, 1989 AT&T"
+echo "			  All Rights Reserved"
+echo ""
+echo "          THIS IS UNPUBLISHED PROPRIETARY SOURCE CODE OF AT&T"
+echo "       The copyright notice above does not evidence any actual or"
+echo "               intended publication of such source code."
+echo ""
+echo ""
+echo ""
+echo ${0}: started at `date`
+
+OKFLAG=0
+
+DIR=""
+BUS=""
+ARCH=""
+while [ $# -ge 1 ]
+do
+case "$1" in
+at386|AT386|at|AT) BUS="$BUS AT386"
+		   ARCH="$ARCH AT386"
+		   DIR="$DIR at";;
+attva|ATTVA|att\-va|ATT\-VA) BUS="$BUS AT386"
+		   ARCH="$ARCH AT386"
+		   DIR="$DIR attva";;
+mca|MCA) BUS="$BUS MCA"
+	 ARCH="$ARCH MCA"
+         DIR="$DIR mca";;
+mb1|MB1|mbus1|MBUS1) BUS="$BUS MB1"
+		     ARCH="$ARCH MBUS"
+		     DIR="$DIR mb1";;
+mb2|MB2|mbus2|MBUS2) BUS="$BUS MB2"
+		     ARCH="$ARCH MBUS"
+		     DIR="$DIR mb2";;
+eisa|EISA)   BUS="$BUS EISA"
+	     ARCH="$ARCH AT386"
+	     DIR="$DIR eisa";;
+ev\-at|EV\-AT) BUS="$BUS EV-AT"
+	       ARCH="$ARCH EV-AT"
+	       DIR="$DIR EV-AT";;
+e333a|E333A)   DIR="$DIR e333a";;
+scsi|SCSI)     DIR="$DIR scsi";;
+i860|I860|860) DIR="$DIR i860";;
+mbus|MBUS)     DIR="$DIR mbus";;
+OK|ok)	OKFLAG=1;;
+*) BUS="$BUS $1"
+   ARCH="$ARCH $1"
+   DIR="$DIR $1";;
+esac
+shift
+done
+
+echo "\t\tBUS TYPE=$BUS"
+cd arch
+if [ ! -d save ]
+then rm -rf save
+     mkdir save
+fi
+
+# Collect the list of all files that are part of the platform binding.
+SUBDIRS=`ls | grep -v "^save$"`
+for i in ${SUBDIRS}
+do
+if [ -d $i ]
+then
+cd $i
+find . -type f -print
+cd ..
+fi
+done | sort -u > /tmp/save.$$
+
+# Collect a list of directories that the platform binding files are in.
+for i in ${SUBDIRS}
+do
+if [ -d $i ]
+then
+cd $i
+find . -type d -print
+cd ..
+fi
+done | sort -u > /tmp/dir.$$
+cd save
+# Create these directories so that files can be saved.
+cat /tmp/dir.$$ | xargs mkdir > /dev/null 2>&1
+
+# Save all the generic/original AT386 platform binding files that will be overlayed.
+cd ../..
+cat /tmp/save.$$ | while read i
+do
+if [ $OKFLAG = 1 ]
+then
+	for j in ${SUBDIRS}
+	do
+		cmp -s $i arch/${j}/$i
+		if [ $? = 0 ]
+		then FLG=1
+		     break
+		fi
+	done
+	if [ ${FLG} = 0 ]
+	then
+	cp $i arch/save/$i
+	fi
+elif [ ! -f arch/save/$i -a -f $i ]
+then
+	FLG=0 ; export FLG
+	for j in ${SUBDIRS}
+	do
+		cmp -s $i arch/${j}/$i
+		if [ $? = 0 ]
+		then FLG=1
+		     break
+		fi
+	done
+
+	# This file does not exist under arch/*, therefore save it under arch/save
+	if [ ${FLG} = 0 ]
+	then
+	cp $i arch/save/$i
+	fi
+fi
+done
+
+# Remove this overlayable platform binding files from the source tree.
+# They'll only live under 'arch'.
+cat /tmp/save.$$ | xargs rm -f
+cat /tmp/dir.$$ | sort -r | xargs rmdir > /dev/null 2>&1
+rm -f /tmp/save.$$ /tmp/dir.$$
+
+# Restore the generic AT386 platform binding files.
+cd arch/save
+find . -type f -print | cpio -pduv ../.. 2>/dev/null | xargs chmod u+w > /dev/null 2>&1
+cd ..
+
+# Overlay the platform binding files for the current bus architecture
+for D in $DIR
+do
+if [ "${D}" != "save" ]
+then
+if [ -d ${D} ]
+then
+cd ${D}
+find . -type f -print | cpio -pvdu ../.. 2>/dev/null | xargs chmod u+w  > /dev/null 2>&1
+cd ..
+fi
+fi
+done
+
+cd ..
+echo ${0}: done at `date`

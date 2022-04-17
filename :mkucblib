@@ -1,0 +1,38 @@
+#ident	"@(#)mk::mkucblib	1.1.2.1"
+#
+#	Build Compatibility Package libraries
+#	For each directory build the library by invoking its
+#	makefile (<dir>.mk).
+#
+trap "exit 1" 1 2 3 15
+MAKE=${MAKE:-make}
+SRCDIR=${SRC:-$ROOT/usr/src}/ucblib
+CLOBBER=${CLOBBER:-"ON"}
+
+if [ ! -d $ROOT/usr/ucblib ] ; then mkdir $ROOT/usr/ucblib ; fi
+
+cd $SRCDIR
+#
+for ARG in $*
+do
+	LIB=`basename $ARG`
+	if [ -d $LIB ]
+	then (
+		echo "======== $LIB"
+		cd $LIB
+		if [ -f $LIB.mk ]
+		then
+			$MAKE -b -f $LIB.mk ROOT=$ROOT install I="install -i -n $ROOT/lib $ROOT/usr/lib"
+			if [ $? -ne 0 ]
+			then
+				echo ":mklib: *** $MAKE failed using $LIB.mk"
+			fi
+			test "$CLOBBER" != "OFF" && $MAKE -b -f $LIB.mk clobber
+		else
+			echo ":mklib: *** no $LIB.mk file in $SRCDIR/$LIB"
+		fi
+	) else
+		echo ":mklib: *** no directory found for $LIB under $SRCDIR"
+	fi
+done
+exit 0

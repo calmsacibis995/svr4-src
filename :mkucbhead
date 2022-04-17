@@ -1,0 +1,32 @@
+#ident	"@(#)mk::mkucbhead	1.1.2.1"
+#
+#	Install UNIX System Compatibility Package header files
+#
+SRCDIR=${SRC:-$ROOT/usr/src}/ucbhead
+TARGDIR=$ROOT/usr/ucbinclude
+TMPFILE=/tmp/mkucbhead$$
+
+if [ ! -d $ROOT/usr/ucbinclude ] ; then mkdir $ROOT/usr/ucbinclude ; fi
+
+trap "rm -f $TMPFILE ; exit 1" 1 2 3 15
+#
+#	Determine files to be processed
+if [ $# -gt 0 ]
+then
+	(cd $SRCDIR; ls $* | sed -e 's/sys\.[^ ]*//g' > $TMPFILE)
+else
+	(cd $SRCDIR; find . -type f -print | sed -e '/sys\.[^ ]*/d' > $TMPFILE)
+fi
+#
+echo "\nInstalling $SRCDIR into $TARGDIR:"
+cat $TMPFILE | pr -ta5
+(cd $SRCDIR; cat $TMPFILE | cpio -pdu $TARGDIR
+#	Set file permissions
+cd $TARGDIR; chmod 664 `cat $TMPFILE`
+if [ "$ROOT" = "" ]
+then
+	chgrp bin `cat $TMPFILE`
+	chown bin `cat $TMPFILE`
+fi )
+rm -f $TMPFILE
+exit 0

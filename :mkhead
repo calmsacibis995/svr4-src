@@ -1,0 +1,79 @@
+echo ""
+echo ""
+echo "			Copyright (c) 1984, 1986, 1987, 1988, 1989 AT&T"
+echo "			  All Rights Reserved"
+echo ""
+echo "          THIS IS UNPUBLISHED PROPRIETARY SOURCE CODE OF AT&T"
+echo "       The copyright notice above does not evidence any actual or"
+echo "               intended publication of such source code."
+echo ""
+echo ""
+echo ""
+
+#ident	"@(#)mk::mkhead	1.20.1.1"
+#
+#	Install UNIX System header files
+#
+TARGDIR=$ROOT/usr/include
+SRCDIR=${SRC:-$ROOT/usr/src}/head
+TMPFILE=/tmp/mkhead$$
+
+trap "rm -f $TMPFILE ; exit 1" 1 2 3 15
+#
+#	Determine files to be processed
+if [ $# -gt 0 ]
+then
+	(cd $SRCDIR; ls $* | sed -e '/sys\.[^ ]*/d' > $TMPFILE)
+else
+	(cd $SRCDIR; find . -type f -print | sed -e '/sys\.[^ ]*/d' > $TMPFILE)
+fi
+#
+
+echo "\nInstalling $SRCDIR into $TARGDIR:"
+if [ ! -d $TARGDIR ]
+then
+   rm -f $TARGDIR
+   mkdir $TARGDIR
+fi
+echo "./sys.s"
+cat $TMPFILE | pr -ta5
+echo "\nCurses.h, unctrl.h, and term.h are installed by libcurses\n"
+
+#
+#	Copy system-dependent sysent table file
+if vax
+then
+	cp $SRCDIR/sys.vax $TARGDIR/sys.s
+elif pdp11
+then
+	cp $SRCDIR/sys.pdp $TARGDIR/sys.s
+elif i286
+then
+	cp $SRCDIR/sys.i286 $TARGDIR/sys.s
+elif i386
+then
+	cp $SRCDIR/sys.i386 $TARGDIR/sys.s
+elif u3b5 || u3b2
+then
+	cp $SRCDIR/sys.u3b5 $TARGDIR/sys.s
+fi
+chmod 664 $TARGDIR/sys.s
+if [ "$ROOT" = "" ]
+then
+	chgrp bin $TARGDIR/sys.s
+	chown bin $TARGDIR/sys.s
+fi
+
+#
+#	Install requested files
+(cd $SRCDIR; cat $TMPFILE | cpio -pdu $TARGDIR
+
+#	Set file permissions
+cd $TARGDIR; chmod 664 `cat $TMPFILE`
+if [ "$ROOT" = "" ]
+then
+	chgrp bin `cat $TMPFILE`
+	chown bin `cat $TMPFILE`
+fi )
+rm -f $TMPFILE
+exit 0

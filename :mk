@@ -1,0 +1,287 @@
+echo ""
+echo ""
+echo "			Copyright (c) 1984, 1986, 1987, 1988, 1989 AT&T"
+echo "			  All Rights Reserved"
+echo ""
+echo "          THIS IS UNPUBLISHED PROPRIETARY SOURCE CODE OF AT&T"
+echo "       The copyright notice above does not evidence any actual or"
+echo "               intended publication of such source code."
+echo ""
+echo ""
+echo ""
+
+#ident	"@(#)mk::mk	1.10.8.1"
+
+#
+#	Shell script for rebuilding the Complete UNIX System V/386 Release 4.0
+#
+
+if [ "$ROOT" = "" ]
+then  echo "$0: You must specify a \$ROOT directory, other than '/', \
+as the root of the source and output tree."
+      exit 1
+fi
+if [ "$ROOT" = "/" ]
+then  echo "$0: You must specify a \$ROOT directory, other than '/', \
+as the root of the source and output tree."
+      exit 1
+fi
+if [ ! -d ${ROOT} ]
+then  echo "$0: You must specify a \$ROOT directory, other than '/', \
+as the root of the source and output tree."
+      exit 1
+fi
+OLDPATH=$PATH
+PATH=$ROOT/xenv:/usr/ccs/bin:/usr/bin:/usr/sbin:/etc; export PATH
+#
+
+PATH=$PATH:$OLDPATH; export PATH
+MCS=${MCS:-mcs}; export MCS
+#
+# changed to allow the following to be setable
+#
+LOAD=${LOAD:-STC}; export LOAD
+RELEASE=${RELEASE:-4.0}; export RELEASE
+TARGET=${TARGET:-i386}; export TARGET
+PRODUCT=${PRODUCT:-386unix}; export PRODUCT
+
+echo $0 started at `date`
+trap "exit 1" 1 2 3 15
+SHELL="/bin/sh"
+export SHELL
+CH=`id | sed '/uid=0[^0-9].*/!s|.*|#|;/#/!d'`
+export CH
+CCSTYPE=ELF; export CCSTYPE
+#
+# NOTE: you can't get to this point with ROOT=""
+#
+if [ "$ROOT" = "" ]
+then
+	PATH=/usr/ccs/bin:/usr/bin:/usr/sbin:/etc; export PATH
+else
+	# Cross-makes may not have all the directories needed
+	for dir in /bin /lib /usr/include /usr/include/sys /shlib /tmp /xenv
+	do	if [ ! -d $ROOT/$dir ]
+		then rm -f $ROOT/$dir
+			mkdir $ROOT/$dir
+		fi
+	done
+fi
+
+echo "uname -a = \c"; uname -a
+
+echo 'MAKEOPTS="MAKE=make AS=as CC=cc LD=ld ROOT=$ROOT INC=$ROOT/usr/include"
+export MAKEOPTS
+if [ -x $ROOT/usr/ccs/bin/make ]
+then ${ROOT}/usr/ccs/bin/make ${MAKEOPTS} "$@"
+else /usr/ccs/bin/make ${MAKEOPTS} "$@"
+fi ' > $ROOT/xenv/make
+chmod +x ${ROOT}/xenv/make
+
+if [ -x $ROOT/usr/ccs/bin/cc ]
+then echo '${ROOT}/usr/ccs/bin/cc "$@" -I$ROOT/usr/include' > $ROOT/xenv/cc
+else echo '/usr/ccs/bin/cc  "$@" -I$ROOT/usr/include' > $ROOT/xenv/cc
+fi
+chmod +x ${ROOT}/xenv/cc
+
+cd $ROOT/usr/src
+while [ $# -ge 1 ]
+do
+case "$1" in
+at386|AT386|at|AT) BUS=AT386; ARCH=AT386;;
+vpix|VPIX) VPIX=VPIX;;
+novpix|NOVPIX) VPIX=NOVPIX;;
+merge386|MERGE386) MERGE386=MERGE386;;
+nomerge386|NOMERGE386) MERGE386=" ";;
+mca|MCA) BUS=MCA; ARCH=MCA;;
+mb1|MB1|mbus1|MBUS1) BUS=MB1; ARCH=MBUS;;
+mb2|MB2|mbus2|MBUS2) BUS=MB2; ARCH=MBUS;;
+eisa|EISA) BUS=EISA; ARCH=AT386;;
+ev\-at|EV\-AT) BUS=EV-AT; ARCH=EV-AT;;
+evga|EVGA) EVGA=EVGA;;
+i860|I860|860) ;;
+mbus|MBUS) ;;
+*) BUS="$1"; ARCH="$1";;
+esac
+shift
+done
+BUS=${BUS:-AT386}; export BUS
+ARCH=${ARCH:-AT386}; export ARCH
+MERGE386=${MERGE386:-MERGE386}; export MERGE386
+VPIX=${VPIX:-VPIX}; export VPIX
+BLTCONS=${BLTCONS:-BLTCONS}; export BLTCONS
+#EVC=${EVC:-EVC}; export EVC
+EVGA=${EVGA:-EVGA}; export EVGA
+
+#	install /usr/include and /usr/include/sys header files
+sh ./:mkhead
+sh ./:mksyshead
+sh ./:mkucbhead
+
+cd cmd/sgs/xenv/i386
+sh pathedit << !
+y
+y
+y
+!
+
+if [ ! -f makefile.1 ]
+then mv makefile makefile.1
+fi
+grep -v unix_conv makefile.1 > makefile 
+
+cd ../../../..
+
+#	Build the C Compilation tools, fltused changes
+sh ./:mkcmd BUS=${BUS} ARCH=${ARCH} $VPIX $MERGE386 sgs
+
+echo '${ROOT}/usr/ccs/bin/cc -Y 0,${ROOT}/usr/ccs/lib -Y 2,${ROOT}/usr/ccs/lib -Y a,${ROOT}/usr/ccs/bin -Y l,${ROOT}/usr/ccs/bin "$@" -Y I,${ROOT}/usr/include' > $ROOT/xenv/cc
+cp ${ROOT}/usr/ccs/bin/ar ${ROOT}/xenv/ar
+cp ${ROOT}/usr/ccs/bin/as ${ROOT}/xenv/as
+cp ${ROOT}/usr/ccs/bin/ld ${ROOT}/xenv/ld
+#	build the C library
+
+sh ./:mklib BUS=${BUS} ARCH=${ARCH} $VPIX $MERGE386 libc
+
+echo '${ROOT}/usr/ccs/bin/cc -Y 0,${ROOT}/usr/ccs/lib -Y 2,${ROOT}/usr/ccs/lib -Y a,${ROOT}/usr/ccs/bin -Y l,${ROOT}/usr/ccs/bin  -Y S,${ROOT}/usr/ccs/lib -L $ROOT/usr/ccs/lib -L $ROOT/usr/lib -Y L,/usr/lib -Y U,/usr/ccs/lib "$@" -Y I,${ROOT}/usr/include' > $ROOT/xenv/cc
+chmod +x ${ROOT}/xenv/cc
+
+#	Build the C Compilation tools
+
+cd cmd/sgs/xenv/i386
+mv makefile.1 makefile
+cd ../../../..
+
+sh ./:mkcmd BUS=${BUS} ARCH=${ARCH} $VPIX $MERGE386 sgs
+cp ${ROOT}/usr/ccs/bin/ar ${ROOT}/xenv/ar
+cp ${ROOT}/usr/ccs/bin/as ${ROOT}/xenv/as
+cp ${ROOT}/usr/ccs/bin/ld ${ROOT}/xenv/ld
+
+#	Build the Libraries
+sh ./:mklib BUS=${BUS} ARCH=${ARCH} $VPIX $MERGE386 xlibcurses
+cp ${ROOT}/usr/ccs/bin/tic ${ROOT}/xenv/tic
+sh ./:mklib BUS=${BUS} ARCH=${ARCH} $VPIX $MERGE386 libc libcrypt libdl libgen libl libm libmalloc liby rtld zlibeti zlibetitam
+
+# Build all the non CSDS libraries
+(
+cd lib
+ls -a | sed \
+		-e "/^.lib.mk$/d" \
+		-e "/^.libmk.temp$/d" \
+		-e "/^libc$/d" \
+		-e "/^libcrypt$/d" \
+		-e "/^libdl$/d" \
+		-e "/^libgen$/d" \
+		-e "/^libl$/d" \
+		-e "/^libm$/d" \
+		-e "/^libmalloc$/d" \
+		-e "/^liby$/d" \
+		-e "/^rtld$/d" \
+		-e "/^xlibcurses$/d" \
+		-e "/^zlibeti$/d" \
+		-e "/^zlibetitam$/d" |
+	sort -u | sed -n '3,$p' > /tmp/$$.doit
+)
+if [ -s /tmp/$$.doit ]
+then sh ./:mklib $VPIX $MERGE386 `cat -s /tmp/$$.doit`
+fi
+rm -f /tmp/$$.doit
+
+(
+cd ${ROOT}/usr/src/xcplib
+ls -a |
+	sort -u |
+	sed -n '3,$p' > /tmp/$$.xit
+)
+sh ./:mkxcplib `cat -s /tmp/$$.xit`
+rm -f /tmp/$$.xit
+
+(
+cd ${ROOT}/usr/src/ucblib
+ls -a |
+	sort -u |
+	sed -n '3,$p' > /tmp/$$.ucbit
+)
+sh ./:mkucblib `cat -s /tmp/$$.ucbit`
+rm -f /tmp/$$.ucbit
+
+
+echo '${ROOT}/usr/ccs/bin/cc -Y 0,${ROOT}/usr/ccs/lib -Y 2,${ROOT}/usr/ccs/lib -Y a,${ROOT}/usr/ccs/bin -Y l,${ROOT}/usr/ccs/bin  -Y S,${ROOT}/usr/ccs/lib -Y L,${ROOT}/usr/ccs/lib -Y U,${ROOT}/usr/lib "$@" -Y I,${ROOT}/usr/include' > $ROOT/xenv/cc
+chmod +x ${ROOT}/xenv/cc
+
+#	build all the commands
+
+if [ ! -x $ROOT/xenv/i386cc ]
+then ln $ROOT/xenv/cc $ROOT/xenv/i386cc
+fi
+(
+cd ${ROOT}/usr/src/cmd
+ls -a |
+	sed -e "s/\.mk$//" -e "s/\.sh$//" -e "s/\.c$//" \
+	-e "/^include$/d" |
+	sort -u |
+	sed -n '3,$p' > /tmp/$$.doit
+)
+sh ./:mkcmd BUS=${BUS} ARCH=${ARCH} $VPIX $MERGE386 `cat -s /tmp/$$.doit`
+rm -f /tmp/$$.doit
+cp $ROOT/usr/ccs/lib/llib-lcrypt $ROOT/usr/lib/llib-lcrypt
+cp $ROOT/usr/ccs/lib/llib-lcrypt.ln $ROOT/usr/lib/llib-lcrypt.ln
+
+(
+cd ${ROOT}/usr/src/ucbcmd
+ls -a |
+	sed -e "s/\.mk$//" -e "s/\.sh$//" -e "s/\.c$//" |
+	sort -u |
+	sed -n '3,$p' > /tmp/$$.ucbit
+)
+sh ./:mkucbcmd `cat -s /tmp/$$.ucbit`
+rm -f /tmp/$$.ucbit
+
+# Remove these five files which are links to other files
+rm -f ${ROOT}/usr/bin/view ${ROOT}/usr/bin/vedit ${ROOT}/usr/bin/edit ${ROOT}/usr/bin/ex ${ROOT}/usr/bin/pcat
+rm ${ROOT}/usr/ccs/lib/libtermcap.a ${ROOT}/usr/ccs/lib/libtermlib.a
+ln ${ROOT}/usr/ccs/lib/libcurses.a ${ROOT}/usr/ccs/lib/libtermcap.a
+ln ${ROOT}/usr/ccs/lib/libtermcap.a ${ROOT}/usr/ccs/lib/libtermlib.a
+
+#	build the OS itself
+ln ${ROOT}/usr/ccs/bin/as ${ROOT}/usr/bin/idas
+ln ${ROOT}/usr/ccs/bin/ld ${ROOT}/usr/bin/idld
+ln ${ROOT}/usr/ccs/bin/cc ${ROOT}/usr/bin/idcc
+ln ${ROOT}/usr/ccs/lib/acomp ${ROOT}/usr/lib/idacomp
+ln ${ROOT}/usr/ccs/lib/cpp ${ROOT}/usr/lib/idcpp
+
+ln -s $ROOT/usr/bin/idas $ROOT/bin/idas
+ln -s $ROOT/usr/bin/idcc $ROOT/bin/idcc
+ln -s $ROOT/usr/bin/idld $ROOT/bin/idld
+ln -s $ROOT/usr/lib/idacomp $ROOT/lib/idacomp
+ln -s $ROOT/usr/lib/idcpp $ROOT/lib/idcpp
+
+sh ./:mkuts ${BUS} ${ARCH} $VPIX $MERGE386 $BLTCONS $EVC $EVGA
+
+# Build the add-ons
+# build all the add-ons that are present.
+pkglist=""
+for i in `cd add-on; ls`
+do
+	# skip ones which are interactive
+	[ $i = source ] && continue
+	pkglist="$pkglist $i"
+done
+sh ./:mk.addon BUS=${BUS} ARCH=${ARCH} $VPIX $MERGE386 $pkglist
+
+for i in `cd pkg; ls`
+do
+	pkglist="$pkglist $i"
+done
+sh ./:mkoam BUS=${BUS} ARCH=${ARCH} $pkglist
+
+cp ${ROOT}/usr/ccs/bin/ar ${ROOT}/usr/bin/ar
+cp ${ROOT}/usr/ccs/bin/captoinfo ${ROOT}/usr/bin/captoinfo
+cp ${ROOT}/usr/ccs/bin/infocmp ${ROOT}/usr/bin/infocmp
+cp ${ROOT}/usr/ccs/bin/mcs ${ROOT}/usr/bin/mcs
+cp ${ROOT}/usr/ccs/bin/tic ${ROOT}/usr/bin/tic
+cp ${ROOT}/usr/ccs/bin/tput ${ROOT}/usr/bin/tput
+cp ${ROOT}/usr/ccs/bin/what ${ROOT}/usr/bin/what
+
+echo $0 done at `date`
+exit 0
