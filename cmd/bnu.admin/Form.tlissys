@@ -1,0 +1,81 @@
+#ident	"@(#)bnu.admin:Form.tlissys	1.6.3.1"
+
+################################################################################
+#
+#	Module Name: Form.tlissys
+#
+#	Functional Description: This Form adds a tlis system to the BNU 
+#                               Systems database.
+#			
+################################################################################
+form="Adds a System to BNU Systems Database"
+
+`readfile $INTFBASE/form.msg | message -s`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+begrow=any
+begcol=any
+
+done=`if [ $F2 = "" ];
+      then
+	   unset -l F2;
+	   set -l F2="\"\"";
+      fi;
+      if [ -z $F3 ];
+      then
+           set -l BNU_NEWLN="$ARG1 $ARG2 $F1 - $F2";
+      else
+         set -l BNU_NEWLN="$ARG1 $ARG2 $F1 - $F2 in:--in: $F3 word: $F4";
+fi; set -l BNU0="$ARG1"; set -l BNU1="$ARG2"; set -l BNU2="-"; set -l BNU3="$F2"; set -l BNU4="in:--in: $F3 word: $F4"`  OPEN FORM $OBJ_DIR/Form.cf_asys "$BNU_NEWLN" "$BNU0" "$BNU1" "$BNU2" "$F1" "$BNU3" "$BNU4"
+
+
+#F1
+name=Network Name:
+nrow=1
+ncol=2
+frow=1
+fcol=16
+rows=1
+columns=14
+rmenu=OPEN MENU $OBJ_DIR/Menu.devname
+valid=`grep "^$F1" /etc/uucp/Devices`
+invalidmsg="\"$F1\" device is not in /etc/uucp/Devices; add the device."
+lininfo=netwk
+
+#F2
+name=Network address:
+nrow=2
+ncol=2
+frow=2
+fcol=19
+rows=1
+columns=19
+valid=`validnetaddr "$F2"`
+invalidmsg="Network address is composed of letters, digits, periods, and backslashes only."
+lininfo=addr
+
+#F3
+name=Login:
+nrow=3
+ncol=2
+frow=3
+fcol=14
+rows=1
+columns=14
+rmenu={ uucp nuucp }
+value=nuucp
+valid=`validname "$F3"`
+invalidmsg="Name is composed of letters and digits only."
+lininfo=login
+
+#F4
+name=Password:
+nrow=4
+ncol=2
+frow=4
+fcol=12
+rows=1
+columns=14
+lininfo=passwd
+

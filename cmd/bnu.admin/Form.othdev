@@ -1,0 +1,133 @@
+#ident	"@(#)bnu.admin:Form.othdev	1.5.3.2"
+
+################################################################################
+#
+#	Module Name: Form.othdev
+#
+#	Functional Description: This Form adds a switch device or other
+#       networking type device for use by Basic Networking
+#
+################################################################################
+form="Add a Generic Device for Use by Basic Networking"
+
+`readfile $INTFBASE/form.msg | message -s`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+begrow=any
+begcol=any
+
+done=`bnuset $F3 $F4; set -l BNU_NEWLN="$F1 $F2 $F3 $F4 $F5 $F6 $F7 $F8 $F9 $F10 \T" set -l BNU0="$F5 $F6 $F7 $F8 $F9 $F10"`OPEN FORM $OBJ_DIR/Form.cf_adev "$BNU_NEWLN" "$F1" "$F2" "$F3" "$F4" "$BNU0"
+
+#F1
+name=Device Type:
+nrow=1
+ncol=2
+frow=1
+fcol=15
+rows=1
+columns=14
+lininfo=odevice
+
+#F2
+name=Port:
+nrow=2
+ncol=2
+frow=2
+fcol=8
+rows=1
+columns=14
+rmenu=OPEN MENU $OBJ_DIR/Menu.ports
+valid=`test -f /usr/tmp/ttylist.$VPID && grep "^/dev/$F2" /usr/tmp/ttylist.$VPID`
+invalidmsg=Press CHOICES to select valid response.
+lininfo=odport
+
+#F3
+name=Dialer Port:
+nrow=3
+ncol=2
+frow=3
+fcol=14
+rows=1
+columns=14
+value=-
+valid=`[ "$F3" != "" ]`
+lininfo=oport
+
+
+#F4
+name=Speed:
+nrow=4
+ncol=2
+frow=4
+fcol=9
+rows=1
+columns=6
+value=Any
+rmenu={ 300 1200 1800 2400 4800 9600 19200 38400 }
+lininfo=ospeed
+
+#F5
+name=First dialer:
+nrow=6
+ncol=2
+frow=6
+fcol=17
+rows=1
+columns=14
+rmenu=OPEN MENU $OBJ_DIR/Menu.devtype
+lininfo=od1
+
+
+#F6
+name=First token:
+nrow=6
+ncol=34
+frow=6
+fcol=48
+rows=1
+columns=14
+lininfo=ot1
+
+#F7
+name=Second dialer:
+nrow=8
+ncol=2
+frow=8
+fcol=17
+rows=1
+columns=14
+rmenu=OPEN MENU $OBJ_DIR/Menu.devtype
+lininfo=od1
+
+#F8
+name=Second token:
+nrow=8
+ncol=34
+frow=8
+fcol=48
+rows=1
+columns=14
+lininfo=ot2
+
+#F9
+name=Third dialer:
+nrow=10
+ncol=2
+frow=10
+fcol=17
+rows=1
+columns=14
+rmenu=OPEN MENU $OBJ_DIR/Menu.devtype
+lininfo=od1
+
+#F10
+name=Third token:
+nrow=10
+ncol=34
+frow=10
+fcol=48
+rows=1
+columns=14
+lininfo=ot3
+

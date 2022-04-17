@@ -1,0 +1,15 @@
+#ident	"@(#)bnu.admin:validhour	1.2"
+
+
+################################################################################
+#	Module Name: valhour.sh
+#	
+#	Inputs:
+#		$1 - pollhour string 
+#	
+#	Description: Verify a valid poll hour was entered.
+################################################################################
+for i in $1
+do [ $i -lt 0 -o $i -gt 23 ] && exit 1
+done
+exit 0

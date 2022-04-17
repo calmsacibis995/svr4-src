@@ -1,0 +1,8 @@
+#ident	"@(#)bnu.admin:devices.menu	1.1"
+#menu#Adding, Listing, and Removing Networking Devices
+#help#Help^Adding, Listing, and Removing Networking Devices
+#life#permanent
+
+add^Adds Devices for use by Basic Networking^add/Form.adddev
+list^Lists Devices Available to Basic Networking^list/Form.listdev
+remove^Removes Devices from use by Basic Networking^remove/Form.rmdev

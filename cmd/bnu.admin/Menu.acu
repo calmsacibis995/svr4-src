@@ -1,0 +1,70 @@
+#ident	"@(#)bnu.admin:Menu.acu	1.2"
+################################################################################
+#
+#	Module Name:Menu.acu
+#
+#	Functional Description: This menu allows user to select a modem or 
+#                                switch.
+#
+#	Inputs:  none
+#
+#	Functions Called:  none
+#
+################################################################################
+
+menu="Basic Networking Utilities Management"
+
+help=OPEN TEXT $INTFBASE/Text.oamhelp $OBJ_DIR/HELP/bnu.help "the BNU Management Menu"
+
+name=rixon
+description=
+action=OPEN MENU $OBJ_DIR/Menu.speed1
+
+name=penril
+description=
+action=OPEN MENU $OBJ_DIR/Menu.speed1
+
+name=hayes
+description=
+action=OPEN MENU $OBJ_DIR/Menu.speed1
+
+name=ventel
+description=
+action=OPEN MENU $OBJ_DIR/Menu.speed1
+
+name=att2212c
+description=
+action=OPEN MENU $OBJ_DIR/Menu.speed1
+
+name=att2212C
+description=
+action=OPEN MENU $OBJ_DIR/Menu.speed1
+
+name=att4000
+description=
+action=OPEN MENU $OBJ_DIR/Menu.speed1
+
+name=vadic
+description=
+action=OPEN MENU $OBJ_DIR/Menu.speed1
+
+name=801
+description=
+action=OPEN MENU $OBJ_DIR/Menu.speed1
+
+name=att2212c
+description=
+action=OPEN MENU $OBJ_DIR/Menu.speed1
+
+name=ports
+description=BNU Port Configuration
+action=OPEN TEXT $OBJ_DIR/Text.ports
+
+name=setup
+description=BNU Setup
+action=OPEN MENU $OBJ_DIR/Menu.setup
+
+name=systems
+description=BNU System Configuration
+action=OPEN MENU $OBJ_DIR/Menu.systems
+

@@ -1,0 +1,67 @@
+
+#ident	"@(#)bnu.admin:bnuset	1.1.3.2"
+
+PORT=`expr "$1" : "/dev/\(.*\)"`
+ID=`echo $1 | cut -c9-16`
+
+    
+SPEED=$2
+DIRECTION=$3
+
+# Now we will check the port.
+
+
+TMON="ttymonbnu"	# port monitor tag for STREAMS devices
+/usr/sadm/sysadm/bin/isastream /dev/$PORT
+RET=$?
+if [ $RET -ne 0 ]
+then
+	STREAM="yes"
+else
+	STREAM="no"
+	
+fi
+
+if [ "$STREAM"="yes" ]
+then
+	sacadm -l | grep $TMON > /dev/null 2>&1
+	if [ $? -eq 1 ]
+	then 
+		sacadm -a -p $TMON -t ttymon -c "/usr/lib/saf/ttymon" -v 1 
+	fi
+
+	case $DIRECTION in
+
+	"Outgoing only")	exit 0 ;; 
+
+	"Incoming only") pmadm -a -p $TMON -s $ID -i root -fu -v 1 -m " `ttyadm -d /dev/$PORT -l $SPEED -s /usr/bin/login -p \"login: \"`" ;;
+		
+	"Both Incoming and Outgoing") pmadm -a -p $TMON -s $ID -i root -fu -v 1 -m "`ttyadm -b -r 0 -t 60 -d /dev/$PORT -l $SPEED  -s /usr/bin/login -p \"login: \"`" ;;
+
+	esac
+
+else	# port is CLIST 
+
+	
+	case $DIRECTION in
+
+	"Outgoing only") exit 0 ;;
+
+	"Incoming only") echo "$ID:23:respawn:/sbin/getty $PORT $SPEED" > /etc/conf/init.d/ua_tty${ID} ;;
+
+	"Both Incoming and Outgoing") echo "$ID:23:respawn:/usr/bin/uugetty -r -t 60 $PORT $SPEED" > /etc/conf/init.d/ua_tty${ID} ;;
+	
+	esac
+
+	trap '' 1 2 3 9 15
+	/etc/conf/bin/idmkinit -o /usr/tmp
+	cp /usr/tmp/inittab /usr/tmp/inittab$$
+	chown bin /usr/tmp/inittab$$
+	chgrp bin /usr/tmp/inittab$$
+	chmod 444 /usr/tmp/inittab$$
+	cp /usr/tmp/inittab$$ /etc/inittab
+	rm -f /usr/tmp/inittab$$ /usr/tmp/inittab
+	telinit q
+fi
+
+exit 0

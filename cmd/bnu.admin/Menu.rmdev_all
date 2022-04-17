@@ -1,0 +1,20 @@
+#ident	"@(#)bnu.admin:Menu.rmdev_all	1.4.2.1"
+ 
+################################################################################
+#
+#	Module Name:Menu.rmdev_all
+#
+#	Functional Description: This menu is a popup menu for listing all
+#                               devices in /etc/uucp/Devices.
+#
+################################################################################
+menu="TYPE- LINE  LINE2  CLASS  DIALER_TOKEN_PAIRS"
+
+`readfile $INTFBASE/ssmenu.msg | message -s`
+
+#`cat /etc/uucp/Devices | regex '^([^ ^#][^ ^#]*)$0 ([^ ^	][^ ^	]*)$1 ([^ ^	][^ ^	]*)$2 ([^ ^	][^ ^	]*)$3 ([^ ^	][^ ^	]*)$4 (.*)$5'
+
+`cat /etc/uucp/Devices | regex '^([^ ^#^	][^ ^#^	]*)$0 ([^ ^	][^ ^	]*)$1 ([^ ^	][^ ^	]*)$2 ([^ ^	][^ ^	]*)$3 ([^ ^	][^ ^	]*)$4 (.*)$5'
+'name="$m0"
+description="$m1 $m2 $m3 $m4 $m5"
+action=`set -l "BNU_NEWLN=$m0 $m1 $m2 $m3 $m4 $m5"; set -l "BNU0=$m0"; set -l "BNU1=$m1"; set -l "BNU2=$m2"; set -l "BNU3=$m3"; set -l "BNU4=$m4"; set -l "BNU5=$m5"`OPEN FORM $OBJ_DIR/Form.cf_rdev "$BNU_NEWLN" "$BNU0" "$BNU1" "$BNU2" "$BNU3" "$BNU4" "$BNU5" `getfrm` '`

@@ -1,0 +1,107 @@
+#ident	"@(#)bnu.admin:Helsys_a	1.4"
+
+ABSTRACT:
+	The add task allows you to tell your system about other 
+	systems with which it may communicate.
+
+ssdevcat:System
+	Give the node name of the system that you want to contact.
+	
+sdevcat:Device
+	Choose the kind of device that you will use to contact the 
+	specified system.  To use either an autodial modem or a modem
+	that requires an 801 Automatic Calling Unit, choose "Modem".
+	To use a direct connection, such as to another computer, choose
+	"Direct".  To use a transport provider (such as STARLAN or        
+	STREAMS-based TCP) that Basic Networking accesses via the 
+	Transport Layer Interface Library, choose "Network".  To use
+	a device from any other category, choose "Other".
+
+time:Time
+	Give the time (or days and times) that you want your system
+	to call the specified system.  Enter "Any" if your system
+	may call at any time during any day of the week.  Enter 
+	"Never" if your system should never call the specified system.
+	( The other system may still be able to call your system.)
+	Enter any of the responses "Su", "Mo", "Tu", "We", "Th", "Fr",
+	or "Sa" to indicate a single day on which to call the 
+	specified system.  Enter "Wk" to indicate that the specified
+	system may be called on any weekday.
+	Enter a time ( in 24-hour format, e.g. "0800" ) or a range of 
+	times( e.g., "0800-1700" for 8 A.M. till 5 P.M.).  Enter a 
+	combination of the above items, separating each day's
+	information by commas ( e.g., "Wk 1700-0800, Sa, Su" to 
+	indicate any weekday after 5 P.M. but before 8 A.M. and
+	anytime Saturday or Sunday).
+	
+dirdev:Device type
+	Give the name of the remote system.  If you have only one 
+	directly-connected system and it corresponds to an entry of
+	type "Direct" in the file /etc/uucp/Devices, then you may also 
+	use the keyword "Direct".
+	
+dirspeed:Speed
+	Choose the speed at which you want to communicate with the other
+	system.
+	
+login:Login
+	Enter the user name with which to log into the remote system.
+		
+passwd:Password
+	Enter the password required for the specified login name on the 
+	remote system.  Note that anyone with read permission for 
+	/etc/uucp/Systems will be able to read any passwords entered 
+	here, therefore /etc/uucp/Systems should not be publicly 
+	readable.
+	
+aspeed:Speed
+	Choose the speed at which you want to communicate with the other
+	system.  If your system has multiple dialing devices for the
+	desired speed, then you may prefix the speed with a single letter
+	to allow the system to choose the proper device from the file
+	/etc/uucp/Devices.
+	
+phone:Phone number
+	Enter the telephone number of the remote system.
+	
+netwk:Network name
+	Enter the name by which the network is known.  The network name
+	must be an entry in the first field of /etc/uucp/Devices.
+
+addr:Network address
+	Enter the network address of the remote system.
+	
+othdev:Device type
+	Enter the type of the device that you will use to connect to
+	the remote system.  The Device type must be an entry in the
+	first field of /etc/uucp/Devices.
+	
+othspeed:Class
+	Enter a numeric value (possibly prefixed by a single letter), the
+	keyword "Any", or no value.  A numeric value will be interpreted
+	as the speed (bits per second) of the device.  A single-letter
+	prefix may be used to distinguish dialers, such as those on the
+	public network from those on a private line network.
+	When a connection is attempted, Basic Networking will choose the
+	device to use by matching the Systems and Class fields of lines
+	in the Systems files of the /etc/uucp directory.
+devices:add_devices
+	The devices menu allows you to administer the characteristics
+	of the devices used by the Basic Networking Utilities.  A 
+	device is specified by giving its type, a particular port, and 
+	the speed and dialing procedure to be used on the port.  A device
+	is selected for use by Basic Networking based on the device type
+	and speed required.  Thus, several devices may have the same
+	type or the same speed, and Basic Networking may attempt to 
+	connect to a remote system by trying several devices in turn.
+
+polling:add_polling
+	The polling menu allows you to administer the times at
+	which remote systems are called by the Basic Networking
+	Utilities.
+
+systems:add_systems
+	The systems menu allows you to manage information that 
+	Basic Networking Utilities stores about remote systems.
+	This information is necessary for your system and remote
+	systems to communicate via mail or uucp.

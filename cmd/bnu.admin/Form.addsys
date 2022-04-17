@@ -1,0 +1,63 @@
+#ident	"@(#)bnu.admin:Form.addsys	1.9.3.1"
+
+################################################################################
+#
+#	Module Name: Form.addsys
+#
+#	Functional Description: This Form adds a system for use by BNU
+#			
+################################################################################
+form="Adds a System to the Basic Networking System Database"
+
+`readfile $INTFBASE/form.msg | message -s`
+
+`set -l BNU_SEQ=3`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+begrow=any
+begcol=any
+
+done=`regex -e -v $F3
+      '^Direct$' 'OPEN FORM $OBJ_DIR/Form.dirsys "$F1" "$F2"'
+      '^Modem$' 'OPEN FORM $OBJ_DIR/Form.acusys "$F1" "$F2"'
+      '^Other$' 'OPEN FORM $OBJ_DIR/Form.othsys "$F1" "$F2"'
+      '^Network$' 'OPEN FORM $OBJ_DIR/Form.tlissys "$F1" "$F2"'`
+
+
+#F1
+name=System:
+nrow=1
+ncol=2
+frow=1
+fcol=10
+rows=1
+columns=14
+lininfo=ssdevcat
+valid=`test "$F1" && test -f /etc/uucp/Systems && validname "$F1"`
+invalidmsg="System name is composed of letters, digits, and - only."
+
+#F2
+name=Days and times to call:
+nrow=2
+ncol=2
+frow=2
+fcol=26
+rows=1
+columns=14
+value=Any
+lininfo=time
+
+#F3
+name=Device category:
+nrow=3
+ncol=2
+frow=3
+fcol=19
+rows=1
+columns=16
+value=Modem
+rmenu={ Direct Modem Network Other }
+menuonly=TRUE
+lininfo=sdevcat
+

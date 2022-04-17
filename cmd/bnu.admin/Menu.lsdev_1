@@ -1,0 +1,19 @@
+#ident	"@(#)bnu.admin:Menu.lsdev_1	1.6.1.1"
+
+ 
+################################################################################
+#
+#	Module Name:Menu.lsdev_1
+#
+#	Functional Description: This menu is a popup menu for listing devices
+#                               in /etc/uucp/Devices, indexes on ports field.
+#
+################################################################################
+menu="TYPE- LINE  LINE2  CLASS  DIALER_TOKEN_PAIRS"
+
+#`cat /etc/uucp/Devices | grep "$ARG1" | regex '^([^ ^#][^ ^#]*)$0 (.*)$1'
+`cat /etc/uucp/Devices | grep "$ARG1" | regex '^([^ ^#^	][^ ^#^	]*)$0 (.*)$1'
+'name="$m0"
+description="$m1"
+action=CLOSE'`
+ 

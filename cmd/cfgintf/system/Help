@@ -1,0 +1,19 @@
+#ident	"@(#)cfgintf:system/Help	1.2"
+
+TITLE:the System Name Information screen
+
+ABSTRACT:
+	The "system" task generates a report containing the name of the system, 
+	the system's node name, the system release number, the system version 
+	number, and the hardware for which the kernel was built.
+
+LISTING:
+	This screen describes the name of the machine and the versions of the
+	operating system running on that machine.
+	
+	The first line is the system name.  At some sites, the system name is
+	the name of the machine, at others, it is the name of the operating
+	system.  The second line is the network node name of the machine.  The
+	third line is the operating system release number, the fourth is the
+	operating system version number, and the fifth line is the machine for
+	which the operating system was built.

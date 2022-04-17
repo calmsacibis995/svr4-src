@@ -1,0 +1,8 @@
+#ident	"@(#)bnu.admin:netserve.menu	1.1.2.1"
+#menu#Network Services Management
+#help#Help^Network Services Management
+#life#permanent
+
+basic_networking^Basic Networking Utilities Management^bnu/bnu.menu
+remote_files^Distributed File System Management^remote_files/Menu.rfiles
+preSVR4^Mail Setup^OBJECTS/mailset/Menu.mail

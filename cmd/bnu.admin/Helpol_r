@@ -1,0 +1,11 @@
+#ident	"@(#)bnu.admin:Helpol_r	1.2"
+
+ABSTRACT:
+	The remove task allows you to tell your system which systems not 
+	to contact.
+
+prmsys:System
+	Give the name of a system that you no longer want Basic
+	Networking not to contact automatically.  System information
+	will be listed for your confirmation before removal.
+

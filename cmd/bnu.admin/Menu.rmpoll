@@ -1,0 +1,24 @@
+
+#ident	"@(#)bnu.admin:Menu.rmpoll	1.4.4.2"
+
+################################################################################
+#
+#	Module Name:Menu.rmpoll
+#
+#	Functional Description: This menu is a popup menu for listing system
+#                               entries in /etc/uucp/Poll; indexes on system
+#                               name.
+#
+################################################################################
+menu="SYSTEM- TIMES"
+
+`readfile $INTFBASE/ssmenu.msg | message -s`
+`bnunotab /etc/uucp/Poll Poll.notab`
+
+`cat /tmp/Poll.notab | grep "^$ARG1" | regex '^([^ ^#^	][^ ^#^	]*)$0 (.*)$1'
+
+'name="$m0"
+description="$m1"
+action=`set -l "BNU_NEWLN=$m0 $m1"; set -l "BNU0=$m0"; set -l "BNU1=$m1"`OPEN FORM $OBJ_DIR/Form.cf_rpoll "$BNU_NEWLN" "$BNU0" "$BNU1" `getfrm` '`
+`rm /tmp/Poll.notab`
+

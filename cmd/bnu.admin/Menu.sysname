@@ -1,0 +1,16 @@
+#ident	"@(#)bnu.admin:Menu.sysname	1.1.2.1"
+
+################################################################################
+#
+#	Module Name:Menu.sysname
+#
+#	Functional Description: This menu is a popup menu for device type 
+#                               selection.  Systems are derived from uucp 
+#                               Systems file.
+################################################################################
+menu="Systems Name Select"
+
+`cat /etc/uucp/Systems | cut -f1 -d" " | sort -u | regex '^([A-Za-z0-9][A-Za-z0-9]*)$0' 
+'name="$m0"
+action=`set -l "Form_Choice=$m0"`CLOSE'`
+

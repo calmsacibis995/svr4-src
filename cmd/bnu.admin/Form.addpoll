@@ -1,0 +1,50 @@
+
+#ident	"@(#)bnu.admin:Form.addpoll	1.8.3.4"
+
+
+################################################################################
+#
+#	Module Name: Form.addpoll
+#
+#	Functional Description: This Form adds a system and time for 
+#				automatic polling by BNU.
+#			
+################################################################################
+form="Adds a System and Times to BNU Poll Database"
+
+`readfile $INTFBASE/form.msg | message -s`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+begrow=any
+begcol=any
+
+done=`set -l BNU_NEWLN="$F1	$F2"`OPEN FORM $OBJ_DIR/Form.cf_apoll "$BNU_NEWLN" "$F1" "$F2"
+
+# F1
+name=System:
+nrow=1
+ncol=2
+frow=1
+fcol=10
+rows=1
+columns=14
+rmenu=OPEN MENU $OBJ_DIR/Menu.sysname
+valid=[ -z "`fmlgrep \"$F1\" /etc/uucp/Systems 2>/dev/null`" -a ! -z "`fmlgrep ^\"$F1\" /etc/uucp/Poll 2>/dev/null`" ]
+invalidmsg="\"$F1\" is not defined in Systems or is a duplicate entry in Poll."
+lininfo=psys
+
+
+#F2
+name=Times:
+nrow=2
+ncol=2
+frow=2
+fcol=9
+rows=1
+columns=61
+value=0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+valid=`validhour "$F2"`
+invalidmsg="All hours must be >= 0 and < 24"
+lininfo=ptimes
+

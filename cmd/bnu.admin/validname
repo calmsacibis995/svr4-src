@@ -1,0 +1,30 @@
+#ident	"@(#)bnu.admin:validname	1.2"
+
+################################################################################
+#	Module Name: validname.sh
+#	
+#	Inputs:
+#		$1 - system name
+#	
+#	Description: Verify a valid system name was entered.
+#
+#                    Note that the input is concatenated to "hh" and then
+#                    the expression is evaluated with expr. Certain characters
+#                    such as - and * have special meaning if they occur as lone
+#                    strings to expr.
+#                   
+###############################################################################
+NEWARG="hh"$1
+# does $1 begin with -?
+if [ `expr $NEWARG : 'hh-'` -eq 3 ]
+then
+	exit 1
+fi
+echo $NEWARG
+if [ `expr $NEWARG : '[0-9A-Za-z-]*'` -eq `expr $NEWARG : '.*'` ]
+then
+        exit 0
+else
+        exit 1
+fi
+

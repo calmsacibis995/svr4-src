@@ -1,0 +1,6 @@
+#ident	"@(#)bnu.admin:setup.menu	1.1"
+#menu#Initial Basic Networking Setup
+#help#Help^Initial Basic Networking Setup
+#life#permanent
+
+add^Adds Devices, Systems, and Polled Systems to Database^add/Menu.setup

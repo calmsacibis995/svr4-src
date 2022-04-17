@@ -1,0 +1,19 @@
+
+#ident	"@(#)bnu.admin:Menu.modtype	1.1"
+
+################################################################################
+#
+#	Module Name:Menu.modtype
+#
+#	Functional Description: This menu is a popup menu for device type 
+#                               selection.  Devices are derived from uucp 
+#                               Dialers file.
+################################################################################
+menu="Device Type Select"
+
+lininfo=devcat
+`readfile $INTFBASE/ssmenu.msg | message -s`
+
+`cat /etc/uucp/Dialers | sed -e '1,$s/^uudirect/#/g'| sed -e '1,$s/^direct/#/g' | sed -e '1,$s/^datakit/#/g' | sed -e '1,$s/^nls/#/g' | regex '^([A-Za-z0-9][A-Za-z0-9]*)$0.*$''' 
+'name="$m0"
+action=`set -l "Form_Choice=$m0"`CLOSE'`

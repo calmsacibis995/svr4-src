@@ -1,0 +1,9 @@
+#ident	"@(#)bnu.admin:Helsys_l	1.1"
+
+ABSTRACT:
+	The list task allows you to list the systems with which your
+	system may initiate communication.
+	
+slistsys:System
+	Give the node name of the system for which you want information.
+	Give "All" to see information about every remote system.

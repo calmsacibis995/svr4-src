@@ -1,0 +1,81 @@
+
+#ident	"@(#)bnu.admin:Form.dirdev	1.6.4.3"
+
+################################################################################
+#
+#	Module Name: Form.dirdev
+#
+#	Functional Description: This Form adds a direct device for use by BNU
+#			
+################################################################################
+form="Adds a Direct Device for Use by Basic Networking"
+
+`readfile $INTFBASE/form.msg | message -s`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+begrow=any
+begcol=any
+
+done=`if [ "$F3" = "Hardware" ];
+      then
+       bnuset CONVERT "/dev/$F1" | set -l FDEV;
+      else
+       echo "$F1" | set -l FDEV;
+fi;bnuset $F2 $F3; set -l BNU_NEWLN="Direct $FDEV - $F2 uudirect \D"; set -l BNU0="-"; set -l BNU1="uudirect"` OPEN FORM $OBJ_DIR/Form.cf_adev "$BNU_NEWLN" "Direct" "$FDEV" "$BNU0" "$F2" "$BNU1"
+
+#F1
+#name=Device Type:
+#nrow=1
+#ncol=2
+#frow=1
+#fcol=15
+#rows=1
+#columns=14
+#lininfo=ddirect
+#value=Direct
+#valid=`validname "$F1"`
+#invalidmsg="Name is composed of letters, digits, and - only."
+
+#F1
+name=Port:
+nrow=1
+ncol=2
+frow=1
+fcol=8
+rows=1
+columns=14
+lininfo=aport
+rmenu=OPEN MENU $OBJ_DIR/Menu.ports
+valid=`[ "$F1" != "" ]`
+invalidmsg=Press CHOICES to select valid response.
+
+#F2
+name=Speed:
+nrow=2
+ncol=2
+frow=2
+fcol=9
+rows=1
+columns=6
+value=9600
+rmenu={ 300 1200 1800 2400 4800 9600 19200 38400 }
+menuonly=TRUE
+lininfo=aspeed
+invalidmsg=Press CHOICES to select valid response.
+
+#F3
+name=Flow Control:
+nrow=5
+ncol=2
+frow=5
+fcol=16
+rows=1
+columns=8
+rmenu={ Software Hardware }
+menuonly=TRUE
+value=Software
+show=`echo $F1 | fmlgrep tty`
+invalidmsg=Press CHOICES to select valid response.
+lininfo=flow
+

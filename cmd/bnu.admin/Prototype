@@ -1,0 +1,144 @@
+#ident	"@(#)bnu.admin:Prototype	1.1.3.3"
+
+!MENU=usr/sadm/sysadm/menu
+!INTFBIN=usr/sadm/sysadm/bin
+
+## Files from local prototype: component=bnu.admin
+
+# foundation set (predecessor) directories
+
+d foundation usr 0755 root sys
+d foundation usr/sadm 0755 bin bin
+d foundation usr/sadm/sysadm 0755 bin bin
+d foundation $INTFBIN 0755 bin bin
+d foundation $MENU 0755 bin bin
+d foundation var 0755 root sys
+d foundation var/sadm 0755 root sys
+d foundation var/sadm/pkg 0755 bin bin
+
+# basic and extended OAM directories
+
+d OAM_basic $MENU/netservices 0755 bin bin
+d OAM_basic $MENU/netservices/bnu 0755 bin bin
+d OAM_basic $MENU/netservices/bnu/devices 0755 bin bin
+d OAM_basic $MENU/netservices/bnu/devices/add 0755 bin bin
+d OAM_basic $MENU/netservices/bnu/devices/list 0755 bin bin
+d OAM_basic $MENU/netservices/bnu/devices/remove 0755 bin bin
+d OAM_basic $MENU/netservices/bnu/polling 0755 bin bin
+d OAM_basic $MENU/netservices/bnu/polling/add 0755 bin bin
+d OAM_basic $MENU/netservices/bnu/polling/list 0755 bin bin
+d OAM_basic $MENU/netservices/bnu/polling/remove 0755 bin bin
+d OAM_basic $MENU/netservices/bnu/setup 0755 bin bin
+d OAM_basic $MENU/netservices/bnu/setup/add 0755 bin bin
+d OAM_basic $MENU/netservices/bnu/systems 0755 bin bin
+d OAM_basic $MENU/netservices/bnu/systems/add 0755 bin bin
+d OAM_basic $MENU/netservices/bnu/systems/list 0755 bin bin
+d OAM_basic $MENU/netservices/bnu/systems/remove 0755 bin bin
+d OAM_basic var/sadm/pkg/bnu 0755 bin bin
+d OAM_basic var/sadm/pkg/bnu/sav 0755 bin bin
+d OAM_basic var/sadm/pkg/bnu/sav/intf_install 0755 bin bin
+
+# basic and extended interface
+
+f OAM_basic $INTFBIN/bnuset 0755 root sys
+f OAM_basic $INTFBIN/delentry 0755 root sys
+f OAM_basic $INTFBIN/validhour 0755 root sys
+f OAM_basic $INTFBIN/validls 0755 root sys
+f OAM_basic $INTFBIN/validname 0755 root sys
+f OAM_basic $INTFBIN/validnetaddr 0755 root sys
+f OAM_basic $INTFBIN/validphone 0755 root sys
+f OAM_basic $INTFBIN/validport 0755 root sys
+f OAM_basic $INTFBIN/validsys 0755 root sys
+f OAM_basic $INTFBIN/uniqport 0755 root sys
+f OAM_basic $INTFBIN/bnunotab 0755 root sys
+f OAM_bhelp $MENU/netservices/bnu/Help 0644 root sys
+v OAM_basic $MENU/netservices/bnu/bnu.menu 0644 root sys
+f OAM_bhelp $MENU/netservices/bnu/devices/Help 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Form.acudev 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Form.acudev1 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Form.acudev2 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Form.acudev3 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Form.acudev4 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Form.acudev5 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Form.adddev 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Form.cf_adev 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Form.dirdev 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Form.othdev 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Form.streams 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Form.tlisdev 0644 root sys
+f OAM_bhelp $MENU/netservices/bnu/devices/add/Help 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Menu.devtype 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Menu.modtype 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Menu.ports 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Text.anok 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/add/Text.aok 0644 root sys
+v OAM_basic $MENU/netservices/bnu/devices/devices.menu 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/list/Form.listdev 0644 root sys
+f OAM_bhelp $MENU/netservices/bnu/devices/list/Help 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/list/Menu.lsdev 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/list/Menu.lsdev_1 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/list/Menu.lsdev_2 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/list/Menu.lsdev_all 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/list/Menu.ports 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/list/Menu.devname 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/remove/Form.cf_rdev 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/remove/Form.rmdev 0644 root sys
+f OAM_bhelp $MENU/netservices/bnu/devices/remove/Help 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/remove/Menu.ports 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/remove/Menu.rmdev 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/remove/Menu.rmdev_1 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/remove/Menu.rmdev_2 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/remove/Menu.rmdev_all 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/remove/Text.rmnok 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/remove/Text.rmok 0644 root sys
+f OAM_basic $MENU/netservices/bnu/devices/remove/Menu.devname 0644 root sys
+f OAM_bhelp $MENU/netservices/bnu/polling/Help 0644 root sys
+f OAM_basic $MENU/netservices/bnu/polling/add/Form.addpoll 0644 root sys
+f OAM_basic $MENU/netservices/bnu/polling/add/Form.cf_apoll 0644 root sys
+f OAM_bhelp $MENU/netservices/bnu/polling/add/Help 0644 root sys
+f OAM_basic $MENU/netservices/bnu/polling/add/Menu.sysname 0644 root sys
+f OAM_basic $MENU/netservices/bnu/polling/add/Text.anok 0644 root sys
+f OAM_basic $MENU/netservices/bnu/polling/add/Text.aok 0644 root sys
+f OAM_basic $MENU/netservices/bnu/polling/list/Form.listpoll 0644 root sys
+f OAM_bhelp $MENU/netservices/bnu/polling/list/Help 0644 root sys
+f OAM_basic $MENU/netservices/bnu/polling/list/Menu.lspoll 0644 root sys
+f OAM_basic $MENU/netservices/bnu/polling/list/Menu.lspoll_a 0644 root sys
+f OAM_basic $MENU/netservices/bnu/polling/list/Menu.psysname 0644 root sys
+v OAM_basic $MENU/netservices/bnu/polling/polling.menu 0644 root sys
+f OAM_basic $MENU/netservices/bnu/polling/remove/Form.cf_rpoll 0644 root sys
+f OAM_basic $MENU/netservices/bnu/polling/remove/Form.rmpoll 0644 root sys
+f OAM_bhelp $MENU/netservices/bnu/polling/remove/Help 0644 root sys
+f OAM_basic $MENU/netservices/bnu/polling/remove/Menu.rmpoll 0644 root sys
+f OAM_basic $MENU/netservices/bnu/polling/remove/Menu.rmpoll_a 0644 root sys
+f OAM_basic $MENU/netservices/bnu/polling/remove/Text.rmnok 0644 root sys
+f OAM_basic $MENU/netservices/bnu/polling/remove/Text.rmok 0644 root sys
+f OAM_bhelp $MENU/netservices/bnu/setup/Help 0644 root sys
+f OAM_bhelp $MENU/netservices/bnu/setup/add/Help 0644 root sys
+f OAM_basic $MENU/netservices/bnu/setup/add/Menu.setup 0644 root sys
+v OAM_basic $MENU/netservices/bnu/setup/setup.menu 0644 root sys
+f OAM_bhelp $MENU/netservices/bnu/systems/Help 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/add/Form.acusys 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/add/Form.addsys 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/add/Form.cf_asys 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/add/Form.dirsys 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/add/Form.othsys 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/add/Form.tlissys 0644 root sys
+f OAM_bhelp $MENU/netservices/bnu/systems/add/Help 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/add/Menu.devname 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/add/Text.anok 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/add/Text.aok 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/list/Form.listsys 0644 root sys
+f OAM_bhelp $MENU/netservices/bnu/systems/list/Help 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/list/Menu.lssys 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/list/Menu.lssys_all 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/list/Menu.sysname 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/remove/Form.cf_rsys 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/remove/Form.rmsys 0644 root sys
+f OAM_bhelp $MENU/netservices/bnu/systems/remove/Help 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/remove/Menu.rmsys 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/remove/Menu.rmsys_all 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/remove/Text.rmnok 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/remove/Text.rmok 0644 root sys
+f OAM_basic $MENU/netservices/bnu/systems/remove/Menu.sysname 0644 root sys
+v OAM_basic $MENU/netservices/bnu/systems/systems.menu 0644 root sys
+v OAM_basic $MENU/netservices/netserve.menu 0644 root sys

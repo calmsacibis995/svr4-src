@@ -1,0 +1,24 @@
+#ident	"@(#)bnu.admin:validls	1.2.1.1"
+
+################################################################################
+#	Module Name: validls.sh
+#	Description: Validation for listing functions
+#
+###############################################################################
+
+if [ -f $2 ]
+then
+	sed '/^ *$/d' "$2" > /tmp/ls$$;  # get red of empty lines from file
+	sed '/^[	# ]/d' /tmp/ls$$ > /tmp/xxx$$;
+	if [ ! -s /tmp/xxx$$ ]
+	then
+		rm -fr /tmp/xxx$$;
+		rm -fr /tmp/ls$$$;
+		exit 1;
+	fi
+else
+ 	exit 1;
+fi
+
+grep "$1" $2 || [ $1 = "All" ]
+

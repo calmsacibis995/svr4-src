@@ -1,0 +1,23 @@
+#ident	"@(#)bnu.admin:Menu.lspoll	1.4.2.1"
+
+
+################################################################################
+#
+#	Module Name:Menu.lspoll
+#
+#	Functional Description: This menu is a popup menu for listing system
+#                               entries in /etc/uucp/Poll.
+#
+################################################################################
+menu="SYSTEM- TIMES"
+
+#`cat /etc/uucp/Poll | grep "^$ARG1" | regex '^([^ ^#][^ ^#]*)$0 (.*)$1'
+`bnunotab /etc/uucp/Poll Poll.notab`
+
+`cat /tmp/Poll.notab | grep "^$ARG1" | regex '^([^ ^#^	][^ ^#^	]*)$0 (.*)$1'
+
+'name="$m0"
+description="$m1"
+action=CLOSE'`
+`rm /tmp/Poll.notab`
+ 

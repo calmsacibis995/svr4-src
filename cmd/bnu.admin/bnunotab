@@ -1,0 +1,4 @@
+
+#ident	"@(#)bnu.admin:bnunotab	1.2"
+
+cat $1 | sed -e '1,$s/	/ /g' > /tmp/$2

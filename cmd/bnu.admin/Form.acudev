@@ -1,0 +1,61 @@
+#ident	"@(#)bnu.admin:Form.acudev	1.4.3.1"
+
+################################################################################
+#
+#	Module Name: Form.acudev
+#
+#	Functional Description: This Form adds a modem for use by BNU
+#			
+################################################################################
+form="Add a Modem Device for use by Basic Networking"
+
+`readfile $INTFBASE/form.msg | message -s`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO 
+
+begrow=any
+begcol=any
+
+done=`regex -e -v $F2
+      '^rixon$' 'OPEN FORM $OBJ_DIR/Form.acudev1 "$F2"'
+      '^penril$' 'OPEN FORM $OBJ_DIR/Form.acudev1 "$F2"'
+      '^hayes$' 'OPEN FORM $OBJ_DIR/Form.acudev1 "$F2"'
+      '^ventel$' 'OPEN FORM $OBJ_DIR/Form.acudev1 "$F2"'
+      '^att2212c$' 'OPEN FORM $OBJ_DIR/Form.acudev1 "$F2"'
+      '^att2212C$' 'OPEN FORM $OBJ_DIR/Form.acudev1 "$F2"'
+      '^att4000$' 'OPEN FORM $OBJ_DIR/Form.acudev1 "$F2"'
+      '^vadic$' 'OPEN FORM $OBJ_DIR/Form.acudev1 "$F2"'
+      '^att2224$' 'OPEN FORM $OBJ_DIR/Form.acudev2 "$F2"'
+      '^att2224ceo$' 'OPEN FORM $OBJ_DIR/Form.acudev2 "$F2"'
+      '^att2224g$' 'OPEN FORM $OBJ_DIR/Form.acudev2 "$F2"'
+      '^att4024$' 'OPEN FORM $OBJ_DIR/Form.acudev2 "$F2"'
+      '^att2224B$' 'OPEN FORM $OBJ_DIR/Form.acudev2 "$F2"'
+      '^att2224CEO$' 'OPEN FORM $OBJ_DIR/Form.acudev2 "$F2"'
+      '^att2224ceo$' 'OPEN FORM $OBJ_DIR/Form.acudev2 "$F2"'
+      '^att2224g$' 'OPEN FORM $OBJ_DIR/Form.acudev2 "$F2"'
+      '^att2296a$' 'OPEN FORM $OBJ_DIR/Form.acudev3 "$F2"'
+      '^att2296A$' 'OPEN FORM $OBJ_DIR/Form.acudev3 "$F2"'
+      '^att2248a$' 'OPEN FORM $OBJ_DIR/Form.acudev4 "$F2"'
+      '^att2248A$' 'OPEN FORM $OBJ_DIR/Form.acudev4 "$F2"'
+      '^801$' 'OPEN FORM $OBJ_DIR/Form.acudev1 "$F2"'
+      '^.*$'	 'OPEN FORM $OBJ_DIR/Form.acudev5 "$F2"'`
+
+#F1
+name=Device Type: ACU
+nrow=1
+ncol=2
+frow=1
+
+#F2
+name=Modem Type:
+nrow=2
+ncol=2
+frow=2
+fcol=14
+rows=1
+columns=14
+value=att2212c
+rmenu=OPEN MENU $OBJ_DIR/Menu.modtype
+valid=`test -f /etc/uucp/Dialers && grep "^$F2" /etc/uucp/Dialers`
+lininfo=adial
+invalidmsg=Press CHOICES to select valid response in /etc/uucp/Dialers.

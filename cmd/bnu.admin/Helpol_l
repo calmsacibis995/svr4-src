@@ -1,0 +1,10 @@
+#ident	"@(#)bnu.admin:Helpol_l	1.2"
+
+ABSTRACT:
+	The list task allows you to display which systems are contacted
+	automatically by your system and at what times contact is
+	attempted.
+
+plistsys:System
+	Give the name of a system for which you want to see Basic 
+	Networking automatic contact times.

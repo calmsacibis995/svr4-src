@@ -1,0 +1,17 @@
+#ident	"@(#)bnu.admin:Menu.devname	1.1.2.1"
+
+################################################################################
+#
+#	Module Name:Menu.devname
+#
+#	Functional Description: This menu is a popup menu for device type 
+#                               selection.  Devices are derived from uucp 
+#                               Devices file.
+################################################################################
+menu="Devices Name Select"
+
+#`cat /etc/uucp/Devices | cut -f1 -d" " | regex '^([A-Za-z0-9][A-Za-z0-9]*)$0' 
+`cat /etc/uucp/Devices | cut -f1 -d" " | sort -u | regex '^([A-Za-z0-9][A-Za-z0-9]*)$0' 
+'name="$m0"
+action=`set -l "Form_Choice=$m0"`CLOSE'`
+

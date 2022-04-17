@@ -1,0 +1,28 @@
+#ident	"@(#)cfgintf:summary/Text.summary	1.4"
+title="System Configuration Information"
+
+lifetime=longterm
+wrap=FALSE
+framemsg=`readfile $INTFBASE/display.msg`
+help=OPEN TEXT $INTFBASE/Text.itemhelp "LISTING"
+
+`
+    prtconf | set -l INFO ;
+    if [ $RET -ne 0 ] ;
+    then set -l INFO="Unable to access system configuration information." ;
+    fi ;
+
+    echo "$INFO" | wc -l | set -l NROWS ;
+    if [ $NROWS -gt 20 ] ;
+    then set -l NROWS=20 ;
+    fi ;
+
+    echo "$INFO" | awk -f $OBJ_DIR/maxcol.awk | set -l NCOLS ;
+    if [ $NCOLS -gt 70 ] ;
+    then set -l NROWS=70 ;
+    fi ;
+`
+
+rows=$NROWS
+columns=$NCOLS
+text="$INFO"

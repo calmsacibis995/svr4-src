@@ -1,0 +1,11 @@
+#ident	"@(#)bnu.admin:Helpdev	1.1"
+
+ABSTRACT:
+	The devices menu allows you to administer the characteristics
+	of the devices used by the Basic Networking Utilities.  A 
+	device is specified by giving its type, a particular port, and 
+	the speed and dialing procedure to be used on the port.  A device
+	is selected for use by Basic Networking based on the device type
+	and speed required.  Thus, several devices may have the same
+	type or the same speed, and Basic Networking may attempt to 
+	connect to a remote system by trying several devices in turn.

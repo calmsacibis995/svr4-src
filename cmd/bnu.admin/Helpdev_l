@@ -1,0 +1,20 @@
+#ident	"@(#)bnu.admin:Helpdev_l	1.1"
+
+ABSTRACT:
+	The list task allows you to display information about the
+	devices over which your system can initiate communication
+	with other systems.  A device may be a directly connected
+	host, a modem, or a TLI network interface.  A port that
+	supports incoming traffic only can be used by BNU to 
+	receive messages; such usage does not require any device
+	administration.
+
+ddlist:Device Type
+	Choose the type of device about which you want to obtain
+	information.  Choose "All" if you want to see information
+	about all devices.
+
+dplist:Port
+	Choose the port for which you want to obtain information
+	about connected devices.  Choose "All" if you want to see
+	information about devices on all ports.

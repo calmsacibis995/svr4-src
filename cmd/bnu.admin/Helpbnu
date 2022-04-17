@@ -1,0 +1,11 @@
+#ident	"@(#)bnu.admin:Helpbnu	1.1"
+
+ABSTRACT:Basic Networking Utilities Management
+	The basic_networking menu provides administrative access 
+	to the various files that control the operation of the
+	Basic Networking Utilities.  The utilities directly
+	affected are the uucp family of commands, including uucp,
+	uuto, and cu.  Other commands, such as mail, that 
+	communicate with remote systems are also affected by
+	basic_networking.
+

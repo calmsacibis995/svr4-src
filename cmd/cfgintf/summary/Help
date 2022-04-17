@@ -1,0 +1,15 @@
+#ident	"@(#)cfgintf:summary/Help	1.2.1.1"
+
+TITLE:the Summary Configuration Information screen
+
+ABSTRACT:
+	The "summary" task provides a report on the system configuration.  It
+	lists the amount of memory configured on the system, followed by a
+	report on boards and devices attached to the system.
+
+LISTING:
+	This list describes the peripherals that are installed on the system.
+	The first line describes the machine type.  The second line describes
+	the amount of memory configured on the machine.  The table of system
+	peripherals describes the (abbreviated) name of the board on which
+	the device is attached.

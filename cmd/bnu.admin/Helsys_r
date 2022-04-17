@@ -1,0 +1,15 @@
+#ident	"@(#)bnu.admin:Helsys_r	1.4"
+
+ABSTRACT:
+	The remove task allows you to remove a system from the list of systems
+	with which your system may initiate communication.
+	
+slistsys:System
+	Give the node name of the system for which you want information.
+	Give "All" to see information about every remote system.
+
+srmsys:System
+	Give the node name of the system that you no longer want to
+	contact.  System information will be listed for your confirmation 
+	before removal.
+

@@ -1,0 +1,23 @@
+#ident	"@(#)cfgintf:system/Text.system	1.4"
+title="System Name and Version Information"
+
+lifetime=longterm
+wrap=FALSE
+help=OPEN TEXT $INTFBASE/Text.itemhelp "LISTING"
+framemsg=`readfile $INTFBASE/display.msg`
+
+`
+	uname -s | set -l SYSNAME ;
+	uname -n | set -l NODENAME ;
+	uname -r | set -l RELEASE ;
+	uname -v | set -l VERSION ;
+	uname -m | set -l HARDWARE ;
+`
+
+rows=5
+columns=37
+text="System Name          = $SYSNAME
+Network Node Name    = $NODENAME
+UNIX System Release  = $RELEASE
+UNIX System Version  = $VERSION
+Hardware Designation = $HARDWARE"

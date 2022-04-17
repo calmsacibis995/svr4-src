@@ -1,0 +1,17 @@
+#ident	"@(#)bnu.admin:Helpdev_r	1.4"
+
+ABSTRACT:
+	The remove task allows you to prune the list of devices over which your
+	system can initiate communication with other systems.  A device may
+	be a directly connected host, a modem, or a TLI network interface.
+
+ddrm:Device type
+	Choose the type of device that Basic Networking should no longer
+	use for accessing remote systems.  Device information will be
+	listed for your confirmation before removal.
+
+dprm:Port
+	Choose the port of a device that Basic Networking should no longer
+	use for accessing remote systems. Device information will be listed
+	for your confirmation before removal.
+

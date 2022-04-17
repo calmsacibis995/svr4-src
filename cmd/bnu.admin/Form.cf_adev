@@ -1,0 +1,110 @@
+#ident	"@(#)bnu.admin:Form.cf_adev	1.4.5.1"
+
+################################################################################
+#	Module Name: Form.cf_adev
+#
+################################################################################
+form="Add a Device"
+#lifetime=shorterm
+
+altslks=TRUE
+
+`readfile $INTFBASE/conf.msg |message -s`
+
+done=`shell cat >>/etc/uucp/Devices <<EOF\
+$ARG1\
+ 	EOF; 
+       regex -e -v $RET
+      '^0$'	'OPEN TEXT $OBJ_DIR/Text.aok `getfrm`'
+      '^.*$'	'OPEN TEXT $OBJ_DIR/Text.anok'`getfrm``
+
+#F1
+name=The following entry will now be made in the 
+nrow=1
+ncol=2
+frow=1
+
+#F2
+name=file /etc/uucp/Devices:
+nrow=2
+ncol=2
+frow=2
+
+#F3
+name=Type
+nrow=4
+ncol=2
+frow=6
+fcol=2
+rows=1
+columns=14
+value=$ARG2
+rmenu={ $ARG2 }
+menuonly=TRUE 
+
+
+#F4
+name=Line
+nrow=4
+ncol=16
+frow=6
+fcol=16
+rows=1
+columns=14
+value=$ARG3
+rmenu={ $ARG3 }
+menuonly=TRUE
+valid=`uniqport "$F4"`
+invalidmsg=Port ALready Assigned; remove port or assign new one, Press CANCEL
+
+#F5
+name=Line2
+nrow=4
+ncol=30
+frow=6
+fcol=30
+rows=1
+columns=14
+value=$ARG4
+rmenu={ $ARG4 }
+menuonly=TRUE
+
+
+#F6
+name=Class 
+nrow=4
+ncol=44
+frow=6
+fcol=44
+rows=1
+columns=14
+value=$ARG5
+rmenu={ $ARG5 }
+menuonly=TRUE
+
+
+#F7
+name=Dialer-Token Pairs
+nrow=8
+ncol=2
+frow=10
+fcol=2
+rows=1
+columns=70
+value=$ARG6 
+rmenu={ uudirect direct $ARG6 }
+menuonly=TRUE
+invalidmsg=Press CHOICE for valid option 
+
+
+name=CONT
+button=11
+action=DONE
+
+name=QUIT
+button=9
+action=CLEANUP
+
+name=CANCEL
+button=14
+action=`unset -l BNU_NEWLN; unset -l BNU0; unset -l BNU1; unset -l BNU2; unset -l BNU3; unset -l BNU4; unset -l BNU5`CLOSE `getfrm`

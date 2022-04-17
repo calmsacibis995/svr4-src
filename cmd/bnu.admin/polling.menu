@@ -1,0 +1,8 @@
+#ident	"@(#)bnu.admin:polling.menu	1.1"
+#menu#Adding, Listing, and Removing Systems to be Polled
+#help#Help^Adding, Listing, and Removing Systems to be Polled
+#life#permanent
+
+add^Causes Systems to be Polled by Basic Networking^add/Form.addpoll
+list^List Systems Polled by Basic Networking^list/Form.listpoll
+remove^Prevent Polling of Remote Systems^remove/Form.rmpoll

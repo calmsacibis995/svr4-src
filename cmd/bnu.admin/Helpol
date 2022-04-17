@@ -1,0 +1,7 @@
+#ident	"@(#)bnu.admin:Helpol	1.1"
+
+ABSTRACT:
+	The polling menu allows you to administer the times at
+	which remote systems are called by the Basic Networking
+	Utilities.
+

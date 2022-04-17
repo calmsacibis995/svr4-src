@@ -1,0 +1,8 @@
+#ident	"@(#)bnu.admin:systems.menu	1.1"
+#menu#Adding, Listing, and Removing Remote Systems
+#help#Help^Adding, Listing, and Removing Remote Systems
+#life#permanent
+
+add^Adds Systems to the Basic Networking Database^add/Form.addsys
+list^Lists Systems Known to Basic Networking^list/Form.listsys
+remove^Removes Systems from the Basic Networking Database^remove/Form.rmsys

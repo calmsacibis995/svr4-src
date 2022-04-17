@@ -1,0 +1,62 @@
+
+#ident	"@(#)bnu.admin:Form.listdev	1.7.4.2"
+
+################################################################################
+#
+#	Module Name: Form.listdev
+#
+#	Functional Description: This task lists devices available to
+#				Basic Networking.
+#
+################################################################################
+form="Lists Devices Available to Basic Networking"
+
+`readfile $INTFBASE/form.msg | message -s`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+begrow=any
+begcol=any
+
+done=`if [ $F1 != "All" ];
+then
+      regex -e -v $F2
+      '^All$' 'OPEN MENU $OBJ_DIR/Menu.lsdev "$F1"'
+      '^(.*)' 'OPEN MENU $OBJ_DIR/Menu.lsdev_2 "$F1" "$F2"';
+else
+      regex -e -v $F2
+      '^All$' 'OPEN MENU $OBJ_DIR/Menu.lsdev_all'
+      '^(.*)' 'OPEN MENU $OBJ_DIR/Menu.lsdev_1 "$F2"';
+fi`
+
+#F1
+name=Device type:
+nrow=1
+ncol=2
+frow=1
+fcol=15
+rows=1
+columns=14
+value=All
+
+#rmenu= OPEN MENU $OBJ_DIR/MENU.devlist
+rmenu= OPEN MENU $OBJ_DIR/Menu.devname
+
+lininfo=ddlist
+valid=`validls "$F1" "/etc/uucp/Devices"`
+#invalidmsg=Cannot list devices; device type not found in /etc/uucp/Devices.
+invalidmsg=No listing available; /etc/uucp/Devices empty or device type not found in it.
+
+#F2
+name=Port:
+nrow=2
+ncol=2
+frow=2
+fcol=8
+rows=1
+columns=14
+value=All
+rmenu=OPEN MENU $OBJ_DIR/Menu.ports
+lininfo=dplist
+valid=`validls "$F2" "/etc/uucp/Devices"`
+invalidmsg=NO listing available; /etc/uucp/Devices file empty or port name not found in it.

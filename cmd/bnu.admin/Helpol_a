@@ -1,0 +1,34 @@
+#ident	"@(#)bnu.admin:Helpol_a	1.3"
+
+ABSTRACT:
+	The add task allows you to tell your system which systems
+	to contact and at what times to contact them.
+
+psys:System
+	Give the name of a system that you want Basic Networking
+	to contact automatically.  The system name must be an
+	entry in the first field of /etc/uucp/Systems.
+
+ptimes:Time
+	Enter a comma or space separated list of integers between O
+	and 23, including ranges specified with hyphens.
+devices:add_devices
+	The devices menu allows you to administer the characteristics
+	of the devices used by the Basic Networking Utilities.  A 
+	device is specified by giving its type, a particular port, and 
+	the speed and dialing procedure to be used on the port.  A device
+	is selected for use by Basic Networking based on the device type
+	and speed required.  Thus, several devices may have the same
+	type or the same speed, and Basic Networking may attempt to 
+	connect to a remote system by trying several devices in turn.
+
+polling:add_polling
+	The polling menu allows you to administer the times at
+	which remote systems are called by the Basic Networking
+	Utilities.
+
+systems:add_systems
+	The systems menu allows you to manage information that 
+	Basic Networking Utilities stores about remote systems.
+	This information is necessary for your system and remote
+	systems to communicate via mail or uucp.

@@ -1,0 +1,147 @@
+
+#ident	"@(#)bnu.admin:Helpdev_a	1.4.1.2"
+
+ABSTRACT:
+	The add task allows you to tell your system about devices 
+	over which it can initiate communication with other
+	systems.  Such devices must be attached to ports that
+	support either outgoing traffic only or both incoming
+	and outgoing (bidirectional) traffic.  A port that
+	supports incoming traffic only can be used by Basic
+	Networking to receive messages; such usage does not
+	require any device administration.
+
+devcat:Device Category
+	To add a direct connection, such as to another computer,
+	choose "Direct".  To add either an autodial modem or a
+	modem that requires an 801 Automatic Calling Unit, choose
+	"Modem".  To add a transport provider (such as STARLAN
+	or STREAMS-based TCP) that Basic Networking accesses via
+	the Transport Layer Interface Library, choose "Network".
+	To add a device from any other category, choose "Other".
+	
+adial:Modem Type
+	Choose the type of modem whose command language is used by your
+	modem.  For example, if your modem uses the "atdt" command set,
+	choose "hayes".
+
+aport:Port
+        Port Numbers are the full PATHNAME of port devices that
+        could be used (if not already in use). One or more Port
+	Numbers can be specified.
+
+        By specifying the device number, you will also be choosing
+        HARDWARE or SOFTWARE flow control.  A tty number with "h"
+        designates hardware flow control and with "s" designates
+        software flow control.
+
+	tty00s tty00h, tty01s, and tty01h refer to internal ports.
+
+	ttys00 to ttys08 and ttyh00 to ttyh08 refer to the eight
+	ports of the first IPC802 or IPC900 Port Controller.  A Streams
+	driver will automatically be started by the Quick Terminal
+	Setup procedure.  A second IPC802 or IPC900 Port Controller
+	will have it's ports numbered from tty[s,h]10 to tty[s,h]18.
+
+	ttyis000 to ttyis016 and ttyih000 to ttyih016 refer to the
+	sixteen ports of the first IPC1600 Port Controller.  A clist
+	driver will automatically be started by the Quick Terminal
+	Setup procedure.  A second IPC1600 Port Controller will
+	have it's ports numbered from ttyi[s,h]100 to ttyi[s,h]118.
+
+        s0vt00 to s0vt16 refer to the ports associated with Fiber
+	Optic Stations).
+
+adport:Dialer Port	
+	Give the name of a special device listed in the /dev/term directory.
+	If your modem requires an external device (such as an 801
+	Automatic Calling Unit) to dial for it, then give its port here.
+	Otherwise, leave this field blank.
+	For example, if your modem is attached to the asynchronous ports
+	11 and its external dialing device is attached to asynchronous
+	port 12, then enter "term/12".
+
+aspeed:Speed
+	Enter the speed at which this device is to operate.
+	
+ndevice:Network Name
+	Enter the name by which you want to refer to the network.  A common
+	convention is to capitalize the port name.  For example, port
+	"starlan" would correspond to network name "STARLAN".
+	Note that if your system is a tli network you should add an
+	entry in /etc/uucp/Devconfig for the added device.  The Devconfig
+	file describes the list of streams modules to push.
+	
+nport:Port
+	Give the name of a special device listed in the /dev directory or
+	one of its subdirectories.  For example, the special device used to 
+	access a STARLAN network is /dev/starlan, so the port would be 
+	"starlan".
+	Note that if your system is a tli network you should add an
+	entry in /etc/uucp/Devconfig for the added device.  The Devconfig
+	file describes the list of streams modules to push.
+	
+ndial:Dialer type
+	Choose "TLIS" to enable Basic Networking to login to remote systems,
+	"TLI" otherwise.  Note that avoiding login may weaken the security
+	of the remote systems.
+	Note that if your system is a tli network you should add an
+	entry in /etc/uucp/Devconfig for the added device.  The Devconfig
+	file describes the list of streams modules to push.
+	
+odevice:Device Type
+	Enter the name by which you want to refer to the device.
+	
+oport:Dialer port
+	Give the name of a special device listed in the /dev directory
+	or one of its subdirectories.  Make an entry here only if the 
+	device you are adding does not make its own calls, such as a 
+	modem with an 801 Automatic Calling Unit.
+	
+odport:odport
+	Give the pathname relative to the /dev directory.
+	
+ospeed:ospeed
+	Enter a numeric value (possibly prefixed by a single letter), the
+	keyword "Any", or no value.  
+	A numeric value will be interpreted as the speed (bits per second)
+	of the device.  A single-letter prefix may be used to distinguish
+	dialers, such as those on the public network from those on a 
+	private line network.
+	
+od1:Dialer
+	Enter the value in the "Dialer" field of some line in the
+	file /etc/uucp/Dialers.
+	
+ot1:Token
+	Enter the character string that must be sent to the first dialer.
+
+ot2:Token
+	Enter the character string that must be sent to the second dialer.
+	
+ot3:Token
+	Enter the character string that must be sent to the third dialer.
+	
+streams:Streams Modules
+	Enter the list of STREAMS modules to be pushed onto a 
+	network connection before starting the terminal service.
+devices:add_devices
+	The devices menu allows you to administer the characteristics
+	of the devices used by the Basic Networking Utilities.  A 
+	device is specified by giving its type, a particular port, and 
+	the speed and dialing procedure to be used on the port.  A device
+	is selected for use by Basic Networking based on the device type
+	and speed required.  Thus, several devices may have the same
+	type or the same speed, and Basic Networking may attempt to 
+	connect to a remote system by trying several devices in turn.
+
+polling:add_polling
+	The polling menu allows you to administer the times at
+	which remote systems are called by the Basic Networking
+	Utilities.
+
+systems:add_systems
+	The systems menu allows you to manage information that 
+	Basic Networking Utilities stores about remote systems.
+	This information is necessary for your system and remote
+	systems to communicate via mail or uucp.

@@ -1,0 +1,10 @@
+#ident	"@(#)bnu.admin:uniqport	1.2"
+
+################################################################################
+#	Module Name: uniqport.sh
+#	Description: Checks uniqueness of Port (Line) assignment in uucp Devices
+#		     file.
+#
+###############################################################################
+
+exit 0

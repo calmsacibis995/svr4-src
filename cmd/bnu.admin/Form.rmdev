@@ -1,0 +1,63 @@
+
+#ident	"@(#)bnu.admin:Form.rmdev	1.6.4.2"
+
+################################################################################
+#
+#	Module Name: Form.rmdev
+#
+#	Functional Description: This Form removes devices available to 
+#                               Basic Networking.
+#			
+################################################################################
+form="Removes Devices from the List of Devices Available to BNU"
+
+`readfile $INTFBASE/form.msg | message -s`
+
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+begrow=any
+begcol=any
+
+done=`if [ $F1 != "All" ];
+then
+      regex -e -v $F2
+      '^All$' 'OPEN MENU $OBJ_DIR/Menu.rmdev "$F1"'
+      '^(.*)'	 'OPEN MENU $OBJ_DIR/Menu.rmdev_2 "$F1" "$F2"';
+else
+      regex -e -v $F2
+      '^All$' 'OPEN MENU $OBJ_DIR/Menu.rmdev_all'
+      '^(.*)'	 'OPEN MENU $OBJ_DIR/Menu.rmdev_1 "$F2"';
+fi`
+
+#F1
+name=Device type:
+nrow=1
+ncol=2
+frow=1
+fcol=15
+rows=1
+columns=14
+value=All
+
+rmenu=OPEN MENU $OBJ_DIR/Menu.devname
+
+lininfo=ddrm
+valid=`validls "$F1" "/etc/uucp/Devices"`
+invalidmsg=No devices available. for removal; /etc/uucp/Devices empty or device type not found.
+
+
+#F2
+name=Port:
+nrow=2
+ncol=2
+frow=2
+fcol=8
+rows=1
+columns=14
+value=All
+rmenu=OPEN MENU $OBJ_DIR/Menu.ports
+lininfo=dprm
+valid=`validls "$F2" "/etc/uucp/Devices";
+	q-rm "/dev/$F2" ttymonbnu`
+invalidmsg=No devices available for removal; /etc/uucp/Devices empty or port type not found.

@@ -1,0 +1,37 @@
+#ident	"@(#)bnu.admin:Text.rmnok	1.3.1.1"
+################################################################################
+#	Module Name: Text.rmnok
+#
+################################################################################
+title="Remove an Entry"
+
+altslks=TRUE
+
+`readfile $INTFBASE/display.msg | message -s`
+
+#rows=15
+rows=3
+#columns=75
+columns=45
+
+begrow=current
+begcol=current
+
+text="
+
+   Entry was not removed from the system."
+
+
+name=CANCEL
+button=14
+action=`unset -l BNU_NEWLN; unset -l BNU0; unset -l BNU1; unset -l BNU2; unset -l BNU3; unset -l BNU4; unset -l BNU5`CLOSE `getfrm` $ARG1 $ARG2
+
+#The following two lines have been added
+name=""
+button=11
+
+name=""
+button=12
+
+name=""
+button=13
