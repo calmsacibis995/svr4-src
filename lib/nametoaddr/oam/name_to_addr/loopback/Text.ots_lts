@@ -1,0 +1,17 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/loopback/Text.ots_lts	1.1"
+title="Loopback Protocol File Success"
+columns=55
+rows=13
+text="
+The service name entered already exists in
+
+	/etc/net/ticotsord/services
+
+but has successfully been added to
+
+	/etc/net/ticots/services
+and
+	/etc/net/ticlts/services
+
+You may now return to the previous menu.
+"

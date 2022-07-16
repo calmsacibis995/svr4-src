@@ -1,0 +1,20 @@
+#ident	"@(#)/usr/src/add-on/pkg.kdb/preremove.sl 1.1 4.0 12/08/90 43906 AT&T-USL"
+
+FAILURE=1	# fatal error
+
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+
+for MODULE in kdb
+do
+	${CONFBIN}/idcheck -p ${MODULE}
+	RES="$?"
+	if
+		[ "${RES}" -ne "100" -a "${RES}" -ne "0" ]
+	then
+		echo "Removing ${NAME} ${MODULE} module ..."
+		${CONFBIN}/idinstall -d ${MODULE}
+	fi
+done
+
+exit 0

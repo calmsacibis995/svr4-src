@@ -1,0 +1,16 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/npack/Text.badport	1.1"
+title="NPACK Protocol Address Error"
+rows=11
+columns=55
+text="
+The service port number entered is not of the correct
+format.  NPACK service port numbers are a sequence
+of 8 hexadecimal digits.  For example, the port number
+of service "rpc" is
+
+		0000000f
+
+and the port number of service "listen" is
+
+		00000007
+"

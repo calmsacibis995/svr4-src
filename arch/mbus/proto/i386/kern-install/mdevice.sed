@@ -1,0 +1,9 @@
+	/^gentty/s/icorf/icof/
+	/^i410/s/icr/ic/
+	/^nsxt/s/icSr/icS/
+	/^nxt/s/icSr/icS/
+	/^sxt/s/irco/ico/
+	/^vx/s/ior/io/
+	/^xt/s/icor/ico/
+	/^rci/s/iroH/ioH/
+	/^osm/s/irco/ico/

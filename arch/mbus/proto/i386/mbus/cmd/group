@@ -1,0 +1,10 @@
+root::0:root
+other::1:
+bin::2:root,bin,daemon
+sys::3:root,bin,sys,adm
+adm::4:root,adm,daemon
+uucp::5:uucp
+mail::6:root
+tty::7:root,tty
+daemon::12:root,daemon
+vm::666:root

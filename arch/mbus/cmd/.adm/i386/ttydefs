@@ -1,0 +1,36 @@
+# VERSION=1
+19200: 19200 opost onlcr tab3 ignpar ixon ixany parenb istrip echo echoe echok icanon isig cs7 cread : 19200 opost onlcr tab3 ignpar ixon ixany parenb istrip echo echoe echok icanon isig cs7 cread ::9600
+9600: 9600 opost onlcr tab3 ignpar ixon ixany parenb istrip echo echoe echok icanon isig cs7 cread : 9600 opost onlcr tab3 ignpar ixon ixany parenb istrip echo echoe echok icanon isig cs7 cread ::4800
+4800: 4800 opost onlcr tab3 ignpar ixon ixany parenb istrip echo echoe echok icanon isig cs7 cread : 4800 opost onlcr tab3 ignpar ixon ixany parenb istrip echo echoe echok icanon isig cs7 cread ::2400
+2400: 2400 opost onlcr tab3 ignpar ixon ixany parenb istrip echo echoe echok icanon isig cs7 cread : 2400 opost onlcr tab3 ignpar ixon ixany parenb istrip echo echoe echok icanon isig cs7 cread ::1200
+1200: 1200 opost onlcr tab3 ignpar ixon ixany parenb istrip echo echoe echok icanon isig cs7 cread : 1200 opost onlcr tab3 ignpar ixon ixany parenb istrip echo echoe echok icanon isig cs7 cread ::300
+300: 300 opost onlcr tab3 ignpar ixon ixany parenb istrip echo echoe echok icanon isig cs7 cread : 300 opost onlcr tab3 ignpar ixon ixany parenb istrip echo echoe echok icanon isig cs7 cread ::19200
+
+auto:hupcl:ixany sane tab3 hupcl:A:9600
+
+console: 9600 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs7 cread : 9600 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs7 cread ::console1
+console1: 1200 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs7 cread : 1200 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs7 cread ::console2
+console2: 300 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs7 cread : 300 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs7 cread ::console3
+console3: 2400 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs7 cread : 2400 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs7 cread ::console4
+console4: 4800 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs7 cread : 4800 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs7 cread ::console5
+console5: 19200 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs7 cread : 19200 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs7 cread ::console
+
+4800H: 4800 : 4800 ixany parenb sane tab3 hupcl ::9600H
+9600H: 9600 : 9600 ixany parenb sane tab3 hupcl ::19200H
+19200H: 19200 : 19200 ixany parenb sane tab3 hupcl ::2400H
+2400H: 2400 : 2400 ixany parenb sane tab3 hupcl ::1200H
+1200H: 1200 : 1200 ixany parenb sane tab3 hupcl ::300H
+300H: 300 : 300 ixany parenb sane tab3 hupcl ::4800H
+
+19200NP: 19200 opost onlcr tab3 ignpar ixon ixany istrip echo echoe echok icanon isig cs8 cread : 19200 opost onlcr tab3 ignpar ixon ixany istrip echo echoe echok icanon isig cs8 cread ::9600NP
+9600NP: 9600 opost onlcr tab3 ignpar ixon ixany istrip echo echoe echok icanon isig cs8 cread : 9600 opost onlcr tab3 ignpar ixon ixany istrip echo echoe echok icanon isig cs8 cread ::4800NP
+4800NP: 4800 opost onlcr tab3 ignpar ixon ixany istrip echo echoe echok icanon isig cs8 cread : 4800 opost onlcr tab3 ignpar ixon ixany istrip echo echoe echok icanon isig cs8 cread ::2400NP
+2400NP: 2400 opost onlcr tab3 ignpar ixon ixany istrip echo echoe echok icanon isig cs8 cread : 2400 opost onlcr tab3 ignpar ixon ixany istrip echo echoe echok icanon isig cs8 cread ::1200NP
+1200NP: 1200 opost onlcr tab3 ignpar ixon ixany istrip echo echoe echok icanon isig cs8 cread : 1200 opost onlcr tab3 ignpar ixon ixany istrip echo echoe echok icanon isig cs8 cread ::300NP
+300NP: 300 opost onlcr tab3 ignpar ixon ixany istrip echo echoe echok icanon isig cs8 cread : 300 opost onlcr tab3 ignpar ixon ixany istrip echo echoe echok icanon isig cs8 cread ::19200NP
+
+vt00: 9600 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs8 cread : 9600 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs8 cread ::vt01
+vt01: 4800 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs8 cread : 4800 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs8 cread ::vt02
+vt02: 2400 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs8 cread : 2400 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs8 cread ::vt03
+vt03: 1200 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs8 cread : 1200 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs8 cread ::vt04
+vt04: 300 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs8 cread : 300 opost onlcr tab3 ignpar istrip ixon ixany echo echoe echok icanon isig cs8 cread ::vt00

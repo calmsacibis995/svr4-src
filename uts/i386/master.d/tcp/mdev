@@ -1,0 +1,2 @@
+*ident	"@(#)//usr/src/uts/i386/master.d/tcp/mdev.sl 1.1 4.0 12/08/90 2446 AT&T-USL"
+tcp	-	Scio	tcp	0	0	1	255	-1

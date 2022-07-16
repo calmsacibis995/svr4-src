@@ -1,0 +1,73 @@
+#ident	"@(#)ucbtroff:troff.d/maketables	1.1"
+
+
+#		PROPRIETARY NOTICE (Combined)
+#
+#This source code is unpublished proprietary information
+#constituting, or derived under license from AT&T's UNIX(r) System V.
+#In addition, portions of such source code were derived from Berkeley
+#4.3 BSD under license from the Regents of the University of
+#California.
+#
+#
+#
+#		Copyright Notice 
+#
+#Notice of copyright on this source code product does not indicate 
+#publication.
+#
+#	(c) 1986,1987,1988,1989  Sun Microsystems, Inc
+#	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+#	          All rights reserved.
+
+
+# For use in one of the dev* font-table directories
+#
+#    If you're not really comfortable with the 'makedev' program, you can
+# use this shell script to make the binary font and device tables for the
+# device independent troff. You can be sure that all the necessary
+# binary files will be properly updated. The command 'maketables *'
+# will make a complete new set of binary '.out' files.
+#
+#    If the makedev program isn't located in the parent of this directory,
+# just change the initialization of the shell variable MAKEDEV.
+#
+#
+# USAGE:  maketables files
+#         files - one or more files from this directory.
+#
+#
+
+
+MAKEDEV=../makedev                        # this program does the real work
+MAKEDESC=no                            # need to remake the DESC.out file
+
+FONTS=`grep "^fonts" DESC | sed s/"fonts[ \t][0-9][0-9]*"//gp`
+
+FONTS=`echo "$FONTS" | sed "s/	/ /gp"`     # get rid of any tabs
+FONTS="$FONTS "								# and add a blank to the end
+
+for i do
+    if echo "$FONTS" | grep " $i " > /dev/null; then
+        MAKEDESC=yes
+        continue
+    fi
+
+    case $i in
+             [A-Z]) $MAKEDEV $i;;
+
+        [A-Z][0-9]) $MAKEDEV $i;;
+
+        [A-Z][A-Z]) $MAKEDEV $i;;
+
+              DESC) MAKEDESC=yes;;
+    esac
+done
+
+if [ $MAKEDESC = yes ]; then
+    $MAKEDEV DESC
+fi
+
+if [ -r LINKFILE ]; then
+	. LINKFILE
+fi

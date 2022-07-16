@@ -1,0 +1,11 @@
+#! /sbin/sh
+
+#       Copyright(c) 1988, Sun Microsystems, Inc.
+#       All Rights Reserved
+
+#ident	"@(#)ucbrefer:papers/runinv	1.1.1.1"
+
+/usr/ucblib/reftools/mkey R* | /usr/ucblib/reftools/inv -v -h997 -n Xind
+mv Xind.ia Ind.ia
+mv Xind.ib Ind.ib
+mv Xind.ic Ind.ic

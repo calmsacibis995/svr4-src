@@ -1,0 +1,2 @@
+#ident	"@(#)/usr/src/add-on/pkg.xx/postremove.sl 1.1 4.0 12/08/90 47948 AT&T-USL"
+cp /usr/bin/x286 /usr/bin/x286emul > /dev/null 2>&1

@@ -1,0 +1,44 @@
+#ident	"@(#)pkg.pc586:prototype	1.1.1.2"
+
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+!PACKDIR=/usr/src/pkg/pc586
+
+i pkginfo
+i postinstall
+i preremove
+i request
+i depend
+i copyright
+i address
+
+!OAMBASE=/usr/sadm/sysadm
+!PKGINST=pc586
+!PKGSAV=/var/sadm/pkg/$PKGINST/save
+!default 0544 bin bin
+d none /tmp	?	?	?
+d none /tmp/pc586		775	bin	bin
+v none /tmp/pc586/Driver.o=$PACKDIR/Driver.o ? ? ?
+v none /tmp/pc586/Space.c=$PACKDIR/Space.c ? ? ?
+v none /tmp/pc586/Master=$PACKDIR/Master ? ? ?
+v none /tmp/pc586/System=$PACKDIR/System ? ? ?
+v none /tmp/pc586/Node=$PACKDIR/Node ? ? ?
+
+d none	usr	?	?	?
+d none	usr/include	?	?	?
+d none	usr/include/sys	?	?	?
+
+#	header files: default owner=bin group=bin mode=0444
+
+!default 0444 bin bin
+f none	usr/include/sys/82586.h=/usr/src/pkg/pc586/sys/82586.h
+f none	usr/include/sys/pc586.h=/usr/src/pkg/pc586/sys/pc586.h
+

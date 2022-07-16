@@ -1,0 +1,18 @@
+#ident	"@(#)/usr/src/add-on/pkg.inet/pkginfo.sl 1.1 4.0 12/08/90 45792 AT&T-USL"
+#
+# 	INET pkginfo
+#
+PKG="inet"
+NAME="internet utilities"
+RELEASE="4.0"
+VERSION="1"
+VENDOR="AT&T-SF"
+ARCH="i386"
+VERSION="1.0"
+CATEGORY="system,utilities"
+BASEDIR=""
+CLASSES="none build"
+PREDEPEND="inet"
+MAXINST="1"
+ISTATES="2"
+RSTATES="2"

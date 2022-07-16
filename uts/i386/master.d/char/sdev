@@ -1,0 +1,6 @@
+#ident	"@(#)master:char/sdev	1.2"
+#ifdef MBUS
+char	N	1	0	0	0	0	0	0	0
+#else
+char	Y	1	0	0	0	0	0	0	0
+#endif

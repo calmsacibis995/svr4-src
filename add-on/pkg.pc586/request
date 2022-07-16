@@ -1,0 +1,38 @@
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+#ident	"@(#)/usr/src/add-on/pkg.pc586/request.sl 1.1 4.0 12/08/90 48426 AT&T-USL"
+
+#	request script for pc586 package installation
+
+trap 'exit 3' 15
+
+REQINTV=`ckitem -u -l "These interrupts may be available" \
+-p "Type the interrupt at which your pc586 board is jumpered.\n" -d 12 "2" "3" "4" "5" "7" "10" "12" "15"` || exit $? 
+
+echo "REQINTV=$REQINTV" >>$1 || exit 1
+
+# Prompt script to allow the user to select installation
+# of addresses of their choice 
+#
+
+echo "\n\nThe following is a list of I/O high and low addresses" 
+echo "at which your ethernet controller may be jumpered"
+
+REQLADD=`ckitem -l "low addr    high addr" \
+-p "Type the menu number for the address you are using.\n" \
+-h "Type the menu number that corresponds to the address at which your pc586 \
+board is jumpered." \
+-d 0D0000 "F00000 F27FFF" "0C0000 0C7FFF" "0C8000 0CFFFF" "0D0000 0D7FFF" "0D8000 0DFFFF" "F40000 F67FFF" "F80000 FA7FFF"` || exit $?
+
+echo "REQLADD=$REQLADD" >>$1 || exit 1
+
+exit 0
+

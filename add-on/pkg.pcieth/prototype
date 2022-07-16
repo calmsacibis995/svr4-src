@@ -1,0 +1,21 @@
+#ident	"@(#)pkg.pcieth:prototype	1.2"
+#	Copyright (c) 1989  Locus Computing Corporation
+#	All Rights Reserved
+#
+#	@(#)prototype	1.2	2/9/90 14:26:37
+#
+i copyright
+i depend
+i pkginfo
+f none /etc/rc2.d/S95pci	744 bin bin
+l none /etc/rc3.d/S95pci=/etc/rc2.d/S95pci
+l none /etc/rc0.d/K95pci=/etc/rc2.d/S95pci
+l none /etc/rc1.d/K95pci=/etc/rc2.d/S95pci
+d none /usr/pci/bin		755 bin bin
+f none /usr/pci/bin/pcistart	744 bin bin
+f none /usr/pci/bin/pcistop	744 bin bin
+f none /usr/pci/loadpci		755 bin bin
+f none /usr/pci/pciconsvr.eth	755 bin bin
+f none /usr/pci/pcidosout.eth	755 bin bin
+f none /usr/pci/pcidossvr.eth	755 bin bin
+f none /usr/pci/pcimapsvr.eth	755 bin bin

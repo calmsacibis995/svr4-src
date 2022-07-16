@@ -1,0 +1,29 @@
+#ident	"@(#)/usr/src/add-on/pkg.sec/postinstall.sl 1.1 4.0 12/08/90 19032 AT&T-USL"
+
+#
+#	386 Security Add-on - kernel parts
+#
+TMP=/tmp/des.ierr
+ERROR1=" Errors have been written to the file $TMP."
+rm -f $TMP > /dev/null 2>&1
+VER=`uname -r`
+if [ "$VER" -lt "4.0" ]
+then
+	message "This package can only be installed on a UNIX System V Release 4.0 System. Your system has a different UNIX release installed. You can determine the release by typing 'uname -r'. The installation is now being terminated."
+	exit 1
+fi
+
+cd /tmp/des
+/etc/conf/bin/idcheck -p des > /dev/null 2>&1
+IDCD=$?
+mkdir /etc/conf/pack.d/des > /dev/null 2>&1
+mv Driver_d.o /etc/conf/pack.d/des/Driver_d.o
+if [ ${IDCD} = 31 ]
+then
+	echo "Installing the Domestic Version of DES Driver.o"
+	ln /etc/conf/pack.d/des/Driver_d.o /etc/conf/pack.d/des/Driver.o
+	/etc/conf/bin/idbuild 2> /dev/null
+fi
+installf -f $PKGINST
+rm -f $TMP
+exit 10

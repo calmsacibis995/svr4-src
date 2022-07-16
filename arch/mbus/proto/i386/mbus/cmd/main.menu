@@ -1,0 +1,38 @@
+: /bin/sh
+#	Copyright (c) 1987, 1988  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+
+#ident	"@(#)mbus:proto/i386/mbus/cmd/main.menu	1.1"
+#
+# main screen
+Main_menu () { cat << HERE
+
+                         System V/${CPU} ${REL}
+                         TAPE DISTRIBUTION  SYSTEM 
+
+
+
+1) Software Installation:   Choose this action to select the SOFTWARE
+                            INSTALLATION menu.
+
+2) Maintenance/repair:      Choose this action to mount root file system
+                            and exit to the shell.
+
+3) Low Level Format:        Choose this action to perform a low level 
+                            format on the hard disk.
+
+
+
+
+
+
+
+
+HERE
+}

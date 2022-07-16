@@ -1,0 +1,13 @@
+/*
+#ident	"@(#)mb1:uts/i386/boot/mb1/ifile	1.1"
+*/
+
+SECTIONS
+{
+	GROUP:
+	{	.text: {}
+		.data: {}
+		.bss:  {}
+	}
+}
+

@@ -1,0 +1,58 @@
+#	Copyright (c) 1988  Intel Corporation
+#	All Rights Reserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+#ident	"@(#)mbus:cmd/bootutils/config.d/config.520	1.1"
+#
+# sample configuration file  for SYP520
+#
+#	This configuration file is set up to work with both flavors  
+#	of the SYP520. 
+#	(I) iSBC 386/258 with CSM 002 and iSBX 279 in slot 0, 
+#	iSBC 386/120 in slot 2, etc. and   
+#	(II) CSM 001 in slot 0, iSBC 386/258 with iSBX 279 in slot 1, 
+#	iSBC 386/120 in slot 3, etc. 
+#
+[BL_Host_id=GLOBAL];
+	pci_hosta = 0;
+	pci_hostb = 1;
+	unix_hosta = 2;
+	unix_hostb = 3;
+	unix_hostc = 4;
+
+# PCI Host
+
+[BL_Host_id=$pci_hosta];
+	BL_QI_Master = $unix_hosta;
+	BL_Target_file = /etc/default/bootserver/pci258;
+	BL_mode = p;
+
+# PCI Host
+
+[BL_Host_id=$pci_hostb];
+	BL_QI_Master = $unix_hostb;
+	BL_Target_file = /etc/default/bootserver/pci258;
+	BL_mode = p;
+
+# Unix Host  #1 or
+
+[BL_Host_id=$unix_hosta];
+	BL_Target_file = /unix;
+
+# Unix Host #1 
+
+[BL_Host_id=$unix_hostb];
+	BL_Target_file = /unix;
+
+# Unix Host  #2
+
+[BL_Host_id=$unix_hostc];
+	BL_Target_file = /unix;
+
+
+

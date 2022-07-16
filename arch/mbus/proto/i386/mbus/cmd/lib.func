@@ -1,0 +1,902 @@
+#	Copyright (c) 1987, 1988, 1990  Intel Corporation
+#	All Rights Reserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+
+#ident	"@(#)mbus:proto/i386/mbus/cmd/lib.func	1.1.4.1"
+
+Select () {
+  echo "$MENU menu"
+  echo "Options:  ! (shell) r (return) q (shutdown system)"
+  echo "Select action to perform: \c"
+  read entry
+}
+Ask () {
+	echo "\n$* \c"
+	read answer
+	case $answer in
+		.*)	tmp="$*"
+			set $answer
+			shift
+			eval "$*"
+			[ -n "$tmp" ] && set $tmp
+			Ask $*
+			;;
+		esac
+}
+Clear () {
+#	echo "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+	echo
+}
+
+Pause () {
+	echo "\nType <RETURN> to continue  \c"
+	read return
+		case $return in
+	   		.*)	tmp="$*"
+				set $return
+				shift
+				eval "$*"
+				[ -n "$tmp" ] && set $tmp
+				Pause
+			;;
+		esac
+	Clear
+	return 0
+}
+Yesno () {
+	Pause
+}
+Quit () {
+	cd /
+	sync
+	sleep 2
+	sync
+	sleep 2
+	sync
+	[ -s /tmp/mounts ] && Do_umount 
+	echo "About to shut the system down"
+	/usr/lib/tape/tapecntl -w >/dev/null 2>&1
+	PS1="" export PS1   # just to keep things neat
+	/sbin/uadmin 2 0 &
+	sleep 60
+}
+Env () {
+	cat >/tmp/env <<-here
+		CPU="$CPU"
+		DEBUG="$DEBUG"
+		PATH="$PATH"
+		ROOT="$ROOT"
+		TERM="$TERM"
+		TERMINFO="$TERMINFO"
+		DSK="$DSK"
+		DEF_DSK_SET="$DEF_DSK_SET"
+		PARAMS_SET="$PARAMS_SET"
+here
+}
+Err (){
+	stat=$?
+	DSK=${DSK:-0}
+	echo "$*  Failed Status = $stat"
+	# Allow error to be seen on screen.
+	Pause
+	Do_umount 
+	Do_unswap $DSK 
+	Env
+	kill -9 0
+	return 0
+}
+Do_swap () {
+	DSK=${DSK:-0}
+	swap -a /dev/dsk/${DSK}s2 0 4096 >/dev/null 2>&1 
+	return 0
+}
+Do_unswap () {
+	DSK=${DSK:-0}
+	swap -d /dev/dsk/${DSK}s2 0 >/dev/null 2>&1 
+	return 0
+}
+Do_mount () {
+	STAT=0
+	nocheck=0
+	count=3
+	[ -z "$1" -o -z "$2" -o -z "$3" ] && {
+		echo "Usage: $0 [-n] devnum dir fstype"
+		return 2
+	}
+	[ $1 = -n ] && {
+		nocheck=1
+		shift
+	}
+	dev="$1"
+	dir="$2"
+	fstype="$3"
+	[ -d $dir ] || mkdir $dir
+	while [ $count -ne 0 ]
+	do
+		echo "Mounting $dev on $dir with fstype $fstype"
+		case $fstype in
+			s5)  /etc/fs/s5/mount $dev $dir >/dev/null 2>&1 ||STAT=$?
+				[ $nocheck -eq 1 ] && break
+				if [ $STAT -ne 0 ];then
+					/etc/fs/s5/fsck -y $dev
+				else
+					break
+				fi
+				count=`expr $count - 1 `
+				;;
+			bfs)  /etc/fs/bfs/mount $dev $dir >/dev/null 2>&1 ||STAT=$?
+				[ $nocheck -eq 1 ] && break
+				if [ $STAT -ne 0 ];then
+					/etc/fs/bfs/fsck -y $dev
+				else
+					break
+				fi
+				count=`expr $count - 1 `
+				;;
+			ufs)  /etc/fs/ufs/mount $dev $dir >/dev/null 2>&1 ||STAT=$?
+				[ $nocheck -eq 1 ] && break
+				if [ $STAT -ne 0 ];then
+					/etc/fs/ufs/fsck -y $dev
+				else
+					break
+				fi
+				count=`expr $count - 1 `
+				;;
+		esac
+	done
+	sync
+	sync
+	# 
+	# add to the list of things to unmount
+	#
+	[ $STAT -eq 0 ] && {
+		[ -f /tmp/mounts ] && mv -f /tmp/mounts /tmp/omounts
+		echo $dev >/tmp/mounts
+		[ -f /tmp/omounts ] && cat /tmp/omounts >>/tmp/mounts 
+	}
+	return $STAT
+}
+
+Do_umount () {
+	cd /
+	STAT=0
+	echo 
+	ROOT=${ROOT:-"/mnt"}
+	[ -f $ROOT/etc/vfstab ] && {
+		while read   device rdevice dir fstype junk doit junk
+		do
+			case $device in
+				\#*)	continue;;
+				 '')	continue;;
+			esac
+			[ $dir = "/" ] && continue
+			[ $dir = "/$ROOT" ] && continue
+			[ $doit = "no" ] && continue
+			echo "Unmounting $ROOT/$dir"
+			umount $ROOT/$dir >/dev/null 2>&1 || \
+				echo "unmount of  $dir failed"
+		done < $ROOT/etc/vfstab
+	}
+	sync
+	for i in `cat /tmp/mounts 2>/dev/null`
+	do
+		sync
+		sleep 2
+		sync
+		echo "Unmounting $i"
+		umount $i  >/dev/null 2>&1
+	done
+	# note this is all or nothing.. since umounts on unmounted things
+	# hang things it less destructive this way.
+	rm -f /tmp/mounts /tmp/omounts
+	umount $ROOT >/dev/null 2>&1
+	return $STAT
+}
+# Do_savefiles and Do_restorfiles
+# comments supported with following restrictions:
+#	comment is #, with space seperating it and first word
+#   at most 26 words per comment line.
+#
+#	state of s means only save, no restore
+#	state of r means save and restore
+#
+Do_savefiles () {
+	ROOT=${ROOT:-"/mnt"}
+	ROOTFREE=${ROOTFREE:-1000}
+	USRFREE=${USRFREE:-3000}
+	tofull=1
+	DSK=${DSK:-0}
+	instdir=$ROOT/opt
+	save_loc=""
+	prod=""
+	exit=0
+	while [ -n "$1" ]
+	do
+		case "$1" in
+			-p) prod=$2;shift;;		
+			-s) save_loc=$2;shift;;		
+			-e) askeach=1;;
+			-r) ROOT=$2;shift;;		
+			-exit) exit=1;;				# return now !
+			-x) set -x;;
+		esac
+		shift
+	done
+	[ $exit -eq 1 ] && return 0
+	[ -z "$prod" ] && {
+  	  echo "Usage:$0 -p product -r root dir -s save location -e -x"
+ 	  return 2
+	}
+	[ -z "$save_loc" ] && save_loc=$instdir/$prod/save.d
+	savefile=$instdir/$prod/savefile
+	STAT=0
+	while [ $tofull -eq 1 ]
+	do
+		tofull=0
+		set `df /dev/dsk/${DSK}s1`
+		[ $4 -le $ROOTFREE ] && {
+			echo "Insufficient free space in /mnt."
+			echo "$ROOTFREE block needed, $4 blocks available"
+			tofull=1
+		}
+		set `df /dev/dsk/${DSK}s3`
+		[ $4 -le $USRFREE ] && {
+			echo "Insufficient free space in /mnt/usr."
+			echo "$USRFREE block needed, $4 blocks available"
+			tofull=1
+		}
+		[ $tofull -eq 1 ] && {
+			Ask "Enter the shell to correct (y/[n]):"
+			case $answer in
+				y*)	echo "\n\nType exit to continue"
+					sh -i;;
+				 *)     [ -z "1" ] || Err "Do_savefiles " 
+			esac
+		}
+	done
+	here=`pwd`
+	cd $ROOT
+	[  -d $save_loc ] || mkdir $save_loc
+	STAT=$?
+	[ $STAT -ne 0 ] && return $STAT
+	while read state flist junk
+	do
+	  [ -z "$state" ] && continue
+	  [ $state = "#" ] && continue
+	  for file in $flist
+		do
+		echo "$file\c"
+		if [ -f $file ];then
+			echo $file|cpio -pdmu $save_loc 2>/dev/null||Err cpio of $file 
+			echo "\t\tsaved \c"
+			if [ $state = "r" ];then
+				echo "for restore"
+			else
+				echo
+			fi
+		else
+			echo "\t\tnot found"
+		fi
+	  done
+	done < $savefile
+	cd  $here
+	return $STAT
+}
+Do_restorfiles () {
+	ROOT=${ROOT:-"/mnt"}
+	instdir=$ROOT/opt
+	save_loc=""
+	prod=""
+	askeach=0
+	exit=0
+	while [ -n "$1" ]
+	do
+		case "$1" in
+			-p) prod=$2;shift;;		
+			-s) save_loc=$2;shift;;		
+			-r) ROOT=$2;shift;;		
+			-e) askeach=1;;
+			-exit) exit=1;;				# return now !
+			-x) set -x;;
+		esac
+		shift
+	done
+	[ $exit -eq 1 ] && return 0
+	[ -z "$save_loc" ] && save_loc=$instdir/$prod/save.d
+	[ -z "$prod" ] && {
+  	  echo "Usage:$0 -p product -r root dir -s save location -x"
+ 	  return 2
+	}
+	savefile=$instdir/$prod/savefile
+	STAT=0
+	here=`pwd`
+	cd $ROOT	
+	[ -d $save_loc ] || {
+		STAT=$?
+		return $STAT
+	}
+	while read state flist junk
+	do
+	  [ -z "$state"  ] && continue		# do nothing if its null
+	  [ $state = "#" ] && continue		# do nothing if its a comment
+	  [ $state = s   ] && continue		# do nothing is its a save only file
+	  for file in $flist
+		do
+		[ $askeach -eq 1 ] && {
+			echo "Restore $file <y/[n]> (or c to continue) : \c"
+			read yesno </dev/tty
+			case $yesno in
+				n)	continue;;
+				c)  askeach=0;;
+			esac
+		}
+		echo "$file\c"
+		if [ -f $file ];then
+			cp $save_loc/$file $ROOT/$file
+			echo "\t\trestored"
+		else
+			echo "\t\tnot found"
+		fi
+	  done
+	done < $savefile 
+	cd  $here
+	return $STAT
+}
+Do_elements() {
+IFS="	"
+DSK=$1
+OPTION=$2
+OFS=$IFS
+while read ele name ro disk1 disk2 slice sz min_sz vfst
+do
+	if [ "$ele" = "#" -o "$ele" = "" ];then 
+		continue
+	fi
+	if [ "${OPTION}" = "REQ" ];then
+		if [ "$ro" = "R" ];then
+			echo "$DSK\t$name\t$vfst\t$ele"
+			continue
+		fi
+	fi
+	if [ "$ro" != "${OPTION}" ];then 
+		continue
+	fi
+	if [ "${OPTION}" != "R" ];then
+		echo "\nCreate a slice for ${ele} (y or n)? \c"
+		read ans  </dev/tty
+	else
+		ans=Y
+	fi
+	while [ 1 ]
+	do
+		if [ "$ans" = "y" -o "$ans" = "Y" ];then
+			if [ "$vfst" != "" ];then
+			    while [ 1 ]
+			    do
+					IFS=", "
+					set $vfst
+			    		IFS=$OFS
+					if [ "$1" = "$vfst" ];then 
+						ans=$1
+						break
+					fi
+					echo "\nPlease select the File System Type for ${name} (${ele})"
+					echo "from the following list:"
+					echo "\t${vfst}"
+					echo "\ndefault($1): \c" 
+					read fans  </dev/tty
+					case $fans in
+						'') ans=$1;break;;
+						ufs|bfs|s5|s52k) ans=$fans;break;;
+						 *) echo "Please enter one of $vfst";;
+					esac
+			    done
+			    IFS=$OFS
+			else 
+				ans="-"
+			fi
+			drive=$DSK
+			echo "${drive}\t${name}\t${ans}\t${ele}" >> /tmp/hd.lay.0
+			if [ "${ele}" = "/" ];then
+				echo "$ans" > /tmp/ROOTFS
+			fi
+			break
+		elif [ "$ans" = "n" -o "$ans" = "N" ];then	
+			break
+		else
+			echo "Please answer \"y\" or \"n\": \c"
+			read ans  </dev/tty
+		fi
+	set +x
+	done
+done < /etc/default/disksetup
+IFS="$OFS"
+}
+
+Do_detune () {
+MEM=$1
+DISK=$2
+SWAPMULT=$3
+THRESHOLD=12	# MB
+mv /tmp/hd.lay /tmp/hd.tmp
+OFS=$IFS
+IFS="	"
+while read slice ele fsty sz min_sz_ro
+do
+	if [ "$ele" = "/dev/swap" ];then
+		min_sz=`expr $min_sz_ro : '\(.*\)[RO]$'`
+		ro=`expr $min_sz_ro : '.*\([RO]\)$'`
+		T2=`expr $THRESHOLD \* 2`
+		if [ $MEM -gt $T2 ];then
+			min_sz=$MEM
+		else
+			if [ $MEM -gt $THRESHOLD ] ; then
+				MEMPROD=`expr $min_sz + $MEM`
+				if [ `expr $MEMPROD % 2` -ne 0 ] ; then
+					min_sz=`expr $MEMPROD / 2 + 1`
+				else
+					min_sz=`expr $MEMPROD / 2`
+				fi
+			fi
+		fi
+		min_sz_ro=${min_sz}${ro}
+		sz=${min_sz}M
+	fi
+	echo "${slice}	${ele}	${fsty}	${sz}	${min_sz_ro}" >> /tmp/hd.lay
+done < /tmp/hd.tmp
+rm -f /tmp/hd.tmp
+IFS="$OFS"
+}
+
+Do_parts() {
+		echo "The following hard disk elements are required and"
+		echo "must reside on your primary (disk 0) hard disk:"
+		echo "Drive\tName            \tType\tFile System/Slice"
+		echo "-----\t----------------\t----\t-----------------"
+		Do_elements $DSK REQ 
+
+		while [ 1 ]
+		do
+			> /tmp/hd.lay.0
+			Do_elements $DSK R 
+
+			echo "\nDo you wish to create any optional"
+			echo "disk slices or filesystems (y or n)? \c"
+			while read ans </dev/tty
+			do
+			if [ "$ans" = "y" -o "$ans" = "Y" ];then
+				Do_elements $DSK O 
+			elif [ "$ans" != "n" -a "$ans" != "N" ];then 
+				echo "Please answer \"y\" or \"n\": \c"
+			     continue
+			fi
+			break
+			done
+			echo "\nThe Hard disk layout you have selected is:\n"
+			echo "Drive\tName            \tType\tFile System/Slice"
+			echo "-----\t----------------\t----\t-----------------"
+			cp /tmp/hd.lay.0 /dev/console
+			echo "\nIs this correct (y or n)? \c"
+			while read ans
+			do
+				if [ "$ans" = "y" -o "$ans" = "Y" -o "$ans" = "n" -o "$ans" = "N" ];then 
+					break
+				else 
+					echo "Please answer \"y\" or \"n\": \c"
+				fi
+			done
+			if [ "$ans" = "y" -o "$ans" = "Y" ];then 
+				break
+			fi
+		done
+		echo "\n"
+}
+
+Do_dsetup()
+{
+DISK=$1
+OFS=$IFS
+ONEMB=1048576
+MEM=`memsize`
+IFS="	"
+
+if [ `expr $MEM % $ONEMB` -ne 0 ];then
+	MEM=`expr $MEM / $ONEMB + 1`
+else
+	MEM=`expr $MEM / $ONEMB`
+fi
+> /tmp/hd.lay
+SWAPMULT=0
+
+SWAPMULT=`while read drive name fsty ele
+do
+	IFS="	"
+	while read tele name ro disk1 disk2 slice sz min_sz vl
+	do
+	if [ "$ele" = "$tele" ];then
+		if [ "$ele" = "/dev/swap"  -o "$ele" = "/dev/dump" ];then
+			if [ \`expr $sz : '.*m$'\` -eq 0 ];then
+				min_sz=\`expr $sz : '\(.*\)[MW]$'\`
+			else
+				MULT=\`expr $sz : '\(.*\)m$'\`
+				if [ "$ele" = "/dev/swap" ];then
+					echo $MULT
+				fi
+				min_sz=\`expr $MEM \* $MULT\`
+				sz=${min_sz}M
+			fi
+		fi
+		echo "${slice}	${ele}	${fsty}	${sz}	${min_sz}${ro}" >> /tmp/hd.lay
+		break;
+	fi
+	done < /etc/default/disksetup
+done < /tmp/hd.lay.0`
+IFS="$OFS"
+
+Do_detune $MEM $DISK $SWAPMULT
+}
+
+Do_disksetup () {
+	dsk=$1
+	disksetup -d /tmp/hd.lay -I -B -b /etc/dsboot /dev/rdsk/${dsk}s0 || STAT=$?
+	sync
+	return $STAT
+}
+
+Do_tag_files () {
+	# $1 = mount point (ROOT)
+	# $2 = product
+	# $3 = tag
+
+	root=$1
+	prod=$2
+	tag=$3
+	instdir=$root/opt
+	case $tag in
+
+		installed)	
+			echo "DATE=`date`" 	 >>$instdir/$prod/.installed
+			echo "Version=$VERS"     >>$instdir/$prod/.installed
+			echo "Rel=$REL" 	 >>$instdir/$prod/.installed
+			;;
+	esac
+	sync
+}
+
+Do_cpio () {
+	ROOT=${ROOT:-"/mnt"}
+	here=`pwd`
+	rflags=""		
+	sflags=""
+	PROD="System V Release 4.0"
+	prod="unix"
+	while [ -n "$1" ]
+	do
+		case "$1" in
+			-r) ROOT=$2;shift;;		
+			-e) rflags="$rflags -e";;		
+			-S) sflags="$sflags -exit";;	# don't save files	
+			-R|-exit) rflags="$rflags -exit";;	# don't restore files	
+			-x) set -x;;
+		esac
+		shift
+	done
+	sync
+	cd $ROOT
+	instdir=${instdir:-"$ROOT/opt"}
+	#
+	# Note that the following presumes that
+	# we are only installing a unix product. 
+	#
+	start=5
+	echo "Rewinding installation tape..."
+	/usr/lib/tape/tapecntl -w
+	/usr/lib/tape/tapecntl -p $start
+	[ -f $instdir/$prod/savefile ] && Do_savefiles  -p $prod $sflags 
+	sync
+	echo "Loading $PROD files onto hard disk"
+	cpio -iBcdmuV </dev/rmt/c0s0n  ||Err cpio for $prod 
+	[ -f $instdir/$prod/savefile ] && Do_restorfiles -p $prod $rflags
+	Do_tag_files $ROOT $prod installed
+	cd $here
+	sync
+	/usr/lib/tape/tapecntl -w
+	return 0
+}
+
+Do_setup () {
+	ROOT=${ROOT:-"/mnt"}
+	tmp=$1
+	DSK=${DSK:-0}
+	INST_TYPE=${tmp:-init}
+	DRIVES=""
+	fstype=""
+
+	fstype=`while read junk junk dir fstype junk junk junk;do
+			if [ $dir = "/usr" ];then
+				echo $fstype
+				break
+			fi
+		done < $ROOT/etc/vfstab`
+
+	#
+	# first make sure that the things needed by the rc scripts
+	# get put on the root partition
+	#
+	[ "$fstype" != "" ] && umount $ROOT/usr >/dev/null 2>&1 
+	[ -d $ROOT/usr ] || mkdir $ROOT/usr
+	[ -d $ROOT/usr/bin ] || mkdir $ROOT/usr/bin
+	[ -d $ROOT/usr/lib ] || mkdir $ROOT/usr/lib
+	cp /usr/lib/libc.so.1 $ROOT/usr/lib
+	cp /usr/bin/sleep /usr/bin/mv $ROOT/usr/bin
+	[ "$fstype" != "" ] && Do_mount /dev/dsk/${DSK}s3 $ROOT/usr $fstype > /dev/null 2>&1
+	cp /tmp/ROOTFS $ROOT/tmp
+	rm /tmp/ROOTFS
+
+#  The following code was moved from setup (what to copy into vfstab) 
+#  and added to the loop 
+
+	[ -f $ROOT/etc/vfstab ] && cp $ROOT/etc/vfstab $ROOT/etc/vfstab-
+echo "/proc	-	/proc	proc	-	no	-" >> $ROOT/etc/vfstab
+echo "/dev/fd	-	/dev/fd	fdfs	-	no	-" >> $ROOT/etc/vfstab
+echo "/dev/dsk/f0t	/dev/dsk/f0t	/install	s5	-	no	-" >> $ROOT/etc/vfstab
+echo "/dev/dsk/f1t	/dev/dsk/f1t	/install	s5	-	no	-" >> $ROOT/etc/vfstab
+echo "/dev/dsk/f0	/dev/dsk/f0	/install	s5	-	no	-" >> $ROOT/etc/vfstab
+echo "/dev/dsk/f1	/dev/dsk/f1	/install	s5	-	no	-" >> $ROOT/etc/vfstab
+	sync
+	cp /etc/fs/s5/labelit $ROOT/etc/fs/s5/labelit
+	cp /etc/fs/ufs/labelit $ROOT/etc/fs/ufs/labelit
+	cp /sbin/initial $ROOT/sbin
+	chroot $ROOT /sbin/sh /opt/unix/setup $DSK
+	rm -f $ROOT/sbin/initial
+	#
+	rm -f $ROOT/dev/root $ROOT/dev/swap $ROOT/dev/rroot $ROOT/dev/rswap
+	rm -f $ROOT/dev/dsk/?s* $ROOT/dev/rdsk/?s* 
+	minor_offset=`expr $DSK \* 16`
+	for i in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+	do
+		minor=`expr $minor_offset + $i `
+		mknod $ROOT/dev/dsk/${DSK}s${i} b 0 $minor
+		mknod $ROOT/dev/rdsk/${DSK}s${i} c 0 $minor
+	done
+	#
+	# NOTE: these raw devices are linked to the
+	#       block dev's for now, many std ATT functions use
+	#       the raw device for non-sector size reading
+	#
+	ln $ROOT/dev/dsk/${DSK}s1 $ROOT/dev/root
+	ln $ROOT/dev/dsk/${DSK}s1 $ROOT/dev/rroot
+	ln $ROOT/dev/dsk/${DSK}s2 $ROOT/dev/swap
+	ln $ROOT/dev/dsk/${DSK}s2 $ROOT/dev/rswap
+
+	# Create /etc/partitions
+	/sbin/prtvtoc -f $ROOT/etc/partitions -e /dev/rdsk/${DSK}s0 > /dev/null 2>&1
+
+#	prtvtoc /dev/rdsk/${DSK}s0 | grep "DUMP" > /dev/null 2>&1
+#	if [ "$?" = "0" ]
+#	then
+#		Node=`expr  6 + \( $DSK \* 16 \) `
+#		mknod $ROOT/dev/dump b 0 $Node  2>/dev/null
+#		grep -v "PANICBOOT" < $ROOT/etc/default/init > /tmp/TTT
+#		cat /tmp/TTT > $ROOT/etc/default/init
+#		rm -rf /tmp/TTT
+#		echo "PANICBOOT=YES" >> $ROOT/etc/default/init
+#		ed $ROOT/etc/conf/cf.d/sassign <<-! > /dev/null 2>&1
+#		/dump/
+#		s/2/$Node/
+#		w
+#		q
+#		!
+#	fi
+	#
+	#
+	sync
+	#
+	date >  $ROOT/etc/.new_unix 
+	#
+	#	Rebuild mdevie and fix any module dependencies
+	#
+	conf=$ROOT/etc/conf/cf.d
+	oconf=$ROOT/opt/unix/save.d/etc/conf/cf.d
+	sdev=$ROOT/etc/conf/sdevice.d
+	sdev_save=$ROOT/etc/conf/sdevice.master
+	osdev=$ROOT/opt/unix/save.d/etc/conf/sdevice.d
+
+	if [ -f $oconf/mdevice ];then
+		#
+		# save the new stuff
+		#
+		[ -f $conf/mdevice.master ] || cp $conf/mdevice $conf/mdevice.master
+		[ -d $sdev_save ] || {
+			mkdir $sdev_save
+			cp $sdev/* $sdev_save
+		}
+		#
+		# save new files, and restore originals.
+		#
+		for i in init.base stune mtune sassign 
+		do
+			[ -f $conf/${i}.master ] || cp $conf/$i $conf/${i}.master
+			cp $oconf/$i $conf/$i
+		done
+		while read name rest
+		do
+			[ -z "$name" ] && continue 			#skip blank lines	
+			grep "^$name[ 	]" $conf/mdevice >/dev/null 2>&1 
+			case $? in  						#add any that wern't found
+				1)	echo "$name\t$rest" >>$conf/mdevice
+					echo ".\c"
+					;;
+			esac
+		done <$oconf/mdevice
+		echo "\n"
+		cp $osdev/* $sdev
+		#
+		# rebuild a overinstall kernel
+		#
+		( unset ROOT;chroot /mnt /sbin/sh /etc/conf/bin/idbuild )
+		[ $? -ne 0 ] && {
+			echo "Kernel Build Failed, with merged configuration files"
+			echo "New configuration files are in /etc/conf/sdevice.master"
+			echo "and /etc/conf/cf.d/mdevice.master. You must edit these "
+			echo "files, build a new kernel and remove any old driver"
+			echo "packages, prior to installing new packages."
+			# 
+			# don't indicate a new kernel is present
+			#
+			rm -f $ROOT/etc/.new_unix >/dev/null 2>&1
+			Pause
+			return 0
+		}
+		echo "Kernel merge complete. If you have made changes to files in:"
+		echo "\t/etc/conf/pack.d,\n\t/etc/conf/sdevice.d,\n\t/etc/conf/init.d"
+		echo "\t/etc/conf/node.d,\n\t/etc/conf/mfsys.d, or\n\t/etc/conf/sfsys.d"
+		echo "You must restore these changes by hand. Your modifications have"
+		echo "been saved in /opt/unix/save.d\n"
+		[ -f $ROOT/etc/conf/cf.d/unix ] && rm -f $ROOT/unix
+		ln $ROOT/etc/conf/cf.d/unix $ROOT/unix
+		cp $ROOT/etc/conf/cf.d/unix $ROOT/stand/unix
+	fi
+}
+Do_allmount () {
+	ROOT=${ROOT:-"/mnt"}
+	ROOTFS=""
+	echo "Checking for root file system type"
+	/etc/fs/bfs/mount /dev/dsk/${DSK}s10 $ROOT >/dev/null 2>&1
+	if [ $? -eq 0 ];then
+		[ -f $ROOT/boot ] && ROOTFS=`while read line;do
+			tmp=\`expr $line : 'rootfs.*=\(.*\)' 2>/dev/null\`
+			if [ $? -eq 0 ];then
+				echo $tmp
+				break
+			fi
+		done < $ROOT/boot`
+		umount $ROOT > /dev/null 2>&1
+	fi
+
+	#
+	# Note that it is presumed that root is mounted first !
+	#
+	if [ "$ROOTFS" != "" ];then
+		Do_mount /dev/dsk/${DSK}s1 $ROOT $ROOTFS || Err Do_allmount root $ROOTFS mount
+	else
+		# Do your best, but don't fsck wrong f.s. type
+		echo "	Unable to determine root file system type, trying s5"
+		Do_mount -n /dev/dsk/${DSK}s1 $ROOT s5
+		if [ $? -ne 0 ];then
+			echo "	Unable to mount root as s5, trying ufs"
+			Do_mount -n /dev/dsk/${DSK}s1 $ROOT ufs
+		fi
+		if [ $? -ne 0 ];then
+			Err Do_allmount possibly corrupted root - s5/ufs mount
+		fi
+	fi
+	[ -f $ROOT/etc/vfstab ] && {
+		while read   device rdevice dir fstype junk doit junk
+		do
+			case $device in
+				\#*)	continue;;
+				 '')	continue;;
+			esac
+			[ $dir = "/" ] && continue
+			[ $doit = "yes" ] || continue
+			Do_mount $device $ROOT/$dir $fstype || Err Do_mount $device
+		done < $ROOT/etc/vfstab
+	}
+	sync
+}
+Do_dsk_args(){
+heads=
+cyls=
+gran=1024
+secs=
+intrl=
+	echo
+	while :
+	do
+		echo 
+		while [ -z "$heads" ]
+		do
+			echo "Enter Number of heads: \c"
+			read theads
+			Do_num_arg $theads && heads=$theads
+		done
+		while [ -z "$cyls" ]
+		do
+			echo "Enter Number of cylinders: \c"
+			read tcyls
+			Do_num_arg $tcyls && cyls=$tcyls
+		done
+		while [ -z "$secs" ]
+		do
+			echo "Enter Number of sectors per track: \c"
+			read tsecs
+			Do_num_arg $tsecs && secs=$tsecs
+		done
+		while [ -z "$gran" ]
+		do
+			echo "Enter Number of bytes per sector: \c"
+			read tgran
+			Do_num_arg $tgran && gran=$tgran
+		done
+		while [ -z "$intrl" ]
+		do
+			echo "Enter Disk Interleave: \c"
+			read tintrl
+			Do_num_arg $tintrl && intrl=$tintrl
+		done
+		Do_print_dsk
+		read ans
+		case $ans in
+			y*)	echo ;PARAMS_SET=1;break;;
+		esac
+		heads=
+		cyls=
+		secs=
+		gran=
+		intrl=
+		echo
+	done
+
+}
+Do_print_dsk() {
+	echo
+	echo "Heads:             $heads"
+	echo "Cylinders:         $cyls"
+	echo "Sectors per track: $secs"
+	echo "Bytes per Sector:  $gran"
+	echo "Interleave:        $intrl"
+	echo "\nAre these correct? (y/[n]) \c"
+}
+Do_num_arg() {
+	args=$1
+
+	case $args in
+		*[a-z]*)	return 1;;
+		*[A-Z]*)	return 1;;
+			 '')	return 1;;
+	esac
+	return 0
+}
+
+Do_def_dsk() {
+	while : 
+	do
+		Ask "Select hard disk: (default is $DSK): \c"
+		case $answer in
+			0)	DSK=$answer;break;;
+			1)	DSK=$answer;break;;
+			2)	DSK=$answer;break;;
+			3)	DSK=$answer;break;;
+			4)	DSK=$answer;break;;
+		   '')	DSK=$DSK;break;;
+		    *)	echo "invalid disk number: <$DSK>";;
+		esac
+	done
+	DEF_DSK_SET=1
+}

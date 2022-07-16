@@ -1,0 +1,253 @@
+#ident	"@(#)prototype	1.2	92/12/21	JPB"
+#ident	"@(#)pkg.inet:prototype	1.32.7.2"
+
+#
+# information files
+#
+
+!PACKDIR=/etc/conf/pack.d
+!MASTDIR=/usr/src/uts/i386/master.d
+
+i depend
+i pkginfo
+i preinstall
+i postinstall
+i preremove
+i copyright
+i request
+
+!default	0775	sys	sys
+d	none	/tmp	?	?	?
+d	none	/tmp/inet	775	bin	bin
+
+v	none /tmp/inet/app.o=$PACKDIR/app/Driver.o	? ? ?
+v	none /tmp/inet/app.Master=$MASTDIR/app/mdev	? ? ?
+v	none /tmp/inet/app.System=$MASTDIR/app/sdev	? ? ?
+
+v	none /tmp/inet/arp.o=$PACKDIR/arp/Driver.o	? ? ?
+v	none /tmp/inet/arp.Master=$MASTDIR/arp/mdev	? ? ?
+v	none /tmp/inet/arp.System=$MASTDIR/arp/sdev	? ? ?
+v	none /tmp/inet/arp.Space=$MASTDIR/arp/space.c	? ? ?
+v	none /tmp/inet/arp.Node=$MASTDIR/arp/node	? ? ?
+
+v	none /tmp/inet/icmp.o=$PACKDIR/icmp/Driver.o	? ? ?
+v	none /tmp/inet/icmp.Master=$MASTDIR/icmp/mdev	? ? ?
+v	none /tmp/inet/icmp.System=$MASTDIR/icmp/sdev	? ? ?
+v	none /tmp/inet/icmp.Node=$MASTDIR/icmp/node	? ? ?
+
+v	none /tmp/inet/ip.o=$PACKDIR/ip/Driver.o	? ? ?
+v	none /tmp/inet/ip.Master=$MASTDIR/ip/mdev	? ? ?
+v	none /tmp/inet/ip.System=$MASTDIR/ip/sdev	? ? ?
+v	none /tmp/inet/ip.Space=$MASTDIR/ip/space.c	? ? ?
+v	none /tmp/inet/ip.Node=$MASTDIR/ip/node	? ? ?
+
+v	none /tmp/inet/llcloop.o=$PACKDIR/llcloop/Driver.o	? ? ?
+v	none /tmp/inet/llcloop.Master=$MASTDIR/llcloop/mdev	? ? ?
+v	none /tmp/inet/llcloop.System=$MASTDIR/llcloop/sdev	? ? ?
+v	none /tmp/inet/llcloop.Space=$MASTDIR/llcloop/space.c	? ? ?
+v	none /tmp/inet/llcloop.Node=$MASTDIR/llcloop/node	? ? ?
+
+v	none /tmp/inet/rawip.o=$PACKDIR/rawip/Driver.o	? ? ?
+v	none /tmp/inet/rawip.Master=$MASTDIR/rawip/mdev	? ? ?
+v	none /tmp/inet/rawip.System=$MASTDIR/rawip/sdev	? ? ?
+v	none /tmp/inet/rawip.Node=$MASTDIR/rawip/node	? ? ?
+
+v	none /tmp/inet/tcp.o=$PACKDIR/tcp/Driver.o	? ? ?
+v	none /tmp/inet/tcp.Master=$MASTDIR/tcp/mdev	? ? ?
+v	none /tmp/inet/tcp.System=$MASTDIR/tcp/sdev	? ? ?
+v	none /tmp/inet/tcp.Space=$MASTDIR/tcp/space.c	? ? ?
+v	none /tmp/inet/tcp.Node=$MASTDIR/tcp/node	? ? ?
+
+v	none /tmp/inet/udp.o=$PACKDIR/udp/Driver.o	? ? ?
+v	none /tmp/inet/udp.Master=$MASTDIR/udp/mdev	? ? ?
+v	none /tmp/inet/udp.System=$MASTDIR/udp/sdev	? ? ?
+v	none /tmp/inet/udp.Space=$MASTDIR/udp/space.c	? ? ?
+v	none /tmp/inet/udp.Node=$MASTDIR/udp/node	? ? ?
+
+#
+# package object files and directories
+#
+!default	0775	root	sys
+
+d	none	etc	?	?	?
+d	none	etc/init.d	?	?	?
+d	none	etc/rc0.d	?	?	?
+d	none	etc/rc2.d	?	?	?
+d	none	etc/inet 0775 root sys
+d	none	var	?	?	?
+d	none	var/spool	?	?	?
+d	none	var/spool/rwho	775	root	bin
+d	none	usr	?	?	?
+d	none	usr/lib	?	?	?
+d	none	usr/sbin	?	?	?
+d	none	usr/bin	?	?	?
+d	none	usr/include	?	?	?
+d	none	usr/include/arpa	775	bin	bin
+d	none	usr/include/protocols	775	bin	bin
+d	none	usr/include/sys	?	?	?
+d 	none	usr/sadm	?	?	?
+d 	none	usr/sadm/sysadm	?	?	?
+d 	none	usr/sadm/sysadm/menu	?	?	?
+d 	none	usr/sadm/sysadm/menu/netservices	755	bin	bin
+d 	none	usr/sadm/sysadm/menu/netservices/name_to_addr	755	bin	bin
+d 	none	usr/sadm/sysadm/menu/netservices/name_to_addr/inet	755	bin	bin
+d	none	usr/sadm/sysadm/menu/netservices/name_to_addr/inet/bin	755	bin	bin
+#
+#	init script
+#
+!default	0444	root	sys
+f	none	etc/init.d/inetinit
+f	none	etc/inet/rc.inet
+l	none	etc/rc0.d/K69inet=etc/init.d/inetinit
+l	none	etc/rc1.d/S69inet=etc/init.d/inetinit
+l	none	etc/rc2.d/S69inet=etc/init.d/inetinit
+
+!default	0444	root	sys
+f	none	usr/lib/tcpip.so
+f	none	usr/lib/resolv.so
+l	none	usr/lib/libresolv.so=usr/lib/resolv.so
+
+#
+#	administrative tables
+#
+!default	0444	root	sys
+v	none	etc/inet/hosts
+v	none	etc/inet/inetd.conf
+v	none	etc/inet/named.boot
+v	none	etc/inet/networks
+v	none	etc/inet/protocols
+v	none	etc/inet/services
+v	none	/etc/inet/shells
+v	none	etc/inet/strcf
+v	none	etc/inet/bootptab
+
+!default	0444	bin	bin
+f	none	usr/lib/nslookup.help
+
+#symlinks to traditional location
+!default	0444	root	sys
+s	none	etc/hosts=etc/inet/hosts
+s	none	etc/inetd.conf=etc/inet/inetd.conf
+s	none	etc/named.boot=etc/inet/named.boot
+s	none	etc/networks=etc/inet/networks
+s	none	etc/protocols=etc/inet/protocols
+s	none	etc/services=etc/inet/services
+s	none	etc/shells=etc/inet/shells
+s	none	etc/strcf=etc/inet/strcf
+s	none	etc/bootptab=etc/inet/bootptab
+s	none	usr/bin/ping=usr/sbin/ping
+
+
+#
+#	usr commands
+#
+!default	0555	bin	bin
+f	none	usr/bin/finger
+f	none	usr/bin/ftp
+f	none	usr/bin/netstat 02555 bin sys
+f	none	usr/bin/rcp 04555 root bin
+f	none	usr/bin/rdate
+f	none	usr/bin/rlogin 04555 root bin
+f	none	usr/bin/rsh 04555 root bin
+f	none	usr/bin/ruptime
+f	none	usr/bin/rwho
+f	none	usr/bin/talk
+f	none	usr/bin/telnet
+f	none	usr/bin/tftp
+f	none	usr/bin/whois
+
+#
+#	daemons and admin commands
+#
+!default	0555	bin	bin
+f	none	usr/sbin/arp 02555 bin sys
+f	none	usr/sbin/gettable
+f	none	usr/sbin/htable
+f	none	usr/sbin/ifconfig
+f	none	usr/sbin/in.comsat
+f	none	usr/sbin/in.fingerd
+f	none	usr/sbin/in.ftpd
+f	none	usr/sbin/in.named
+f	none	usr/sbin/nstest
+f	none	usr/sbin/nslookup
+f	none	usr/sbin/in.rarpd
+f	none	usr/sbin/in.rexecd
+f	none	usr/sbin/in.rlogind
+f	none	usr/sbin/in.routed
+f	none	usr/sbin/in.rshd
+f	none	usr/sbin/in.rwhod
+f	none	usr/sbin/in.talkd
+f	none	usr/sbin/in.telnetd
+f	none	usr/sbin/in.tftpd
+f	none	usr/sbin/in.tnamed
+f	none	usr/sbin/in.bootpd
+f	none	usr/sbin/inetd
+f	none	usr/sbin/ping 04555 root bin
+f	none	usr/sbin/route
+f	none	usr/sbin/slink 0500	root	bin
+f	none	usr/sbin/trpt
+
+#
+#	header files
+#
+!default 0444 bin bin
+f	none	usr/include/resolv.h=usr/src/head/resolv.h
+f	none	usr/include/netdb.h=usr/src/head/netdb.h
+f	none	usr/include/arpa/ftp.h=usr/src/head/arpa/ftp.h
+f	none	usr/include/arpa/inet.h=usr/src/head/arpa/inet.h
+f	none	usr/include/arpa/nameser.h=usr/src/head/arpa/nameser.h
+f	none	usr/include/arpa/telnet.h=usr/src/head/arpa/telnet.h
+f	none	usr/include/arpa/tftp.h=usr/src/head/arpa/tftp.h
+f	none	usr/include/netconfig.h=usr/src/head/netconfig.h
+f	none	usr/include/netdir.h=usr/src/head/netdir.h
+f	none	usr/include/protocols/dumprestore.h=usr/src/head/protocols/dumprestore.h
+f	none	usr/include/protocols/routed.h=usr/src/head/protocols/routed.h
+f	none	usr/include/protocols/rwhod.h=usr/src/head/protocols/rwhod.h
+f	none	usr/include/protocols/timed.h=usr/src/head/protocols/timed.h
+f       none    usr/include/netinet/arp.h
+f       none    usr/include/netinet/icmp_var.h
+f       none    usr/include/netinet/if_ether.h
+f       none    usr/include/netinet/in.h
+f       none    usr/include/netinet/in_pcb.h
+f       none    usr/include/netinet/in_systm.h
+f       none    usr/include/netinet/in_var.h
+f       none    usr/include/netinet/insrem.h
+f       none    usr/include/netinet/ip.h
+f       none    usr/include/netinet/ip_icmp.h
+f       none    usr/include/netinet/ip_str.h
+f       none    usr/include/netinet/ip_var.h
+f       none    usr/include/netinet/llcloop.h
+f       none    usr/include/netinet/nihdr.h
+f       none    usr/include/netinet/symredef.h
+f       none    usr/include/netinet/tcp.h
+f       none    usr/include/netinet/tcp_debug.h
+f       none    usr/include/netinet/tcp_fsm.h
+f       none    usr/include/netinet/tcp_seq.h
+f       none    usr/include/netinet/tcp_timer.h
+f       none    usr/include/netinet/tcp_var.h
+f       none    usr/include/netinet/tcpip.h
+f       none    usr/include/netinet/udp.h
+f       none    usr/include/netinet/udp_var.h
+f       none    usr/include/net/af.h
+f       none    usr/include/net/if.h
+f       none    usr/include/net/if_arp.h
+f       none    usr/include/net/route.h
+f       none    usr/include/net/strioc.h
+
+#
+#       OAM name to address files...
+#
+!default 0644 bin bin
+f none usr/sadm/sysadm/menu/netservices/name_to_addr/inet/Form.inethost
+f none usr/sadm/sysadm/menu/netservices/name_to_addr/inet/Form.inetserv
+f none usr/sadm/sysadm/menu/netservices/name_to_addr/inet/Help
+f none usr/sadm/sysadm/menu/netservices/name_to_addr/inet/Menu.inet
+f none usr/sadm/sysadm/menu/netservices/name_to_addr/inet/Text.badaddr
+f none usr/sadm/sysadm/menu/netservices/name_to_addr/inet/Text.badport
+f none usr/sadm/sysadm/menu/netservices/name_to_addr/inet/Text.h_exists
+f none usr/sadm/sysadm/menu/netservices/name_to_addr/inet/Text.h_success
+f none usr/sadm/sysadm/menu/netservices/name_to_addr/inet/Text.s_exists
+f none usr/sadm/sysadm/menu/netservices/name_to_addr/inet/Text.s_success
+f none usr/sadm/sysadm/menu/netservices/name_to_addr/inet/bin/inet.host 0755 bin bin
+f none usr/sadm/sysadm/menu/netservices/name_to_addr/inet/bin/inet.services 0755 bin bin
+

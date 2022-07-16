@@ -1,0 +1,71 @@
+#ident	"@(#)eisa:add-on/ups/Remove	1.1"
+#
+#	UPS Support Remove Package
+#
+BLD=$1
+TMP=/tmp/upsdrv.err1
+ERROR1="An an error was encountered removing the UPS Support package.\
+  The file $TMP contains errors reported by the system."
+ERROR2="The kernel rebuild failed.  However all software dealing with the \
+UPS Support has been removed.  The UPS Support Package - Version \
+1.0 will still appear in the Show Installed Software / Remove Installed \
+Software menus because the kernel still has the driver in it.  \
+Please correct the problem and remove the software again.  The file \
+$TMP contains error reported by the system."
+
+rm -f $TMP > /dev/null 2>&1
+rm -f /etc/ups_daem /etc/powerfail /etc/rc2.d/S49ups /etc/conf/init.d/fpan
+
+if [ $# != 1 ]
+then echo "\n\n\n\n\n\nRemoving UPS Support Package - Version 1.0 ...\c"
+fi
+
+if [ -x /etc/conf/bin/idcheck -a -x /etc/conf/bin/idbuild -a -x /etc/conf/bin/idinstall ]
+then 
+	:
+else 
+	message "The Installable Driver feature has been removed.  The UPS Support package cannot be removed."
+	exit 1
+fi
+
+for DRIVER in fpan
+do
+	/etc/conf/bin/idcheck -p $DRIVER 2>/dev/null
+	if [ $? = 0 ]
+	then
+		message "Warning: Driver \"$DRIVER\" was not installed. Strike ENTER to continue or DEL to abort."
+	fi
+done
+
+echo ".\c"
+
+for DRIVER in fpan
+do
+	/etc/conf/bin/idinstall -d ${DRIVER} 2>> $TMP
+	if [ $? != 0 ]
+	then
+		message $ERROR1
+		exit 1
+	fi
+done
+
+echo ".\c"
+
+############
+
+echo "...Complete.\n\n"
+
+/etc/conf/bin/idmkinit -i /etc/conf/cf.d -o /etc 2>> $TMP
+
+if [ "$BLD" != NOBUILD ]
+then
+	/etc/conf/bin/idbuild 2>> $TMP
+	if [ $? != 0 ]
+	then
+		message $ERROR2
+		exit 1
+	fi
+fi
+rm -f $TMP
+exit 0
+

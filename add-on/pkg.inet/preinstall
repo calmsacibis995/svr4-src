@@ -1,0 +1,22 @@
+#ident	"@(#)/usr/src/add-on/pkg.inet/preinstall.sl 1.1 4.0 12/08/90 5458 AT&T-USL"
+#
+#	The machine must have 2 Meg of memory to run.
+#
+MEM=`memsize`
+MEG=`expr $MEM / 1048576`
+
+if
+	test "$MEG" = ""
+then
+	MEG=1
+fi
+
+if
+	test  $MEG -lt 2
+then
+	echo "**ERROR**   ${PKGINST} cannot be installed --"
+	echo "At least 2 Megabytes of memory must be available."
+	exit 1
+fi
+
+exit 0

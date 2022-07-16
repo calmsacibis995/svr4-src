@@ -1,0 +1,285 @@
+#ident	"@(#)proto:i386/at386/scsi/INSTALL2	1.2.2.3"
+
+echo "
+	Copyright (C) 1984, 1986, 1987, 1988, 1989, 1990 AT&T
+	Copyright (C) 1990 UNIX System Laboratories, Inc.
+	Copyright (C) 1987, 1988 Microsoft Corp.
+		All Rights Reserved
+"
+trap 'trap "" 1 2 3 9 15;
+	set +e;
+	cd /;
+	echo "You have canceled the installation of the UNIX System.  \
+If you wish\nto re-run it, type INSTALL at the prompt.  \
+Please consult your\n\"Installation Guide\" \
+for further information.";
+	umount /usr > /dev/null 2>&1;
+	umount /home > /dev/null 2>&1;
+	umount /stand > /dev/null 2>&1;
+	umount /var > /dev/null 2>&1;
+exit 2' 1 2 3 15
+
+VER="4.0"
+VER_LABEL="${VER:?}.3 386unix Fnd Set 1 of \([0-9]*\)"
+TAPE=/dev/rmt/c0t3d0s0
+if [ -c /dev/rmt/c0s0 ]
+then TENSION="/sbin/tapecntl -t"
+     MOVE="/sbin/tapecntl -p1"
+else TENSION="/etc/scsitapecntl -t -y ${TAPE}n"
+     MOVE="/etc/scsitapecntl -p1 -y ${TAPE}n"
+fi
+export TAPE TENSION VER VER_LABEL
+
+stty erase '^h' echoe
+
+# linen is a function to get line #n from file in arg1.
+linen() {
+if [ $# -ne 2 ] ; then
+	return 1
+fi
+echo "$2p\nq" | ed - $1 
+return 0
+}
+
+set +e
+while read special fsck_dev mount_pt fs_type fsck_pass auto_mnt mnt_flgs
+do
+if [ "$mount_pt" = "/" ]
+then
+if [ -f /tmp/fsck.do ]
+then /etc/fs/${fs_type}/fsck -y -s -t /tmp/tmp1 -D ${fsck_dev} > /dev/null 2>&1
+else > /tmp/fsck.do
+fi
+echo "/dev/root	/	${fs_type}	rw,suid	640387496" > /etc/mnttab
+fi
+done < /etc/vfstab
+cd /
+umount /usr > /dev/null 2>&1
+umount /home > /dev/null 2>&1
+umount /stand > /dev/null 2>&1
+umount /var > /dev/null 2>&1
+set -e                  # exit if anything bad happens
+while read special fsck_dev mount_pt fs_type fsck_pass auto_mnt mnt_flgs
+do
+if [ "$special" = "#" ]
+then continue
+fi
+if [ "$mount_pt" = "/usr" -o "$mount_pt" = "/stand" -o "$mount_pt" = "/home" -o "$mount_pt" = "/var" ]
+then
+     set +e 		# don't exit if mount fails
+     /etc/fs/${fs_type}/mount $special $mount_pt > /dev/null 2>&1
+     if [ $? != 0 ]
+     then /etc/fs/${fs_type}/fsck -y -t /tmp/tmp1 $fsck_dev > /dev/null 2>&1
+	  > /tmp/tmp1
+	  set -e	# Now if the mount fails BYE-BYE
+	  /etc/fs/${fs_type}/mount $special $mount_pt > /dev/null 2>&1
+     fi
+     set -e		# In case the mount pass'ed reset it to -e.
+fi
+done < /etc/vfstab
+set +e
+if [ ! -f /floppy.count ]
+then if [ ! -f /tmp/tape.count ]
+     then
+	/sbin/flop_disk
+	case "$?" in
+	0) a=n;;
+	1) a=y;;
+	100) echo "\nWARNING!\n\nInstallation of the UNIX System has been canceled."
+		umount /usr >/dev/null 2>&1;
+		umount /home > /dev/null 2>&1;
+		umount /stand > /dev/null 2>&1;
+		umount /var > /dev/null 2>&1;
+		exit 1;;
+	esac
+     else a=y
+     fi
+else a=n
+fi
+
+if [ "$a" = y ]
+then
+   if [ ! -f /tmp/tape.count ]
+   then
+	echo "\n\n"
+	/sbin/machid -e > /dev/null
+	if [ $? = 3 ]
+	then echo "You cannot install off the cartridge tape."
+		cd /; umount /usr > /dev/null 2>&1
+		umount /home > /dev/null 2>&1
+		umount /stand > /dev/null 2>&1
+		umount /var > /dev/null 2>&1;
+		exit 2
+	fi
+
+	while [ 1 ]
+	do
+	echo "Please insert the UNIX System V/386 Release 4.0 Version 3.0"
+	echo "Foundation Set cartridge tape into the integral tape drive."
+	echo "\nStrike ENTER when ready or DEL to cancel the installation."
+	read x
+	( < ${TAPE} ) > /dev/null 2>&1
+	if [ "$?" != 0 ]
+	then
+		echo "ERROR!\n\nNo cartridge tape or cartridge tape drive found.\n"
+		echo "Please make sure that the cartridge tape is correctly inserted."
+		echo "Please check that your tape drive is correctly"
+		echo "installed and configured, then RESUME the"
+		echo "installation by typing INSTALL."
+		echo "\nPlease strike ENTER when ready.\c"
+		read x
+		umount /usr > /dev/null 2>&1
+		umount /home > /dev/null 2>&1
+		umount /stand > /dev/null 2>&1
+		umount /var > /dev/null 2>&1
+		exit 1
+	fi
+	sleep 1
+	dd if=${TAPE} of=/tmp/p bs=5120 count=1 > /dev/null 2>&1
+	if [ "$?" = "0" ]
+	then
+	   cpio -icBdum < /tmp/p 2>/dev/null
+	   if [ -f /tmp/pkglist ]
+	   then
+		lab=`linen /tmp/pkglist 1`
+		if [ "$lab" = "UNIX System V/386 Release 4.0 Version 3.0 Foundation Set" ]
+		then break;
+		fi
+	   fi
+	fi
+	echo "This is not the UNIX System V/386 Release 4.0 Version 3.0\n\
+Foundation Set cartridge tape.\n"
+	echo "Please insert the correct tape in the tape drive.\n"
+	done
+
+	echo "\tInstallation in progress -- Do not remove the cartridge tape\c"
+	sleep 1
+	${TENSION}
+	sleep 2
+	${MOVE} > /dev/null 2>&1
+	sleep 1
+	cpio -icdumC102400 -I${TAPE}n 2>/dev/null
+	if [ "$?" != 0 ]
+	then
+		umount /usr > /dev/null 2>&1
+		umount /home > /dev/null 2>&1
+		umount /stand > /dev/null 2>&1
+		umount /var > /dev/null 2>&1
+		echo "ERROR!\n\nNo cartridge tape drive found.\n"
+		echo "Please check that your tape drive is correctly"
+		echo "installed and configured, then RESUME the"
+		echo "installation by typing INSTALL."
+		echo "\nStrike ENTER when ready.\c"
+		read x
+		exit 1
+	fi
+	echo 1 > /tmp/tape.count
+	echo "\n"
+	sync
+   fi
+else
+	if [ -f /tmp/LABEL ]
+	then
+		lab=`linen /tmp/LABEL 1`
+		Lblock=`linen /tmp/LABEL 2`
+		if [ "$Lblock" = "?" -o -z "$Lblock" ] ; then
+			Lblock=29	#default
+		else
+			Lblock=`expr $Lblock - 1`
+		fi
+	else
+		lab="Apples and Oranges"
+	fi
+	fcnt=`expr "$lab" : "$VER_LABEL"`
+	if [ $? -ne 0 ]
+	then
+		umount /usr > /dev/null 2>&1
+		umount /home > /dev/null 2>&1
+		umount /stand > /dev/null 2>&1
+		umount /var > /dev/null 2>&1
+		echo "\nCannot determine total number of floppies for the Base System.\n\
+The first floppy disk may be labeled incorrectly.\n\
+Please contact your AT&T services representative for further assistance."
+		exit 1
+	fi
+	if [ -f /floppy.count ]
+	then
+		t=`linen /floppy.count 1`
+		i=`expr 1 + $t`
+	else
+		i=`expr 3`
+	fi
+	echo "\n"
+	pflag=0
+	LABEL=""
+	while [ $i -le $fcnt ]
+	do
+	if [ $pflag -ne 0 ]
+	then pflag=0
+	else echo "Please insert the UNIX System \"Base System Package\" \n\
+Floppy Disk $i of $fcnt and then strike ENTER. \c"
+	read a
+	fi
+	readfloppy $Lblock
+	if [ $? != 0 ]
+	then echo "A floppy disk read error has occurred.  If necessary, please \
+consult your\n\"Installation Guide\".\nAfter correcting the \
+error, strike ENTER to continue."
+		read a
+		readfloppy $Lblock
+		if [ $? != 0 ]
+		then echo "Unable to read floppy disk.  Installation terminated.\n\
+You may attempt to restart the installation process, but if this problem\n\
+recurs, please contact your support representative immediately."
+		     umount /usr > /dev/null 2>&1
+		     umount /home > /dev/null 2>&1
+		     umount /stand > /dev/null 2>&1
+		     umount /var > /dev/null 2>&1
+		     exit 1
+		fi
+	fi
+	seq=`linen /tmp/seq 1`
+	LABEL="$VER"
+	if [ "$seq" != "${LABEL}.3 386unix Fnd Set $i of $fcnt" ]
+	then echo "\nThe inserted floppy disk is incorrect.  Please insert the \n\
+floppy disk labeled $i of $fcnt and strike ENTER."
+		read a
+		pflag=1
+		continue
+	fi
+	retry=`expr 0`
+	cpio -iBcmdu -I/dev/rdsk/f0 2>/dev/null
+	while [ $? -ne 0 -a $retry -le 2 ]
+	do
+		retry=`expr $retry + 1`
+		cpio -iBcmdu -I/dev/rdsk/f0 2>/dev/null
+	done
+	if [ $retry -gt 2 ]
+	then echo "Unable to read floppy disk.  Installation terminated.\n\
+You may attempt to restart the installation process, but if this problem\n\
+recurs, please contact your support representative immediately."
+		umount /usr > /dev/null 2>&1
+		umount /home > /dev/null 2>&1
+		umount /stand > /dev/null 2>&1
+		umount /var > /dev/null 2>&1
+		exit 1
+	fi
+	echo "$i" > /floppy.count
+	i=`expr $i + 1`
+	sync
+	echo "\n"
+	done
+fi
+set +e
+sync
+
+MEDIA="It is now safe\nto remove the floppy disk.  "; export MEDIA
+if [ -f /tmp/tape.count ]
+then MEDIA="\n"; export MEDIA
+fi
+
+echo "\nUNIX System files have been copied to the hard disk.  ${MEDIA}\
+Additional system files will now be setup.\n\
+Please stand by ...\c"
+
+exec /tmp/INSTALL3

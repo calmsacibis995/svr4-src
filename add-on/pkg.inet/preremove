@@ -1,0 +1,78 @@
+#ident	"@(#)/usr/src/add-on/pkg.inet/preremove.sl 1.1 4.0 12/08/90 24450 AT&T-USL"
+#
+# Issue a warning message if inet is running.
+#
+TMP=/tmp/tcp.err
+ERROR1="An error was encountered removing the ${NAME} package. \
+The file $TMP contains errors reported by the system."
+ERROR2="The kernel rebuild failded.  However all software dealing with the \
+${NAME} package has been removed."
+
+if [ ! -z "`ps -ef | grep slink | grep -v grep`" ]
+then
+	echo "WARNING: inet (slink) is still running."
+fi
+#
+# Deinstall INET
+#
+for MODULE in app arp icmp ip llcloop rawip tcp udp 
+do
+	/etc/conf/bin/idcheck -p ${MODULE} 2> /dev/null
+	RES="$?"
+	if [ "${RES}" -ne "100" -a "${RES}" -ne "0" ]
+	then
+		echo "Removing ${NAME} ${MODULE} module ..."
+		/etc/conf/bin/idinstall -d ${MODULE} 2>> $TMP
+		if [ $? != 0 ]
+		then
+			message $ERROR1
+			exit 1
+		fi
+		REBUILD=1
+	fi
+done
+
+#
+# Remove the entries from /etc/netconfig
+#
+
+grep -v '[ 	]inet[ 	][ 	]*tcp[ 	][ 	]*/dev/tcp[ 	]' /etc/netconfig 2>/dev/null >/tmp/$$.1
+grep -v '[ 	]inet[ 	][ 	]*udp[ 	][ 	]*/dev/udp[ 	]' /tmp/$$.1 2>/dev/null >/tmp/$$.2
+grep -v '[ 	]inet[ 	][ 	]*icmp[ 	][ 	]*/dev/icmp[ 	]' /tmp/$$.2 2>/dev/null >/etc/netconfig
+
+#
+#	Remove ourself from the OAM Scripts...
+#
+MAPMENU=/usr/sadm/sysadm/menu/netservices/name_to_addr/map.menu
+if [ -f $MAPMENU ]
+then
+	grep -v 'inet^Internet Protocols (TCP and UDP)^inet/Menu.inet' $MAPMENU 2>/dev/null >/tmp/$$.1
+	cp /tmp/$$.1 $MAPMENU
+	rm -f /tmp/$$.1
+	removef $PKGINST $MAPMENU
+fi
+
+removef -f $PKGINST
+
+#
+# Remove the port monitor entry
+#
+rm -f /etc/inet/ftpusers /etc/ftpusers
+
+sacadm -r -p inetd >/dev/null 2>&1
+sacadm -r -p tcp >/dev/null 2>&1
+
+if	[ "${REBUILD}" = "1" ]
+then
+	/etc/conf/bin/idbuild 2>> $TMP
+	if [ $? != 0 ]
+	then
+		message $ERROR2
+		exit 1
+	else
+		exit 10
+	fi
+else
+	exit 0
+fi
+

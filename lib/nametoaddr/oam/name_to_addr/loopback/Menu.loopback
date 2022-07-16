@@ -1,0 +1,12 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/loopback/Menu.loopback	1.1"
+
+###############################################################################
+menu="Loopback Name to Address Mapping"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/ssmenu.msg | message -p`
+
+name=services
+description=Create Service Information for Loopback Protocols
+action=OPEN FORM "$INTFBASE/netservices/name_to_addr/loopback/Form.lbserv"
+lininfo=menu:services

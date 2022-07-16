@@ -1,0 +1,4 @@
+#ifdef MERGE386
+*ident	"@(#)master:merge/mdev	1.1"
+merge	I	io	merge	0	0	1	1	-1
+#endif /* MERGE386 */

@@ -1,0 +1,115 @@
+#ident	"@(#)head:sys.i386	1.2"
+
+/
+/	Definitions of Kernel Entry Call Gates
+/
+
+#define	SYSCALL	$0x7,$0
+#define SIGCALL $0xF,$0
+
+/
+/	Definitions of System Call Entry Point Numbers
+/
+
+#define	ACCESS	33
+#define	ACCT	51
+#define	ADVFS	70
+#define	ALARM	27
+#define	BREAK	17
+#define	BRK	17
+#define	CHDIR	12
+#define	CHMOD	15
+#define	CHOWN	16
+#define	CHROOT	61
+#define	CLOSE	6
+#define	CREAT	8
+#define	DUP	41
+#define	EXEC	11
+#define	EXECE	59
+#define	EXIT	1
+#define	FCNTL	62
+#define	FORK	2
+#define	FSTAT	28
+#define	FSTATFS	38
+#define	GETDENTS	81
+#define	GETGID	47
+#define	GETMSG	85
+#define	GETPID	20
+#define	GETUID	24
+#define	GTTY	32
+#define	IOCTL	54
+#define	KILL	37
+#define	LINK	9
+#define	LOCK	45
+#define	LSEEK	19
+#define	MKDIR	80
+#define	MKNOD	14
+#define	MOUNT	21
+#define	MSGSYS	49
+#define	NICE	34
+#define	OPEN	5
+#define	PAUSE	29
+#define	PIPE	42
+#define	PLOCK	45
+#define	POLL	87
+#define	PROF	44
+#define	PTRACE	26
+#define	PUTMSG	86
+#define	RDEBUG	76
+#define	READ	3
+#define	RFSTART	74
+#define	RFSTOP	77
+#define	RFSYS	78
+#define	RMDIR	79
+#define	RMOUNT	72
+#define	RUMOUNT	73
+#define	SEEK	19
+#define	SEMSYS	53
+#define	SETGID	46
+#define	SETPGRP	39
+#define	SETUID	23
+#define	SHMSYS	52
+#define	SIGNAL	48
+#define	STAT	18
+#define	STATFS	35
+#define	STIME	25
+#define	STTY	31
+#define	SYNC	36
+#define	SYS3B	50
+#define SYSI86  50
+#define	SYSACCT	51
+#define	SYSFS	84
+#define	TIME	13
+#define	TIMES	43
+#define	UADMIN	55
+#define	ULIMIT	63
+#define	UMASK	60
+#define	UMOUNT	22
+#define	UNADVFS	71
+#define	UNLINK	10
+#define	UTIME	30
+#define	UTSSYS	57
+#define	WAIT	7
+#define	WRITE	4
+
+#define CXENIX	40
+#define XLOCKING	296
+#define CREATSEM	552
+#define OPENSEM		808
+#define SIGSEM		1064
+#define WAITSEM		1320
+#define NBWAITSEM	1576
+#define RDCHK		1832
+#define CHSIZE		2600
+#define FTIME		2856
+#define NAP		3112
+#define SDGET		3368
+#define SDFREE		3624
+#define SDENTER		3880
+#define SDLEAVE		4136
+#define SDGETV		4392
+#define SDWAITV		4648
+#define PROCTL		8232
+#define EXECSEG		8488
+#define UNEXECSEG	8744
+#define CLOCAL		127

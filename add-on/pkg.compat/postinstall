@@ -1,0 +1,13 @@
+#ident	"@(#)/usr/src/add-on/pkg.compat/postinstall.sl 1.1 4.0 12/08/90 30172 AT&T-USL"
+cd /usr/ucblib/reftools/papers; ./runinv >/dev/null
+if [ -f /usr/lib/libsocket.so ]
+then
+/usr/ucb/newaliases -oA/usr/ucblib/aliases >/dev/null 2>&1
+else
+echo "The NSU package has not been installed. You need it to run sendmail."
+echo "After installation of Network Support Utilities (NSU) please run the"
+echo "following command: /usr/ucb/newaliases -oA/usr/ucblib/aliases >/dev/null 2>&1"
+fi
+>/usr/ucblib/sendmail.fc
+chmod 660 /usr/ucblib/sendmail.fc
+chown bin /usr/ucblib/sendmail.fc; chgrp bin /usr/ucblib/sendmail.fc

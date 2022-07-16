@@ -1,0 +1,92 @@
+'\"#ident	"@(#)ucbtroff:troff.d/tmac.d/index.me	1.1"
+'\"		PROPRIETARY NOTICE (Combined)
+'\"
+'\"This source code is unpublished proprietary information
+'\"constituting, or derived under license from AT&T's UNIX(r) System V.
+'\"In addition, portions of such source code were derived from Berkeley
+'\"4.3 BSD under license from the Regents of the University of
+'\"California.
+'\"
+'\"
+'\"
+'\"		Copyright Notice 
+'\"
+'\"Notice of copyright on this source code product does not indicate 
+'\"publication.
+'\"
+'\"	(c) 1986,1987,1988,1989  Sun Microsystems, Inc
+'\"	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+'\"	          All rights reserved.
+.nr _0 \n(c.
+.\"	@(#)index.me	2.8	3/19/81
+.\" This version has had comments stripped; an unstripped version is available.
+.de (x
+.ds |X x
+.if \\n(.$>0 \
+.	ds |X \\$1
+.ie !"\\n(.z"" \
+\{\
+.	ev 2
+\!.(x \\*(|X
+.rm |X
+.\}
+.el \
+\{\
+.	am %\\*(|X )x
+.	sp \\n(xsu
+.	ti -\\n(piu
+.\}
+..
+.de )x
+.ie "\\n(.z"" \
+\{\
+.	ds |x \\n%
+.	if \\n(.$>0 \
+.		ds |x \\$1
+.	if "\\*(|x"_" \
+.		ig ..
+.	am %\\*(|X ..
+.	if \w"\\$2">(\\n(.l-\\n(.i-\\n(.k) \
+.		ti +\\n(xuu
+\\\\a\\\\t\\$2\\*(|x
+...
+.	rm |x
+.	rm |X
+.\}
+.el \
+\{\
+\!.)x \\$1 \\$2
+.	br
+.	ev
+.\}
+..
+.de xp
+.br
+.@C 2
+.ls 1
+.vs \\n(.su*\\n($Ru
+.fi
+.in +\\n(piu
+.ds |X x
+.if \\n(.$>0 \
+.	ds |X \\$1
+.xl -(\\n(xuu+\w'...'u)
+.di |x
+.%\\*(|X
+.br
+.di
+.rm %\\*(|X
+.xl \\n($lu
+.rm |X
+.ev
+.nf
+.in 0
+.ta \\n(.lu-\\n(xuuR \\n(.luR
+.|x
+.fi
+.in
+.rm |x
+..
+.if \n(xu<=0 \
+.	nr xu 0.5i
+.nr c. \n(_0

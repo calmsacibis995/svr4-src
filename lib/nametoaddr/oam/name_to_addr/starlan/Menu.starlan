@@ -1,0 +1,17 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/starlan/Menu.starlan	1.1"
+
+###############################################################################
+menu="ISO Starlan Name to Address Mapping"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/ssmenu.msg | message -p`
+
+name=hosts
+description=Create Addresses Information for ISO Starlan Protocol
+action=OPEN FORM "$INTFBASE/netservices/name_to_addr/starlan/Form.slhost"
+lininfo=menu:host
+
+name=services
+description=Create Service Information for ISO Starlan Protocol
+action=OPEN FORM "$INTFBASE/netservices/name_to_addr/starlan/Form.slserv"
+lininfo=menu:services

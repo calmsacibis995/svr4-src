@@ -1,0 +1,252 @@
+/*	Copyright (c) 1987  Intel Corporation	*/
+/*	All Rights Reserved	*/
+
+/*	INTEL CORPORATION PROPRIETARY INFORMATION	*/
+
+/*	This software is supplied to AT & T under the terms of a license   */ 
+/*	agreement with Intel Corporation and may not be copied nor         */
+/*	disclosed except in accordance with the terms of that agreement.   */	
+
+#ident	"@(#)mbus:cmd/mbusutils/mb2.d/cci.d/example.d/example.lit	1.1"
+
+$SAVE NOLIST 
+
+
+	/* Commonly used literals */
+	
+DECLARE 
+	TOKEN					LITERALLY 'SELECTOR',
+	OK						LITERALLY '0',
+	ERROR					LITERALLY '80H',
+    TRUE					LITERALLY   '0FFH',
+	FALSE					LITERALLY   '0';
+	
+DECLARE
+	STACK_SIZE		LITERALLY	'600',
+	MSG_Q_SIZE		LITERALLY	'10',
+	MAX_BUF_LEN		LITERALLY	'4096',
+	MAX_BUF			LITERALLY	'1',
+	XPORT_SERV		LITERALLY	'02',
+	NO_FRAG			LITERALLY	'04',
+	SEG_TYPE		LITERALLY	'6';
+
+
+	/* RMX Exception codes for message passing */
+	
+DECLARE
+	E$OK					LITERALLY	'0',
+	E$CANCELLED      		LITERALLY	'00E1h',
+	E$NO$LOCAL$BUFFER		LITERALLY	'00E3h';
+
+	/* CCI Server Message Formats */
+	
+DECLARE
+	LDI_BIND		LITERALLY	'1',
+	LDI_UNBIND		LITERALLY	'2',
+	LDI_ATTACH		LITERALLY	'3',
+	LDI_SWITCH		LITERALLY	'4',
+	LDI_DETACH		LITERALLY	'5';
+
+
+DECLARE	param_rec	LITERALLY	'STRUCTURE(
+									req_mbx		TOKEN,
+									reply_mbx	TOKEN)';
+
+
+DECLARE	bind_req	LITERALLY	'STRUCTURE(
+									type		BYTE,
+									res1		BYTE,
+									line		BYTE,
+									res2(29) 	BYTE)';
+
+DECLARE	bind_resp	LITERALLY	'STRUCTURE(
+									type		BYTE,
+									status		BYTE,
+									res1		BYTE,
+									line		BYTE,
+									max_subch	WORD,
+									res(26)		BYTE)';
+
+DECLARE	attach_req	LITERALLY	'STRUCTURE(
+									type		BYTE,
+									res1		BYTE,
+									host		WORD,
+									res2		BYTE,
+									line		BYTE,
+									subch		WORD,
+									portid		WORD,
+									res3(22)	BYTE)';
+
+DECLARE	attach_resp1	LITERALLY	'type		BYTE,
+									status		BYTE,
+									res(3)		BYTE,
+									line		BYTE,
+									subch		WORD,
+									port_id		WORD';
+
+DECLARE	attach_resp2	LITERALLY	'tx_size	BYTE,
+									port_q_size	BYTE,
+									rx_size		BYTE,
+									version		BYTE,
+									res1(18)	BYTE';
+
+DECLARE attach_resp		LITERALLY	'STRUCTURE(
+										attach_resp1,
+										attach_resp2)';
+
+DECLARE	switch_req	LITERALLY	'STRUCTURE(
+									type		BYTE,
+									res			BYTE,
+									host		WORD,
+									line		BYTE,
+									res1		BYTE,
+									subch		WORD,
+									portid		WORD,
+									res2(22)	BYTE)';
+
+DECLARE	switch_resp	LITERALLY	'STRUCTURE(
+									type		BYTE,
+									status		BYTE,
+									res 		WORD,
+									line		BYTE,
+									res0		BYTE,
+									subch		WORD,
+									res1(24)	BYTE)';
+
+DECLARE	detach_req	LITERALLY	'STRUCTURE(
+									type		BYTE,
+									res			WORD,
+									line		BYTE,
+									subch		WORD,
+									res1(26)	BYTE)';
+
+DECLARE	detach_resp	LITERALLY	'STRUCTURE(
+									type		BYTE,
+									status		BYTE,
+									res 		BYTE,
+									line		BYTE,
+									subch		WORD,
+									res1(26)	BYTE)';
+
+DECLARE	unbind_req	LITERALLY	'STRUCTURE(
+									type		BYTE,
+									res			BYTE,
+									line		BYTE,
+									res1(29)	BYTE)';
+
+DECLARE	unbind_resp	LITERALLY	'STRUCTURE(
+									type		BYTE,
+									status		BYTE,
+									line		BYTE,
+									res1(29)	BYTE)';
+
+
+	/* Format for rq$create$port information structure */
+
+DECLARE	p_crt_rec	LITERALLY	'STRUCTURE(
+									pid			WORD,
+									type		BYTE,
+									res			BYTE,
+									flag		WORD)';
+
+	
+	/* Format for rq$get$port$attr information structure */
+
+DECLARE	p_info_rec	LITERALLY	'STRUCTURE(
+									pid			WORD,
+									type		BYTE,
+									res			BYTE,
+									q_size		WORD,
+									res1		WORD,
+									res2		WORD,
+									s_port		TOKEN,
+									rem_soc		DWORD,
+									b_pool		TOKEN,
+									flag		WORD,
+									res3		BYTE)';
+
+	/* Format for rq$receive message info structure */
+ 
+DECLARE	info_rec	LITERALLY	'STRUCTURE(
+									flags	WORD,
+									status	WORD,
+									tid		WORD,
+									len		DWORD,
+									fprt	TOKEN,
+									skt		DWORD,
+									msg(20)	BYTE,
+									res		BYTE)';
+
+
+	/* Message formats for the sample line discipline protocol */	
+
+DECLARE
+	GET_CS			LITERALLY	'1',
+	CRT_SEG			LITERALLY	'2',
+	DEL_SEG			LITERALLY	'3',
+	READ_DATA		LITERALLY	'4',
+	WRITE_DATA		LITERALLY	'5';
+	
+
+DECLARE	cs_req		LITERALLY	'STRUCTURE(
+									type		BYTE,
+									res1		BYTE,
+									res2(18) 	BYTE)';
+
+DECLARE	cs_resp		LITERALLY	'STRUCTURE(
+									type		BYTE,
+									status		BYTE,
+									cs_val		WORD,
+									res(16)		BYTE)';
+
+DECLARE	crt_seg_req		LITERALLY	'STRUCTURE(
+									type		BYTE,
+									res1		BYTE,
+									len			WORD,
+									res2(16)	BYTE)';
+
+DECLARE	crt_seg_resp	LITERALLY	'STRUCTURE(
+									type		BYTE,
+									status		BYTE,
+									len			WORD,
+									segtok		TOKEN,
+									res2(14)	BYTE)';
+
+DECLARE	del_seg_req		LITERALLY	'STRUCTURE(
+									type		BYTE,
+									res1		BYTE,
+									segtok		TOKEN,
+									res2(16)	BYTE)';
+
+DECLARE	del_seg_resp	LITERALLY	'STRUCTURE(
+									type		BYTE,
+									status		BYTE,
+									segtok		TOKEN,
+									res2(16)	BYTE)';
+
+DECLARE	read_req	LITERALLY	'STRUCTURE(
+									type		BYTE,
+									res			BYTE,
+									segtok		TOKEN,
+									len			WORD,
+									res1(14)	BYTE)';
+
+DECLARE	read_resp	LITERALLY	'STRUCTURE(
+									type		BYTE,
+									status		BYTE,
+									segtok		TOKEN,
+									res1(12)	BYTE)';
+
+DECLARE	write_req	LITERALLY	'STRUCTURE(
+									type		BYTE,
+									res			BYTE,
+									segtok		TOKEN,
+									res1(12)	BYTE)';
+
+DECLARE	write_resp	LITERALLY	'STRUCTURE(
+									type		BYTE,
+									status		BYTE,
+									segtok		TOKEN,
+									res1(16)	BYTE)';
+
+$RESTORE

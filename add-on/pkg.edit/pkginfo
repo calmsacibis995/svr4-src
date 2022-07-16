@@ -1,0 +1,11 @@
+#ident	"@(#)/usr/src/add-on/pkg.edit/pkginfo.sl 1.1 4.0 12/08/90 26487 AT&T-USL"
+
+PKG="ed"
+CLASSES="none"
+NAME="Editing Package"
+RELEASE="4.0"
+VERSION="1"
+VENDOR="AT&T-SF"
+CATEGORY="applications,tools"
+ARCH="i386"
+PREDEPEND="ed"

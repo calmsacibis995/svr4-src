@@ -1,0 +1,78 @@
+TCINQ	EMULEX  MD23/S2     ESDI
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd00.0
+TCINQ	AT&T    KS23483         
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd00.0
+TCINQ	HP      97536D          
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd01.1
+TCINQ	HP      97536T          
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd01.1
+TCINQ	HP      7937S           
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd01.2
+TCINQ	CDC     94161-9         
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd00.0
+TCINQ	CDC     94171-9         
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd00.0
+TCINQ	WANGTEK KS23417         
+MKDEV	/etc/scsi/mkdev.d/qtape1
+TCINQ	EMULEX  MT02/S1 +CCS INQ
+MKDEV	/etc/scsi/mkdev.d/qtape1
+TCINQ	WANGTEK KS23465         
+MKDEV	/etc/scsi/mkdev.d/qtape2
+TCINQ	WANGTEK KS23569         
+MKDEV	/etc/scsi/mkdev.d/qtape3
+TCINQ	WANGTEK 5125ES SCSI ES41
+MKDEV	/etc/scsi/mkdev.d/qtape4
+TCINQ	NCR H6210-STD1-01-46C632
+MKDEV	/etc/scsi/mkdev.d/9track1
+TCINQ	CDC     92181           
+MKDEV	/etc/scsi/mkdev.d/9track1
+TCINQ	AT&T    KS22762         
+MKDEV	/etc/scsi/mkdev.d/9track1
+TCINQ	CDC     92185           
+MKDEV	/etc/scsi/mkdev.d/9track2
+TCINQ	HP      88780           
+MKDEV	/etc/scsi/mkdev.d/9track2
+TCINQ	AT&T    KS23495         
+MKDEV	/etc/scsi/mkdev.d/9track2
+TCINQ	AT&T    WD7000-ASC      
+MKDEV	/etc/scsi/mkdev.d/ha1
+TCINQ	MAXTOR  XT-4170S        
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd00.0
+TCINQ	MAXTOR  XT-4280S        
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd00.0
+TCINQ	MAXTOR  XT-4380S        
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd00.0
+TCINQ	MAXTOR  XT-8380S        
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd00.0
+TCINQ	MAXTOR  XT-8760S        
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd00.0
+TCINQ	QUANTUM P40S 940-40-94xx
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd01.1
+TCINQ	QUANTUM P80S 980-80-94xx
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd01.1
+TCINQ	MICROP  1674-07MB1036509
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd00.0
+TCINQ	MICROP  1588-15MB1036509
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd00.0
+TCINQ	MICROP  1578-15MB1036509
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd00.0
+TCINQ	QUANTUM Q2802022003-REV0
+MKDEV	/etc/scsi/mkdev.d/disk1
+FORMAT	/etc/scsi/format.d/sd01.1

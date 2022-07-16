@@ -1,0 +1,44 @@
+/dev/null
+1422 100
+d--775 0 3
+install d--775 0 3
+	Rlist		---555 2 2	./install/terminf/Rlist.svr2curs
+	UNINSTALL	---555 2 2	./install/terminf/UNINSTALL.3
+	INSTALL		---555 2 2	./install/terminf/INSTALL.3
+	ORDER		---555 2 2	./install/terminf/ORDER.3
+$
+new	d--775 0 3
+	usr	d--775 0 3
+		bin	d--775 2 2
+			captoinfo	---555 2 2	../usr/bin/captoinfo
+			infocmp		---555 2 2	../usr/bin/infocmp
+			tic		---555 2 2	../usr/bin/tic
+			tput		---555 2 2	../usr/bin/tput
+		$
+		include	d--775 2 2
+			curses.h	---444 2 2	../usr/include/curses.h
+			term.h		---444 2 2	../usr/include/term.h
+			unctrl.h	---444 2 2	../usr/include/unctrl.h
+		$
+		lib	d--775 0 3
+			llib-lcurses	---444 2 2	../usr/lib/llib-lcurses
+			llib-lcurses.ln	---444 2 2	../usr/lib/llib-lcurses.ln
+			libcurses.a	---444 2 2	../usr/lib/libcurses.a
+			terminfo	d--775 2 2
+			$
+			tabset	d--775 2 2
+				3101	---444 2 2 	../usr/lib/tabset/3101
+				beehive	---444 2 2 	../usr/lib/tabset/beehive
+				std	---444 2 2 	../usr/lib/tabset/std
+				teleray	---444 2 2 	../usr/lib/tabset/teleray
+				vt100	---444 2 2 	../usr/lib/tabset/vt100
+				xerox1720	---444 2 2 	../usr/lib/tabset/xerox1720
+			$
+		$
+		options	d--775 0 3
+			svr2curs.name	---444 2 2	./install/terminf/svr2curs.name
+		$
+	$
+$
+$
+@(#)pkg.terminf:terminf/proto.1	1.11

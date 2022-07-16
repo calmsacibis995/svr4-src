@@ -1,0 +1,304 @@
+#ident	"@(#)shlibc:i386/spec	1.3.6.1"
+##
+## Libc_s specification file
+##
+#address .text 0xa0000000
+#address .data 0xa0400000
+#target /shlib/libc_s
+#branch
+_doprnt 1
+_bufsync 2
+_cerror	3
+_cleanup 4
+_filbuf	5
+_findbuf 6
+_findiop 7
+_flsbuf	8
+_wrtchk	9
+_xflsbuf 10
+abs	11
+access	12
+atof	13
+atoi	14
+atol	15
+brk	16
+calloc	17
+cfree	18
+chdir	19
+chmod	20
+close	21
+creat	22
+ecvt	23
+fclose	24
+fcntl	25
+fcvt	26
+fflush	27
+fgetc	28
+fgets	29
+fopen	30
+fprintf	31
+fputc	32
+fputs	33
+fread	34
+free	35
+freopen	36
+frexp	37
+fseek	38
+fstat	39
+fwrite	40
+gcvt	41
+getchar	42
+getenv	43
+getopt	44
+getpid	45
+gets	46
+getw	47
+ioctl	48
+isatty	49
+isnand	50
+kill	51
+ldexp	52
+lseek	53
+malloc	54
+memccpy	55
+memchr	56
+memcmp	57
+memcpy	58
+memset	59
+mktemp	60
+open	61
+printf	62
+putchar	63
+puts	64
+putw	65
+read	66
+realloc	67
+sbrk	68
+setbuf	69
+sighold	70
+sigignore 71
+signal	72
+sigpause 73
+sigrelse 74
+sigset	75
+sprintf	76
+stat	77
+strcat	78
+strchr	79
+strcmp	80
+strcpy	81
+strlen	82
+strncat	83
+strncmp	84
+strncpy	85
+strrchr	86
+time	87
+old_tolower 88
+old_toupper 89
+ungetc	90
+unlink	91
+utime	92
+write	93
+getpid 94-150
+#objects
+##
+##
+##
+##	 Imported symbols definition files
+##
+../port/gen/ctype_def.o
+../port/gen/mall_def.o
+../port/gen/reall_def.o
+../port/gen/free_def.o
+../port/stdio/stdio_def.o
+../i386/gen/gen_def.o
+##	 Read/Write Global data
+../port/gen/opt_data.o
+../i386/gen/i386_data.o
+
+##	 REST of *.o
+
+##	Some frequently used functions, called randomly
+
+../i386/gen/abs.o
+../port/gen/old_tolower.o
+../port/stdio/ungetc.o
+../i386/gen/strcmp.o
+
+##	malloc family
+
+../port/gen/calloc.o
+../port/gen/malloc.o
+
+##	infrequently used, page glue
+
+../port/gen/strncat.o
+
+##	frequently used, randomly called
+
+../port/gen/memccpy.o
+../i386/gen/memcpy.o
+../port/gen/memset.o
+../port/gen/strcat.o
+../i386/gen/strcpy.o
+../i386/gen/strlen.o
+
+##	stdio group
+
+../port/stdio/filbuf.o
+../port/stdio/fread.o
+
+##	stdio group
+
+../port/stdio/fgetc.o
+../port/stdio/fgets.o
+../port/stdio/gets.o
+../port/stdio/getchar.o
+../port/stdio/getw.o
+
+##	stdio group
+
+../port/stdio/fputs.o
+../port/stdio/putw.o
+../port/stdio/fputc.o
+../port/stdio/putchar.o
+
+##	infrequently called, page glue
+
+../port/gen/old_toupper.o
+
+##	stdio group
+
+../port/stdio/fwrite.o
+../port/stdio/flsbuf.o
+../port/stdio/fseek.o
+
+##	infrequently called, page glue
+
+../port/gen/strncpy.o
+
+##	stdio group
+
+../port/gen/isatty.o
+../port/stdio/fopen.o
+../port/stdio/findiop.o
+
+##	stdio group (remainder)
+
+../port/stdio/puts.o
+
+##	printf family
+
+../port/print/fprintf.o
+../port/print/printf.o
+../port/print/sprintf.o
+
+##	floating point stuff, called from and ecvt
+##		fills out page
+
+../port/gen/frexp.o
+../i386/gen/isnand.o
+../i386/crt/fpreal.o
+
+##	page glue
+
+../port/gen/memcmp.o
+
+##	printf internals
+
+../port/print/doprnt.o
+
+##	process startup functions
+
+../port/gen/mktemp.o
+../port/gen/getenv.o
+../port/gen/getopt.o
+../port/stdio/setbuf.o
+../i386/sys/signal.o
+
+##	printf internals, floating pt
+
+../i386/gen/ecvt.o
+../port/gen/gcvt.o
+
+##	misc. stuff, infrequently, randomly called
+##		glue to cross page boundary
+
+../port/gen/atol.o
+../port/gen/atoi.o
+../port/gen/memchr.o
+../port/gen/strchr.o
+../port/gen/strncmp.o
+../port/gen/strrchr.o
+
+##	system calls
+
+../i386/crt/cerror.o
+../i386/sys/close.o
+../i386/sys/access.o
+../i386/sys/chdir.o
+../i386/sys/chmod.o
+../i386/sys/creat.o
+../i386/sys/fcntl.o
+../i386/sys/fstat.o
+../i386/sys/getpid.o
+../i386/sys/ioctl.o
+../i386/sys/kill.o
+../i386/sys/lseek.o
+../i386/sys/open.o
+../i386/sys/read.o
+../i386/sys/sbrk.o
+../i386/sys/stat.o
+../i386/sys/time.o
+../i386/sys/unlink.o
+../i386/sys/utime.o
+../i386/sys/write.o
+
+##	fp masks, misc
+
+../i386/gen/atof.o
+../port/gen/ldexp.o
+../i386/gen/biglitpow.o
+../i386/gen/dtop.o
+../i386/gen/ptod.o
+../i386/gen/ltostr.o
+
+#init ctype_def.o
+_libc__ctype		_ctype
+
+#init gen_def.o
+_libc__cleanup		_cleanup
+_libc_end		end
+_libc_environ		environ
+
+#init mall_def.o
+_libc_malloc		malloc
+#init free_def.o
+_libc_free		free
+_libc__allocs		_allocs
+#init reall_def.o
+_libc_realloc		realloc
+	
+#init stdio_def.o
+_libc__sibuf		_sibuf
+_libc__sobuf		_sobuf
+_libc__smbuf		_smbuf
+_libc__iob		_iob
+_libc__lastbuf		_lastbuf
+_libc__bufendtab	_bufendtab
+
+
+## HIDE all symbols, except those that are :
+## 1. In the branch table
+## 2. In #init's
+## 3. Explicity EXPORTed below
+
+#hide linker *
+#export linker
+___Fp_Used
+__fltused
+errno
+optarg
+opterr
+optind
+optopt

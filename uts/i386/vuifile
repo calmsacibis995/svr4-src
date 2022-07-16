@@ -1,0 +1,112 @@
+/*	Copyright (c) 1987, 1988 Microsoft Corporation	*/
+/*	  All Rights Reserved	*/
+
+/*	This Module contains Proprietary Information of Microsoft  */
+/*	Corporation and should be treated as Confidential.	   */
+
+/*
+#ident	"@(#)kern-mk:vuifile	1.2"
+*/
+
+MEMORY	{
+	DF_stack:	origin	= 0xD0000000,	length	=   0x01000
+/* MB1 and MB2 need space at 10000 for boot parameter string */
+#if defined (MB1) || defined (MB2)
+	KV_loadsite:    origin  = 0xD0011000,   length  =  0x3f0000
+#else
+	KV_loadsite:    origin  = 0xD0010000,   length  =  0x3f0000
+#endif
+
+	KV_sysseg:	origin  = 0xD1000000,	length 	=  0x400000
+	KV_pioseg:	origin  = 0xD2000000,	length 	=  0x400000
+	KV_segmap:	origin	= 0xD2400000,	length	=  0x400000
+
+	UV_ublock:	origin  = 0xe0000000,	length =    0x20000
+	KV_segu:	origin	= 0xe0200000,	length	=  0x400000
+	UV_stack:       origin  = 0x7ffffffc,   length =    0x00000
+	}
+SECTIONS {
+	BKI (COPY): { . += 2; } = 2	/* BKI version number */
+
+	/* sections whose names begin with a period are virtual */
+	dft_stack (NOLOAD):
+		{
+		df_stack	=	.;
+		} > DF_stack
+
+	page0 0xD0000000 (NOLOAD):
+		{
+#if defined (MB1)
+		enetmem =   .+0x1600;
+		bootinfo =	.+0x1700;
+		kspt0 =  	.+0x2000;
+		kpd0 =  	.+0x3000;
+		bpsinfo =	.+0x10000;
+#endif
+#if defined (MB2) 
+		bootinfo =	.+0xd000;
+		kspt0 =		.+0xe000;
+		kpd0 = 		.+0xf000;
+		bpsinfo =	.+0x10000;
+#endif
+#if defined (AT386) || defined (MCA)
+		bootinfo =	.+0x600;
+		kspt0 =		.+0x1000;
+		kpd0 = 		.+0x2000;
+#endif
+	}
+	.text:	{
+		stext = .;
+		../pack.d/kernel/start.o(.text)
+		} > KV_loadsite
+
+	.data ALIGN(0x1000) :	{
+		sdata = .;
+#if defined (MB1)
+			i214dev = .;
+			. = .+0x400;
+#endif
+		../pack.d/kernel/locore.o(.data)
+#ifdef WEITEK_EMULATOR
+		__fltused = .;
+		. += 4;
+#endif /* WEITEK_EMULATOR */
+		} > KV_loadsite
+
+	.bss ALIGN(0x1000) :	{
+		sbss = .;
+		../pack.d/kernel/locore.o(.bss)
+		} > KV_loadsite
+
+	kv_sysseg (NOLOAD):
+		{
+		syssegs		=	.;
+		} > KV_sysseg
+
+	kv_pioseg (NOLOAD):
+		{
+		piosegs		=	.;
+		} > KV_pioseg
+
+	kv_segmap (NOLOAD):
+		{
+		kvsegmap	=	.;
+		} > KV_segmap
+
+	kv_segu (NOLOAD):
+		{
+		kvsegu		=	.;
+		} > KV_segu
+
+	uv_stack (NOLOAD):
+		{
+		userstack	=	.;
+		} > UV_stack
+
+	uv_ublock (NOLOAD):
+		{
+		u		=	.;
+		} > UV_ublock
+
+	}
+

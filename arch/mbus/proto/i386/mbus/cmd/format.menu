@@ -1,0 +1,66 @@
+: /bin/sh
+#	Copyright (c) 1987, 1988  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+
+#ident	"@(#)mbus:proto/i386/mbus/cmd/format.menu	1.1.1.1"
+Install_menu () { cat <<HERE
+
+                           System V/${CPU} ${REL}
+
+                                 DISK FORMAT
+
+Select the desired action:
+
+
+1) Set Disk Parameters:     Choose this action to select default disk and
+                            setup disk parameters.
+
+2) Initial Format:          Choose this action to format the selected drive.
+
+3) Install New Bootstrap:   Choose this action to install a new bootstrap loader
+                            on the hard disk.
+
+4) Add New Defects:         Choose this action to add new defect information
+                            to that which is already on the hard disk.
+
+5) Display Defect list:     Choose this action to display the defect list.
+
+
+HERE
+}
+##
+# Overinstall screen
+#
+Install_over_menu () { cat <<HERE
+
+                         *** WARNING! ***
+
+      This installstion procedure will over-write all system files 
+      on your hard disk drive.  The user is responsible for saving 
+      site specific modifications.  
+
+                         *** WARNING! ***
+
+HERE
+}
+#
+# Initial Installation screen
+#
+Install_init_menu () { cat <<HERE
+
+                         *** CAUTION! ***
+
+       This  installation procedure will format the system hard disk
+       drive,  in preparation for  a complete  software installation. 
+       Any  information on  the  hard disk drive will  be  destroyed.
+
+                         *** CAUTION! ***
+
+HERE
+}

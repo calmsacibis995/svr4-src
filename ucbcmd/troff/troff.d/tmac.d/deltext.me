@@ -1,0 +1,39 @@
+'\"#ident	"@(#)ucbtroff:troff.d/tmac.d/deltext.me	1.1"
+'\"		PROPRIETARY NOTICE (Combined)
+'\"
+'\"This source code is unpublished proprietary information
+'\"constituting, or derived under license from AT&T's UNIX(r) System V.
+'\"In addition, portions of such source code were derived from Berkeley
+'\"4.3 BSD under license from the Regents of the University of
+'\"California.
+'\"
+'\"
+'\"
+'\"		Copyright Notice 
+'\"
+'\"Notice of copyright on this source code product does not indicate 
+'\"publication.
+'\"
+'\"	(c) 1986,1987,1988,1989  Sun Microsystems, Inc
+'\"	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+'\"	          All rights reserved.
+.nr _0 \n(c.
+.\"	@(#)deltext.me	2.1	8/18/80
+.\" This version has had comments stripped; an unstripped version is available.
+.de (d
+.am |d )d
+.sp \\n(bsu
+..
+.de )d
+.if \\n# \
+.	nr $d +1
+.ds # [\\n($d]\k#
+.rr #
+..
+.de pd
+.|d
+.rm |d
+.nr $d 1 1
+.ds # [1]\k#
+..
+.nr c. \n(_0

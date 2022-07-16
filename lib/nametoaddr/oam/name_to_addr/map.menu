@@ -1,0 +1,4 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/map.menu	1.2"
+#menu#Name to Address Mapping
+
+loopback^Local Loopback Protocol^loopback/Menu.loopback

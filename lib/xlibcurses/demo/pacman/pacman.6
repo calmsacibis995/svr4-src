@@ -1,0 +1,100 @@
+.TH PACMAN 6 5/5/82
+.SH NAME
+pacman \- Food Eating CRT Game
+.SH SYNOPSIS
+.B pacman
+[
+.B \-ehm
+]
+[
+.B \-p
+]
+[
+.BI \-n cps
+]
+.SH DESCRIPTION
+.PP
+.I Pacman
+is the familiar video game where the hero (``pacman'') runs around a maze,
+eating food off the floor.
+The pacman is controlled with either the hjkl convention, arrow keys,
+or a pad centered around the D key, using sefc.
+These keys cause an immediate change in direction.
+Hitting space or running into a wall causes the pacman to stop.
+.PP
+There are four monsters running around the maze.
+If they run into the pacman, he gets killed.
+Getting killed for the third time ends the game.
+(Reserve pacmen are shown by @'s in the lower left corner.)
+.PP
+There are four energizers in the corners of the maze.
+Eating an energizer allows the pacman to eat monsters for a limited time.
+The number of turns of monster-eating time remaining are shown in the
+countdown field as they tick off.
+The bell is sounded at 10 turns and for each turn from 4 down to 1.
+.PP
+After eating four monsters, a treasure will appear just below the monsters pen.
+This treasure is worth bonus points, depending on the round.
+It will disappear after a certain elapsed time.
+.PP
+The options control the display format and the difficulty of the game.
+Normally, the pacman and monsters are shown highlighted.
+On some terminals, at low speeds, this highlighting causes enough extra
+output to slow the game down, resulting in delayed response to direction
+changes.
+(You tend to overshoot your turns.)
+The
+.B \-p
+option can be turned on to disable highlighting, often
+resulting in a better game.
+.PP
+Using the
+.B \-n
+option you can give pacman an estimate of the number of characters needed
+per turn to update the screen.
+This estimate, along with your speed, is used to decide how often to
+draw the monsters.
+The monsters are updated every
+.I syncscreen
+turns.  This value is shown in the lower left corner.
+The default, 60 characters, will usually result in a
+.I syncscreen
+value of 1
+in the early rounds and
+higher values in subsequent rounds.
+A higher value will cause less output and less frequent updates of
+monster positions,
+and is useful if you have a very dumb terminal or one with very
+verbose escape sequences
+(such as an ANSI terminal, a VT100, or an HP).
+A lower value can be used to keep
+.I syncscreen
+at 1 in later rounds, on a terminal with very short escape sequences,
+such as a mime.
+.PP
+The
+.BR \-e (easy),
+.BR \-m (medium),
+and
+.BR \-h (hard)
+options control the difficulty of the game.
+The parameter varied is the intelligence of the monsters.
+In the easy game, the monsters have no intelligence.
+They always move at random.
+In the medium game, the monsters gradually get smarter,
+as the players score increases.
+At 10000 points, the monsters are totally smart.
+In the hard game, the monsters get smarter much faster,
+reaching total intelligence at 1000 points.
+.SH FILES
+.DT
+/usr/games/lib/paclog	Score file
+.SH BUGS
+.PP
+Large values of
+.I cps
+do not seem to help when trying to run at 1200 baud on an ANSI
+terminal with highlighting.
+The
+.B \-p
+option seems to be necessary in this case.

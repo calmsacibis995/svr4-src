@@ -1,0 +1,14 @@
+#ident	"@(#)/usr/src/add-on/pkg.mse/pkginfo.sl 1.1 4.0 12/08/90 9093 AT&T-USL"
+
+# mouse pkginfo
+
+PKG="mouse"
+NAME="Mouse Driver Package"
+ARCH="AT386"
+VERSION="3.0"
+VENDOR="AT&T"
+CATEGORY="system"
+CLASSES="none"
+BASEDIR=""
+MAXINST=1
+PREDEPEND="mouse"

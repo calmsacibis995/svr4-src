@@ -1,0 +1,41 @@
+.TH CHGTINFO 1
+.SH NAME
+chgtinfo \- create a temporary version of a terminfo entry
+.SH SYNOPSIS
+TERMINFO=`chgtinfo 
+.BR modifications `
+.br
+export TERMINFO
+.SH DESCRIPTION
+One of the touted drawbacks of terminfo has been that one could
+not create a temporary modification of a terminfo entry.
+.I Chgtinfo\^
+permits the user to make such modifications.
+.P
+The
+.B modifications
+are actual terminfo source statements
+and are passed on to tic for compilation.
+The new terminfo directory tree is printed out so that it may be assigned to
+.SM $TERMINFO .
+Any programs run subsequent to this assignment will make use of the modified
+terminfo entry instead of the original terminfo entry.
+.SH EXAMPLE
+.RS 1i
+TERMINFO=`chgtinfo xhp, smso=\E[3m, smul@,`
+.br
+export TERMINFO
+.RE
+.P
+This will add the 
+.B xhp
+boolean variable, change or add the
+.B smso
+string variable,
+and remove the 
+.B smul
+string variable from the current terminfo entry.
+.SH FILES
+.TP 2i
+/usr/tmp/tinfo*
+temporary directories and files holding modified terminfo entry

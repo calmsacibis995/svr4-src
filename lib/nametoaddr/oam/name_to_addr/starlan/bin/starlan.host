@@ -1,0 +1,60 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/starlan/bin/starlan.host	1.1"
+#
+#	Echo "1" if the name already exists (make sure the comments
+#	are stripped out of hosts files first)....
+#
+
+slan=`cat /etc/net/starlan/hosts 2>/dev/null | sed 's/#.*$//' |
+       egrep "[ 	]$1$"`
+
+slandg=`cat /etc/net/starlandg/hosts 2>/dev/null | sed 's/#.*$//' |
+       egrep "[ 	]$1$"`
+
+if [ "$slan" != "" -a "$slandg" != "" ]
+then
+	echo 1
+	exit
+fi
+
+#
+#	Check to make sure no spaces are in the address string
+#
+
+ret=`echo $2 | awk 'BEGIN       { error = 0 }
+		    NF != 1	{ error = 1 }
+		    /\./	{ error = 1 }
+		    END         { print error }'`
+
+
+if [ $ret -eq 1 ]
+then
+	echo 2
+	exit
+fi
+
+#
+#	Put the entry into /etc/net/starlan/hosts and
+#	/etc/net/starlandg/hosts
+#
+
+mkdir /etc/net /etc/net/starlan /etc/net/starlandg >/dev/null 2>&1
+
+if [ "$slan" = "" ]
+then
+	echo "$2	$1" >>/etc/net/starlan/hosts
+fi
+
+if [ "$slandg" = "" ]
+then
+	echo "$2	$1" >>/etc/net/starlandg/hosts
+fi
+
+if [ "$slan" = "" -a "$slandg" = "" ]
+then
+	echo 0
+elif [ "$slan" = "" ]
+then
+	echo 3
+else
+	echo 4
+fi

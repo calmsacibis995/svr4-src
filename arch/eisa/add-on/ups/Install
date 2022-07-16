@@ -1,0 +1,110 @@
+#ident	"@(#)eisa:add-on/ups/Install	1.1"
+#	UPS Support Install Package
+#
+
+TMP=/tmp/upsdrv.err
+ERROR1=" Errors have been written to the file $TMP."
+rm -f $TMP > /dev/null 2>&1
+NAME="`cat Name`"
+PKG="Olivetti UPS Support Package"
+echo "\n\nInstalling ${NAME}\n\n"
+if [ -x /etc/conf/bin/idcheck -a -x /etc/conf/bin/idbuild -a -x /etc/conf/bin/idinstall ]
+then 
+	:	
+else
+	message "The Installable Driver feature has been removed.  The ${NAME} cannot be installed."
+	exit 1
+fi
+
+RELEASE=`uname -v`
+
+RETVCHK=0
+
+DRVLIST=""
+# find out which drivers are to be installed
+VANSWER=""
+DRVLIST="fpan"
+
+for DRIVER in ${DRVLIST}
+do
+	/etc/conf/bin/idcheck -p $DRIVER > /dev/null 2>&1
+	RETTP=$?
+	if [ $RETTP != 0 ]
+	then
+		break 2
+	fi
+done
+
+ERROR=""
+if [ $RETTP != 0 ]
+then 
+	ERROR="has already been installed.  You cannot install this package \
+on top of the old package.  You must remove the old ${PKG} before you can \
+install the new one"
+
+fi
+
+if [ $RETTP != 0 ]
+then
+	message "The ${PKG} ${ERROR}.  \
+Use Remove Installed Software to remove the existing driver before attempting \
+to install the ${NAME} again."
+	exit 1
+fi
+
+message -c "You are installing the ${NAME}."
+
+if [ $? != 0 ]
+then
+	exit 1
+fi
+
+if [ $RETTP != 0 ]
+then
+	chmod +x Remove
+	./Remove NOBUILD
+fi
+
+############
+for DIR in ${DRVLIST}
+do
+	echo ".\c"
+	/etc/conf/bin/idinstall -a $DIR 2>> $TMP
+	if [ $? != 0 ]
+	then
+        	message "The installation cannot be completed due to an error\
+ in the '$DIR' driver installation. $ERROR1  Please try the installation again.\
+ If the error occurs again, contact your AT&T Service Representative or \
+AT&T Personal Computer Dealer."
+		chmod +x ./Remove
+		./Remove NOBUILD
+		exit 1
+	fi
+done
+
+echo ".\c"
+
+cp ups_daem powerfail /etc
+cp S49ups /etc/rc2.d
+
+echo ".Complete.\n\n"
+
+/etc/conf/bin/idbuild 2>> $TMP
+if [ $? != 0 ]
+then
+        message "The installation cannot be completed due to an error in the \
+kernel reconfiguration. $ERROR1  Please try the installation again.  If the \
+error occurs again, contact your AT&T Service Representative or AT&T Personal \
+Computer Dealer."
+	chmod +x Remove
+	./Remove NOBUILD
+        exit 1
+fi
+
+echo "\n\nRebuilding inittab.\n"
+
+/etc/conf/bin/idmkinit -i /etc/conf/cf.d -o /etc 2>> $TMP
+
+rm -f $TMP
+exit 0
+

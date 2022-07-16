@@ -1,0 +1,60 @@
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+#ident	"@(#)/usr/src/add-on/pkg.wd/preremove.sl 1.1 4.0 12/08/90 62021 AT&T-USL"
+
+FAILURE=1	# fatal error
+
+REBUILD=0
+
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+
+undo_strcf() {
+if [ -f /etc/inet/strcf ]
+then 
+	sed "/\# i386\/$1/s/^	/#	/" < /etc/inet/strcf > /etc/inet/strcf.tmp 
+	mv /etc/inet/strcf.tmp /etc/inet/strcf
+fi
+rm -rf /etc/inet/strcf.tmp
+}
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be removed."
+
+if [ ! -x ${CONFBIN}/idbuild -o ! -x ${CONFBIN}/idinstall ]
+then
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+#put the comment back in /etc/strcf when this package is removed
+undo_strcf wd8003
+
+${CONFBIN}/idcheck -p ${PKG}
+RES="$?"
+if [ "${RES}" -ne "100" -a "${RES}" -ne "0" ]
+then
+	${CONFBIN}/idinstall -d ${PKG}
+	echo "Removing ${NAME} ${PKG} module ..."
+	REBUILD=1
+fi
+if [ "${REBUILD}" = "1" ]
+then
+	# rebuild for changes to take effect
+	
+	${CONFBIN}/idbuild
+	if [ "$?" -ne "0" ]
+	then
+		exit ${FAILURE}
+	else
+		exit 10
+	fi
+fi
+exit 0

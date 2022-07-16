@@ -1,0 +1,285 @@
+#ident	"@(#)/usr/src/add-on/pkg.lp/request.sl 1.1 4.0 12/08/90 38396 AT&T-USL"
+
+
+trap "exit 3" 1 2 3 15
+
+
+##########
+#
+# Make life a little easier...
+##########
+
+CKYORN () {
+	ans=`ckyorn "$@"` || exit $?
+	case "${ans}" in
+	y | yes | Y | YES )  return 0 ;;
+	n | no  | N | NO  )  return 1 ;;
+	esac
+}
+
+CONTINUE () {
+	if CKYORN -d n -h "$1" -p "Should installation continue?\n"
+	then
+		return 0
+	else
+		exit 3
+	fi
+}
+
+environ=$1
+>${environ}
+
+addenv () {
+	eval $1
+	eval echo $1 >>${environ}
+}
+
+
+##########
+#
+# The package isn't really relocatable (yet), but making it so
+# eases testing of the packaging and installation.
+##########
+
+TEST_T=/tmp/t-lp
+[ -r "${TEST_T}" ] && T=`cat ${TEST_T}`
+
+addenv USR=${T}/usr
+addenv USRSBIN=${USR}/sbin
+addenv USRBIN=${USR}/bin
+addenv USRLIB=${USR}/lib
+addenv USRUCB=${USR}/ucb
+addenv VAR=${T}/var
+addenv VARSPOOL=${VAR}/spool
+addenv ETC=${T}/etc
+
+
+##########
+#
+# ${SPOOLDIR} is the name of the old directory where everything was kept.
+# ${VARSPOOLLP} and ${ETCLP} are the names of the new directories where
+# things are now kept.
+# ${SPOOLDIR_BAK} is a place to keep things while installing files;
+# it is needed only if ${SPOOLDIR} and ${VARSPOOL} are identical.
+##########
+
+addenv VARSPOOLLP=${VARSPOOL}/lp
+addenv ETCLP=${ETC}/lp
+addenv USRLIBLP=${USRLIB}/lp
+
+SPOOLDIR_BAK=${VARSPOOL}/.${PKGINST}.bak
+
+getspooldir () {
+	SPOOLDIR=`ckpath -y -o -r -w -x -d /usr/spool/lp \
+		-h "
+		The installation process can restore preSVR4
+		or preSVR3.2 LP print service configurations,
+		if you have saved the spooling directory.
+		Normally this directory was /usr/spool/lp.
+\n\n
+		If you need to stop the installation now to
+		restore the directory from a backup copy, enter
+		\"q\". Otherwise, give its full path-name, or
+		press return for the default, /usr/spool/lp." \
+		-p "
+		Enter the name of the OLD spooling directory;\n
+		just press <return> if this is a new installation\n"
+		` || exit $?
+
+	echo
+
+	if [ -d "${SPOOLDIR}" ]
+	then
+		inode () {
+			ls -lid $1 2>/dev/null | cut -c1-6
+			return 0
+		}
+
+		if [ "x`inode ${SPOOLDIR}`" = "x`inode ${VARSPOOLLP}`" ]
+		then
+			[ -d ${SPOOLDIR_BAK} ] || [ -f ${SPOOLDIR_BAK} ] \
+			&& {
+				echo "
+${SPOOLDIR} is identical to the new spooling directory.  The install
+process needs to move ${SPOOLDIR} aside for awhile,  but the attempt
+to rename it ${SPOOLDIR_BAK} failed.  Please  move the old spooling
+directory to another place and try the installation again.\n"
+				exit 1
+			}
+			addenv SPOOLDIR_BAK=${SPOOLDIR_BAK}
+		fi
+	fi
+
+	addenv SPOOLDIR=${SPOOLDIR}
+}
+
+
+##########
+#
+# See if we will be able to save/restore the current LP configuration
+# (if any).
+##########
+
+echo "
+Examining your system to see if you have the old LP Spooler Utilities."
+
+if [ -d "${USRLIBLP}/model" -a -d "${VARSPOOLLP}" ]
+then
+
+	echo \
+"You already have a new version; that is okay. Installation continues."
+	addenv OLD_VERSION=SVR4.0
+
+
+elif getspooldir && [ ! -d "${SPOOLDIR}" -a ! -d "${VARSPOOLLP}" ]
+then
+
+	echo \
+"You have neither old nor new version. Installation continues."
+	addenv OLD_VERSION=NONE
+
+
+elif [ -d "${SPOOLDIR}/admins" -a -d "${SPOOLDIR}/admins/lp" ]
+then
+
+	echo \
+"You have the SVR3.2 version installed; that is okay.  The current print
+service  configuration  will  be  set  aside,   to let the installation
+proceed.  Later, the configuration will be automatically updated to the
+new form."
+	addenv OLD_VERSION=SVR3.2
+
+
+elif [ ! -s "${SPOOLDIR}/pstatus" ]
+then
+
+	echo \
+"You appear to have had the old or new version installed at  one  time,
+but  there's no configuration information present now. Installation is
+continuing."
+	addenv OLD_VERSION=NONE
+
+
+elif [ ! -s "${SPOOLDIR}/qstatus" -o ! -d "${SPOOLDIR}/interface" ]
+then
+
+	echo \
+"The existing print service configuration looks odd.  Installation  can
+continue, but there may be problems in saving the configuration."
+	addenv OLD_VERSION=SVR3.1
+
+	CONTINUE "
+		If you answer \"n\" (or \"no\") installation will stop to
+		give you a chance to examine the existing configuration
+		in the directory ${SPOOLDIR}, and preserve by hand any
+		existing configuration information. If you answer \"y\"
+		(or \"yes\") installation will proceed but it may fail
+		to preserve the existing configuration."
+
+
+else
+
+	echo \
+"You have the old version installed; that is okay.  The  current  print
+service  configuration  will  be  set  aside,  to let the installation
+proceed.  Later, the configuration will be automatically  converted to
+the new form."
+	addenv OLD_VERSION=SVR3.1
+
+	##########
+	#
+	# Check to see if there are any requests still queued.
+	##########
+	if ls ${SPOOLDIR}/request/*/* 1>/dev/null 2>&1
+	then
+		echo "
+There are still some print requests queued for printing.  Installation
+of the new Spooler over the old configuration will DESTROY them."
+
+		CONTINUE "
+		If you answer \"n\" (or \"no\") installation will stop
+		to give the queued print requests a chance to be printed.
+		If you answer \"y\" (or \"yes\") installation will proceed
+		WITHOUT SAVING any currently queued jobs.
+\n\n
+		If you suspect that there really are no requests still
+		queued, look for strange files in the directories under
+		${SPOOLDIR}/request."
+	fi
+
+
+	if [ -f ${SPOOLDIR}/model/standard ]
+	then
+		echo "
+The existing print service configuration has a  printer  model  called
+\"standard\".   If installation continues it will be LOST."
+
+		CONTINUE "
+		If you answer \"n\" (or \"no\") installation will stop to
+		give you a chance to save the model \"standard\" in a
+		different place or under a different name. You'll find it
+		in the directory ${SPOOLDIR}/model. If you answer \"y\"
+		(or \"yes\") installation will proceed and will DESTROY
+		the existing model called \"standard\". All other models
+		will be left alone."
+	fi
+
+fi
+
+##########
+#
+# Make the "disable" and "enable" commands available to everyone?
+##########
+if CKYORN -d y -h "
+	If you answer \"y\" (or \"yes\") the disable and enable commands
+	will be marked to allow ANY user to disable or enable a
+	printer. This is the way the old LP Spooler worked, and is
+	useful on small systems where anybody who notices a problem
+	with a printer should be able to stop further printing on
+	the printer (i.e. disable the printer).
+\n\n
+	If you answer \"n\" (or \"no\") the disable and enable commands
+	will not be so marked, thus preventing anyone except the
+	\"root\" and \"lp\" users from using them. This is NOT the way
+	the old LP Spooler worked, but is likely to be appropriate
+	for larger systems where regular users should not be
+	interfering with printers." \
+	-p "Should the disable and enable commands be available to ALL users?\n"
+
+then
+	echo "OPEN_ENABLE_DISABLE=y" >>$1
+fi
+
+temp=`pkginfo | grep "oam" | wc -l`
+if [ $temp -eq 1 ]
+then
+	CLASSES="${CLASSES} none OAMadmin OAMmif" 
+	echo CLASSES="${CLASSES}" >>${environ}
+else
+	CLASSES="${CLASSES} none" 
+	echo CLASSES="${CLASSES}" >>${environ}
+	echo "The OAM interface is not installed.  In order to use the OAM"
+	echo "LP interface, you must install OAM and then re-install LP."
+fi
+##########
+#
+# Install the PostScript stuff?
+##########
+if CKYORN -d y -h "
+	If you answer \"y\" (or \"yes\") the programs necessary for using
+	PostScript printers will be installed.
+\n\n
+	If you answer \"n\" (or \"no\") these programs will not be
+	installed. This will prevent the use of a PostScript printer,
+	but will conserve space on the hard disk." \
+	-p "Will you be attaching a PostScript printer to this system?\n"
+then
+	echo CLASSES="${CLASSES} post" >>${environ}
+	echo COMPILE_FONT_TABLES=y >>${environ}
+
+	addenv POSTSCRIPT=${USRLIB}/lp/postscript
+	addenv FONTDIR=${USRLIB}/font
+	addenv TERMINFO=${USR}/share/lib/terminfo
+fi
+
+exit 0

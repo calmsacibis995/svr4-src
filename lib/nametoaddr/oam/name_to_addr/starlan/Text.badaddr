@@ -1,0 +1,17 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/starlan/Text.badaddr	1.1"
+title="ISO Starlan Protocol Address Error"
+columns=55
+rows=13
+text="
+The address entered is not of the correct format.
+ISO Starlan addresses are simple strings.  For this
+menu, the string cannot contain any white space nor
+a dot (".").  For example, the address of machine
+"elvis" might be
+
+	elvis
+
+and the address of machine "james" might be
+
+	jamesaddr
+"

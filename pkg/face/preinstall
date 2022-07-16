@@ -1,0 +1,85 @@
+#ident	"@(#)/usr/src/pkg/face/preinstall.sl 1.1 4.0 12/08/90 38843 AT&T-USL"
+
+trap 'exit 3' 1 2 3 15
+
+groupadd vm > /dev/null 2>&1
+ret=$?
+
+if [ "$ret" -eq "9" ]
+then
+	echo >&2 "WARNING: group vm already exists."
+	echo >&2 "         FACE uses this group-id."
+	echo >&2 "         Installation continues."
+elif [ "$ret" -ne "0" ]
+then
+	echo >&2 "ERROR: unable to create group vm."
+	echo >&2 "       FACE must have this group-id"
+	echo >&2 "       available for installation."
+	echo >&2 "       Installation terminates."
+	exit 1
+fi
+
+
+useradd -g vm -d /home/vmsys -c "FACE executables" -m vmsys > /dev/null 2>&1
+ret=$?
+
+if [ "$ret" -eq "9" ]
+then
+	echo >&2 "ERROR: login vmsys already exists."
+	echo >&2 "       This login must be available for"
+	echo >&2 "       FACE installation to continue."
+	echo >&2 "       Installation terminates."
+	exit 1
+elif [ "$ret" -eq "10" ]
+then
+	echo >&2 "WARNING: unable to update /etc/group for login vmsys."
+	echo >&2 "         Installation continues."
+elif [ "$ret" -eq "12" ]
+then
+	echo >&2 "ERROR: cannot create directory /home/vmsys."
+	echo >&2 "       This directory must not exist before"
+	echo >&2 "       FACE installation can succeed."
+	echo >&2 "       Installation terminates."
+	exit 1
+elif [ "$ret" -ne "0" ]
+then
+	echo >&2 "ERROR: cannot create login vmsys."
+	echo >&2 "       This login must be creatable before"
+	echo >&2 "       FACE installation can succeed."
+	echo >&2 "       Installation terminates."
+	exit 1
+fi
+
+
+
+useradd -g other -d /home/oasys -c "Object Architecture Files" -m oasys > /dev/null 2>&1
+ret=$?
+
+if [ "$ret" -eq "9" ]
+then
+	echo >&2 "ERROR: login oasys already exists."
+	echo >&2 "       This login must be available for"
+	echo >&2 "       FACE installation to continue."
+	echo >&2 "       Installation terminates."
+	exit 1
+elif [ "$ret" -eq "10" ]
+then
+	echo >&2 "WARNING: unable to update /etc/group for login oasys."
+	echo >&2 "         Installation continues."
+elif [ "$ret" -eq "12" ]
+then
+	echo >&2 "ERROR: cannot create directory /home/oasys."
+	echo >&2 "       This directory must not exist before"
+	echo >&2 "       FACE installation can succeed."
+	echo >&2 "       Installation terminates."
+	exit 1
+elif [ "$ret" -ne "0" ]
+then
+	echo >&2 "ERROR: cannot create login oasys."
+	echo >&2 "       This login must be creatable before"
+	echo >&2 "       FACE installation can succeed."
+	echo >&2 "       Installation terminates."
+	exit 1
+fi
+
+exit 0

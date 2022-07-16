@@ -1,0 +1,380 @@
+#ident	"@(#)curses:demo/ft	1.2"
+The following device driver is in the public domain and has been posted to
+USENET.  It implements the "ft" device and the FTIOCSET and FTIOCCANCEL
+ioctl's used by the nap routine in delay.c of curses.  (Otherwise curses
+will attempt to get the effect of nap some other way that won't work as
+well.)
+
+The instructions given here make it easy to install on 4.1BSD,
+but it also needs to be ported to UNIX 5.0.  If someone ports it,
+please let me know, I'll include the USG version in the next curses
+distribution as well. -- MRH
+
+From cbosg!vax135!cornell!dean Wed Feb 17 21:31:02 1982
+Subject: ft driver package
+To: vax135!cbosg!cbosgd!mark
+
+I mentioned two items in a later note of which you are probably well aware.
+First, it doesn't have to be device 25 if you already have some local devices.
+Second, you need to use the 4.1BSD signal stuff (sighold() and sigpause())
+for short times to work reliably.
+
+Good luck!
+			Dean Krafft
+			(decvax!cornell!dean or vax135!cornell!dean)
+
+---------------------------------------------------------------------------
+
+Below is the code and documentation for a "fast" timer driver for 4.1BSD.
+This allows programs to simulate an alarm(2) call with resolution of 1/60
+of a second.  We developed the driver for use with interactive programs
+where very short delays are required.
+
+**** INSTALLATION INSTRUCTIONS ****
+
+ 1) You will need to put the following defines into ioctl.h (both in /sys/h
+	and in /usr/include/sys).
+
+		/* fast timer ioctls */
+		#define FTIOCSET	(('T'<<8)|0)
+		#define FTIOCCANCEL	(('T'<<8)|1)
+
+ 2) The file /sys/conf/files needs to have the line
+
+	/dev/ft.c			optional ft
+
+	added into it.
+
+ 3) The configuration file (e.g. /sys/conf/PICKLE) should have about 8 lines of
+    the form
+
+		pseudo-device ft
+		pseudo-device ft
+		...
+
+	put into it.
+
+ 4) The conf.c file will need to have the following two sets of
+	lines added into it in the appropriate places.
+
+	----------- At approximately line 247 (note: ft.h is created by config)
+
+	#include "ft.h"
+	#if NFT > 0
+		int ftopen(), ftclose(), ftread(), ftwrite(), ftioctl();
+	#   define ftreset nulldev
+	#else
+	#   define ftopen nodev
+	#   define ftclose nodev
+	#   define ftread nodev
+	#   define ftwrite nodev
+	#   define ftioctl nodev
+	#   define ftreset nulldev
+	#endif
+
+	------------ At approximately line 350 (search for "local sites")
+
+	/* 25-99 reserved to local sites */
+			ftopen,         ftclose,        ftread,         ftwrite,        /*25*/
+			ftioctl,        nodev,          nulldev,        0,
+
+	----------------------------------------------------------------------------
+
+ 5) Finally, you will have to /etc/config, make the system, and install
+	the /dev entries (major = 25, minor = 0-7).
+
+
+I hope I haven't forgotten anything in the procedure.  If you have any
+problems, please send me some mail and I will either respond directly or
+publish a fix.  Good luck.
+
+			Dean Krafft
+			Dept. of Computer Science, Cornell University
+			(decvax!cornell!dean or dean.cornell@udel)
+
+--------------------------- /usr/man/man4/ft.4 --------------------------------
+.TH FT 4 
+.UC 4
+.SH NAME
+ft \- fake interval timer
+.SH DESCRIPTION
+.I ft
+is a pseudo-device that makes it possible to simulate an
+.IR alarm (2)
+call with better than 1 second resolution.
+.PP
+To use the interval timer, open one of the files
+.I /dev/ft?.
+This opens the interval timer for exclusive use;
+an attempt by another process to open the timer will fail
+with error indication ENXIO in 
+.I errno
+\- see
+.IR intro (2).
+The resulting file descriptor can be the argument of an
+.IR ioctl (2)
+call:
+.RS 1
+
+ #include <sgtty.h>
+ struct requestbuf { short time; short signo; } request;
+ ioctl( fildes, FTIOCSET, &request);
+
+.RE
+After
+.I time
+sixtieths of a second, a signal of type
+.I signo
+will be sent to the requesting process.
+The requested
+.I time
+may not exceed 60 seconds
+(if longer delays are required the real
+.IR alarm (2)
+call should be used).
+The
+.IR ioctl (2)
+call
+.RS 1
+
+ ioctl( fildes, FTIOCCANCEL, (struct requestbuf *)0 );
+
+.RE
+cancels any outstanding interrupt request.
+.SH FILES
+/dev/ft?
+.SH "SEE ALSO"
+ioctl(2), alarm(2)
+.SH BUGS
+An FTIOCCANCEL request prevents the signal from being sent
+when the interval has expired, but does not actually cancel
+the timeout request.
+It cannot be followed by a new FTIOCSET request
+until the original delay has expired.
+
+----------------------------- /sys/dev/ft.c --------------------------------
+
+/*  ft.c     08/15/81 */
+
+#include "ft.h"
+#if NFT > 0
+/*
+ *  Fast Timer -- a pseudo-device that behaves like an interval timer.
+ *
+ *  Note because of exclusive-open it can also be used as lock files.
+ */
+
+#include "../h/param.h"
+#include "../h/systm.h"
+#include "../h/tty.h"
+#include "../h/dir.h"
+#include "../h/user.h"
+#include "../h/proc.h"
+#include "../h/map.h"
+#include "../h/pte.h"
+#include "../h/conf.h"
+
+/*
+ * per-minor-device state table
+ *
+ * Invariants:
+ *      - device is open iff ftt_procp != 0
+ *      - timeout in progress iff ftt_state != AVAILABLE
+ */
+
+struct fttab {
+
+    struct proc *ftt_procp; /* proctab entry and process id of controlling  */
+    short ftt_pid;          /*   process.                                   */
+
+    short ftt_state;        /* AVAILABLE, CANCELLED, or signal number       */
+
+} fttab[NFT];
+
+#define AVAILABLE   (0)
+#define CANCELLED  (-1)
+
+#define MAXTIMEREQ (60*hz)  /* 1 minute */
+
+/*
+ * open 
+ *
+ * exclusive use only
+ */
+
+/*ARGSUSED*/
+ftopen(d, flag)
+{
+register unsigned dminor;
+register struct fttab *ftp;
+ 
+    dminor = minor(d);
+    if( dminor >= NFT ) {
+		u.u_error = ENXIO;
+		return;
+    }
+    ftp = &fttab[dminor];
+    if( (ftp->ftt_procp != (struct proc *)0)
+      || (ftp->ftt_state != AVAILABLE) ) {
+        u.u_error = EBUSY;
+        return;
+    }
+    ftp->ftt_procp = u.u_procp;
+    ftp->ftt_pid = u.u_procp->p_pid;
+}
+ 
+/*
+ * close
+ */
+
+ftclose(d)
+{
+register unsigned dminor;
+register struct fttab *ftp;
+
+    dminor = minor(d);
+#   ifdef PARANOIA
+        if( dminor >= NFT ) {
+            printf("ERR: ftclose\n");
+            u.u_error = ENXIO;
+            return;
+        }
+#   endif
+    ftp = &fttab[ dminor ];
+    ftp->ftt_procp = (struct proc *) 0;
+    ftp->ftt_pid = 0;
+
+}
+
+/*
+ * dummy read/write routines
+ */
+
+/*ARGSUSED*/
+ftread(d)
+{
+    u.u_error = ENXIO;
+}
+
+/*ARGSUSED*/
+ftwrite(d)
+{
+    u.u_error = ENXIO;
+}
+ 
+/*
+ * ioctl
+ *
+ * all real work is done here using
+ *
+ *  FTIOCSET    request a software interrupt after specified number
+ *              of clock ticks.
+ *  FTIOCCANCEL cancel an outstanding request.
+ */
+
+/*ARGSUSED*/
+ftioctl(dev, cmd, addr, flag)
+caddr_t addr;
+dev_t dev;
+{
+void fttimeout();
+register unsigned dminor;
+register struct fttab *ftp;
+
+    dminor = minor(dev);
+    if( dminor >= NFT ) {
+        printf("ERR: ftioctl!\n");
+        u.u_error = EINVAL;
+    }
+
+    ftp = &fttab[ dminor ];
+
+    /* Make sure invoking process owns the device.  */
+    /* This can only fail if call is from a child   */
+    /*  forked off after opening the ft device.     */
+        if( (u.u_procp != ftp->ftt_procp)
+          || (u.u_procp->p_pid != ftp->ftt_pid) ) {
+            u.u_error = ENXIO;
+            return;
+        }
+
+    /* interpret command */
+
+        switch( cmd ) {
+
+        case FTIOCSET:
+            { struct { unsigned short timereq; short sigreq; } request;
+
+                /* get request, make sure it's reasonable */
+                    if( copyin(addr,(caddr_t)&request, sizeof request) ) {
+                        u.u_error = EFAULT;
+                        return;
+                    }
+                    if( (request.sigreq <= 0) || (request.sigreq > NSIG) 
+                      || (request.timereq > (MAXTIMEREQ)) ) {
+                        u.u_error = EINVAL;
+                        return;
+                    }
+                /* schedule the interrupt */
+                    if( ftp->ftt_state != AVAILABLE ) {
+                        u.u_error = EBUSY;
+                        return;
+                    }
+                    ftp->ftt_state = request.sigreq;
+                    timeout( fttimeout, (caddr_t) ftp, request.timereq );
+            }
+            break;
+
+        case FTIOCCANCEL:
+            (void) spl5();
+            if( ftp->ftt_state != AVAILABLE )
+                ftp->ftt_state = CANCELLED;
+            (void) spl0();
+            break;
+
+        default:
+            u.u_error = ENOTTY;
+            break;
+
+        }
+}
+
+/*
+ * fttimeout
+ *
+ * called by system timeout
+ *
+ * verify that requesting process is still around
+ * verify that request hasn't been cancelled
+ * send the signal
+ */
+void
+fttimeout(ftp)
+register struct fttab *ftp;
+{
+register struct proc *pp;
+register int prevstate;
+
+    prevstate = ftp->ftt_state;
+    ftp->ftt_state = AVAILABLE;
+
+    if( (prevstate == CANCELLED)
+      || ((pp = ftp->ftt_procp) == ((struct proc *)0))
+      || (pp->p_pid != ftp->ftt_pid) )
+        return;
+
+#   ifdef PARANOIA
+        if( (prevstate < 1) || (prevstate >= NSIG) ) {
+            printf("ERR: fttimeout %d\n",prevstate);
+            return;
+        }
+#   endif
+
+    psignal( pp, prevstate );
+
+}
+#endif
+----------------------------------------------------------------------
+
+
+

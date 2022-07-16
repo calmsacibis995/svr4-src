@@ -1,0 +1,78 @@
+#ident	"@(#)/usr/src/add-on/pkg.mse/preremove.sl 1.1 4.0 12/08/90 22597 AT&T-USL"
+
+NAME="AT&T Mouse Driver - Version 3.0"
+FAILURE=1	# fatal error
+
+REBUILD=0
+
+CONFDIR=/etc/conf
+CONFBIN=$CONFDIR/bin
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be removed."
+
+TMP=/tmp/mouse.err1
+ERROR1="An an error was encountered removing the ${NAME}.\
+  The file ${TMP} contains errors reported by the system."
+ERROR2="The kernel rebuild failed.  However all software dealing with the \
+${NAME} has been removed.  The ${NAME} \
+will still appear in the Show Installed Software / Remove Installed \
+Software menus because the kernel still has the mouse driver in it.  \
+Please correct the problem and remove the software again.  The file \
+$TMP contains error reported by the system."
+
+rm -f $TMP > /dev/null 2>&1
+
+
+if [ -x ${CONFBIN}/idcheck -a -x ${CONFBIN}/idbuild -a -x ${CONFBIN}/idinstall ]
+then 
+	:
+else 
+	message ${NOTOOLS}
+	exit ${FAILURE}
+fi
+
+IDERR=0
+for MODULE in mse bmse smse m320
+do
+	${CONFBIN}/idcheck -p ${MODULE}
+	RES="$?"
+	if
+		[ "${RES}" -ne "100" -a "${RES}" -ne "0" ]
+	then
+		${CONFBIN}/idinstall -d ${MODULE} 2>> ${TMP}
+		if [ $? != 0 ]
+		then
+			IDERR=1
+		fi
+		REBUILD=1
+	fi
+done
+
+if [ ${IDERR} != 0 ]
+then
+	message $ERROR1
+	exit ${FAILURE}
+fi
+
+
+RETVAL=0
+
+if
+	[ "${REBUILD}" = "1" ]
+then
+	# rebuild for changes to take effect
+	${CONFBIN}/idbuild 2>> $TMP
+	if [ $? != 0 ]
+	then
+		message $ERROR2
+		exit ${FAILURE}
+	else
+		RETVAL=10
+	fi
+fi
+
+rm -f $TMP 1>/dev/null 2>&1
+rm -f /usr/lib/mousetab 1>/dev/null 2>&1
+
+exit ${RETVAL}

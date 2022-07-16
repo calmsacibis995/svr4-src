@@ -1,0 +1,262 @@
+#ident	"@(#)sti:curses/setup	1.1"
+#
+#	Script for installation of terminfo entries
+#
+cd /install/install
+
+rm -rf /usr/tmp/all.ti
+COMPILE="tic -v "
+PERMLOC=/usr/lib/terminfo
+TIFILES=`ls -aFx *.ti`;
+TMPLOC=/usr/tmp/terminf.wrk
+
+#
+#	This routine locates a terminal name within a terminfo file
+#
+locate_ent()
+{
+	#
+	#	This routine searches for the terminal name within
+	#	the ti files, if found the file's name is displayed.
+	#
+	disp_msg()
+	{
+		FILE=`egrep -l "^${TERMNAME}\||^[^#].*\|${TERMNAME}\|" *.ti`
+		if [ -n "${FILE}" ]
+			then echo "Terminal ${TERMNAME} is located within terminfo file '${FILE}'"
+			else echo Terminal ${TERMNAME} not found.
+		fi
+	}
+
+	#
+	#	Prompt user for terminal name, reject a NULL reply
+	#
+	echo
+	echo "Enter terminal name to be located: \c"
+	read TERMNAME
+	if [ -n "${TERMNAME}" ]
+		then disp_msg
+		else echo Null reply ignored!
+	fi
+}
+#
+#	Search for the given terminal name - If found compile it
+#	into /usr/tmp and then move the SINGLE terminal entry to
+#	${PERMLOC}. Perform all necessary links.
+#
+single_file()
+{
+	#
+	#	This routine performs the actual build, moves
+	#	and links.
+	#
+	tmpbuild()
+	{
+		#
+		#	Clean up from prior run
+		#
+		rm -rf ${TMPLOC}
+		mkdir ${TMPLOC}
+
+		#
+		#	Compile entire file into a temporary location
+		#
+		TERMINFO=${TMPLOC} tic ${FILE}
+
+		#
+		#	Locate the subdirectory of the requested device
+		#
+		PREFIX=`expr ${TERMNAME} : '\(.\)' \| ${TERMNAME}`
+
+		#
+		#	To perform links we get the inode of the actual
+		#	file created by tic, then search for all files
+		#	in the ${TMPLOC} directory with the same inode.
+		#	Those files with the same inode are aliases for
+		#	The original entry.
+		#
+		CURDIR=`pwd`
+		cd ${TMPLOC}
+		INODE=`echo \`ls -i ${PREFIX}/${TERMNAME}\` | cut -f 1 -d ' '`
+		echo Working in ${PERMLOC}
+
+		#
+		#	Ensure ${PERMLOC} directory exists
+		#
+		if [ ! -d "${PERMLOC}" ]
+			then mkdir ${PERMLOC}
+			chmod 775 ${PERMLOC}
+			chown bin ${PERMLOC}
+			chgrp bin ${PERMLOC}
+		fi
+
+		#
+		#	Ensure directory exists for upcoming copy
+		#
+		if [ ! -d "${PERMLOC}/${PREFIX}" ]
+			then mkdir ${PERMLOC}/${PREFIX}
+		fi
+
+		cp ${TMPLOC}/${PREFIX}/${TERMNAME} ${PERMLOC}/${PREFIX}
+		echo Created ${PREFIX}/${TERMNAME}
+		ls -i */* | grep ${INODE} | cut -c7- | while read LINKTO
+		do
+			PARTIAL=${PREFIX}/${TERMNAME}
+			DEST=${PERMLOC}/${LINKTO}
+			#
+			#	Locate the subdirectory of the requested device
+			#
+			LNKPRE=`expr ${LINKTO} : '\(.\)' \| ${LINKTO}`
+
+			#
+			#	Ensure LNKPRE dir exists
+			#
+			if [ ! -d "${PERMLOC}/${LNKPRE}" ]
+				then mkdir "${PERMLOC}/${LNKPRE}"
+			fi
+
+			if [ "${PARTIAL}" != "${LINKTO}" ]
+				then ln ${PERMLOC}/${PARTIAL} ${DEST}
+				echo Linked ${LINKTO}
+			fi
+		done
+		cd ${CURDIR}
+		rm -rf ${TMPLOC}
+	}
+
+	#
+	#	This routine determines the file which contains the
+	#	terminal desired. If found it is compiled via tmpbuild()
+	#
+	looktic()
+	{
+		FILE=`egrep -l "^${TERMNAME}\||^[^#].*\|${TERMNAME}\|" *.ti`
+		if [ -n "${FILE}" ]
+			then tmpbuild
+			else echo Terminal ${TERMNAME} not found.
+		fi
+	}
+
+	#
+	#	Prompt user for terminal name, reject NULL reply
+	#
+	echo
+	echo "Enter terminal name: \c"
+	read TERMNAME
+	if [ -n "${TERMNAME}" ]
+		then looktic
+		else echo Null reply ignored!
+	fi
+}
+#
+#	List all eligible files, and allow building of any one file
+#
+tic_file()
+{
+	#
+	#	Display list of available files
+	#
+	list_files()
+	{
+		echo
+		echo "The following terminfo files may be selected for installation:"
+		echo
+		ls -aFx *.ti
+	}
+
+	#
+	#	The user's file must be in our list
+	#
+	valid_file()
+	{
+		echo /usr/tmp/all.ti ${TIFILES} | grep ${FILE} > /dev/null
+		return $?
+	}
+
+	#
+	#	Ensure only one file is specified
+	#
+	multiple()
+	{
+		echo ${FILE} | egrep " |	" > /dev/null
+		if [ $? -eq 0 ] 
+			then echo "Error: Only one file may be specified!"
+				return 0
+			else return 1
+		fi
+	}
+
+	#
+	#	Display file names, and loop over the user's replies
+	#
+	list_files
+	while :;
+	do
+		rm -rf /usr/tmp/all.ti
+		echo
+		echo "Enter a file name, 'all', 'done', or 'files': \c"
+		read FILE
+		if [ -n "${FILE}" ]
+			then if [ "${FILE}" = "all" ]
+				then rm -rf /usr/tmp/all.ti
+					cat *.ti > /usr/tmp/all.ti
+					FILE=/usr/tmp/all.ti
+			fi
+			if multiple 
+				then :;
+				#
+				#	If the user's reply is not NULL
+				#	continue parseing
+				#
+				elif [ "${FILE}" = "done" ] 
+						then return
+		
+					elif [ "${FILE}" = "files" ]
+						then list_files
+		
+					#
+					#	If user gave us a file name,
+					#	verify it as a .ti file, and 
+					#	compile it
+					#
+					elif [ -f "${FILE}" ] 
+						then if valid_file
+							then ${COMPILE} ${FILE}
+							else echo Error: ${FILE} is not in the list!
+						fi
+		
+						else echo Error: ${FILE} is not a file!
+					fi
+		else echo Null reply ignored!
+		fi
+	done
+}
+
+#
+#	Main loop of the script, handles main menu
+#
+while :;
+	do
+		echo
+		echo "       0       Terminate installation"
+		echo
+		echo "       1       Install terminfo file(s)"
+		echo
+		echo "       2       Locate a specific terminal within terminfo file(s)"
+		echo
+		echo "       3       Compile a SINGLE terminal entry"
+		echo
+		echo "Enter option: \c"
+		read OPTION
+		if [ -n "${OPTION}" ]
+			then
+			case ${OPTION} in
+				0)	exit;;
+				1)	tic_file;;
+				2)	locate_ent;;
+				3)	single_file;;
+				*)	echo "Invalid option";;
+			esac
+			else echo "Null reply ignored!"
+		fi
+	done

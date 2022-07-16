@@ -1,0 +1,23 @@
+#ident	"@(#)curses:demo/pacman/README	1.2"
+Pacman has been tested on cbosgd (running 4.1BSD with the fast timer
+driver added), and on vanilla 5.0 systems on a VAX and on a 3B.
+It is strongly urged that you add the fast timer driver (../ft) since
+otherwise the nap mechanism won't work very well.  (On 5.0, for
+example, it will feel strange every time you hit a key.)
+To my knowledge, ft needs to be ported to 5.0, and I don't know of
+anyone who has done this.
+
+Pacman should work on any system that can run this version of curses.
+The worst that will happen is that turns will only go one per second,
+resulting in a very slow (and boringly easy) game.  You need some form
+of improved nap to make the game go fast enough to be interesting.
+
+Recent changes to Pacman make it work reasonably well at 1200 baud on
+verbose terminals such as HP's, vt100's, and Ambassadors.  However,
+it still feels better at high speeds and on terse terminals such as
+the mime, concept, blit, and adm3a.  ("verbose" and "terse" refer to
+the length of the cursor addressing sequence - 3 or 4 characters is
+terse, 8 is verbose.)  The improvement is to use the draino function,
+which needs TIOCOUTQ, which, alas, only exists on 4.1BSD.  (But all
+the ioctl does is return the number of characters in the output queue,
+so it ought to be trivial to add to 5.0.)

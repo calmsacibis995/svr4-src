@@ -1,0 +1,32 @@
+#ident	"@(#)/usr/src/add-on/pkg.oam/postinstall.sl 1.1 4.0 12/08/90 61426 AT&T-USL"
+
+#
+# Link in the 4.0 backup and restore commands
+#
+
+if [ ! -z "`echo ${CLASSES} | grep extended`" ]
+then
+	ln -s /usr/sbin/backup /usr/bin/backup
+	ln -s /sbin/restore /usr/bin/restore
+fi
+
+# Work-around for long UFS pathname
+
+if [ -d "${MENU}/netservices" ]
+then
+	FSTYPE="`/etc/devnm ${MENU}/netservices |
+		sed -e 's/ .*//' |
+		xargs fstyp`"
+
+	if [ "${FSTYPE}" = "ufs"  -a ! -d "${MENU}/netservices/basic_networking" ]
+	then
+		echo "## Creating symbolic link for long UFS pathname."
+		ln -s ${MENU}/netservices/basic_networki ${MENU}/netservices/basic_networking
+		if [ $? -ne 0 ]
+		then
+			echo "WARNING: Could not create symbolic link for basic_networking!"
+		fi
+	fi
+fi
+
+exit 0

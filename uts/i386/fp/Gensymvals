@@ -1,0 +1,97 @@
+
+#ident	"@(#)kern-fp:Gensymvals	1.1"
+
+# This shell script generates assembler .set pseudo ops
+# that specify the offsets of symbols in structures.
+#
+# The resulting symvals.h file is included by e80387.h, which is included
+# by the .s files before assembly.
+
+
+# create C source file that includes needed header files
+
+cat <<END >$$.1.c
+#include        "sys/types.h"
+#include        "sys/immu.h"
+#include        "sys/tss.h"
+#include        "sys/seg.h"
+#include        "sys/signal.h"
+#include        "sys/fs/s5dir.h"
+#include        "sys/user.h"
+END
+
+# Any arguments are evaluated so as to propagate elements of the
+# cross-environment.
+while [ "$*" ]
+do
+	front=`expr "${1}" : '\([^=]*\)=.*'`
+	back=`expr "${1}" : '[^=]*=\(.*\)'`
+	if [ x${CCSTYPE} = xELF ]
+	then
+		back=`echo $back | sed 's/-O//g'`
+	fi
+	eval ${front}=\"${back}\"
+	shift
+done
+
+# compile the header files to produce assembly code that contains
+# symbol value definitions
+${CC} ${CFLAGS} -S -g -I.. $$.1.c
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+# extract lines with the needed symbols
+if [ x${CCSTYPE} = xELF ]
+then
+	tool/setfilter $$.1.s > symvals.h << EOF
+p_sysid
+u_caddrflt
+u_fps
+u_fpvalid
+EOF
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+else
+
+egrep \
+'p_sysid
+u_caddrflt
+u_fps
+u_fpvalid
+' $$.1.s >$$.2.s
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+# convert symbol value definitions into assembler .set pseudo ops
+
+
+# Watch out for the tabs below:
+sed -e 's|[ 	][ 	]*| |g
+        s| *\.def *\([a-zA-Z0-9_.]*\); *\.val *\([0-9]*\).*|	.set	\1,\2|' \
+$$.2.s >symvals.h
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+fi
+
+/bin/grep USER_FP ${INCRT:-..}/sys/seg.h >>symvals.h
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+rm -fr $$.*

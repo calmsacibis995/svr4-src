@@ -1,0 +1,13 @@
+#ident	"@(#)/usr/src/add-on/pkg.oam/pkginfo.sl 1.1 4.0 12/08/90 26558 AT&T-USL"
+
+PKG="oam"
+PREDEPEND="oam"
+NAME="Operations, Administration, and Maintenance"
+ARCH="AT386"
+RELEASE="4.0"
+VERSION="1"
+VENDOR="AT&T-SF"
+
+CLASSES=""
+ORDER="foundation OAM_basic OAM_extended OAMmif"
+CATEGORY="application"

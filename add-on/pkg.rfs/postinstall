@@ -1,0 +1,179 @@
+#ident	"@(#)/usr/src/add-on/pkg.rfs/postinstall.sl 1.1 4.0 12/08/90 35927 AT&T-USL"
+
+# install a module.  $1 is the module name
+
+do_install() {
+	OPTS=""	# part of idinstall and -a -clop hack
+	ERR=/tmp/${1}.err
+	if
+		[ -f ${1}.Driver.o ]
+	then
+		mv ${1}.Driver.o Driver.o
+	fi
+	if
+		[ -f ${1}.Space.c ]
+	then
+		mv ${1}.Space.c Space.c
+	fi
+	if
+		[ -f ${1}.Master ]
+	then
+		mv ${1}.Master Master
+	fi
+	if
+		[ -f ${1}.System ]
+	then
+		sed "${SEDCMD1}" ${1}.System >System
+		rm -rf ${1}.System
+	fi
+	if
+		[ -f ${1}.Mfsys ]
+	then
+		mv ${1}.Mfsys Mfsys
+		OPTS="-c"
+	fi
+	if
+		[ -f ${1}.Sfsys ]
+	then
+		sed "${SEDCMD2}" ${1}.Sfsys >Sfsys
+		rm -rf ${1}.Sfsys
+		OPTS=${OPTS}"l"
+	fi
+	if
+		[ -f ${1}.Node ]
+	then
+		mv ${1}.Node Node
+	fi
+	echo "Installing ${NAME} ${1} module ..."
+	${CONFBIN}/idcheck -p ${1} > ${ERR} 2>&1
+	if
+		[ "$?" = "0" ]
+	then
+		${CONFBIN}/idinstall -a ${1} > ${ERR} 2>&1
+		RET=$?
+	else
+		${CONFBIN}/idinstall -u ${1} > ${ERR} 2>&1
+		RET=$?
+	fi
+
+	if [ ${RET} != "0" ]
+	then
+			message "The installation cannot be completed due to \
+an error in the driver installation during the installation of the ${1} \
+module of the ${NAME}.  The file ${ERR} contains the errors."
+			exit ${FAILURE}
+	fi
+	rm -rf ${ERR}
+}
+
+FAILURE=1	# fatal error
+
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be installed."
+
+SEDCMD1="s/[	 ]N[	 ]/	Y	/"
+SEDCMD2="s/[	 ]N/	Y/"
+
+cd /var/sadm/pkg/${PKG}/install
+
+# determine that ID/TP tools are available
+
+if
+	[ ! -x ${CONFBIN}/idbuild -o ! -x ${CONFBIN}/idinstall ]
+then
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+
+# install modules
+
+
+cd /tmp/rfs
+for module in RFS 
+do
+	
+	do_install ${module}
+done
+
+rm -f /etc/rfs/nspip
+
+# rfuadmin have moved from /usr/bin to /etc/rfs
+
+if
+	[ -f /usr/bin/rfudaemon ]
+then
+	rm -f /usr/bin/rfudaemon
+fi
+
+if
+	[ -f /usr/bin/rfuadmin ]
+then
+	mv /usr/bin/rfuadmin /etc/rfs/rfuadmin
+fi
+
+#	Do the idload(1M) command if it needs to be done...
+
+if
+	[ -f /etc/rfs/auth.info/uid.rules -a ! -f /etc/rfs/auth.info/.\<uid.rules\> ]
+then
+	idload >/dev/null 2>&1
+fi
+
+#	Initialize service codes for all installed transport providers
+#	but first remove any old, potentially obsolete entries (SVR3.X
+#	entries specify id listen - this should now be root).  Note:
+#	pmadm adds the entry to all currently defined listeners.
+
+NLS=/usr/sbin/nlsadmin
+
+for n in `$NLS -x | sed 's/	.*$//'`
+do
+	$NLS -r 105 $n >/dev/null 2>&1
+done
+pmadm -a -t listen -s 105 -i root -v `$NLS -V` -y "RFS server" -m "`$NLS -c /usr/net/servers/rfs/rfsetup`" >/dev/null 2>&1
+
+#	add entry in /etc/dfs/fstypes
+
+if
+	[ ! -d /etc/dfs ]
+then
+	mkdir /etc/dfs
+fi
+
+if
+	[  -s /etc/dfs/fstypes ]
+then
+	grep '^$PKG' /etc/dfs/fstypes > /dev/null 2>&1
+	if
+		[ "$?" -ne "0" ]
+	
+	then
+		echo "$PKG	$NAME: $VERSION" >> /etc/dfs/fstypes
+	fi
+else
+	echo "$PKG	$NAME: $VERSION" > /etc/dfs/fstypes
+fi 
+
+# rebuild for changes to take effect
+
+TMP=/tmp/rfs.$$
+${CONFBIN}/idbuild 2>>${TMP}
+if
+	[ "$?" -ne "0" ]
+then
+	echo "An error has occurred during the rebuild of the UNIX System."
+	echo "Errors have been written the file " ${TMP}
+	exit ${FAILURE}
+fi
+
+rm -f ${TMP} 1>/dev/null 2>/dev/null
+removef ${PKGINST} /tmp/rfs/RFS.Driver.o >/dev/null
+removef ${PKGINST} /tmp/rfs/RFS.Space.c >/dev/null
+removef ${PKGINST} /tmp/rfs/RFS.Mfsys >/dev/null
+removef ${PKGINST} /tmp/rfs/RFS.Sfsys >/dev/null
+removef ${PKGINST} /tmp/rfs >/dev/null
+removef -f ${PKGINST}
+exit 10

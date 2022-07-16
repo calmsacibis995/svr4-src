@@ -1,0 +1,15 @@
+#ident	"@(#)/usr/src/add-on/pkg.nsu/pkginfo.sl 1.1 4.0 12/08/90 3239 AT&T-USL"
+
+# NSU pkginfo
+
+PKG="nsu"
+NAME="Networking Support Utilities"
+ARCH="i386"
+RELEASE="4.0"
+VERSION="1"
+VENDOR="AT&T-SF"
+CATEGORY="system"
+CLASSES=""
+BASEDIR=""
+MAXINST=1
+PREDEPEND="nsu"

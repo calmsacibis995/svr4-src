@@ -1,0 +1,785 @@
+#ident	"@(#)proto:i386/at386/tape/INSTALLA	1.3.6.2"
+
+# Enough of the system is copied to the hard disk that we can boot there
+# and copy the remainder of the system.
+
+PATH=/sbin:/usr/bin:/etc
+PATH=$PATH:/install/sbin:/install/usr/bin:/install/etc:/install/usr/sbin
+PATH=$PATH:/etc/fs/s5
+export PATH
+
+trap 'trap "" 1 2 3 9 15;
+	set +e;
+	cd /;
+	echo "\nYou have canceled the installation of the UNIX System.
+If you wish to re-run it, type INSTALL at the prompt.
+Please consult your \"Installation Guide\"
+for further information.";
+	rm -f /tmp/FLG /core /etc/.mnt.lock;
+	mv /mnt/etc/UGpasswd /mnt/etc/passwd > /dev/null 2>&1;
+	mv /mnt/etc/UGprofile /mnt/etc/profile > /dev/null 2>&1;
+	mv /mnt/etc/UGshadow /mnt/etc/shadow > /dev/null 2>&1;
+	mv /mnt/etc/UGgroup /mnt/etc/group > /dev/null 2>&1;
+	mv /mnt/etc/UGBackup /mnt/etc/Backup > /dev/null 2>&1;
+	mv /mnt/etc/UGIgnore /mnt/etc/Ignore > /dev/null 2>&1;
+	mv /mnt/etc/UGfstab /mnt/etc/fstab > /dev/null 2>&1;
+	umount /mnt/home > /dev/null 2>&1;
+	umount /mnt/stand > /dev/null 2>&1;
+	umount /mnt/usr  > /dev/null 2>&1;
+	umount /mnt/tmp > /dev/null 2>&1;
+	umount /mnt/var > /dev/null 2>&1;
+	umount /mnt/home2 > /dev/null 2>&1;
+	umount /tmp  > /dev/null 2>&1;
+	umount /dev/dsk/0s1  > /dev/null 2>&1;
+	umount /mnt > /dev/null 2>&1; sync > /dev/null 2>&1;
+exit 2' 1 2 3 15
+
+cd /
+svblks=10
+upgrade=0
+newinstall=0
+vtoc=0
+rootfs=0
+user=0
+usrfs=0
+
+elements()
+{
+IFS="	"
+SECOND=$2
+OPTION=$1
+SZ=$3
+while read ele name ro disk1 disk2 slice sz min_sz vfst
+do
+	if [ "$ele" = "#" -o "$ele" = "" ]
+	then continue
+	fi
+	if [ "${OPTION}" = "REQ" ]
+	then
+		if [ "$ro" = "R" ]
+		then
+			echo "0\t$name\t$vfst\t$ele"
+			continue
+		fi
+	fi
+	if [ "$ro" != "${OPTION}" ]
+	then continue
+	fi
+	if [ "${OPTION}" != "R" ]
+	then
+		echo "\nDo you wish to install ${ele} (y or n)? \c"
+		read ans < /dev/tty
+	else ans=Y
+	fi
+	while [ 1 ]
+	do
+	if [ "$ans" = "y" -o "$ans" = "Y" ]
+	then
+		if [ "$vfst" != "" ]
+		then
+		    ans=`while [ 1 ]
+		    do
+			IFS=", "
+			set $vfst
+			if [ "$1" = "$vfst" ]
+			then echo $1
+				break
+			fi
+			echo "\nPlease select the File System Type for ${ele} (${name}) from\n\
+the following list:\n\t\t${vfst}\nPlease press ENTER for the default type, $1. \c" >&2
+			read fans < /dev/tty
+			if [ "$fans" = "" ]
+			then fans=$1
+			fi
+			if [ "$fans" != "ufs" -a "$fans" != "bfs" -a "$fans" != "s5" -a "$fans" != "s52k" ]
+			then echo "Please select only from ${vfst}" >&2
+			else
+			if expr "$vfst" : ".*${fans}" > /dev/null
+			then echo $fans
+			     break
+			else echo "Please select only from ${vfst}" >&2
+			fi
+			fi
+		    done`
+		else ans="-"
+		fi
+		if [ "${SECOND}" = "Yes" -a "${disk2}" = "Yes" ]
+		then
+			drive=`while [ 1 ]
+			do
+echo "Please select the drive upon which you wish to install ${ele} (0 or 1)? \c" >&2
+			read fdrive < /dev/tty
+			if [ "${fdrive}" = "" ]
+			then fdrive=0
+			fi
+			if expr $fdrive : '^[0-1]$' > /dev/null
+			then echo $fdrive
+			     break
+			else echo "Please select 0 or 1" >&2
+			fi
+			done`
+		else drive=0
+		fi
+		echo "${drive}\t${name}\t${ans}\t${ele}" >> /tmp/hd.lay
+		if [ "${ele}" = "/" ]
+		then echo "rootfstype=${ans}" > /tmp/ROOTFS
+		fi
+		break
+	elif [ "$ans" = "n" -o "$ans" = "N" ]
+	then	break
+	else	echo "Please answer \"y\" or \"n\": \c"
+		read ans < /dev/tty
+	fi
+	done
+done < /install/etc/disk.ele${SZ}
+}
+
+detune ()
+{
+MEM=$1
+DISK=$2
+SWAPMULT=$3
+THRESHOLD=12	# MB
+set +e
+mv /tmp/hd.${DISK}.lay /tmp/hd.${DISK}.tmp
+
+IFS="	"
+while read slice ele fsty sz min_sz_ro
+do
+	if [ "$ele" = "/dev/swap" ];then
+		min_sz=`expr $min_sz_ro : '\(.*\)[RO]$'`
+		ro=`expr $min_sz_ro : '.*\([RO]\)$'`
+		T2=`expr $THRESHOLD \* 2`
+		if [ $MEM -gt $T2 ];then
+			min_sz=$MEM
+		else
+			if [ $MEM -gt $THRESHOLD ] ; then
+				MEMPROD=`expr $min_sz + $MEM`
+				if [ `expr $MEMPROD % 2` -ne 0 ] ; then
+					min_sz=`expr $MEMPROD / 2 + 1`
+				else
+					min_sz=`expr $MEMPROD / 2`
+				fi
+			fi
+		fi
+		min_sz_ro=${min_sz}${ro}
+		sz=${min_sz}M
+	fi
+	echo "${slice}	${ele}	${fsty}	${sz}	${min_sz_ro}" >> /tmp/hd.${DISK}.lay
+done < /tmp/hd.${DISK}.tmp
+rm -f /tmp/hd.${DISK}.tmp
+}
+
+setup()
+{
+DISK=$1
+SECOND=$2
+SZ=$3
+ONEMB=1048576
+MEM=`memsize`
+
+set +e
+
+if [ `expr $MEM % $ONEMB` -ne 0 ] ; then
+	MEM=`expr $MEM / $ONEMB + 1`
+else
+	MEM=`expr $MEM / $ONEMB`
+fi
+> /tmp/hd.${DISK}.lay
+while read drive name fsty ele
+do
+	if [ ${drive} != ${DISK} ]
+	then continue
+	fi
+	IFS="	"
+	while read tele name ro disk1 disk2 slice sz min_sz vl
+	do
+	if [ "$ele" = "$tele" ]
+	then
+		if [ "$ele" = "/dev/swap"  -o "$ele" = "/dev/dump" ] ; then
+			if [ `expr $sz : '.*m$'` -eq 0 ] ; then
+				min_sz=`expr $sz : '\(.*\)[MW]$'`
+			else
+				MULT=`expr $sz : '\(.*\)m$'`
+				if [ "$ele" = "/dev/swap" ] ; then
+					SWAPMULT=$MULT
+				fi
+				min_sz=`expr $MEM \* $MULT`
+				sz=${min_sz}M
+			fi
+		fi
+		echo "${slice}	${ele}	${fsty}	${sz}	${min_sz}${ro}" >> /tmp/hd.${DISK}.lay
+		break;
+	fi
+	done < /install/etc/disk.ele${SZ}
+done < /tmp/hd.lay
+if [ -s /tmp/hd.${DISK}.lay ]
+then if [ ${DISK} = 0 ] 
+     then
+     detune $MEM $DISK $SWAPMULT
+     set -e
+     disksetup -d /tmp/hd.${DISK}.lay -IB -b /install/etc/boot /dev/rdsk/${DISK}s0
+     else disksetup -d /tmp/hd.${DISK}.lay -I /dev/rdsk/${DISK}s0
+     fi
+else echo "\nYou have not allocated any slices/file systems on your second drive,"
+     echo "you may run \"diskadd\" after completing installation if you wish to"
+     echo "install your second drive."
+fi
+rm -f /tmp/hd.${DISK}.lay
+}
+
+rm -f /tmp/FLG /core /etc/.mnt.lock
+echo "\n"
+
+set +e
+machine_type > /dev/null 2>&1
+MACH=$?
+if [ ! -f /etc/mnttab ]
+then > /etc/mnttab
+fi
+
+#Check to see if the VTOC is OK or if it is a pristine system
+dd if=/dev/rdsk/0s1 count=1 > /dev/null 2>&1
+if [ "$?" != "0" ]
+then
+	vtoc=1
+	newinstall=1
+fi
+
+#Check root filesystem
+
+if [ "$vtoc" = 0 ]
+then
+	echo "Please wait while existing file systems are checked for consistency ....\c"
+	/etc/fs/s5/mount -r /dev/dsk/0s1 /mnt > /dev/null 2>&1
+	if [ "$?" != "0" ]
+	then /etc/fs/ufs/mount -r /dev/dsk/0s1 /mnt > /dev/null 2>&1
+	     if [ "$?" != "0" ]
+	     then
+		rootfs=1
+	     fi
+	fi
+	echo "...\c"
+	cp /mnt/etc/vfstab /tmp/vfstab.old > /dev/null 2>&1
+
+#Check for usr filesystem
+#If there is one, check to see if it is ok
+
+	if [ "$rootfs" = "0" ]
+	then
+		if [ -f /mnt/etc/vfstab ]
+		then
+		while read special fsck_dev mount_pt fs_type fsck_pass auto_mnt mnt_flgs
+		do
+		    if [ "$mount_pt" = "/usr" ]
+		    then
+			/etc/fs/${fs_type}/mount -r ${special} /mnt/usr > /dev/null 2>&1
+			echo "...\c"
+			break
+		    fi
+		done < /mnt/etc/vfstab
+		fi
+
+#If all goes well, root is mounted on /mnt and usr is mounted
+#on /tmp
+
+#Check to see if this is an AT&T 4.0 system
+
+		echo "...\c"
+		release=`/mnt/usr/bin/mcs -p /mnt/etc/conf/pack.d/kd/Driver.o 2>/dev/null | /mnt/sbin/grep "@" 2>/dev/null | /mnt/usr/bin/cut -d" " -f3 2>/dev/null`
+		if [ "$release" != "4.0" ]
+		then
+		#
+		# check to see if its an mcs stamp rather than the
+		# above pstamp stlye version stamp
+		#
+		release=`/mnt/usr/bin/mcs -p /mnt/etc/conf/pack.d/kd/Driver.o 2>/dev/null | /mnt/sbin/grep "@" 2>/dev/null | /mnt/usr/bin/cut -d" " -f5 2>/dev/null`
+		fi
+		if [ "$release" != "4.0" ]
+		then
+echo "\n\nWARNING:  You have a UNIX System installed on your hard\n\
+disk which is NOT AT&T UNIX System V Release 4.0.\n\
+Installation of the AT&T UNIX System V Release 4.0 will\n\
+replace your existing system and files.\n"
+			newinstall=1
+		fi
+
+		umount /mnt/usr > /dev/null 2>&1
+		umount /dev/dsk/0s1 > /dev/null 2>&1
+	fi
+	echo "\n"
+fi
+
+set -e
+echo
+
+echo "Please strike ENTER to install the UNIX System\non your hard disk or DEL to cancel the installation.\c"
+read a
+while [ "$a" != "" ]
+do
+	echo "Please strike ENTER to install the UNIX System\non your hard disk or DEL to cancel the installation.\c"
+	read a
+done
+#Is it a new installation or an upgrade
+
+if [ "$newinstall" != "1" ]
+then
+	echo "\nYou may overlay your existing UNIX System with a new UNIX System,\n\
+this will leave your user files intact, or you may replace everything\n\
+on the disk with the new UNIX System (losing all existing user files\non the disk)."
+
+	echo "\nDo you wish to overlay your existing UNIX System with a\nnew UNIX System (y or n)? \c"
+	while [ 1 ]
+	do
+		read ans
+		if [ "$ans" = "n" -o "$ans" = "N" ]
+		then
+			newinstall=1
+			break
+		elif [ "$ans" = "y" -o "$ans" = "Y" ]
+		then
+			if [ "$vtoc" = "1" -o "$rootfs" = "1" -o "$usrfs" = "1" ]
+			then
+				echo "\nYou will be unable to do an overlay because your system"
+				echo "does not contain a valid AT&T UNIX System V Release 4.0 System.  Please consult"
+				echo "your \"Release Notes\" for further information."
+				echo "Please strike ENTER to continue with a new installation"
+				echo "or DEL to cancel the overlay installation procedure. \c"
+				read ans
+				while [ "$ans" != "" ]
+				do
+					echo "\nPlease strike ENTER to continue with\n\
+a new installation or DEL to cancel the installation.\c"
+					read ans
+				done
+				newinstall=1
+				break
+			else
+				upgrade=1
+				break
+			fi
+		else
+			echo "Overlay your existing UNIX System (y or n)? \c"
+		fi
+	done
+fi
+
+if [ "$newinstall" = "1" ]
+then
+	echo "\nWARNING: A new installation of the UNIX System will destroy"
+	echo "all files currently on the system.  Do you wish to continue (y or n)?  \c"
+	read ans
+	while [ "$ans" != "y" -a "$ans" != "n" -a "$ans" != "Y" -a "$ans" != "N" ]
+	do
+		echo "\nInstall a new system (y or n)?  \c"
+		read ans
+	done
+
+	if [ "$ans" = "n" -o "$ans" = "N" ]
+	then
+		cd /
+		exit 0
+	fi
+
+	while [ 1 ]
+	do
+		set +e
+		rm -f /tmp/FLG /core /etc/.mnt.lock
+		FLG=0
+		export FLG
+###################################################################################
+# If support for disks with > 1024 cyls (using a controller that doesn't provide
+# transparent logical translation) is required, the following eight lines should be
+# uncommented. (This assumes the changes to disksetup and diskadd.sh were also made.)
+#		set +e
+#		disksetup -O		# Manually enter disk parameters
+#		dOerr=$?
+#		set -e			# Exit if any error
+###################################################################################
+		SECOND=No
+		set +e
+		( < /dev/rdsk/1s0 ) > /dev/null 2>&1
+		if [ $? = 0 ]
+		then
+			echo "This system is equipped with two hard disk devices\n\
+that can be used for installation of the UNIX System.\n"
+			echo "You can elect to install the entire UNIX System on the\n\
+primary hard disk, or to install some of the UNIX System\ncomponents onto the secondary hard disk, allowing you,\n\
+for example, to create a larger root file system on the primary.\n"
+			echo "The next step will create partition(s) on your hard disk(s).\n\
+Even if you partition both hard disks now, you may still\n\
+elect to install the UNIX System just on the primary hard disk.\n"
+			echo "Do you wish to partition both hard disks at this time (y or n)? \c"
+			while read ans
+			do
+			if [ "$ans" = "y" -o "$ans" = "Y" -o "$ans" = "n" -o "$ans" = "N" ]
+			then break;
+			echo "\nPartition both hard disks (y or n)? \c"
+			fi
+			done
+			if [ "$ans" = "y" -o "$ans" = "Y" ]
+			then SECOND=Yes
+			fi
+		fi
+		echo "\nIf you wish to use part of your hard disk for\n\
+other operating system(s) other than the UNIX System,\n\
+such as MS-DOS, that space MUST be reserved now."
+		echo "You are about to partition hard disk 0.\n\
+Please strike ENTER when ready or DEL to cancel the installation. \c"
+		read ans
+		fdisk /dev/rdsk/0s0
+		SZ=`partsize /dev/rdsk/0s0`
+		if [ $SECOND = Yes ]
+		then
+			echo "You are about to partition hard disk 1.\n\
+Please strike ENTER when ready or DEL to cancel the installation. \c"
+			read ans
+			fdisk /dev/rdsk/1s0
+			SZ0=$SZ
+			SZ1=`partsize /dev/rdsk/1s0`
+			SZ=`expr $SZ0 + $SZ1`
+		fi
+		if [ $SZ -lt 35 ]
+		then echo "You have allocated less than 35 megabytes to the UNIX Operating System.\n\
+Please restart the Installation and allocate more.\n"
+			cd /
+			umount /mnt/usr > /dev/null 2>&1
+			umount /dev/dsk/0s1 > /dev/null 2>&1
+			exit 1
+		fi
+		if [ $SZ -lt 130 ]
+		then SMALL=sm
+		else SMALL=""
+		fi
+		echo "\nHard disk partitioning complete."
+		echo "\nYou have allocated $SZ megabytes to the UNIX Operating System.\n"
+		if [ "${SECOND}" = "Yes" ]
+		then echo "Disk 0 has $SZ0 megabytes, disk 1 has $SZ1 megabytes.\n"
+		fi
+		derr=1
+
+		echo "The following hard disk elements are required and\n\
+must reside on your primary (disk 0) hard disk:\n\
+Drive\tName            \tType\tFile System/Slice\n\
+-----\t----------------\t----\t-----------------"
+		elements REQ ${SECOND} ${SMALL}
+
+		while [ 1 ]
+		do
+			> /tmp/hd.lay
+			elements R ${SECOND} ${SMALL}
+
+			echo "\nDo you wish to create any optional\ndisk slices or filesystems (y or n)? \c"
+			while read ans
+			do
+			if [ "$ans" = "y" -o "$ans" = "Y" ]
+			then
+				elements O ${SECOND} ${SMALL}
+			elif [ "$ans" != "n" -a "$ans" != "N" ]
+			then echo "Please answer \"y\" or \"n\": \c"
+			     continue
+			fi
+			break
+			done
+			echo "\nThe Hard disk layout you have selected is:\n\n\
+Drive\tName            \tType\tFile System/Slice\n\
+-----\t----------------\t----\t-----------------"
+			cp /tmp/hd.lay /dev/console
+			echo "\nIs this correct (y or n)? \c"
+			while read ans
+			do
+			if [ "$ans" = "y" -o "$ans" = "Y" -o "$ans" = "n" -o "$ans" = "N" ]
+			then break
+			else echo "Please answer \"y\" or \"n\": \c"
+			fi
+			done
+			if [ "$ans" = "y" -o "$ans" = "Y" ]
+			then break
+			fi
+		done
+
+		dd if=/dev/rdsk/0s1 of=/dev/null bs=512 count=1 > /dev/null 2>&1
+		set -e
+		echo "\nSurface analysis will now be performed on your hard disk and"
+		echo "UNIX System file systems will be created on your hard disk."
+		echo "This will overwrite all data in the UNIX System partition."
+		echo "Please strike ENTER to continue or DEL to cancel the installation.  \c"
+		read ans
+		while [ "$ans" != "" ]
+		do
+			echo "\nPlease strike ENTER to continue or DEL to cancel the installation. \c"
+			read ans
+		done
+		setup 0 ${SECOND} ${SMALL}
+		if [ "${SECOND}" = "Yes" ]
+		then
+			setup 1 ${SECOND} ${SMALL}
+		fi
+		sync
+		echo "\nInitializing UNIX System file system(s) on your hard disk ...\c"
+		echo "\n"
+		if [ -f /tmp/FLG ]
+		then FLG=1
+		     rm -f  /tmp/FLG
+		fi
+		if [ $FLG = 0 ]
+		then
+			break
+		else
+			echo "\nAn error has occured while setting up your hard disk.\n\
+	Strike ENTER to install again."
+			read a
+			continue
+		fi
+	done
+	sync
+	set +e
+	echo "UNIX System file system(s) have been created in your active UNIX System\n\
+partition."
+else
+#an upgrade
+	set +e
+	echo "\nWARNING: A system backup is suggested"
+	echo "prior to doing a system overlay.\n"
+	echo "To proceed with the installation strike ENTER,"
+	echo "otherwise, strike DEL to cancel the installation. \c"
+	read ans
+	while [ "$ans" != "" ]
+	do
+		echo "\nPlease strike ENTER to continue or DEL to cancel the installation. \c"
+		read ans
+	done
+
+#determine if there is enough space to save the files
+
+	umount /mnt/stand > /dev/null 2>&1
+	while read special fsck_dev mount_pt fs_type fsck_pass auto_mnt mnt_flgs
+	do
+	if [ "$mount_pt" = "/" -o "$mount_pt" = "/usr" -o "$mount_pt" = "/stand" -o "$mount_pt" = "/var" -o "$mount_pt" = "/home" ]
+	then
+	if [ "$mount_pt" = "/" ]
+	then echo "rootfstype=${fs_type}" > /tmp/ROOTFS
+	fi
+	echo "...\c"
+	/etc/fs/${fs_type}/mount ${special} /mnt${mount_pt} > /dev/null 2>&1
+	if [ $? != 0 ]
+	then /etc/fs/${fs_type}/fsck -y -t /tmp/tmp1 ${fsck_dev} > /dev/null 2>&1
+	     rm -f /tmp/tmp1
+	     /etc/fs/${fs_type}/mount ${special} /mnt${mount_pt} > /dev/null 2>&1
+	     if [ $? != 0 ]
+	     then 
+		cd /
+		echo "\nYou will be unable to do an overlay because your system"
+		echo "does not contain a valid AT&T UNIX System V Release 4.0 System.  Please consult"
+		echo "your \"Release Notes\" for further information."
+		umount /mnt/usr > /dev/null 2>&1
+		umount /mnt/stand > /dev/null 2>&1
+		umount /mnt/var > /dev/null 2>&1
+		umount /mnt/home > /dev/null 2>&1
+		umount /dev/dsk/0s1 > /dev/null 2>&1
+		exit 0
+	     fi
+	fi
+	fi
+	done < /tmp/vfstab.old
+	ROOT=/mnt
+	USER=/mnt/usr
+
+	cp /tmp/vfstab.old /etc/vfstab > /dev/null 2>&1
+	blks=`$ROOT/sbin/df $ROOT | $USER/bin/tr -s " " ":" | $USER/bin/cut -d":" -f4`
+	rm -f /etc/vfstab
+	if [ "$blks" -lt "$svblks" ]
+	then
+		cd /
+		echo "\nThere is not enough space in the root filesystem on your hard disk"
+		echo "to back up files for a system overlay.  Please remove some files and"
+		echo "try again.  Consult your \"Release Notes\" for further information."
+		umount /mnt/usr > /dev/null 2>&1
+		umount /mnt/stand > /dev/null 2>&1
+		umount /mnt/var > /dev/null 2>&1
+		umount /mnt/home > /dev/null 2>&1
+		umount /dev/dsk/0s1 > /dev/null 2>&1
+		exit 1
+	fi
+
+	VAR=
+	if [ -d $USER/lib/installed/Remove ]
+	then
+		cd $USER/lib/installed/Remove
+		VAR=`$ROOT/sbin/grep idinstall * 2>/dev/null | $ROOT/sbin/grep '\-d'`
+		if [ "$VAR" != "" ]
+		then echo "\nWARNING: The following packages will need to be \
+removed before the overlay\ninstallation can be attempted.\nRemove these packages with the \"removepkg\" command.\n"
+
+		     echo "These packages modified the UNIX System kernel when \
+they were installed and\nmay not function correctly once the new system is in place.\n"
+		$ROOT/sbin/grep idinstall * /dev/null 2>/dev/null | $ROOT/sbin/grep '\-d' |
+		$USER/bin/cut -d: -f1 | $USER/bin/sort -u | while read i
+		     do
+			$USER/bin/cat $USER/options/$i
+		     done | $USER/bin/pr -n -l1
+		     cd /
+		echo "\nThe packages can be re-installed once the overlay is complete.\n\nStrike ENTER when ready."
+		     read x
+		fi
+	fi
+
+	if [ -d /mnt/var/sadm/pkg ]
+	then
+		cd /mnt/var/sadm/pkg
+		VAR=`$ROOT/sbin/grep idinstall */install/*remove 2>/dev/null | $ROOT/sbin/grep '\-d'`
+		if [ "$VAR" != "" ]
+		then echo "\nWARNING: The following packages will need to be \
+removed before the overlay\ninstallation can be attempted.\nRemove these packages with the \"pkgrm\" command.\n"
+		     echo "These packages modified the UNIX System kernel when \
+they were installed and\nmay not function correctly once the new system is in place.\n"
+		$ROOT/sbin/grep idinstall */install/*remove /dev/null 2>/dev/null | $ROOT/sbin/grep '\-d' |
+		$USER/bin/cut -d/ -f1 | $USER/bin/sort -u | while read i
+		     do
+			echo "$i \c"
+			$ROOT/sbin/grep "^NAME=" $i/pkginfo | $USER/bin/cut -f2- -d=
+		     done | $USER/bin/pr -n -l1
+		     cd /
+		echo "\nThe packages can be re-installed once the overlay is complete.\n\nStrike ENTER when ready."
+		     read x
+		fi
+	fi
+
+	if [ "$VAR" != "" ]
+	then
+		umount /mnt/usr > /dev/null 2>&1
+		umount /mnt/stand > /dev/null 2>&1
+		umount /mnt/var > /dev/null 2>&1
+		umount /mnt/home > /dev/null 2>&1
+		umount /dev/dsk/0s1 > /dev/null 2>&1
+		exit 0
+	fi
+	if [ -d $USER/options ]
+	then if [ -n "`$USER/bin/ls $USER/options/*.name 2>/dev/null`" ]
+		then echo "\nWARNING: If any of the packages currently on the system fail to work"
+		echo "after the overlay, please remove the package and then re-install it."
+		fi
+	fi
+	cd /
+
+	mv $ROOT/etc/passwd $ROOT/etc/UGpasswd
+	mv $ROOT/etc/profile $ROOT/etc/UGprofile
+	mv $ROOT/etc/shadow $ROOT/etc/UGshadow
+	mv $ROOT/etc/group $ROOT/etc/UGgroup
+	mv $ROOT/etc/Backup $ROOT/etc/UGBackup > /dev/null 2>&1
+	mv $ROOT/etc/Ignore $ROOT/etc/UGIgnore > /dev/null 2>&1
+	mv $ROOT/etc/fstab $ROOT/etc/UGfstab > /dev/null 2>&1
+	cp $ROOT/etc/vfstab $ROOT/etc/UGvfstab > /dev/null 2>&1
+fi
+
+echo "\nA UNIX System will now be installed on your hard disk ...\c"
+
+cd /
+set -e
+rm -f /mnt/unix
+cp unix /mnt
+echo ".\c"
+chmod 775 /mnt
+chmod 744 /mnt/unix
+chown root /mnt /mnt/unix
+chgrp sys /mnt
+chgrp other /mnt/unix
+
+set +e
+umount /mnt/tmp > /dev/null 2>&1
+umount /mnt/home2 > /dev/null 2>&1
+rm -f /etc/vfstab
+find dev etc usr sbin var -print | cpio -pdmu /mnt > /dev/null 2>&1
+echo ".\c"
+umount /mnt/var > /dev/null 2>&1
+find var -print | cpio -pdmu /mnt > /dev/null 2>&1
+echo ".\c"
+cd /install
+find usr sbin etc -print | cpio -pdmu /mnt > /dev/null 2>&1
+echo ".\c"
+cd /
+disksetup -b /install/etc/boot /dev/rdsk/0s0
+echo ".\c"
+mv /mnt/etc/inittab2 /mnt/etc/inittab
+sync
+echo ".\c"
+cp .profile /mnt
+echo ".\c"
+[ -d /mnt/tmp ] || mkdir /mnt/tmp > /dev/null 2>&1
+[ -d /mnt/mnt ] || mkdir /mnt/mnt > /dev/null 2>&1
+[ -d /mnt/usr ] || mkdir /mnt/usr > /dev/null 2>&1
+chmod 777 /mnt/tmp /mnt/mnt /mnt/usr
+echo ".\c"
+cp /install/INSTALL2 /mnt/tmp/INSTALL
+cp /install/INSTALL4 /mnt/tmp/INSTALL4
+cp /install/readfloppy /LABEL /mnt/tmp > /dev/null 2>&1
+sync
+echo ".\c"
+mv /mnt/sbin/-sh /mnt/tmp/-sh
+find dev/console -print | cpio -pdmu /mnt/tmp > /dev/null 2>&1
+echo ".\c"
+sync
+
+case $MACH in
+1|2|3)
+	do_shadow=""
+	echo "\nDo you want to reclaim the BIOS SHADOW RAM ?"
+	while :
+	do
+		echo "Type \"y\" or \"n\" [y] \c"
+		read do_shadow 
+	
+		do_shadow=${do_shadow:="y"}
+
+		if [ "$do_shadow" = "y" ]
+		then 
+			break
+		elif [ "$do_shadow" = "n" ]
+		then
+			MACH=0
+			break
+		fi
+	done
+	;;
+esac
+
+case $MACH in
+0)
+	cp /mnt/etc/default/default.at386 /mnt/etc/default/boot > /dev/null 2>&1
+	;;
+1)
+	cp /mnt/etc/default/default.cpq /mnt/etc/default/boot > /dev/null 2>&1
+	;;
+2)
+	cp /mnt/etc/default/default.att /mnt/etc/default/boot > /dev/null 2>&1
+	;;
+3)
+	cp /mnt/etc/default/default.att512 /mnt/etc/default/boot > /dev/null 2>&1
+	;;
+esac
+read ROOTFS < /tmp/ROOTFS
+echo $ROOTFS >> /mnt/etc/default/boot
+rm -rf /tmp/ROOTFS
+mkdir /mnt/stand /mnt/home /mnt/home2 /mnt/tmp > /dev/null 2>&1
+cp /mnt/etc/default/boot /mnt/stand/boot
+cp /mnt/unix /mnt/stand/unix
+cp /mnt/etc/initprog/* /mnt/stand
+umount /mnt/home > /dev/null 2>&1
+umount /mnt/stand > /dev/null 2>&1
+umount /mnt/usr > /dev/null 2>&1
+# Put an extra copy of stty on the boot disk
+mkdir /mnt/usr /mnt/usr/bin > /dev/null 2>&1
+cp /usr/bin/stty /mnt/usr/bin/stty
+rm /mnt/etc/mnttab
+
+ln /mnt/dev/dsk/0s2 /mnt/dev/swap
+umount /dev/dsk/0s1 > /dev/null 2>&1
+rm -f /core /etc/.mnt.lock
+sync
+sync
+stty -echo raw
+echo "\n\rPlease standby.\n\n\r\
+When you are prompted to reboot your system,\n\r\
+remove the floppy disk from the diskette drive,\n\r\
+and strike CTRL-ALT-DEL.\n\rPlease wait for the prompt.\n\r"
+uadmin 2 0 

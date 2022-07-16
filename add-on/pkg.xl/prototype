@@ -1,0 +1,53 @@
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+#ident	"@(#)pkg.xl:prototype	1.1"
+
+!PACKDIR=/usr/src/pkg/xl
+
+i pkginfo
+i preinstall
+i postinstall
+i preremove
+i copyright
+
+!PKGINST=xl
+!PKGSAV=/var/sadm/pkg/$PKGINST/save
+!default 0544 bin bin
+d none /tmp	?	?	?
+d none /tmp/xl		775	bin	bin
+v none /tmp/xl/Driver.o=$PACKDIR/Driver.o ? ? ?
+v none /tmp/xl/Driver.o.fd=$PACKDIR/Driver.o.fd ? ? ?
+v none /tmp/xl/Space.c=$PACKDIR/Space.c ? ? ?
+v none /tmp/xl/Master=$PACKDIR/Master ? ? ?
+v none /tmp/xl/System=$PACKDIR/System ? ? ?
+v none /tmp/xl/Node=$PACKDIR/Node ? ? ?
+
+d none /usr	?	?	?
+d none /usr/vmsys	?	?	?
+d none /usr/vmsys/OBJECTS	?	?	?
+
+d OAMadmin /usr/vmsys/OBJECTS/ftape	755	bin	bin
+f OAMadmin /usr/vmsys/OBJECTS/ftape/Menu.tape=$PACKDIR/Menu.tape	755	bin	bin 
+f OAMadmin /usr/vmsys/OBJECTS/ftape/Text.tape=$PACKDIR/Text.tape	755	bin	bin 
+f OAMadmin /usr/vmsys/OBJECTS/ftape/Text.sop=$PACKDIR/Text.sop	755	bin	bin 
+f OAMadmin /usr/vmsys/OBJECTS/ftape/Text.fop=$PACKDIR/Text.fop	755	bin	bin 
+f OAMadmin /usr/vmsys/OBJECTS/ftape/admin=$PACKDIR/admin	755	bin	bin 
+
+!default 755 bin bin
+d none /usr/lib	?	?	?
+d none /usr/lib/tape	?	?	?
+f none /usr/lib/tape/ftapecntl=$PACKDIR/ftapecntl
+
+!default 444 bin bin
+d none /usr/include	?	?	?
+d none /usr/include/sys	?	?	?
+f none /usr/include/sys/ftape.h=$PACKDIR/ftape.h
+

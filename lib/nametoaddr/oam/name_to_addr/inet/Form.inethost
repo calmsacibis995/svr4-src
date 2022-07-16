@@ -1,0 +1,41 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/inet/Form.inethost	1.2"
+form="Create Internet Protocol Hosts File"
+close=unset -l H_RET -l CMD
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/form.msg|message -p`
+
+done=`indicator -w;
+	$INTFBASE/netservices/name_to_addr/inet/bin/inet.host  $F1 $F2 | set -l H_RET;
+	if [ "$H_RET" = "1" ];
+	then
+		set -l CMD="OPEN TEXT $INTFBASE/netservices/name_to_addr/inet/Text.h_exists";
+	elif [ "$H_RET" = "2" ];
+	then
+		set -l CMD="OPEN TEXT $INTFBASE/netservices/name_to_addr/inet/Text.badaddr";
+	else
+		set -l CMD="OPEN TEXT $INTFBASE/netservices/name_to_addr/inet/Text.h_success";
+	fi;
+	`$CMD
+
+name="Machine name:"
+nrow=1
+ncol=1
+frow=1
+fcol=15
+rows=1
+columns=14
+valid=`[ "$F1" ]`
+invalidmsg="Fields can not be empty"
+lininfo=inet:name
+
+name="Machine address:"
+nrow=2
+ncol=1
+frow=2
+fcol=18
+rows=1
+columns=30
+valid=`[ "$F2" ]`
+invalidmsg="Fields can not be empty"
+lininfo=inet:addr

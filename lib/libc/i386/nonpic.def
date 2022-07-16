@@ -1,0 +1,10 @@
+_m4_dnl_	#ident	"@(#)libc-i386:nonpic.def	1.2"
+
+_m4_define_(`_prologue_',`/')
+_m4_define_(`_prologuen_',`/')
+_m4_define_(`_epilogue_',`/')
+_m4_define_(`_fref_',``$1'')
+_m4_define_(`_dref_',``$1'')
+_m4_define_(`_daref_',`$`$1'')
+_m4_define_(`_sref_',``$1'')
+_m4_define_(`_esp_',`$1'(%esp))

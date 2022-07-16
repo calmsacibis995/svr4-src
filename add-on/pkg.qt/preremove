@@ -1,0 +1,95 @@
+#ident	"@(#)/usr/src/add-on/pkg.qt/preremove.sl 1.1 4.0 12/08/90 61552 AT&T-USL"
+
+FAILURE=1	# fatal error
+
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+TMP=/tmp/tapedrv.err
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be removed."
+
+ERROR1="An an error was encountered removing the Cartridge Tape Driver.\
+  The file $TMP contains errors reported by the system."
+ERROR2="The kernel rebuild failed.  However all software dealing with the \
+streaming tape has been removed.  The Cartridge Tape Unit - Version \
+Please correct the problem and remove the software again.  The file \
+$TMP contains error reported by the system."
+
+# determine that ID/TP tools are available
+
+if
+	[ ! -x ${CONFBIN}/idbuild -o ! -x ${CONFBIN}/idinstall ]
+then
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+
+rm -f $TMP > /dev/null 2>&1
+if [ $# != 1 ]
+then echo "\n\n\n\n\n\nRemoving Cartridge Tape Utilities - Version 2.2 ...\n\n"
+fi
+
+if [ -x /etc/conf/bin/idcheck -a -x /etc/conf/bin/idbuild -a -x /etc/conf/bin/idinstall ]
+then 
+	:
+else 
+	message "The Installable Driver feature has been removed.  The Cartridge Tape Driver cannot be removed."
+	exit 1
+fi
+
+echo "Removing the cartridge tape driver...\n"
+/etc/conf/bin/idcheck -p qt 2>/dev/null
+if [ $? = 0 ]
+then
+	exit 0
+fi
+
+if [ $# = 0 ]
+then
+/etc/conf/bin/idinstall -d qt 2>> $TMP
+if [ $? != 0 ]
+then
+	message $ERROR1
+	exit 1
+fi
+else
+	/etc/conf/bin/idinstall -e -d qt > /dev/null 2>&1
+fi
+
+if [ -d /dev/rmt ]
+then
+	rm -f /dev/rmt/c0s0 /dev/rmt/c0s0n /dev/rmt/c0s0r /dev/rmt/c0s0nr
+	if [ 3 -eq `expr \`ls -al /dev/rmt | wc -l\`` ]
+	then
+		rm -rf /dev/rmt
+	fi
+fi
+
+#####
+# Remove the tape control funcions to the user interface if
+# FACE is already installed.
+
+FACEDIR="/usr/vmsys/OBJECTS"
+
+if [ -f "${FACEDIR}/Menu.admin" ]
+then
+	ed - "${FACEDIR}"/Menu.admin <<- !
+		g/^name=Tape Operations/d
+		g/^action=.*tape.Menu.tape.*$/.,+1d
+		w
+		q
+	!
+fi
+############
+
+echo "Rebuilding UNIX kernel...\n\n\n"
+/etc/conf/bin/idbuild 2>> $TMP
+if [ $? != 0 ]
+then
+	message $ERROR2
+	exit 1
+fi
+rm -f $TMP
+exit 0
+

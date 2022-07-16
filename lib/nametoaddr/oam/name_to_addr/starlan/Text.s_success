@@ -1,0 +1,15 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/starlan/Text.s_success	1.2"
+title="ISO Starlan Protocol Success"
+columns=55
+rows=11
+text="
+The service name entered has successfully been added to
+
+	/etc/net/starlan/services
+
+and
+
+	/etc/net/starlandg/services
+
+You may now now return to the previous menu.
+"

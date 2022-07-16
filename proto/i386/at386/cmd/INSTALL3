@@ -1,0 +1,783 @@
+#ident	"%W%	%E%	%Q%"
+#ident	"@(#)proto:i386/at386/cmd/INSTALL3	1.2.11.3"
+
+# Booted UNIX System V/386 Release 4.0 kernel now.
+
+# Set PATH to include new directory layout structure.
+PATH=/sbin:/usr/sbin:/usr/bin:/etc:$PATH export PATH
+
+sync
+
+mv /bin/sh /tmp/sh > /dev/null 2>&1
+mv  /usr/bin/sh /usr/bin/old.sh > /dev/null 2>&1
+rm -rf /tmp/sh /usr/bin/old.sh > /dev/null 2>&1
+
+mkdir /bin > /dev/null 2>&1
+/etc/links /usr/bin/true /sbin/i386
+sync
+
+/etc/links /sbin/init /sbin/telinit
+
+if [ ! -h /shlib ]
+then mv /shlib/libc_s /usr/lib/libc_s
+     mv /shlib/libnsl_s /usr/lib/libnsl_s
+     rm -fr /shlib > /dev/null 2 >&1
+     ln -s /usr/lib /shlib
+fi
+if [ ! -h /etc/emulator ]
+then mv /etc/emulator /sbin/emulator
+     ln -s /sbin/emulator /etc/emulator
+fi
+
+/etc/links /sbin/emulator /sbin/emulator.rel1
+rm -f /etc/emulator.rel1
+ln -s /sbin/emulator.rel1 /etc/emulator.rel1 > /dev/null 2>&1
+rm -f /etc/emulator.dflt
+/etc/links /sbin/rstab /etc/rstab
+ln -s /sbin/diskadd /etc/diskadd > /dev/null 2>&1
+/etc/links /sbin/who /usr/bin/who
+chmod 444 /etc/boot
+/etc/links /etc/boot /etc/.wboot
+/etc/links /etc/.fboot /etc/fboot 
+/etc/links /usr/bin/sleep /sbin/sleep
+/etc/links /usr/lib/lib.b /usr/lib/lib.bc
+if [ ! -f /sbin/ps ]
+then
+mv /usr/bin/ps /sbin/ps > /dev/null 2>&1
+fi
+if [ ! -f /sbin/killall ]
+then
+mv /usr/sbin/killall /sbin/killall > /dev/null 2>&1
+fi
+if [ ! -f /sbin/sulogin ]
+then
+mv /etc/sulogin /sbin/sulogin > /dev/null 2>&1
+fi
+if [ ! -f /sbin/setmnt ]
+then
+mv /usr/sbin/setmnt /sbin/setmnt > /dev/null 2>&1
+fi
+rm -rf /usr/bin/ps /usr/sbin/killall /etc/sulogin /usr/sbin/setmnt > /dev/null 2>&1
+/etc/links /sbin/sh /sbin/jsh
+/etc/links /usr/bin/dd /sbin/dd
+ln -s /sbin/jsh /usr/bin/jsh > /dev/null 2>&1
+ln -s /sbin/sh /usr/bin/sh > /dev/null 2>&1
+ln -s /sbin/sh /usr/lib/rsh > /dev/null 2>&1
+/etc/links /etc/Backup /usr/sbin/Backup
+/etc/links /etc/Ignore /usr/sbin/Ignore
+/etc/links /etc/motd /var/motd
+ln -s /sbin/grep /usr/bin/grep > /dev/null 2>&1
+/etc/links /usr/bin/uname /sbin/uname
+
+ln -s /etc/fs/bfs/fsck /usr/lib/fs/bfs/fsck > /dev/null 2>&1
+ln -s /etc/fs/bfs/fstyp /usr/lib/fs/bfs/fstyp > /dev/null 2>&1
+ln -s /etc/fs/bfs/mkfs /usr/lib/fs/bfs/mkfs > /dev/null 2>&1
+ln -s /etc/fs/bfs/mount /usr/lib/fs/bfs/mount > /dev/null 2>&1
+ln -s /etc/fs/fdfs/mount /usr/lib/fs/fdfs/mount > /dev/null 2>&1
+ln -s /etc/fs/proc/mount /usr/lib/fs/proc/mount > /dev/null 2>&1
+ln -s /etc/fs/s5/mount /usr/lib/fs/s5/mount > /dev/null 2>&1
+ln -s /etc/fs/s5/labelit /usr/lib/fs/s5/labelit > /dev/null 2>&1
+ln -s /etc/fs/s5/clri /usr/lib/fs/s5/clri > /dev/null 2>&1
+ln -s /etc/fs/s5/df /usr/lib/fs/s5/df > /dev/null 2>&1
+ln -s /etc/fs/s5/fsck /usr/lib/fs/s5/fsck > /dev/null 2>&1
+ln -s /etc/fs/s5/fsdb /usr/lib/fs/s5/fsdb > /dev/null 2>&1
+ln -s /etc/fs/s5/fstyp /usr/lib/fs/s5/fstyp > /dev/null 2>&1
+ln -s /etc/fs/s5/mkfs /usr/lib/fs/s5/mkfs > /dev/null 2>&1
+ln -s /etc/fs/s5/mount /usr/lib/fs/s5/mount > /dev/null 2>&1
+ln -s /etc/fs/ufs/df /usr/lib/fs/ufs/df > /dev/null 2>&1
+ln -s /etc/fs/ufs/fsck /usr/lib/fs/ufs/fsck > /dev/null 2>&1
+ln -s /etc/fs/ufs/mkfs /usr/lib/fs/ufs/mkfs > /dev/null 2>&1
+ln -s /etc/fs/ufs/mount /usr/lib/fs/ufs/mount > /dev/null 2>&1
+ln -s /etc/fs/ufs/labelit /usr/lib/fs/ufs/labelit > /dev/null 2>&1
+ln -s /usr/lib/fs/ufs/edquota /usr/sbin/edquota > /dev/null 2>&1
+ln -s /usr/lib/fs/ufs/quot /usr/sbin/quot > /dev/null 2>&1
+ln -s /usr/lib/fs/ufs/quota /usr/sbin/quota > /dev/null 2>&1
+ln -s /usr/lib/fs/ufs/quotacheck /usr/sbin/quotacheck > /dev/null 2>&1
+
+/etc/links /usr/lib/fs/ufs/quotaon /usr/lib/fs/ufs/quotaoff /usr/sbin/quotaon /usr/sbin/quotaoff
+ln -s /usr/lib/fs/ufs/repquota /usr/sbin/repquota > /dev/null 2>&1
+ln -s /usr/lib/fs/ufs/tunefs /usr/sbin/tunefs > /dev/null 2>&1
+ln -s /usr/lib/fs/ufs/ufsdump /usr/sbin/ufsdump > /dev/null 2>&1
+ln -s /usr/lib/fs/ufs/ufsrestore /usr/sbin/ufsrestore > /dev/null 2>&1
+/etc/links /sbin/clri /sbin/fsdb /sbin/labelit /usr/sbin/labelit /sbin/mkfs /sbin/dcopy 
+/etc/links /usr/sbin/labelit /usr/sbin/switchout
+/etc/links /usr/sbin/ff /usr/sbin/ncheck
+
+mkdir /usr/sadm /usr/sadmin/bin /usr/tmp /usr/tmp/installed > /dev/null 2>&1
+/etc/links /usr/bin/ckint /usr/bin/getint /usr/sadm/bin/valint /usr/sadm/bin/helpint /usr/sadm/bin/errint
+/etc/links /usr/bin/chitem /usr/bin/getitem /usr/sadm/bin/valitem /usr/sadm/bin/helpitem /usr/sadm/bin/erritem
+/etc/links /usr/bin/ckpath /usr/bin/getpath /usr/sadm/bin/valpath /usr/sadm/bin/helppath /usr/sadm/bin/errpath
+/etc/links /usr/bin/ckrange /usr/bin/getrange /usr/sadm/bin/valrange /usr/sadm/bin/helprange /usr/sadm/bin/errange
+/etc/links /usr/bin/ckstr /usr/bin/getstr /usr/sadm/bin/valstr /usr/sadm/bin/helpstr /usr/sadm/bin/errstr
+/etc/links /usr/bin/ckyorn /usr/bin/getyorn /usr/sadm/bin/valyorn /usr/sadm/bin/helpyorn /usr/sadm/bin/erryorn
+/etc/links /usr/bin/ckkeywd /usr/bin/getkeywd /usr/sadm/bin/valkeywd /usr/sadm/bin/helpkeywd /usr/sadm/bin/errkeywd
+/etc/links /usr/bin/cktime /usr/bin/gettime /usr/sadm/bin/valtime /usr/sadm/bin/helptime /usr/sadm/bin/errtime
+/etc/links /usr/bin/ckdate /usr/bin/getdate /usr/sadm/bin/valdate /usr/sadm/bin/helpdate /usr/sadm/bin/errdate
+/etc/links /usr/bin/ckuid /usr/bin/getuid /usr/sadm/bin/valuid /usr/sadm/bin/helpuid /usr/sadm/bin/erruid /usr/sadm/bin/dispuid
+/etc/links /usr/bin/ckgid /usr/bin/getgid /usr/sadm/bin/valgid /usr/sadm/bin/helpgid /usr/sadm/bin/errgid /usr/sadm/bin/dispgid
+/etc/links /usr/sbin/installf /usr/sbin/removef
+/etc/links /usr/sbin/pkgadd /usr/sbin/pkgask
+
+sync
+/etc/links /sbin/restore /sbin/unrestore
+/etc/links /sbin/df /usr/bin/df /sbin/devnm
+ln -s /sbin/dfspace /etc/dfspace > /dev/null 2>&1
+rm -f /usr/bin/x286emul
+cp /usr/bin/x286 /usr/bin/x286emul
+
+cd /sbin
+for i in *
+do
+if [ -f $i ]
+then
+/usr/bin/rm -f /usr/sbin/$i
+/usr/bin/ln -s /sbin/$i /usr/sbin/$i
+fi
+done > /dev/null 2>&1
+
+cd /usr/bin
+/etc/links ed red
+/etc/links false iAPX286 i286 mc68k pdp11 u370 u3b u3b15 u3b2 u3b5 vax
+/etc/links true i386 iAPX386
+/sbin/machid -p
+case $? in
+3) /etc/links false i486 ;;
+4) /etc/links true i486 ;;
+esac
+/etc/links compress uncompress zcat
+/etc/links dfmounts dfshares
+/etc/links general unshare
+/etc/links kill stop
+/etc/links ksh rksh
+/etc/links ls lc
+/etc/links mail rmail
+/etc/links stty STTY
+/etc/links unpack pcat
+sync
+
+cd /etc
+
+/etc/links /etc/init.d/ANNOUNCE /etc/rc0.d/K00ANNOUNCE
+/etc/links /etc/init.d/MOUNTFSYS /etc/rc1.d/S01MOUNTFSYS /etc/rc2.d/S01MOUNTFSYS
+/etc/links /etc/init.d/RMTMPFILES /etc/rc2.d/S05RMTMPFILES
+/etc/links /etc/init.d/acct /etc/rc0.d/K22acct
+/etc/links /etc/init.d/cron /etc/rc0.d/K75cron /etc/rc2.d/S75cron
+/etc/links /etc/init.d/osm /etc/rc2.d/S95osm /etc/rc0.d/K95osm
+/etc/links /etc/init.d/perf /etc/rc2.d/S21perf
+/etc/links /etc/init.d/sysetup /etc/rc2.d/S20sysetup
+/etc/links /etc/init.d/uucp /etc/rc0.d/K70uucp /etc/rc2.d/S70uucp
+/etc/links /etc/rc2.d/S88smtpd /etc/rc3.d/S88smtpd
+/etc/links /usr/bin/more /usr/bin/page
+/etc/links /usr/lib/libnsl_i.so /usr/lib/libnsl.so
+sync
+
+/etc/links /usr/bin/oawk /usr/bin/awk
+
+/sbin/isat386 > /dev/null 2>&1
+if [ $? = 0 ]
+then TERM=AT386-M
+else TERM=ansi
+fi
+export TERM
+
+echo "\nSystem time is: `date`"
+
+# Create device nodes
+if [ -s /tmp/Plist.dev ]
+then
+	cd /
+	rm -f /dev/tty00 /dev/tty01 /dev/term/000 /dev/term/001
+	sync
+	/etc/setmods.elf -s /tmp/Plist.dev 2>/tmp/pdev.err
+	if [ -s /tmp/pdev.err ] ; then echo "Errors in /tmp/pdev.err"; fi
+fi
+
+# Create /etc/shadow
+/usr/sbin/pwconv > /dev/null 2>&1
+
+cd /usr/share/lib/terminfo
+/etc/links a/ansi A/ANSI
+/etc/links A/AT386 a/at386 3/386at 3/386AT
+/etc/links A/AT386-M a/at386-m 3/386at-m 3/386AT-M
+/etc/links A/AT386-UL a/at386-ul 3/386AT-UL 3/386at-ul
+/etc/links	4/435	a/att435	
+/etc/links	4/43ro	a/att43ro
+/etc/links	4/442	a/att442	
+/etc/links	4/444	a/att444	
+/etc/links	4/446	a/att446	
+/etc/links	4/447	a/att447	
+/etc/links	4/455	a/att455 d/daisy q/qume 
+/etc/links	4/457	a/att457	
+/etc/links	4/458	a/att458	
+/etc/links	4/470	a/att470	
+/etc/links	4/471	a/att471	
+/etc/links	4/473	a/att473	
+/etc/links	4/474	a/att474	
+/etc/links	4/475	a/att475	
+/etc/links	4/476	a/att476	
+/etc/links	4/477	a/att477 
+/etc/links	4/477-455	a/att477-455
+/etc/links	4/477-470	a/att477-470
+/etc/links	4/477ibmc	a/att477ibmc
+/etc/links	4/477ibmg	a/att477ibmg
+/etc/links	4/477qume	a/att477qume
+/etc/links	4/478	a/att478	
+/etc/links	4/479	a/att479	
+/etc/links	4/495hp	a/att495hp
+/etc/links	4/495ibm	a/att495ibm
+/etc/links	4/495qume	a/att495qume
+/etc/links	5/5310	a/att5310
+/etc/links	5/5320	a/att5320
+/etc/links	7/705	7/705mt	A/ATT705	a/att705
+/etc/links	7/7475	h/hp7475
+/etc/links	h/hplaserjet	h/hplaser 
+/etc/links	4/40-80-6	a/att40-80-6
+/etc/links	4/40-80-8	a/att40-80-8
+/etc/links	4/40-132-6	a/att40-132-6
+/etc/links	4/40-132-8	a/att40-132-8
+
+# CORE terminfo files
+if [ ! -d ../.COREterm ]
+then
+	mkdir ../.COREterm
+fi
+chmod 775 ../.COREterm; chgrp bin ../.COREterm; chown bin ../.COREterm
+find * -type f -print | cpio -pldmu ../.COREterm >/dev/null 2>&1
+sync
+ln -s /usr/share/lib/.COREterm /usr/lib/.COREterm > /dev/null 2>&1
+
+cd /
+
+mkdir /u > /dev/null 2>&1
+
+sync
+
+mkdir /etc/saf > /dev/null 2>&1
+chmod 755 /etc/saf > /dev/null 2>&1
+chown bin /etc/saf > /dev/null 2>&1
+chgrp bin /etc/saf > /dev/null 2>&1
+
+rm -f /usr/bin/installpkg /usr/bin/removepkg
+ln /usr/lbin/installpkg.r /usr/bin/installpkg > /dev/null 2>&1
+ln /usr/lbin/removepkg.r /usr/bin/removepkg > /dev/null 2>&1
+/etc/links /usr/sbin/menu_add /usr/sbin/menu_del /usr/bin/menu_del /usr/bin/menu_add
+
+#link 3b2 device names to that of 386 for compatibility
+/usr/sadm/sysadm/bin/mkdtab > /dev/null 2>&1
+if [ -s /etc/device.tab ]
+then	disk_num=`grep q15d /etc/device.tab|grep '^diskette'|cut -d: -f1|cut -c9` > /dev/null 2>&1
+	if [ "$disk_num" = 1 -o "$disk_num" = 2 ]
+	then	disk_num=`expr $disk_num - 1`
+		ln /dev/dsk/f${disk_num}t /dev/save 
+		ln /dev/rdsk/f${disk_num}t /dev/rsave 
+		ln /dev/dsk/f${disk_num}t /dev/diskette 
+		ln /dev/rdsk/f${disk_num}t /dev/rdiskette 
+	fi
+fi
+
+if [ ! -d /etc/rc.d ]
+then
+mkdir /etc/rc.d
+fi
+chmod 775 /etc/rc.d; chown root /etc/rc.d; chgrp sys /etc/rc.d
+
+cd /
+sync
+
+# Turn process accounting off
+/usr/lib/acct/turnacct off
+sync
+
+# chown root /; chgrp root /; chmod 755 /
+# chown bin /lib; chgrp bin /lib; chmod 775 /lib
+
+sync
+
+chmod 400 /usr/sbin/filesave > /dev/null 2>&1
+> /var/adm/log/filesave.log
+
+/etc/links /var/sadm/pkg/dfm/pkginfo /var/sadm/pkg/sys/pkginfo /var/sadm/pkg/usrenv/pkginfo
+
+cd /etc/uucp
+for i in *
+do
+/usr/bin/ln -s /etc/uucp/$i /usr/lib/uucp/$i
+done > /dev/null 2>&1
+
+# Create SYMBOLIC LINKS to conventional AT&T UNIX names.
+while read new_path old_path
+do
+	# Is a Comment
+	if [ "$new_path" = "#" -o -z "$new_path" ] ; then
+		continue
+	fi
+	${DBG} /usr/bin/rm -rf $old_path
+	${DBG} /usr/bin/ln -s $new_path $old_path
+done	 <<-!!
+
+# NEW		OLD
+
+/sbin/vtgetty	/etc/vtgetty
+/sbin/dumpsave	/etc/dumpsave
+/usr/bin	/bin
+/sbin/autopush	/etc/autopush
+/usr/sbin/install	/etc/install
+/usr/sbin/.cpiopc	/etc/.cpiopc
+/sbin/cleanup	/etc/cleanup
+/sbin/deluser	/etc/deluser
+/sbin/adduser	/etc/adduser
+/sbin/dumpcheck	/etc/dumpcheck
+/sbin/conflgs	/etc/conflgs
+/usr/sbin/sag	/usr/bin/sag
+/usr/bin/license	/etc/license
+/sbin/isat386	/etc/isat386
+/sbin/chkconsole	/etc/chkconsole
+/usr/bin/uugetty	/usr/lib/uucp/uugetty
+/usr/bin/.backup	/usr/bin/backup
+/usr/bin/.restore	/usr/bin/restore
+# /usr/share/lib/termcap	/etc/termcap
+/sbin/sync	/usr/bin/sync
+/sbin/ps	/usr/bin/ps
+/sbin/df /usr/bin/df
+/sbin/sulogin	/etc/sulogin
+/sbin/disksetup /etc/disksetup
+/sbin/setclk /etc/setclk
+/sbin/mkpart /etc/mkpart
+/sbin/labelit	/etc/labelit
+/usr/sbin/tar /usr/bin/tar
+/usr/sbin/tar /etc/tar
+/sbin/prtvtoc	/etc/prtvtoc
+/sbin/clri	/etc/clri
+/usr/sbin/pwconv	/usr/bin/pwconv
+/usr/sbin/crash	/etc/crash
+/sbin/init	/etc/init
+/sbin/telinit	/etc/telinit
+/sbin/telinit	/usr/bin/telinit
+/sbin/memsize	/etc/memsize
+/usr/sbin/passmgmt	/usr/bin/passmgmt
+/usr/sbin/sar	/usr/bin/sar
+/sbin/fdisk	/etc/fdisk
+/sbin/killall	/etc/killall
+/sbin/flop_disk	/etc/flop_disk
+/sbin/machid	/etc/machid
+/sbin/bcheckrc	/etc/bcheckrc
+/sbin/brc	/etc/brc
+/usr/sbin/chroot	/etc/chroot
+/usr/sbin/ckbupscd	/etc/ckbupscd
+/usr/sbin/cron	/etc/cron
+/usr/sbin/dcopy	/etc/dcopy
+/sbin/devnm	/etc/devnm
+/usr/sbin/dfsck	/etc/dfsck
+/usr/sbin/ff	/etc/ff
+/usr/sbin/format	/etc/format
+/usr/sbin/fsba	/etc/fsba
+/sbin/fsck	/etc/fsck
+/sbin/fsdb	/etc/fsdb
+/sbin/fsstat	/etc/fsstat
+/sbin/fstyp	/etc/fstyp
+/usr/sbin/fuser	/etc/fuser
+/sbin/getclk	/etc/getclk
+/sbin/getty	/etc/getty
+/usr/sbin/grpck	/etc/grpck
+/sbin/ldsysdump	/etc/ldsysdump
+/usr/sbin/link	/etc/link
+/var/adm	/usr/adm
+/var/adm/log	/etc/log
+/sbin/mkfs	/etc/mkfs
+/sbin/mknod	/etc/mknod
+/sbin/mount	/etc/mount
+/sbin/mountall	/etc/mountall
+/usr/sbin/mvdir	/etc/mvdir
+/usr/sbin/ncheck	/etc/ncheck
+/usr/sbin/prfdc	/etc/prfdc
+/usr/sbin/prfld	/etc/prfld
+/usr/sbin/prfpr	/etc/prfpr
+/usr/sbin/prfsnap	/etc/prfsnap
+/usr/sbin/prfstat	/etc/prfstat
+/usr/sbin/pwck	/etc/pwck
+/sbin/rc0	/etc/rc0
+/sbin/rc1	/etc/rc1
+/sbin/rc2	/etc/rc2
+/sbin/rc3	/etc/rc3
+/sbin/rc6	/etc/rc6
+/sbin/setmnt	/etc/setmnt
+/sbin/shutdown	/etc/shutdown
+/usr/sbin/swap	/etc/swap
+/usr/sbin/sysdef	/etc/sysdef
+/sbin/uadmin	/etc/uadmin
+/sbin/umount	/etc/umount
+/sbin/umountall	/etc/umountall
+/usr/sbin/unlink	/etc/unlink
+/var/adm/utmp	/etc/utmp
+/var/adm/utmpx	/etc/utmpx
+/usr/sbin/volcopy	/etc/volcopy
+/usr/sbin/wall	/etc/wall
+/usr/sbin/whodo	/etc/whodo
+/sbin/su	/usr/bin/su
+/var/adm/wtmp	/etc/wtmp
+/usr/lib	/lib
+/usr/lib/saf/sac	/usr/etc/sac
+/etc/saf	/usr/etc/sac.d
+/usr/lib/saf/ttymon	/usr/etc/ttymon
+/etc/cron.d	/usr/lib/cron
+/usr/share/lib/terminfo	/usr/lib/terminfo
+/var/mail	/usr/mail
+/etc/mail/mailsurr	/usr/lib/mail/mailsurr
+/etc/mail/binarsys	/usr/lib/binarsys
+/usr/share/lib/mailx	/usr/lib/mailx
+/var/news	/usr/news
+/var/preserve	/usr/preserve
+/usr/share/lib	/usr/pub
+/var/tmp	/usr/tmp
+/var/installed	/usr/tmp/installed
+/var/uucp/.Admin	/var/spool/uucp/.Admin
+/var/uucp/.Corrupt	/var/spool/uucp/.Corrupt
+/var/uucp/.Log	/var/spool/uucp/.Log
+/var/uucp/.Old	/var/spool/uucp/.Old
+/var/uucp/.Sequence	/var/spool/uucp/.Sequence
+/var/uucp/.Status	/var/spool/uucp/.Status
+/var/uucp/.Workspace	/var/spool/uucp/.Workspace
+/var/uucp/.Xqtdir	/var/spool/uucp/.Xqtdir
+/var/spool	/usr/spool
+!!
+
+chown -h bin /lib /bin
+chgrp -h bin /lib /bin
+
+sync; sync; sync
+
+chmod 777 /home
+su install -c "mkdir /home/install > /dev/null 2>&1"
+sync
+chmod 755 /u /home
+chmod 775 /home/install
+sync
+ln -s /home/install /u/install > /dev/null 2>&1
+ln -s /home/install /usr/install > /dev/null 2>&1
+
+chgrp root /u
+sync; sync; sync
+
+cd /usr/lib/locale/C
+PERMS=`umask` export PERMS
+umask 0022
+chrtbl chrtbl_C
+colltbl colltbl_C
+montbl montbl_C
+umask $PERMS
+sync
+#------install codesets
+cd /usr/lib/iconv
+for i in codesets/646da.8859.p codesets/646de.8859.p codesets/646en.8859.p \
+codesets/646es.8859.p codesets/646fr.8859.p codesets/646it.8859.p \
+codesets/646sv.8859.p codesets/8859.646.p codesets/8859.646da.p \
+codesets/8859.646de.p codesets/8859.646en.p codesets/8859.646es.p \
+codesets/8859.646fr.p codesets/8859.646it.p codesets/8859.646sv.p
+
+do
+/usr/bin/kbdcomp -o `basename $i .p` $i;
+done
+ln -s /usr/lib/iconv /usr/lib/kbd
+sync
+
+cd /
+
+if [ ! -s /etc/UGpasswd ]
+then
+# Get some passwords
+cat <<!!
+
+Enter a password for the 'root' or super-user.
+
+(Note: This password must be kept EXTREMELY secure):
+!!
+/usr/bin/passwd root
+sync
+
+cat <<!!
+
+Enter a password for the 'install' user.
+
+(Note: This password must be kept EXTREMELY secure,
+       and should be different from the root password):
+!!
+/usr/bin/passwd install
+
+if [ -f /usr/sbin/csu ]
+then
+cat <<!!
+
+Enter a password for the 'service' user (used by the service personnel
+for maintenance and software updates).
+
+(Note: This password must be kept EXTREMELY secure,
+       and should be different from the root and install passwords):
+!!
+/usr/bin/passwd service
+fi
+sync
+fi
+
+if [ ! -s /etc/rc2.d/S11uname ]
+then
+while [ 1 ]
+do
+cat <<!!
+
+Please enter a System Name for this system.  This will set the "node" name
+and the "system" name.  This name will be used for uucp(1) and networking.
+!!
+echo "Enter System Name: \c"
+read node
+if [ "$node" = "" -o "$node" = "unix" ]
+then echo "Please choose another name, it cannot be unix or nothing.\n"
+     continue
+fi
+# Count the newline character
+if [ `echo "$node" | wc -c | sed -e 's/ //g'` -gt 9 ]
+then echo "The name cannot exceed 8 characters.\n"
+     continue
+fi
+
+uname -S "$node"
+if [ $? = 0 ]
+then break
+fi
+echo "Please choose another name\n"
+done
+
+fi
+
+trap '' 1 2 3 9 15  # No breaking out from here on
+
+if [ -f /etc/conf/cf.d/mdevice.base ]
+then mv /etc/conf/cf.d/mdevice.base /etc/conf/cf.d/mdevice > /dev/null 2>&1
+fi
+
+if [ ! -s /etc/UGpasswd ]
+then
+SECOND=NO; export SECOND
+/sbin/machid
+MID=$?
+if [ $MID -gt 3 ]
+then	SECOND=YES
+	grep "^asy	" /etc/conf/cf.d/mdevice > /tmp/MDEV
+	grep -v "^asy	" /etc/conf/cf.d/mdevice > /tmp/M
+	cat /tmp/M > /etc/conf/cf.d/mdevice
+	sed -e 's/	asy/r	asy/' < /tmp/MDEV >> /etc/conf/cf.d/mdevice
+	rm -rf /tmp/M /tmp/MDEV
+	rm -rf /etc/conf/node.d/asy
+	mkdir /etc/.devices > /dev/null 2>&1
+	chmod 755 /etc/.devices
+	cat > /etc/.devices/.tty02 << END
+TTY=tty01
+TYPE='None'
+NAME='None'
+SPEED=
+INCOME=
+DEV_ENTRY=
+FLOW_CTL=
+END
+	chown root /etc/.devices /etc/.devices/.tty02
+	chgrp other /etc/.devices /etc/.devices/.tty02
+	chmod 644 /etc/.devices/.tty02
+	if [ $MID = 4 ]
+	then
+		ed /etc/conf/sdevice.d/kd <<-! > /dev/null 2>&1
+		/c0000/
+		s/c0000/e0000/
+		s/c7fff/effff/
+		w
+		q
+		!
+	fi
+	if [ $MID = 160 ]
+	then
+		ed /etc/conf/sdevice.d/lp <<-! > /dev/null 2>&1
+		/378/
+		s/378/278/
+		s/37f/27f/
+		s/	7	/	5	/
+		w
+		q
+		!
+	fi
+else
+	grep -v "asy	Y	1	7	1	3	2f8	2ff	0	0" /etc/conf/sdevice.d/asy > /tmp/ASY
+	cat /tmp/ASY > /etc/conf/sdevice.d/asy
+	rm -rf /tmp/ASY
+fi
+fi
+sync
+if [ "" = "`conflgs 2>&1 | grep 'UNIX system console: second'`" ]
+then
+	ed /etc/conf/cf.d/init.base <<-! > /dev/null 2>&1
+	/rconsole/
+	s/rconsole/console/
+	w
+	q
+	!
+fi
+sync
+
+# Create /etc/partitions
+if [ -c /dev/rdsk/c0t0d0s0 ]
+then
+/sbin/prtvtoc -e /dev/rdsk/c0t0d0s0 > /dev/null 2>&1
+/sbin/prtvtoc -e /dev/rdsk/c0t1d0s0 > /dev/null 2>&1
+else
+/sbin/prtvtoc -e /dev/rdsk/0s0 > /dev/null 2>&1
+/sbin/prtvtoc -e /dev/rdsk/1s0 > /dev/null 2>&1
+fi
+
+/sbin/prtvtoc /dev/rdsk/0s0 | /usr/bin/grep "6:	DUMP" > /dev/null 2>&1
+if [ "$?" = "0" ]
+then
+	x=`ls -l /dev/dsk/0s0 | /usr/bin/cut -f18 -d" " | /usr/bin/sed 's/,//'`
+	/sbin/mknod /dev/dump b $x 6 2>/dev/null
+	grep -v "PANICBOOT" < /etc/default/init > /tmp/TTT
+	cat /tmp/TTT > /etc/default/init
+	rm -rf /tmp/TTT
+	echo "PANICBOOT=YES" >> /etc/default/init
+	ed /etc/conf/cf.d/sassign <<-! > /dev/null 2>&1
+	/dump/
+	s/2/6/
+	w
+	q
+	!
+else
+/sbin/prtvtoc /dev/rdsk/1s0 2>/dev/null | /usr/bin/grep "6:	DUMP" > /dev/null 2>&1
+if [ "$?" = "0" ]
+then
+	x=`ls -l /dev/dsk/1s0 | /usr/bin/cut -f18 -d" " | /usr/bin/sed 's/,//'`
+	/sbin/mknod /dev/dump b $x 22 2>/dev/null
+	grep -v "PANICBOOT" < /etc/default/init > /tmp/TTT
+	cat /tmp/TTT > /etc/default/init
+	rm -rf /tmp/TTT
+	echo "PANICBOOT=YES" >> /etc/default/init
+	ed /etc/conf/cf.d/sassign <<-! > /dev/null 2>&1
+	/dump/
+	s/2/22/
+	w
+	q
+	!
+fi
+fi
+
+if [ ! -s /etc/UGpasswd ]
+then
+	echo "/proc	-	/proc	proc	-	no	-" >> /etc/vfstab
+	echo "/dev/fd	-	/dev/fd	fdfs	-	no	-" >> /etc/vfstab
+	echo "/dev/dsk/f0t	/dev/rdsk/f0t	/install	s5	-	no	-" >> /etc/vfstab
+	echo "/dev/dsk/f1t	/dev/rdsk/f1t	/install	s5	-	no	-" >> /etc/vfstab
+	echo "/dev/dsk/f0	/dev/rdsk/f0	/install	s5	-	no	-" >> /etc/vfstab
+	echo "/dev/dsk/f1	/dev/rdsk/f1	/install	s5	-	no	-" >> /etc/vfstab
+fi
+
+if [ -f /tmp/INSTALL4 ]
+then
+	> /etc/conf/cf.d/sdevice
+	mount -Fproc /proc /proc > /dev/null 2>&1
+	mv /var/sadm/install/admin/default /var/sadm/install/admin/DEFAULT
+	cp /tmp/default /var/sadm/install/admin/default
+	chmod +x /tmp/INSTALL4
+	if [ -s /etc/UGpasswd ]
+	then
+		cp /etc/UGpasswd /etc/passwd > /dev/null 2>&1
+		mv /etc/UGshadow /etc/shadow > /dev/null 2>&1
+		mv /etc/UGgroup /etc/group > /dev/null 2>&1
+		mv /etc/UGBackup /etc/Backup > /dev/null 2>&1
+		mv /etc/UGIgnore /etc/Ignore > /dev/null 2>&1
+	fi
+	sync
+ 	/tmp/INSTALL4
+	rm -f /tmp/default /var/sadm/install/admin/default
+	mv /var/sadm/install/admin/DEFAULT /var/sadm/install/admin/default
+	umount /proc > /dev/null 2>&1
+fi
+
+if [ -f /etc/conf/cf.d/unix ]
+then
+	rm -f /unix /stand/unix
+	ln /etc/conf/cf.d/unix /unix > /dev/null 2>&1
+	cp /unix /stand/unix > /dev/null 2>&1
+fi
+
+if [ ! -s /etc/UGpasswd ]
+then
+	while read special fsck_dev mount_pt fs_type fsck_pass auto mnt_f
+	do
+	if [ "$mount_pt" != "/" ]
+	then
+		if [ ! -d /$mount_pt ]
+		then mkdir /$mount_pt
+		fi
+		chown root /$mount_pt
+		chgrp sys /$mount_pt
+		chmod 775 /$mount_pt
+		if [ "$mount_pt" != "/usr" ]
+		then /sbin/umount $mount_pt > /dev/null 2>&1
+		     chmod 775 $mount_pt
+		fi
+		sync
+	fi
+	done < /etc/vfstab
+fi
+
+chown root /usr; chgrp sys /usr; chmod 775 /usr
+chown root /; chgrp sys /; chmod 775 /
+chmod 644 /etc/vfstab
+mkdir /dev/fd > /dev/null 2>&1
+chown root /dev/fd; chgrp root /dev/fd; chmod 555 /dev/fd
+
+# clean up temporary installation-related files.
+rm -f /.profile
+rm -f /floppy.count /etc/links /etc/setmods.elf
+rm -f /etc/.lastbackup /etc/.lastpartial /etc/disk.ele /etc/disk.elesm
+
+# Put key commands in /sbin
+cp /usr/bin/rm /usr/bin/mv /usr/bin/rmdir /usr/bin/expr /sbin > /dev/null 2>&1
+ln /sbin/mv /sbin/ln > /dev/null 2>&1
+
+sync
+
+rm -rf /etc/inittab
+mv /etc/inittab3 /etc/inittab
+sync
+
+if [ -s /etc/UGpasswd ]
+then
+	rm /etc/UGpasswd > /dev/null 2>&1
+	/sbin/umountall > /dev/null 2>&1
+else
+	/sbin/umount /usr > /dev/null 2>&1
+fi
+
+sync
+
+sync
+if [ "$SECOND" = "YES" ]
+then
+echo "\nNote: Your system is equipped with two built-in serial ports."
+echo "\nSupport for both of these ports has automatically been provided in"
+echo "the UNIX System being installed.\n"
+echo "The second serial port is using interrupt 3 and address range 2F8 -> 2FF."
+echo "\nIf you do not wish to use the second port, and would like to reclaim the"
+echo "interrupt line and address range that this port uses, it can be disabled"
+echo "with the \"Enable/Disable Second Serial Port\" options of the \"Peripherals"
+echo "Setup\" menu in OA&M"
+fi
+echo "\n\nThe UNIX System installation process is now complete.\n"
+/sbin/machid > /dev/null
+if [ $? != 41 ]
+then
+echo "To install the Foundation Set Add-On packages,"
+echo "use the \"pkgadd\" command from the UNIX System prompt.\n"
+fi
+echo "Be sure the floppy drive is empty and strike CTRL-ALT-DEL to reboot"
+echo "your newly configured UNIX System."
+sync
+stty -echo raw
+(sleep 5) > /dev/null 2>&1
+sync
+/sbin/uadmin 2 0

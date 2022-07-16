@@ -1,0 +1,11 @@
+#ident	"%W%	%E%	%Q%"
+
+PKG="e503"
+NAME="3-com503 Ethernet Driver"
+ARCH="AT386"
+RELEASE="4.0"
+VERSION="2.0"
+CATEGORY="system,utilities"
+CLASSES="none build"
+BASEDIR=""
+MAXINST="1"

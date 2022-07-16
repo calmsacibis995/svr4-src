@@ -1,0 +1,113 @@
+#ident	"@(#)bld.set1	1.2	92/07/07	JPB"
+#ident	"@(#)proto:i386/at386/tape/bld.set1	1.2.2.1"
+
+if [ "${VERSION}" = "" ]
+then VERSION="4.0 3.0"
+fi
+
+if [ "${SIZE}" = "" ]
+then SIZE=2360
+fi
+export VERSION SIZE
+
+PKG_LIST=/tmp/pkglist
+ans=no
+if [ -r /dev/rmt/c0s0 ]
+then if [ -r /dev/scsi/qtape1 ]
+     then echo "Please specify the Tape Device to write to:"
+          echo "  t - /dev/rmt/c0s0 (Usually the Non-SCSI Cartridge Tape)"
+          echo "  s - /dev/scsi/qtape1 (Usually the SCSI Cartridge Tape)"
+          echo "> \c"
+	  read ans
+     else
+          ans=t
+     fi
+else if [ -r /dev/scsi/qtape1 ]
+     then ans=s
+     fi
+fi
+case "$ans" in
+t) DRIVE=/dev/rmt/c0s0
+   TAPECNTL=/usr/lib/tape/tapecntl
+   PKGNAME=ctape1
+   DEVICEN=""
+	;;
+s) DRIVE=/dev/scsi/qtape1
+   TAPECNTL=/usr/lib/scsi/scsitapecntl
+   PKGNAME=qtape1
+   DEVICEN="-y ${DRIVE}n"
+	;;
+*) DRIVE=""
+	;;
+esac
+if [ "$DRIVE" = "" ]
+then echo "No Tape Drive available"
+     exit 1
+fi
+
+TAPE=${DRIVE}n
+TITLE="UNIX System V/386 Release 4.0 Version 3.0 Foundation Set"
+
+echo "Insert Cartridge Tape into the Drive ($DRIVE) and press return\c"
+read x;
+< ${DRIVE}
+${TAPECNTL} -e ${DEVICEN}
+if [ $? != 0 ]
+then echo "Can't erase the tape"
+     exit 1
+fi
+
+echo "Creating a Binary Tape for ${TITLE}"
+> $PKG_LIST
+echo "${TITLE}" > $PKG_LIST
+echo "Base Set	Hidden" >> $PKG_LIST
+if [ ! -d $ROOT/tmp/pkg ]
+then rm -rf $ROOT/tmp/pkg
+mkdir $ROOT/tmp/pkg > /dev/null 2>&1
+fi
+
+cd $ROOT/usr/src/add-on
+for i in pkg.*
+do
+if [ -f $i/prototype ]
+then
+cd $i; echo $i
+pkgmk -o -v"${VERSION}" -l${SIZE} -r$ROOT -d$ROOT/tmp/pkg
+cd ..
+fi
+done
+
+cd $ROOT/usr/src/pkg
+for i in terminf face scde
+do
+if [ -f $i/prototype ]
+then
+cd $i; echo $i
+pkgmk -o -v"${VERSION}" -l${SIZE} -r$ROOT -d$ROOT/tmp/pkg
+cd ..
+fi
+done
+
+echo $PKG_LIST | cpio -oBc 2>/dev/null | dd of=${TAPE} bs=5120
+rm $PKG_LIST
+
+echo "Writing the ${TITLE} to Tape ..."
+echo "Base System ...\c"
+
+cd ${ROOT}/
+cat ${ROOT}/usr/src/proto/i386/at386/FLOPPY/cpiolist?? | cpio -ocC102400 -O${TAPE} 2>/dev/null
+
+echo "..\n"
+cd $ROOT/tmp/pkg
+
+SCDE=
+if [ -d scde ]
+then SCDE=scde
+fi
+export SCDE
+# Ones not on the tape: crypt, inet, license, mouse, pc586, scsi
+echo "go" |
+pkgtrans -s `pwd` ${PKGNAME} ed terminf termcap fmli oam face nsu dfs compat lp xcp rpc windowing ${SCDE} mouse inet nfs rfs pci pcieth
+
+< ${DRIVE}
+echo "Add-on Tape is complete"

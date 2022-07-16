@@ -1,0 +1,41 @@
+#ident	"@(#)mbus:add-on/pkg.ots/prototype	1.1"
+
+!PACKDIR=$ROOT/etc/conf/pack.d
+!MASTDIR=$ROOT/usr/src/uts/i386/master.d
+
+i copyright
+i depend
+i pkginfo
+i postinstall
+i preremove
+
+!OAMBASE=/usr/sadm/sysadm
+!PKGINST=ots
+!PKGSAV=/var/sadm/pkg/$PKGINST/save
+
+d none /tmp/ots               775     bin     bin
+
+v none /tmp/ots/ots.Dr=$PACKDIR/ots/Driver.o	?	?	?
+v none /tmp/ots/ots.Sp=$MASTDIR/ots/space.c	?	?	?
+v none /tmp/ots/ots.Ma=$MASTDIR/ots/mdev	?	?	?
+v none /tmp/ots/ots.Sy=$MASTDIR/ots/sdev	?	?	?
+v none /tmp/ots/ots.No=$MASTDIR/ots/node	?	?	?
+
+v none /tmp/ots/otsdg.Dr=$PACKDIR/otsdg/Driver.o	?	?	?
+v none /tmp/ots/otsdg.Ma=$MASTDIR/otsdg/mdev	?	?	?
+v none /tmp/ots/otsdg.Sy=$MASTDIR/otsdg/sdev	?	?	?
+v none /tmp/ots/otsdg.No=$MASTDIR/otsdg/node	?	?	?
+
+#	commands: default owner=root, group=sys, mode=0700
+
+!default 0700 root sys
+f none	usr/sbin/otsstats 0755 root adm
+s none	usr/bin/otsstats=usr/sbin/otsstats
+f none	usr/sbin/otsreset
+s none	usr/bin/otsreset=usr/sbin/otsreset
+
+#	header files: default owner=bin group=bin mode=0444
+
+!default 0444 bin bin
+f none	usr/include/sys/ots.h=usr/src/uts/i386/sys/ots.h
+f none	usr/include/sys/otsuser.h=usr/src/uts/i386/sys/otsuser.h

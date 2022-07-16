@@ -1,0 +1,188 @@
+#ident	"@(#)pkg4.i386:scde/i.Z	1.4"
+#-------
+# i.Z - installation class Z script
+#
+# PKGINST provided by installation service
+#
+# Note that installf/removef should not be used in a class action
+# script.
+# Since the regular files are all type "e", the installation service
+# will simply note the change in size and checksum caused by
+# uncompressing the files.
+#-------
+
+die()	# exitcode message...
+{
+	: ${EXIT:=$1}
+	shift
+	echo "$@" >&2
+	exit "${EXIT:-0}"
+}
+
+for WHAT in /usr/ccs/bin/what /usr/bin/what whatever
+{
+	[ -x "$WHAT" ] && break
+}
+if	[ "$WHAT" = whatever ]
+then	die 1 cannot find what
+fi
+
+SED=sed
+
+#-------
+# verget - print the major/minor pstamp version numbers
+# of a given absolute filename.
+# If no version information is available, "-1 -1" is printed.
+#-------
+verget()	# filename stamppath
+{
+	FILE="$1"		# the file to examine
+	STAMP="$2.sl"		# the pstamp string to look for
+
+	case "$FILE"
+	{
+	/*)	;;
+	*)	die 1 "$FILE": not an absolute pathname
+		;;
+	}
+
+	#-------
+	# Obtain the pstamp, if there is one.
+	# Using fgrep allows any characters to be found.
+	# The sed command ensures that at most the first
+	# $FILE.sl line is examined.
+	#-------
+	shift $#
+	set -- `$WHAT $FILE 2>>/dev/null | fgrep "$STAMP" | $SED 1q`
+
+	case "$#"
+	{
+	7)
+		#-------
+		# CI5 pstamping - make 8th and 9th parameters the
+		# major and minor numbers from the seventh parameter.
+		#-------
+		set -- "$@" `IFS="${IFS}."; set -- $7; echo "$@"`
+
+		if	[ $# = 9 ]
+		then	echo $8 $9
+		else	echo -1 -1
+		fi
+		;;
+	*)
+		echo -1 -1
+		;;
+	}
+}
+
+#-------
+# vercmp - compare major/minor number pairs
+#
+# vercmp M1 m1 M2 m2
+#
+# vercmp prints -1, 0, or 1 according as pair (M1, m1) is less than,
+# equal to, or greater that pair (M2, m2).
+#
+# Its results are defined only when it is given four arguments,
+# all of which are numbers.
+#-------
+vercmp()	# M1 m1 M2 m2
+{
+	M1="$1"
+	m1="$2"
+	M2="$3"
+	m2="$4"
+
+	if	[ "$M1" -lt "$M2" ]
+	then	echo -1
+	elif	[ "$M1" -gt "$M2" ]
+	then	echo 1
+	elif	[ "$m1" -lt "$m2" ]
+	then	echo -1
+	elif	[ "$m1" -gt "$m2" ]
+	then	echo 1
+	else	echo 0
+	fi
+}
+
+#-------
+# Main Body
+#-------
+
+while	read SRC DST
+do
+	[ "$SRC" = /dev/null ]	&& continue
+
+	#-------
+	# If the target file does not exist, then simply uncompress
+	# the source file.
+	#-------
+	if	[ ! -f "$DST" ]
+	then	
+		echo "$DST"
+		zcat < "$SRC" > "$DST" 2> /dev/null
+		if [ "$?" != "0" ]
+		then 
+			cp "$SRC" "$DST"
+		fi
+		continue
+	fi
+
+	#-------
+	# Otherwise, we have to compare versions.
+	# We overwrite the existing file if the SRC file is newer.
+	# (or equal, FOR NOW, since pstamping is not in place)
+	#-------
+	TMP=/var/tmp/$$iZ
+	zcat < "$SRC" > "$TMP" 2> /dev/null
+	if [ "$?" != "0" ]
+	then
+               	cp "$SRC" "$DST"
+               	cp "$SRC" "$TMP"
+	fi
+
+	case "`vercmp \`verget $TMP $DST\` \`verget $DST $DST\``"
+	{
+	1)
+		echo "$DST: installing later version"
+		mv -f $TMP $DST
+
+		#-------
+		# If we happen to be replacing programs used by this
+		# class script, make sure we can execute them.
+		#
+		# This ensures we can continue installation until
+		# OA&M sets the permissions properly.
+		#-------
+		case "$DST"
+		{
+		$WHAT)
+			chmod a+x "$DST"
+			;;
+		}
+		;;
+	0)
+		echo "$DST: installing same version"
+		mv -f $TMP $DST
+
+		#-------
+		# If we happen to be replacing programs used by this
+		# class script, make sure we can execute them.
+		#
+		# This ensures we can continue installation until
+		# OA&M sets the permissions properly.
+		#-------
+		case "$DST"
+		{
+		$WHAT)
+			chmod a+x "$DST"
+			;;
+		}
+		;;
+	*)
+		echo "$DST: not installing earlier version"
+		rm -f $TMP
+		;;
+	}
+done
+exit 0

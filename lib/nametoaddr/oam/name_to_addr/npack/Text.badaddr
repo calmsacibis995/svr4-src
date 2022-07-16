@@ -1,0 +1,16 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/npack/Text.badaddr	1.1"
+title="NPACK Protocol Address Error"
+columns=55
+rows=12
+text="
+The address entered is not of the correct format.
+NPACK addresses are a sequence of 16 hexadecimal
+digits.  For example, the address of machine "elvis"
+might be
+
+	80001023dc3f0000
+
+and the address of machine "james" might be
+
+	800010f345d60000
+"

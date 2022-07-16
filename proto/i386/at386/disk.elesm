@@ -1,0 +1,10 @@
+#	ident	"@(#)proto:i386/at386/disk.elesm	1.2.3.1"
+#	Small Disk information < 130 Meg
+#	Element	Name	     Req/Opt	Disk0	Disk1	SLICE	SZ	MINSZ	Valid Fst
+/stand	Boot File System     	R	Yes	No	10	5M	5	bfs
+/dev/swap	Swap Slice           	R	Yes	No	2	2m	8
+/	Root File System     	R	Yes	No	1	27M	27	s5, ufs, s52k
+/usr	usr File System      	O	Yes	Yes	3	30M	40	s5, ufs, s52k
+/home	User File System     	O	Yes	Yes	4	50W	40	s5, ufs, s52k
+/dev/dump	Dump Slice           	O	Yes	Yes	6	1m	4
+/var	Add-ons File System  	O	Yes	Yes	11	50W	30	s5, ufs, s52k

@@ -1,0 +1,5 @@
+*ident	"@(#)mbus:uts/i386/master.d/ramd/node	1.1"
+ramd	dsk/ram0	b	0
+ramd	dsk/ram1	b	1
+ramd	rdsk/ram0	c	0
+ramd	rdsk/ram1	c	1

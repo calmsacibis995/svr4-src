@@ -1,0 +1,8 @@
+#
+#ident	"@(#)mbus:cmd/autopush/i386/chan.ap	1.1"
+#
+# /dev/console and /dev/tty* autopush setup
+#
+# major minor   lastminor       modules
+    1      0       0            ldterm ttcompat
+    15     0       255          ldterm ttcompat

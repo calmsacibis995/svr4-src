@@ -1,0 +1,413 @@
+#ident	"@(#)proto:i386/Plists/Plist.dev	1.3.5.1"
+
+775	root	sys	dev	d
+# dev/zero must be added to the B6 boot floppy after dev/pmem.
+666	root	sys	dev/zero	c	2	4
+
+775	root	sys	dev/dsk	d
+775	root	sys	dev/rdsk	d
+
+666	root	sys	dev/dsk/f03d	b	1	100
+666	root	sys	dev/dsk/f03dt	b	1	96
+666	root	sys	dev/dsk/f03h	b	1	116
+666	root	sys	dev/dsk/f03ht	b	1	112
+666	root	sys	dev/dsk/f05d16	b	1	68
+666	root	sys	dev/dsk/f05d16t	b	1	64
+666	root	sys	dev/dsk/f05d4	b	1	52
+666	root	sys	dev/dsk/f05d4t	b	1	48
+666	root	sys	dev/dsk/f05d8u	b	1	38
+666	root	sys	dev/dsk/f05q	b	1	84
+666	root	sys	dev/dsk/f05qt	b	1	80
+666	root	sys	dev/dsk/f0d8d	b	1	36
+666	root	sys	dev/dsk/f05d8	l	dev/dsk/f0d8d
+666	root	sys	dev/dsk/f0d8dt	b	1	32
+666	root	sys	dev/dsk/f05d8t	l	dev/dsk/f0d8dt
+666	root	sys	dev/dsk/f0d9d	b	1	20
+666	root	sys	dev/dsk/f05d9	l	dev/dsk/f0d9d
+666	root	sys	dev/dsk/f0d9dt	b	1	16
+666	root	sys	dev/dsk/f05d9t	l	dev/dsk/f0d9dt
+666	root	sys	dev/dsk/f05h	l	dev/dsk/f0q15d
+666	root	sys	dev/dsk/f05ht	l	dev/dsk/f0q15dt
+666	root	sys	dev/dsk/f13d	b	1	101
+666	root	sys	dev/dsk/f13dt	b	1	97
+666	root	sys	dev/dsk/f13h	b	1	117
+666	root	sys	dev/dsk/f13ht	b	1	113
+666	root	sys	dev/dsk/f15d16	b	1	69
+666	root	sys	dev/dsk/f15d16t	b	1	65
+666	root	sys	dev/dsk/f15d4	b	1	53
+666	root	sys	dev/dsk/f15d4t	b	1	49
+666	root	sys	dev/dsk/f15d8u	b	1	39
+666	root	sys	dev/dsk/f15q	b	1	85
+666	root	sys	dev/dsk/f15qt	b	1	81
+666	root	sys	dev/dsk/f1d8d	b	1	37
+666	root	sys	dev/dsk/f15d8	l	dev/dsk/f1d8d
+666	root	sys	dev/dsk/f1d8dt	b	1	33
+666	root	sys	dev/dsk/f15d8t	l	dev/dsk/f1d8dt
+666	root	sys	dev/dsk/f1d9d	b	1	21
+666	root	sys	dev/dsk/f15d9	l	dev/dsk/f1d9d
+666	root	sys	dev/dsk/f1d9dt	b	1	17
+666	root	sys	dev/dsk/f15d9t	l	dev/dsk/f1d9dt
+666	root	sys	dev/dsk/f1q15d	b	1	5
+666	root	sys	dev/dsk/f15h	l	dev/dsk/f1q15d
+666	root	sys	dev/dsk/f1q15dt	b	1	1
+666	root	sys	dev/dsk/f15ht	l	dev/dsk/f1q15dt
+666	root	sys	dev/fd1	l	dev/dsk/f1q15dt
+
+440	sys	sys	dev/kmem	c	2	1
+666	root	root	dev/lp	c	7	1
+666	root	root	dev/lp0	c	7	0
+666	root	root	dev/lp1	c	7	1
+666	root	root	dev/lp2	c	7	2
+644	root	root	dev/osm	c	17	0
+644	root	root	dev/osm1	c	17	1
+644	root	root	dev/osm2	c	17	2
+664	root	sys	dev/ptmx	c	11	0
+
+666	root	sys	dev/rdsk/f03d	c	1	100
+666	root	sys	dev/rdsk/f03dt	c	1	96
+666	root	sys	dev/rdsk/f03h	c	1	116
+666	root	sys	dev/rdsk/f03ht	c	1	112
+666	root	sys	dev/rdsk/f05d16	c	1	68
+666	root	sys	dev/rdsk/f05d16t	c	1	64
+666	root	sys	dev/rdsk/f05d4	c	1	52
+666	root	sys	dev/rdsk/f05d4t	c	1	48
+666	root	sys	dev/rdsk/f05d8u	c	1	38
+666	root	sys	dev/rdsk/f05q	c	1	84
+666	root	sys	dev/rdsk/f05qt	c	1	80
+666	root	sys	dev/rdsk/f0d8d	c	1	36
+666	root	sys	dev/rdsk/f05d8	l	dev/rdsk/f0d8d
+666	root	sys	dev/rdsk/f0d8dt	c	1	32
+666	root	sys	dev/rdsk/f05d8t	l	dev/rdsk/f0d8dt
+666	root	sys	dev/rdsk/f0d9d	c	1	20
+666	root	sys	dev/rdsk/f05d9	l	dev/rdsk/f0d9d
+666	root	sys	dev/rdsk/f0d9dt	c	1	16
+666	root	sys	dev/rdsk/f05d9t	l	dev/rdsk/f0d9dt
+666	root	sys	dev/rdsk/f05h	l	dev/rdsk/f0q15d
+666	root	sys	dev/rdsk/f05ht	l	dev/rdsk/f0q15dt
+666	root	sys	dev/rdsk/f13d	c	1	101
+666	root	sys	dev/rdsk/f13dt	c	1	97
+666	root	sys	dev/rdsk/f13h	c	1	117
+666	root	sys	dev/rdsk/f13ht	c	1	113
+666	root	sys	dev/rdsk/f15d16	c	1	69
+666	root	sys	dev/rdsk/f15d16t	c	1	65
+666	root	sys	dev/rdsk/f15d4	c	1	53
+666	root	sys	dev/rdsk/f15d4t	c	1	49
+666	root	sys	dev/rdsk/f15d8u	c	1	39
+666	root	sys	dev/rdsk/f15q	c	1	85
+666	root	sys	dev/rdsk/f15qt	c	1	81
+666	root	sys	dev/rdsk/f1d8d	c	1	37
+666	root	sys	dev/rdsk/f15d8	l	dev/rdsk/f1d8d
+666	root	sys	dev/rdsk/f1d8dt	c	1	33
+666	root	sys	dev/rdsk/f15d8t	l	dev/rdsk/f1d8dt
+666	root	sys	dev/rdsk/f1d9d	c	1	21
+666	root	sys	dev/rdsk/f15d9	l	dev/rdsk/f1d9d
+666	root	sys	dev/rdsk/f1d9dt	c	1	17
+666	root	sys	dev/rdsk/f15d9t	l	dev/rdsk/f1d9dt
+666	root	sys	dev/rdsk/f1q15d	c	1	5
+666	root	sys	dev/rdsk/f15h	l	dev/rdsk/f1q15d
+666	root	sys	dev/rdsk/f1q15dt	c	1	1
+666	root	sys	dev/rdsk/f15ht	l	dev/rdsk/f1q15dt
+666	root	sys	dev/rfd1	l	dev/rdsk/f1q15dt
+
+600	root	sys	dev/root	l	dev/dsk/0s1
+600	root	sys	dev/rtc	c	8	0
+600	root	sys	dev/clock	l	dev/rtc
+
+# STREAMs sxt devices
+622	root	sys	dev/sxt000	c	34	0
+622	root	sys	dev/sxt001	c	34	1
+622	root	sys	dev/sxt002	c	34	2
+622	root	sys	dev/sxt003	c	34	3
+622	root	sys	dev/sxt004	c	34	4
+622	root	sys	dev/sxt005	c	34	5
+622	root	sys	dev/sxt006	c	34	6
+622	root	sys	dev/sxt007	c	34	7
+622	root	sys	dev/sxt010	c	34	8
+622	root	sys	dev/sxt011	c	34	9
+622	root	sys	dev/sxt012	c	34	10
+622	root	sys	dev/sxt013	c	34	11
+622	root	sys	dev/sxt014	c	34	12
+622	root	sys	dev/sxt015	c	34	13
+622	root	sys	dev/sxt016	c	34	14
+622	root	sys	dev/sxt017	c	34	15
+622	root	sys	dev/sxt020	c	34	16
+622	root	sys	dev/sxt021	c	34	17
+622	root	sys	dev/sxt022	c	34	18
+622	root	sys	dev/sxt023	c	34	19
+622	root	sys	dev/sxt024	c	34	20
+622	root	sys	dev/sxt025	c	34	21
+622	root	sys	dev/sxt026	c	34	22
+622	root	sys	dev/sxt027	c	34	23
+622	root	sys	dev/sxt030	c	34	24
+622	root	sys	dev/sxt031	c	34	25
+622	root	sys	dev/sxt032	c	34	26
+622	root	sys	dev/sxt033	c	34	27
+622	root	sys	dev/sxt034	c	34	28
+622	root	sys	dev/sxt035	c	34	29
+622	root	sys	dev/sxt036	c	34	30
+622	root	sys	dev/sxt037	c	34	31
+622	root	sys	dev/sxt040	c	34	32
+622	root	sys	dev/sxt041	c	34	33
+622	root	sys	dev/sxt042	c	34	34
+622	root	sys	dev/sxt043	c	34	35
+622	root	sys	dev/sxt044	c	34	36
+622	root	sys	dev/sxt045	c	34	37
+622	root	sys	dev/sxt046	c	34	38
+622	root	sys	dev/sxt047	c	34	39
+622	root	sys	dev/sxt050	c	34	40
+622	root	sys	dev/sxt051	c	34	41
+622	root	sys	dev/sxt052	c	34	42
+622	root	sys	dev/sxt053	c	34	43
+622	root	sys	dev/sxt054	c	34	44
+622	root	sys	dev/sxt055	c	34	45
+622	root	sys	dev/sxt056	c	34	46
+622	root	sys	dev/sxt057	c	34	47
+622	root	sys	dev/sxt060	c	34	48
+622	root	sys	dev/sxt061	c	34	49
+622	root	sys	dev/sxt062	c	34	50
+622	root	sys	dev/sxt063	c	34	51
+622	root	sys	dev/sxt064	c	34	52
+622	root	sys	dev/sxt065	c	34	53
+622	root	sys	dev/sxt066	c	34	54
+622	root	sys	dev/sxt067	c	34	55
+622	root	sys	dev/sxt070	c	34	56
+622	root	sys	dev/sxt071	c	34	57
+# The dev/sxt directory and it's entries MUST be created after
+#	the dev/sxt??? devices.
+775	root	root	dev/sxt	d
+622	root	sys	dev/sxt/000	l	dev/sxt000
+622	root	sys	dev/sxt/001	l	dev/sxt001
+622	root	sys	dev/sxt/002	l	dev/sxt002
+622	root	sys	dev/sxt/003	l	dev/sxt003
+622	root	sys	dev/sxt/004	l	dev/sxt004
+622	root	sys	dev/sxt/005	l	dev/sxt005
+622	root	sys	dev/sxt/006	l	dev/sxt006
+622	root	sys	dev/sxt/007	l	dev/sxt007
+622	root	sys	dev/sxt/010	l	dev/sxt010
+622	root	sys	dev/sxt/011	l	dev/sxt011
+622	root	sys	dev/sxt/012	l	dev/sxt012
+622	root	sys	dev/sxt/013	l	dev/sxt013
+622	root	sys	dev/sxt/014	l	dev/sxt014
+622	root	sys	dev/sxt/015	l	dev/sxt015
+622	root	sys	dev/sxt/016	l	dev/sxt016
+622	root	sys	dev/sxt/017	l	dev/sxt017
+622	root	sys	dev/sxt/020	l	dev/sxt020
+622	root	sys	dev/sxt/021	l	dev/sxt021
+622	root	sys	dev/sxt/022	l	dev/sxt022
+622	root	sys	dev/sxt/023	l	dev/sxt023
+622	root	sys	dev/sxt/024	l	dev/sxt024
+622	root	sys	dev/sxt/025	l	dev/sxt025
+622	root	sys	dev/sxt/026	l	dev/sxt026
+622	root	sys	dev/sxt/027	l	dev/sxt027
+622	root	sys	dev/sxt/030	l	dev/sxt030
+622	root	sys	dev/sxt/031	l	dev/sxt031
+622	root	sys	dev/sxt/032	l	dev/sxt032
+622	root	sys	dev/sxt/033	l	dev/sxt033
+622	root	sys	dev/sxt/034	l	dev/sxt034
+622	root	sys	dev/sxt/035	l	dev/sxt035
+622	root	sys	dev/sxt/036	l	dev/sxt036
+622	root	sys	dev/sxt/037	l	dev/sxt037
+622	root	sys	dev/sxt/040	l	dev/sxt040
+622	root	sys	dev/sxt/041	l	dev/sxt041
+622	root	sys	dev/sxt/042	l	dev/sxt042
+622	root	sys	dev/sxt/043	l	dev/sxt043
+622	root	sys	dev/sxt/044	l	dev/sxt044
+622	root	sys	dev/sxt/045	l	dev/sxt045
+622	root	sys	dev/sxt/046	l	dev/sxt046
+622	root	sys	dev/sxt/047	l	dev/sxt047
+622	root	sys	dev/sxt/050	l	dev/sxt050
+622	root	sys	dev/sxt/051	l	dev/sxt051
+622	root	sys	dev/sxt/052	l	dev/sxt052
+622	root	sys	dev/sxt/053	l	dev/sxt053
+622	root	sys	dev/sxt/054	l	dev/sxt054
+622	root	sys	dev/sxt/055	l	dev/sxt055
+622	root	sys	dev/sxt/056	l	dev/sxt056
+622	root	sys	dev/sxt/057	l	dev/sxt057
+622	root	sys	dev/sxt/060	l	dev/sxt060
+622	root	sys	dev/sxt/061	l	dev/sxt061
+622	root	sys	dev/sxt/062	l	dev/sxt062
+622	root	sys	dev/sxt/063	l	dev/sxt063
+622	root	sys	dev/sxt/064	l	dev/sxt064
+622	root	sys	dev/sxt/065	l	dev/sxt065
+622	root	sys	dev/sxt/066	l	dev/sxt066
+622	root	sys	dev/sxt/067	l	dev/sxt067
+622	root	sys	dev/sxt/070	l	dev/sxt070
+622	root	sys	dev/sxt/071	l	dev/sxt071
+
+# Non-STREAMs sxt devices
+622	root	sys	dev/sxto000	c	14	0
+622	root	sys	dev/sxto001	c	14	1
+622	root	sys	dev/sxto002	c	14	2
+622	root	sys	dev/sxto003	c	14	3
+622	root	sys	dev/sxto004	c	14	4
+622	root	sys	dev/sxto005	c	14	5
+622	root	sys	dev/sxto006	c	14	6
+622	root	sys	dev/sxto007	c	14	7
+622	root	sys	dev/sxto010	c	14	8
+622	root	sys	dev/sxto011	c	14	9
+622	root	sys	dev/sxto012	c	14	10
+622	root	sys	dev/sxto013	c	14	11
+622	root	sys	dev/sxto014	c	14	12
+622	root	sys	dev/sxto015	c	14	13
+622	root	sys	dev/sxto016	c	14	14
+622	root	sys	dev/sxto017	c	14	15
+622	root	sys	dev/sxto020	c	14	16
+622	root	sys	dev/sxto021	c	14	17
+622	root	sys	dev/sxto022	c	14	18
+622	root	sys	dev/sxto023	c	14	19
+622	root	sys	dev/sxto024	c	14	20
+622	root	sys	dev/sxto025	c	14	21
+622	root	sys	dev/sxto026	c	14	22
+622	root	sys	dev/sxto027	c	14	23
+622	root	sys	dev/sxto030	c	14	24
+622	root	sys	dev/sxto031	c	14	25
+622	root	sys	dev/sxto032	c	14	26
+622	root	sys	dev/sxto033	c	14	27
+622	root	sys	dev/sxto034	c	14	28
+622	root	sys	dev/sxto035	c	14	29
+622	root	sys	dev/sxto036	c	14	30
+622	root	sys	dev/sxto037	c	14	31
+622	root	sys	dev/sxto040	c	14	32
+622	root	sys	dev/sxto041	c	14	33
+622	root	sys	dev/sxto042	c	14	34
+622	root	sys	dev/sxto043	c	14	35
+622	root	sys	dev/sxto044	c	14	36
+622	root	sys	dev/sxto045	c	14	37
+622	root	sys	dev/sxto046	c	14	38
+622	root	sys	dev/sxto047	c	14	39
+622	root	sys	dev/sxto050	c	14	40
+622	root	sys	dev/sxto051	c	14	41
+622	root	sys	dev/sxto052	c	14	42
+622	root	sys	dev/sxto053	c	14	43
+622	root	sys	dev/sxto054	c	14	44
+622	root	sys	dev/sxto055	c	14	45
+622	root	sys	dev/sxto056	c	14	46
+622	root	sys	dev/sxto057	c	14	47
+622	root	sys	dev/sxto060	c	14	48
+622	root	sys	dev/sxto061	c	14	49
+622	root	sys	dev/sxto062	c	14	50
+622	root	sys	dev/sxto063	c	14	51
+622	root	sys	dev/sxto064	c	14	52
+622	root	sys	dev/sxto065	c	14	53
+622	root	sys	dev/sxto066	c	14	54
+622	root	sys	dev/sxto067	c	14	55
+622	root	sys	dev/sxto070	c	14	56
+622	root	sys	dev/sxto071	c	14	57
+# The dev/sxto directory and it's entries MUST be created after
+#	the dev/sxto??? devices.
+775	root	root	dev/sxto	d
+622	root	sys	dev/sxto/000	l	dev/sxto000
+622	root	sys	dev/sxto/001	l	dev/sxto001
+622	root	sys	dev/sxto/002	l	dev/sxto002
+622	root	sys	dev/sxto/003	l	dev/sxto003
+622	root	sys	dev/sxto/004	l	dev/sxto004
+622	root	sys	dev/sxto/005	l	dev/sxto005
+622	root	sys	dev/sxto/006	l	dev/sxto006
+622	root	sys	dev/sxto/007	l	dev/sxto007
+622	root	sys	dev/sxto/010	l	dev/sxto010
+622	root	sys	dev/sxto/011	l	dev/sxto011
+622	root	sys	dev/sxto/012	l	dev/sxto012
+622	root	sys	dev/sxto/013	l	dev/sxto013
+622	root	sys	dev/sxto/014	l	dev/sxto014
+622	root	sys	dev/sxto/015	l	dev/sxto015
+622	root	sys	dev/sxto/016	l	dev/sxto016
+622	root	sys	dev/sxto/017	l	dev/sxto017
+622	root	sys	dev/sxto/020	l	dev/sxto020
+622	root	sys	dev/sxto/021	l	dev/sxto021
+622	root	sys	dev/sxto/022	l	dev/sxto022
+622	root	sys	dev/sxto/023	l	dev/sxto023
+622	root	sys	dev/sxto/024	l	dev/sxto024
+622	root	sys	dev/sxto/025	l	dev/sxto025
+622	root	sys	dev/sxto/026	l	dev/sxto026
+622	root	sys	dev/sxto/027	l	dev/sxto027
+622	root	sys	dev/sxto/030	l	dev/sxto030
+622	root	sys	dev/sxto/031	l	dev/sxto031
+622	root	sys	dev/sxto/032	l	dev/sxto032
+622	root	sys	dev/sxto/033	l	dev/sxto033
+622	root	sys	dev/sxto/034	l	dev/sxto034
+622	root	sys	dev/sxto/035	l	dev/sxto035
+622	root	sys	dev/sxto/036	l	dev/sxto036
+622	root	sys	dev/sxto/037	l	dev/sxto037
+622	root	sys	dev/sxto/040	l	dev/sxto040
+622	root	sys	dev/sxto/041	l	dev/sxto041
+622	root	sys	dev/sxto/042	l	dev/sxto042
+622	root	sys	dev/sxto/043	l	dev/sxto043
+622	root	sys	dev/sxto/044	l	dev/sxto044
+622	root	sys	dev/sxto/045	l	dev/sxto045
+622	root	sys	dev/sxto/046	l	dev/sxto046
+622	root	sys	dev/sxto/047	l	dev/sxto047
+622	root	sys	dev/sxto/050	l	dev/sxto050
+622	root	sys	dev/sxto/051	l	dev/sxto051
+622	root	sys	dev/sxto/052	l	dev/sxto052
+622	root	sys	dev/sxto/053	l	dev/sxto053
+622	root	sys	dev/sxto/054	l	dev/sxto054
+622	root	sys	dev/sxto/055	l	dev/sxto055
+622	root	sys	dev/sxto/056	l	dev/sxto056
+622	root	sys	dev/sxto/057	l	dev/sxto057
+622	root	sys	dev/sxto/060	l	dev/sxto060
+622	root	sys	dev/sxto/061	l	dev/sxto061
+622	root	sys	dev/sxto/062	l	dev/sxto062
+622	root	sys	dev/sxto/063	l	dev/sxto063
+622	root	sys	dev/sxto/064	l	dev/sxto064
+622	root	sys	dev/sxto/065	l	dev/sxto065
+622	root	sys	dev/sxto/066	l	dev/sxto066
+622	root	sys	dev/sxto/067	l	dev/sxto067
+622	root	sys	dev/sxto/070	l	dev/sxto070
+622	root	sys	dev/sxto/071	l	dev/sxto071
+
+# 666	root	sys	dev/tty	c	16	0
+666	root	root	dev/tty00	c	3	0
+666	root	root	dev/tty01	c	3	1
+666	root	root	dev/tty00h	c	3	128
+666	root	root	dev/tty01h	c	3	129
+666	root	root	dev/tty00s	c	3	0
+666	root	root	dev/tty01s	c	3	1
+666	root	root	dev/term/00	c	3	0
+666	root	root	dev/term/01	c	3	1
+666	root	root	dev/term/00h	c	3	128
+666	root	root	dev/term/01h	c	3	129
+666	root	root	dev/term/00s	c	3	0
+666	root	root	dev/term/01s	c	3	1
+
+
+# 
+# Non-STREAMs xto devices
+600	root	sys	dev/xto000	c	13	0
+600	root	sys	dev/xto001	c	13	1
+600	root	sys	dev/xto002	c	13	2
+600	root	sys	dev/xto003	c	13	3
+600	root	sys	dev/xto004	c	13	4
+600	root	sys	dev/xto005	c	13	5
+600	root	sys	dev/xto006	c	13	6
+600	root	sys	dev/xto007	c	13	7
+# Non-STREAMS xto device links - must be created AFTER the dev/xto???'s.
+775	root	root	dev/xto	d
+600	root	sys	dev/xto/000	l	dev/xto000
+600	root	sys	dev/xto/001	l	dev/xto001
+600	root	sys	dev/xto/002	l	dev/xto002
+600	root	sys	dev/xto/003	l	dev/xto003
+600	root	sys	dev/xto/004	l	dev/xto004
+600	root	sys	dev/xto/005	l	dev/xto005
+600	root	sys	dev/xto/006	l	dev/xto006
+600	root	sys	dev/xto/007	l	dev/xto007
+# 
+# The STREAMs xt devices
+600	root	sys	dev/xt000	c	33	0
+600	root	sys	dev/xt001	c	33	1
+600	root	sys	dev/xt002	c	33	2
+600	root	sys	dev/xt003	c	33	3
+600	root	sys	dev/xt004	c	33	4
+600	root	sys	dev/xt005	c	33	5
+600	root	sys	dev/xt006	c	33	6
+600	root	sys	dev/xt007	c	33	7
+# 
+# STREAMS xt device links - must be created AFTER the dev/xt???'s.
+775	root	root	dev/xt	d
+600	root	sys	dev/xt/000	l	dev/xt000
+600	root	sys	dev/xt/001	l	dev/xt001
+600	root	sys	dev/xt/002	l	dev/xt002
+600	root	sys	dev/xt/003	l	dev/xt003
+600	root	sys	dev/xt/004	l	dev/xt004
+600	root	sys	dev/xt/005	l	dev/xt005
+600	root	sys	dev/xt/006	l	dev/xt006
+600	root	sys	dev/xt/007	l	dev/xt007

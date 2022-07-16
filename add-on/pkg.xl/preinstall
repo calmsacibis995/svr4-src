@@ -1,0 +1,53 @@
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+#ident	"@(#)/usr/src/add-on/pkg.xl/preinstall.sl 1.1 4.0 12/08/90 41602 AT&T-USL"
+
+#	preinstall script for xl package installation
+
+trap 'exit 3' 15
+
+#
+# Prompt script to allow the user to select installation
+# of the oam xl forms and menus only if FACE is installed
+#
+
+# check to see if face is installed
+
+FACE=`/usr/bin/pkginfo face >/dev/null 2>&1; echo $?`
+
+if [ ${FACE} -eq 0 ]
+then
+	ANS=`getyorn -d y \
+	-p  "You have the Framed Access Command Environment (FACE) \
+	package installed.  Would you like to add the floppy tape control functions \
+	to the user interface?\n"
+	` || exit $?
+else
+	ANS=n
+fi
+
+if [ "$ANS" = n ]
+then
+	CLASSES="none"
+else
+	CLASSES="none OAMadmin OAMmif"
+fi
+echo "CLASSES=$CLASSES" >> $1
+
+message -c "You are installing the ${NAME}. \
+The floppy disk controller will be shared by both floppy disk and floppy \
+tape drives."
+if [ $? != 0 ]
+then
+	exit 1
+fi
+exit 0
+

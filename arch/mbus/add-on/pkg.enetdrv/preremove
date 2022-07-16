@@ -1,0 +1,60 @@
+#ident	"@(#)mbus:add-on/pkg.enetdrv/preremove	1.1.1.1"
+
+undo_strcf() {
+if [ -f /etc/inet/strcf ]
+then 
+	cp /etc/inet/strcf /etc/inet/.strcf.old
+	sed "/\# i386\/$1/s/^	/#	/" < /etc/inet/.strcf.old > /etc/inet/strcf
+fi
+}
+
+FAILURE=1	# fatal error
+
+REBUILD=0
+
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be removed."
+
+# determine that ID/TP tools are available
+
+if
+	[ ! -x ${CONFBIN}/idbuild -o ! -x ${CONFBIN}/idinstall ]
+then
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+
+for MODULE in i530 edlina
+do
+	${CONFBIN}/idcheck -p ${MODULE}
+	RES="$?"
+	if
+		[ "${RES}" -ne "100" -a "${RES}" -ne "0" ]
+	then
+		${CONFBIN}/idinstall -d ${MODULE}
+		echo "Removing ${NAME} ${MODULE} module ..."
+		REBUILD=1
+	fi
+done
+
+undo_strcf EDL
+
+if
+	[ "${REBUILD}" = "1" ]
+then
+	# rebuild for changes to take effect
+	
+	${CONFBIN}/idbuild
+	if
+		[ "$?" -ne "0" ]
+	then
+		exit ${FAILURE}
+	else
+		exit 10
+	fi
+else
+	exit 0
+fi

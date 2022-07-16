@@ -1,0 +1,80 @@
+set -a
+PKG_BASE="geus gpp gcontrib mouse nfs rfs rpc xcp scde lp compat dfs enetdrv ots inet nsu oam fmli termcap terminf ed"
+PKG_DEFAULT=/tmp/deflt.$$
+IDCMD=/etc/conf/bin
+PKG_CURRENT=""
+REBOOT=0
+make_default () {
+cat >$PKG_DEFAULT << END
+mail=root
+instance=unique
+partial=nocheck
+runlevel=ask
+idepend=ask
+rdepend=ask
+space=nocheck
+setuid=nocheck
+conflict=nocheck
+action=nocheck
+basedir=default
+END
+}
+
+find_pkg () {
+	PKG_CURRENT=`pkginfo|while read type name des
+	do
+		case $name in	#don't list the unremovable packages
+			sys)	continue;;
+			dfm)	continue;;
+		    usrenv)	continue;;
+		esac
+		echo $name
+	done`
+}
+
+remove_unknown_pkg () {
+	[ -f $IDCMD/S.idbuild ] || cp $IDCMD/idbuild $IDCMD/S.idbuild
+	>$IDCMD/idbuild
+	for i in $PKG_CURRENT
+	do
+		echo $PKG_BASE|grep -s $i>/dev/null 2>&1  && continue
+		echo "Removing Package $i"
+		pkgrm -a $PKG_DEFAULT -n $i 2>/dev/null
+		case $? in
+			0) echo "Removal of $i was successful";;
+		       10) echo "Removal of $i was successful";REBOOT=1;;
+		esac
+	done
+	cp /etc/conf/bin/S.idbuild /etc/conf/bin/idbuild
+	>/etc/conf/cf.d/sdevice
+}
+
+remove_base_pkg () {
+	[ -f $IDCMD/S.idbuild ] || cp $IDCMD/idbuild $IDCMD/S.idbuild
+	>$IDCMD/idbuild
+
+	for i in $PKG_BASE
+	do
+		echo $PKG_CURRENT|grep -s $i>/dev/null 2>&1  || continue
+		echo "Removing Package $i"
+		pkgrm -a $PKG_DEFAULT -n $i 2>/dev/null
+		case $? in
+			0) echo "Removal of $i was successful";;
+		       10) echo "Removal of $i was successful";REBOOT=1;;
+		esac
+	done
+	cp /etc/conf/bin/S.idbuild /etc/conf/bin/idbuild
+	>/etc/conf/cf.d/sdevice
+	if [ $REBOOT -eq 1 ];then
+		/etc/conf/bin/idbuild
+		echo "In order for changes to take effect, reboot"
+		echo "Reboot the system NOW, using the "
+		echo "\t'shutdonw -y -g0' command"
+	fi
+
+}
+make_default 
+find_pkg 
+remove_unknown_pkg
+remove_base_pkg
+rm -f $PKG_DEFAULT

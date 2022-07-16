@@ -1,0 +1,11 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/inet/Text.h_exists	1.1"
+title="Internet Protocol File Error"
+columns=55
+rows=7
+text="
+The machine name entered already exists in
+
+	/etc/hosts
+
+If you want to remove it, please edit this file.
+"

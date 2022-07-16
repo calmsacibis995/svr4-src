@@ -1,0 +1,4 @@
+#ident	"@(#)mbus:uts/i386/boot/msa/mapfile	1.1"
+
+text = V0x0 A0x1000;
+data = A0x4;

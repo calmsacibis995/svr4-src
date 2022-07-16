@@ -1,0 +1,43 @@
+#ident	"@(#)pkg4.i386:scde/profile	1.1"
+#-------
+# profile build file
+#
+# This build file edits /etc/profile.
+#
+# During installation, it appends a line which will make
+# the new compilation system the default.
+#
+# During removal, it removes the line it added before.
+#
+# To use this, there should be a line like
+#
+# 	e build /etc/profile ? ? ?
+#
+# in the package prototype file.
+#
+# PKGINST should be provided by the installation service.
+# CORESIDENT set by request script.
+#-------
+: ${PKGINST:=scde}
+
+PROFILE=/etc/profile
+
+#-------
+# Don't export PATH in this command; let its export status remain
+# whatever it is already.
+#-------
+LINE=
+case "$CORESIDENT"
+{
+y)	LINE='PATH="/usr/ccs/bin:$PATH"'		;;
+n)	LINE='PATH="$PATH:/usr/ccs/bin"'		;;
+*)	echo profile: error: CORESIDENT = $CORESIDENT	;;
+}
+LINE="$LINE	# Installed by package instance $PKGINST"
+
+grep -v "^$LINE$" $PROFILE	|| exit 2
+
+if	[ "$1" = install ]
+then	echo "$LINE"		|| exit 2
+fi
+exit 0

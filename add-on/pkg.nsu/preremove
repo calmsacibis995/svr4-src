@@ -1,0 +1,112 @@
+#ident	"@(#)pkg.nsu:preremove	1.11.5.1"
+
+FAILURE=1	# fatal error
+
+REBUILD=0
+
+CONFDIR=/etc/conf
+CONFBIN=$CONFDIR/bin
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be removed."
+
+# determine that ID/TP tools are available
+
+if
+	[ ! -x ${CONFBIN}/idbuild -o ! -x ${CONFBIN}/idinstall \
+			-o ! -x ${CONFBIN}/idcheck ]
+then
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+
+for MODULE in clone sockmod timod tirdwr pckt ptem ptm pts ticlts ticots ticotsor log
+do
+	${CONFBIN}/idcheck -p ${MODULE}
+	RES="$?"
+	if
+		[ "${RES}" -ne "100" -a "${RES}" -ne "0" ]
+	then
+		${CONFBIN}/idinstall -d ${MODULE}
+		echo "Removing ${NAME} ${MODULE} module ..."
+		REBUILD=1
+	fi
+done
+
+# remove the listener id
+
+/usr/bin/passmgmt -d listen >/dev/null 2>&1
+
+# remove listen-type port monitors and any symbolic links that might
+# be lying arount
+
+sacadm -L -t listen 2>/dev/null | cut -f1 -d: >/tmp/listeners
+for i in `cat /tmp/listeners`
+do
+	sacadm -r -p $i >/dev/null 2>&1
+done
+
+# symlinks and links
+
+LHOME=$BASEDIR/usr/net/nls
+if
+	[ -f "$LHOME/listen" ]
+then
+	rm $LHOME/listen
+fi
+if
+	[ -f "$LHOME/dbfconv" ]
+then
+	rm $LHOME/dbfconv
+fi
+if	
+	[ -f "$LHOME/nlps_server" ]
+then
+	rm $LHOME/nlps_server
+fi
+if [ -f /usr/bin/nlsadmin ]
+then
+	rm /usr/bin/nlsadmin
+fi
+rm /tmp/listeners
+
+#	Remove entries from /etc/netconfig
+
+grep -v '[ 	]loopback[ 	][ 	]*-[ 	][ 	]*/dev/ticlts[ 	]' /etc/netconfig 2>/dev/null >/tmp/$$.1
+grep -v '[ 	]loopback[ 	][ 	]*-[ 	][ 	]*/dev/ticotsord[ 	]' /tmp/$$.1 2>/dev/null >/tmp/$$.2
+grep -v '[ 	]loopback[ 	][ 	]*-[ 	][ 	]*/dev/ticots[ 	]' /tmp/$$.2 2>/dev/null >/etc/netconfig
+
+rm -f /rmp/$$.1 /tmp/$$.2
+
+#
+#	Remove entries from OAM scripts...
+#
+
+NSMENU=/usr/sadm/sysadm/menu/netservices/netserve.menu
+if [ -f $NSMENU ]
+then
+	fgrep -v 'name_to_address^Machine and Service Address Management^name_to_addr/map.menu' $NSMENU 2>/dev/null >/tmp/$$.3
+	cp /tmp/$$.3 $NSMENU
+	rm -f /tmp/$$.3
+	removef  $PKGINST $NSMENU
+fi
+
+removef -f $PKGINST
+
+#
+if
+	[ "${REBUILD}" = "1" ]
+then
+	# rebuild for changes to take effect
+	
+	${CONFBIN}/idbuild
+	if
+		[ "$?" -ne "0" ]
+	then
+		exit ${FAILURE}
+	else
+		exit 10
+	fi
+else
+	exit 0
+fi

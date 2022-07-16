@@ -1,0 +1,59 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/starlan/bin/starlan.servic	1.1"
+#
+#	Echo "1" if the name already exists (make sure the comments
+#	are stripped out of services files first)....
+#
+
+slan=`cat /etc/net/starlan/services 2>/dev/null | sed 's/#.*$//' |
+       egrep "^$1[ 	]"`
+
+slandg=`cat /etc/net/starlandg/services 2>/dev/null | sed 's/#.*$//' |
+       egrep "^$1[ 	]"`
+
+if [ "$slan" != "" -a "$slandg" != "" ]
+then
+	echo 1
+	exit
+fi
+
+#
+#	Check to make sure no spaces are in the port string
+#
+
+ret=`echo $2 | awk 'BEGIN       { error = 0 }
+		    NF != 1	{ error = 1 }
+		    /\./	{ error = 1 }
+		    END         { print error }'`
+
+if [ $ret -eq 1 ]
+then
+	echo 2
+	exit
+fi
+
+#
+#	Put the entry into /etc/net/starlan/services and
+#	/etc/net/starlandg/services
+#
+
+mkdir /etc/net /etc/net/starlan /etc/net/starlandg >/dev/null 2>&1
+
+if [ "$slan" = "" ]
+then
+	echo "$1	$2" >>/etc/net/starlan/services
+fi
+
+if [ "$slandg" = "" ]
+then
+	echo "$1	$2" >>/etc/net/starlandg/services
+fi
+
+if [ "$slan" = "" -a "$slandg" = "" ]
+then
+	echo 0
+elif [ "$slan" = "" ]
+then
+	echo 3
+else
+	echo 4
+fi

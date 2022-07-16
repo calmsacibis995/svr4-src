@@ -1,0 +1,95 @@
+#ident	"@(#)mbus:proto/i386/mbus/cmd/do_slinks	1.1"
+
+# Create SYMBOLIC LINKS to conventional AT&T UNIX names.
+rm -rf /bin/sh
+while read new_path old_path
+do
+	# Is a Comment
+	if [ "$new_path" = "#" -o -z "$new_path" ] ; then
+		continue
+	fi
+	${DBG} /usr/bin/rm -rf $old_path
+	${DBG} /usr/bin/ln -s $new_path $old_path
+done	 <<-!!
+
+# NEW		OLD
+
+# /stand/unix	/unix
+/sbin/vtgetty	/etc/vtgetty
+/sbin/dumpsave	/etc/dumpsave
+/usr/bin	/bin
+/sbin/autopush	/etc/autopush
+/sbin/bcheckrc	/etc/bcheckrc
+/sbin/brc	/etc/brc
+/usr/sbin/chroot	/etc/chroot
+/usr/sbin/ckbupscd	/etc/ckbupscd
+/usr/sbin/cron	/etc/cron
+/usr/sbin/dcopy	/etc/dcopy
+/sbin/devnm	/etc/devnm
+/usr/sbin/dfsck	/etc/dfsck
+/usr/sbin/errdump	/etc/errdump
+/usr/bin/ff	/etc/ff
+/usr/sbin/format	/etc/format
+/usr/sbin/fsba	/etc/fsba
+/sbin/fsck	/etc/fsck
+/sbin/fsdb	/etc/fsdb
+/sbin/fsstat	/etc/fsstat
+/sbin/fstyp	/etc/fstyp
+/usr/sbin/fuser	/etc/fuser
+/sbin/getclk	/etc/getclk
+/usr/sbin/getmajor	/etc/getmajor
+/sbin/getty	/etc/getty
+/usr/sbin/gettype	/etc/gettype
+/usr/sbin/grpck	/etc/grpck
+/usr/sbin/ldsysdump	/etc/ldsysdump
+/usr/sbin/link	/etc/link
+/var/log	/etc/log
+/sbin/mkfs	/etc/mkfs
+/sbin/mknod	/etc/mknod
+/sbin/mount	/etc/mount
+/sbin/mountall	/etc/mountall
+/usr/sbin/mvdir	/etc/mvdir
+/usr/sbin/ncheck	/etc/ncheck
+/usr/sbin/prfdc	/etc/prfdc
+/usr/sbin/prfld	/etc/prfld
+/usr/sbin/prfpr	/etc/prfpr
+/usr/sbin/prfsnap	/etc/prfsnap
+/usr/sbin/prfstat	/etc/prfstat
+/usr/sbin/pwck	/etc/pwck
+/sbin/rc0	/etc/rc0
+/sbin/rc1	/etc/rc1
+/sbin/rc2	/etc/rc2
+/sbin/rc3	/etc/rc3
+/usr/sbin/setmnt	/etc/setmnt
+/sbin/shutdown	/etc/shutdown
+/usr/sbin/swap	/etc/swap
+/usr/sbin/sysdef	/etc/sysdef
+/sbin/uadmin	/etc/uadmin
+/sbin/umount	/etc/umount
+/sbin/umountall	/etc/umountall
+/usr/sbin/unlink	/etc/unlink
+/var/adm/utmp	/etc/utmp
+/var/adm/utmpx	/etc/utmpx
+/usr/sbin/volcopy	/etc/volcopy
+/usr/sbin/wall	/etc/wall
+/usr/sbin/whodo	/etc/whodo
+/var/adm/wtmp	/etc/wtmp
+/usr/lib	/lib
+/usr/lib/saf/sac	/usr/etc/sac
+/etc/saf	/usr/etc/sac.d
+/usr/lib/saf/ttymon	/usr/etc/ttymon
+/etc/cron.d	/usr/lib/cron
+/usr/share/lib/terminfo	/usr/lib/terminfo
+/var/mail	/usr/mail
+/etc/mail/mailsurr	/usr/lib/mail/mailsurr
+/etc/mail/binarsys	/usr/lib/mail/binarsys
+/var/news	/usr/news
+/etc/nserve	/usr/nserve
+/var/preserve	/usr/preserve
+/usr/share/lib	/usr/pub
+/var/tmp	/usr/tmp
+/var/installed	/usr/tmp/installed
+/var/uucp	/var/spool/uucp
+/var/spool	/usr/spool
+!!
+

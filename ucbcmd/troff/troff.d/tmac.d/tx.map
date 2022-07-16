@@ -1,0 +1,63 @@
+'\"#ident	"@(#)ucbtroff:troff.d/tmac.d/tx.map	1.1"
+'\"		PROPRIETARY NOTICE (Combined)
+'\"
+'\"This source code is unpublished proprietary information
+'\"constituting, or derived under license from AT&T's UNIX(r) System V.
+'\"In addition, portions of such source code were derived from Berkeley
+'\"4.3 BSD under license from the Regents of the University of
+'\"California.
+'\"
+'\"
+'\"
+'\"		Copyright Notice 
+'\"
+'\"Notice of copyright on this source code product does not indicate 
+'\"publication.
+'\"
+'\"	(c) 1986,1987,1988,1989  Sun Microsystems, Inc
+'\"	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+'\"	          All rights reserved.
+'	# TX - Resolve a Title Reference
+.de TX
+.ds Tx "UNKNOWN TITLE ABBREVIATION: \\$1
+.if '\\$1'GSBG' .ds Tx "Getting Started with SunOS: Beginner's Guide
+.if '\\$1'SUBG' .ds Tx "Setting Up Your SunOS Environment: Beginner's Guide 
+.if '\\$1'SHBG' .ds Tx "Self-Help with Problems: Beginner's Guide
+.if '\\$1'SVBG' .ds Tx "SunView\ 1 Beginner's Guide
+.if '\\$1'MMBG' .ds Tx "Mail and Messages: Beginner's Guide
+.if '\\$1'DMBG' .ds Tx "Doing More with SunOS: Beginner's Guide
+.if '\\$1'UNBG' .ds Tx "Using the Network: Beginner's Guide
+.if '\\$1'GDBG' .ds Tx "Games, Demos & Other Pursuits
+.if '\\$1'CHANGE' .ds Tx "SunOS 4.0 Change Notes
+.if '\\$1'INSTALL' .ds Tx "Installing the SunOS
+.if '\\$1'ADMIN' .ds Tx "System and Network Administration
+.if '\\$1'SECUR' .ds Tx "Security Features Guide
+.if '\\$1'PROM' .ds Tx "PROM User's Manual
+.if '\\$1'DIAG' .ds Tx "Sun System Diagnostics
+.if '\\$1'SUNDIAG' .ds Tx "Sundiag User's Guide
+.if '\\$1'MANPAGES' .ds Tx "SunOS Reference Manual
+.if '\\$1'REFMAN' .ds Tx "SunOS Reference Manual
+.if '\\$1'SSI' .ds Tx "Sun System Introduction
+.if '\\$1'SSO' .ds Tx "System Services Overview
+.if '\\$1'TEXT' .ds Tx "Editing Text Files
+.if '\\$1'DOCS' .ds Tx "Formatting Documents
+.if '\\$1'TROFF' .ds Tx "Using \&\fLnroff\fP and \&\fLtroff\fP
+.if '\\$1'INDEX' .ds Tx "Global Index
+.if '\\$1'CPG' .ds Tx "C Programmer's Guide
+.if '\\$1'CREF' .ds Tx "C Reference Manual
+.if '\\$1'ASSY' .ds Tx "Assembly Language Reference
+.if '\\$1'PUL' .ds Tx "Programming Utilities and Libraries
+.if '\\$1'DEBUG' .ds Tx "Debugging Tools
+.if '\\$1'NETP' .ds Tx "Network Programming
+.if '\\$1'DRIVER' .ds Tx "Writing Device Drivers
+.if '\\$1'FPOINT' .ds Tx "Floating-Point Programmer's Guide
+.if '\\$1'SVPG' .ds Tx "SunView\ 1 Programmer's Guide
+.if '\\$1'SVSPG' .ds Tx "SunView\ 1 System Programmer's Guide
+.if '\\$1'PIXRCT' .ds Tx "Pixrect Reference Manual
+.if '\\$1'CGI' .ds Tx "SunCGI Reference Manual
+.if '\\$1'CORE' .ds Tx "SunCore Reference Manual
+.if '\\$1'4ASSY' .ds Tx "Sun-4 Assembly Language Reference
+.	# non-Sun titles
+.if '\\$1'KR' .ds Tx "The C Programming Language
+\fI\\*(Tx\f1\\$2
+..

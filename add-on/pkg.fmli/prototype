@@ -1,0 +1,16 @@
+#ident	"@(#)pkg.fmli:prototype	1.1.2.1"
+
+# information files for fmli application
+
+i pkginfo
+i copyright
+
+# directories
+
+d fmli usr ? ? ?
+d fmli usr/bin ? ? ?
+
+# files
+
+f fmli usr/bin/fmli 0755 bin bin
+f fmli usr/bin/vsig 0755 bin bin

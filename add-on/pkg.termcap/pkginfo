@@ -1,0 +1,12 @@
+#ident	"@(#)/usr/src/add-on/pkg.termcap/pkginfo.sl 1.1 4.0 12/08/90 41261 AT&T-USL"
+
+ARCH="i386"
+CATEGORY="system"
+CLASSES="none"
+MAXINST=1
+NAME="AT&T Termcap Compatibility Package"
+PKG="termcap"
+VENDOR="AT&T-SF"
+VERSION="1"
+RELEASE="4.0"
+PREDEPEND="termcap"

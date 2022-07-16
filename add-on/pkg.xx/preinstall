@@ -1,0 +1,6 @@
+#ident	"@(#)/usr/src/add-on/pkg.xx/preinstall.sl 1.1 4.0 12/08/90 15445 AT&T-USL"
+
+cmp /usr/bin/x286 /usr/bin/x286emul > /dev/null 2>&1
+if [ $? = 0 ]
+then rm /usr/bin/x286emul > /dev/null 2>&1
+fi

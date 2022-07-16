@@ -1,0 +1,27 @@
+#ident	"@(#)/usr/src/add-on/pkg.oam/preremove.sl 1.1 4.0 12/08/90 39154 AT&T-USL"
+
+#
+# Ensure OAM not in use prior to removal
+#
+
+endnotok() {
+	exit 3
+}
+
+trap 'endnotok' 1 2 3 15
+
+RUNFLG="`ps -ef | \
+	grep -v grep | \
+	grep 'fmli -i /usr/sadm/sysadm/menu/oam.init' | \
+	wc -l`"
+
+if [ ${RUNFLG} -ne 0 ]
+then
+	echo "
+OA&M is currently in use. You may not remove it while it
+is being used. Please try again later.
+"
+	endnotok
+fi
+
+exit 0

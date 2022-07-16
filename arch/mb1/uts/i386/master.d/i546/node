@@ -1,0 +1,14 @@
+*ident	"@(#)mb1:uts/i386/master.d/i546/node	1.2"
+iasy	tty000	c	2
+iasy	tty001	c	3
+iasy	tty002	c	4
+iasy	tty003	c	5
+iasy	lp	c	6
+iasy	tty100	c	14
+iasy	tty101	c	15
+iasy	tty102	c	16
+iasy	tty103	c	17
+iasy	tty104	c	18
+iasy	tty105	c	19
+iasy	tty106	c	20
+iasy	tty107	c	21

@@ -1,0 +1,1478 @@
+#ident	"@(#)proto:i386/Plists/Plist	1.2.11.4"
+
+# Entries are generally sorted by name (field #4), however,
+#	there are exceptions (e.g. dev/xt, dev/sxt).
+# Fields 1-4: Mode Owner Group FileName
+# Field 5: Type (d | l | p | b | c)
+# Field 6: (depends on Field #5)
+#	field 5: l              (b|c)
+#	field 6: source_file    major #
+#	field 7:	        minor #
+#
+
+775	root	sys	etc	d
+755	root	sys	etc/fs	d
+755	root	sys	etc/fs/s5	d
+755	root	sys	etc/fs/ufs	d
+# This guy MUST be on floppy #2 as close to the beginning as possible.
+555	root	sys	etc/fs/ufs/fsck
+444	root	sys	etc/.fboot
+444	bin	bin	etc/.installdate
+444	bin	bin	etc/.installstart
+644	bin	bin	etc/Backup
+644	bin	bin	etc/Ignore
+755	bin	bin	etc/acct	d
+755	bin	bin	etc/acct/holidays
+644	root	sys	etc/bupsched
+664	root	sys	etc/checklist
+755	root	sys	etc/conf	d
+755	root	sys	etc/conf/bin	d
+744	root	root	etc/conf/bin/idbuild
+744	root	root	etc/conf/bin/idcheck
+744	root	root	etc/conf/bin/idconfig
+744	root	root	etc/conf/bin/idinstall
+744	root	root	etc/conf/bin/idmaster
+744	root	root	etc/conf/bin/idmkenv
+744	root	root	etc/conf/bin/idmkinit
+744	root	root	etc/conf/bin/idmknod
+744	root	root	etc/conf/bin/idmkunix
+744	root	root	etc/conf/bin/idreboot
+744	root	root	etc/conf/bin/idspace
+744	root	root	etc/conf/bin/idtune
+744	root	root	etc/conf/bin/idval
+755	root	sys	etc/conf/cf.d	d
+644	root	sys	etc/conf/cf.d/init.base
+644	root	sys	etc/conf/cf.d/kernmap
+644	root	sys	etc/conf/cf.d/mdevice.base	x
+644	root	sys	etc/conf/cf.d/mfsys	v
+644	root	sys	etc/conf/cf.d/mtune
+644	root	sys	etc/conf/cf.d/sassign
+644	root	sys	etc/conf/cf.d/sfsys	v
+644	root	sys	etc/conf/cf.d/stune	v
+755	root	sys	etc/conf/init.d	d
+755	root	sys	etc/conf/mfsys.d	d
+644	root	sys	etc/conf/mfsys.d/bfs
+644	root	sys	etc/conf/mfsys.d/events
+644	root	sys	etc/conf/mfsys.d/fdfs
+644	root	sys	etc/conf/mfsys.d/fifofs
+644	root	sys	etc/conf/mfsys.d/namefs
+644	root	sys	etc/conf/mfsys.d/nfa
+644	root	sys	etc/conf/mfsys.d/nfs
+644	root	sys	etc/conf/mfsys.d/proc
+644	root	sys	etc/conf/mfsys.d/RFS
+644	root	sys	etc/conf/mfsys.d/s5
+644	root	sys	etc/conf/mfsys.d/specfs
+644	root	sys	etc/conf/mfsys.d/ufs
+644	root	sys	etc/conf/mfsys.d/xnamfs
+755	root	sys	etc/conf/node.d	d
+644	root	sys	etc/conf/node.d/asy
+644	root	sys	etc/conf/node.d/lp
+644	root	sys	etc/conf/node.d/prf
+755	root	sys	etc/conf/pack.d	d
+755	root	sys	etc/conf/pack.d/RFS	d
+644	root	sys	etc/conf/pack.d/RFS/stubs.c
+755	root	sys	etc/conf/pack.d/ansi	d
+644	root	sys	etc/conf/pack.d/ansi/Driver.o
+755	root	sys	etc/conf/pack.d/asy	d
+644	root	sys	etc/conf/pack.d/asy/Driver.o
+644	root	sys	etc/conf/pack.d/asy/space.c
+755	root	sys	etc/conf/pack.d/async	d
+644	root	sys	etc/conf/pack.d/async/space.c
+644	root	sys	etc/conf/pack.d/async/stubs.c
+755	root	sys	etc/conf/pack.d/bfs	d
+644	root	sys	etc/conf/pack.d/bfs/Driver.o
+755	root	sys	etc/conf/pack.d/char	d
+644	root	sys	etc/conf/pack.d/char/Driver.o
+755	root	sys	etc/conf/pack.d/clist	d
+644	root	sys	etc/conf/pack.d/clist/Driver.o
+644	root	sys	etc/conf/pack.d/clist/stubs.c
+755	root	sys	etc/conf/pack.d/cmux	d
+644	root	sys	etc/conf/pack.d/cmux/Driver.o
+755	root	sys	etc/conf/pack.d/coff	d
+644	root	sys	etc/conf/pack.d/coff/Driver.o
+644	root	sys	etc/conf/pack.d/coff/stubs.c
+755	root	sys	etc/conf/pack.d/connld	d
+644	root	sys	etc/conf/pack.d/connld/Driver.o
+755	root	sys	etc/conf/pack.d/cpyrt	d
+644	root	sys	etc/conf/pack.d/cpyrt/Driver.o
+644	root	sys	etc/conf/pack.d/cpyrt/space.c
+755	root	sys	etc/conf/pack.d/cram	d
+644	root	sys	etc/conf/pack.d/cram/Driver.o
+755	root	sys	etc/conf/pack.d/dma	d
+644	root	sys	etc/conf/pack.d/dma/Driver.o
+755	root	sys	etc/conf/pack.d/dosx	d
+644	root	sys	etc/conf/pack.d/dosx/Driver.o
+755	root	sys	etc/conf/pack.d/elf	d
+644	root	sys	etc/conf/pack.d/elf/Driver.o
+755	root	sys	etc/conf/pack.d/events	d
+644	root	sys	etc/conf/pack.d/events/space.c
+644	root	sys	etc/conf/pack.d/events/stubs.c
+755	root	sys	etc/conf/pack.d/fd	d
+644	root	sys	etc/conf/pack.d/fd/Driver.o
+755	root	sys	etc/conf/pack.d/fdfs	d
+644	root	sys	etc/conf/pack.d/fdfs/Driver.o
+755	root	sys	etc/conf/pack.d/fifofs	d
+644	root	sys	etc/conf/pack.d/fifofs/Driver.o
+755	root	sys	etc/conf/pack.d/fp	d
+644	root	sys	etc/conf/pack.d/fp/Driver.o
+755	root	sys	etc/conf/pack.d/gendisp	d
+644	root	sys	etc/conf/pack.d/gendisp/Driver.o
+644	root	sys	etc/conf/pack.d/gendisp/space.c
+755	root	sys	etc/conf/pack.d/gentty	d
+644	root	sys	etc/conf/pack.d/gentty/Driver.o
+755	root	sys	etc/conf/pack.d/gvid	d
+644	root	sys	etc/conf/pack.d/gvid/Driver.o
+644	root	sys	etc/conf/pack.d/gvid/stubs.c
+755	root	sys	etc/conf/pack.d/hd	d
+644	root	sys	etc/conf/pack.d/hd/Driver.o
+755	root	sys	etc/conf/pack.d/hrt	d
+644	root	sys	etc/conf/pack.d/hrt/Driver.o
+644	root	sys	etc/conf/pack.d/hrt/space.c
+755	root	sys	etc/conf/pack.d/i286x	d
+644	root	sys	etc/conf/pack.d/i286x/Driver.o
+755	root	sys	etc/conf/pack.d/intp	d
+644	root	sys	etc/conf/pack.d/intp/Driver.o
+644	root	sys	etc/conf/pack.d/intp/stubs.c
+755	root	sys	etc/conf/pack.d/ipc	d
+644	root	sys	etc/conf/pack.d/ipc/Driver.o
+755	root	sys	etc/conf/pack.d/kd	d
+644	root	sys	etc/conf/pack.d/kd/Driver.o
+644	root	sys	etc/conf/pack.d/kd/space.c
+755	root	sys	etc/conf/pack.d/kdvm	d
+644	root	sys	etc/conf/pack.d/kdvm/Driver.o
+644	root	sys	etc/conf/pack.d/kdvm/stubs.c
+755	root	sys	etc/conf/pack.d/kernel	d
+644	root	sys	etc/conf/pack.d/kernel/fs.o
+644	root	sys	etc/conf/pack.d/kernel/io.o
+644	root	sys	etc/conf/pack.d/kernel/locore.o
+644	root	sys	etc/conf/pack.d/kernel/os.o
+644	root	sys	etc/conf/pack.d/kernel/space.c	v
+644	root	sys	etc/conf/pack.d/kernel/start.o
+644	root	sys	etc/conf/pack.d/kernel/syms.o
+644	root	sys	etc/conf/pack.d/kernel/vm.o
+755	root	sys	etc/conf/pack.d/kma	d
+644	root	sys	etc/conf/pack.d/kma/Driver.o
+755	root	sys	etc/conf/pack.d/kmacct	d
+644	root	sys	etc/conf/pack.d/kmacct/Driver.o
+644	root	sys	etc/conf/pack.d/kmacct/space.c
+644	root	sys	etc/conf/pack.d/kmacct/stubs.c
+755	root	sys	etc/conf/pack.d/ldterm	d
+644	root	sys	etc/conf/pack.d/ldterm/Driver.o
+755	root	sys	etc/conf/pack.d/lp	d
+644	root	sys	etc/conf/pack.d/lp/Driver.o
+644	root	sys	etc/conf/pack.d/lp/space.c
+755	root	sys	etc/conf/pack.d/mem	d
+644	root	sys	etc/conf/pack.d/mem/Driver.o
+755	root	sys	etc/conf/pack.d/merge	d
+644	root	sys	etc/conf/pack.d/merge/stubs.c
+755	root	sys	etc/conf/pack.d/msg	d
+644	root	sys	etc/conf/pack.d/msg/Driver.o
+644	root	sys	etc/conf/pack.d/msg/space.c
+644	root	sys	etc/conf/pack.d/msg/stubs.c
+755	root	sys	etc/conf/pack.d/namefs	d
+644	root	sys	etc/conf/pack.d/namefs/Driver.o
+755	root	sys	etc/conf/pack.d/nfa	d
+644	root	sys	etc/conf/pack.d/nfa/stubs.c
+755	root	sys	etc/conf/pack.d/nfs	d
+644	root	sys	etc/conf/pack.d/nfs/stubs.c
+755	root	sys	etc/conf/pack.d/nmi	d
+644	root	sys	etc/conf/pack.d/nmi/Driver.o
+755	root	sys	etc/conf/pack.d/nsxt	d
+644	root	sys	etc/conf/pack.d/nsxt/Driver.o
+644	root	sys	etc/conf/pack.d/nsxt/space.c
+755	root	sys	etc/conf/pack.d/nxt	d
+644	root	sys	etc/conf/pack.d/nxt/Driver.o
+644	root	sys	etc/conf/pack.d/nxt/space.c
+755	root	sys	etc/conf/pack.d/osm	d
+644	root	sys	etc/conf/pack.d/osm/Driver.o
+755	root	sys	etc/conf/pack.d/pic	d
+644	root	sys	etc/conf/pack.d/pic/space.c
+755	root	sys	etc/conf/pack.d/pipemod	d
+644	root	sys	etc/conf/pack.d/pipemod/Driver.o
+755	root	sys	etc/conf/pack.d/proc	d
+644	root	sys	etc/conf/pack.d/proc/Driver.o
+755	root	sys	etc/conf/pack.d/prf	d
+644	root	sys	etc/conf/pack.d/prf/Driver.o
+644	root	sys	etc/conf/pack.d/prf/space.c
+644	root	sys	etc/conf/pack.d/prf/stubs.c
+755	root	sys	etc/conf/pack.d/raio	d
+644	root	sys	etc/conf/pack.d/raio/Driver.o
+644	root	sys	etc/conf/pack.d/raio/stubs.c
+755	root	sys	etc/conf/pack.d/rmc	d
+644	root	sys	etc/conf/pack.d/rmc/stubs.c
+755	root	sys	etc/conf/pack.d/rt	d
+644	root	sys	etc/conf/pack.d/rt/Driver.o
+644	root	sys	etc/conf/pack.d/rt/space.c
+644	root	sys	etc/conf/pack.d/rt/stubs.c
+755	root	sys	etc/conf/pack.d/rtc	d
+644	root	sys	etc/conf/pack.d/rtc/Driver.o
+755	root	sys	etc/conf/pack.d/s5	d
+644	root	sys	etc/conf/pack.d/s5/Driver.o
+644	root	sys	etc/conf/pack.d/s5/space.c
+755	root	sys	etc/conf/pack.d/sad	d
+644	root	sys	etc/conf/pack.d/sad/Driver.o
+644	root	sys	etc/conf/pack.d/sad/space.c
+755	root	sys	etc/conf/pack.d/sem	d
+644	root	sys	etc/conf/pack.d/sem/Driver.o
+644	root	sys	etc/conf/pack.d/sem/space.c
+644	root	sys	etc/conf/pack.d/sem/stubs.c
+755	root	sys	etc/conf/pack.d/shm	d
+644	root	sys	etc/conf/pack.d/shm/Driver.o
+644	root	sys	etc/conf/pack.d/shm/space.c
+644	root	sys	etc/conf/pack.d/shm/stubs.c
+755	root	sys	etc/conf/pack.d/specfs	d
+644	root	sys	etc/conf/pack.d/specfs/Driver.o
+755	root	sys	etc/conf/pack.d/sxt	d
+644	root	sys	etc/conf/pack.d/sxt/Driver.o
+644	root	sys	etc/conf/pack.d/sxt/space.c
+644	root	sys	etc/conf/pack.d/sxt/stubs.c
+755	root	sys	etc/conf/pack.d/sysmsg	d
+644	root	sys	etc/conf/pack.d/sysmsg/Driver.o
+644	root	sys	etc/conf/pack.d/sysmsg/space.c
+755	root	sys	etc/conf/pack.d/ts	d
+644	root	sys	etc/conf/pack.d/ts/Driver.o
+644	root	sys	etc/conf/pack.d/ts/space.c
+755	root	sys	etc/conf/pack.d/ttcompat	d
+644	root	sys	etc/conf/pack.d/ttcompat/Driver.o
+755	root	sys	etc/conf/pack.d/ufs	d
+644	root	sys	etc/conf/pack.d/ufs/Driver.o
+644	root	sys	etc/conf/pack.d/ufs/space.c
+755	root	sys	etc/conf/pack.d/vx	d
+644	root	sys	etc/conf/pack.d/vx/Driver.o
+644	root	sys	etc/conf/pack.d/vx/space.c
+644	root	sys	etc/conf/pack.d/vx/stubs.c
+755	root	sys	etc/conf/pack.d/weitek	d
+644	root	sys	etc/conf/pack.d/weitek/Driver.o
+644	root	sys	etc/conf/pack.d/weitek/space.c
+644	root	sys	etc/conf/pack.d/weitek/stubs.c
+755	root	sys	etc/conf/pack.d/ws	d
+644	root	sys	etc/conf/pack.d/ws/Driver.o
+644	root	sys	etc/conf/pack.d/ws/space.c
+755	root	sys	etc/conf/pack.d/xque	d
+644	root	sys	etc/conf/pack.d/xque/Driver.o
+755	root	sys	etc/conf/pack.d/xnamfs	d
+644	root	sys	etc/conf/pack.d/xnamfs/stubs.c
+755	root	sys	etc/conf/pack.d/xout	d
+644	root	sys	etc/conf/pack.d/xout/Driver.o
+644	root	sys	etc/conf/pack.d/xout/stubs.c
+755	root	sys	etc/conf/pack.d/xt	d
+644	root	sys	etc/conf/pack.d/xt/Driver.o
+644	root	sys	etc/conf/pack.d/xt/space.c
+644	root	sys	etc/conf/pack.d/xt/stubs.c
+755	root	sys	etc/conf/rc.d	d
+755	root	sys	etc/conf/sd.d	d
+755	root	sys	etc/conf/sdevice.d	d
+644	root	sys	etc/conf/sdevice.d/ansi
+644	root	sys	etc/conf/sdevice.d/asy
+644	root	sys	etc/conf/sdevice.d/async
+644	root	sys	etc/conf/sdevice.d/char
+644	root	sys	etc/conf/sdevice.d/clist
+644	root	sys	etc/conf/sdevice.d/cmux
+644	root	sys	etc/conf/sdevice.d/coff
+644	root	sys	etc/conf/sdevice.d/connld
+644	root	sys	etc/conf/sdevice.d/cpyrt
+644	root	sys	etc/conf/sdevice.d/cram
+644	root	sys	etc/conf/sdevice.d/dma
+644	root	sys	etc/conf/sdevice.d/dosx
+644	root	sys	etc/conf/sdevice.d/elf
+644	root	sys	etc/conf/sdevice.d/fd
+644	root	sys	etc/conf/sdevice.d/fp
+644	root	sys	etc/conf/sdevice.d/gendisp
+644	root	sys	etc/conf/sdevice.d/gentty
+644	root	sys	etc/conf/sdevice.d/gvid
+644	root	sys	etc/conf/sdevice.d/hd
+644	root	sys	etc/conf/sdevice.d/hrt
+644	root	sys	etc/conf/sdevice.d/i286x
+644	root	sys	etc/conf/sdevice.d/intp
+644	root	sys	etc/conf/sdevice.d/ipc
+644	root	sys	etc/conf/sdevice.d/kd
+644	root	sys	etc/conf/sdevice.d/kdvm
+644	root	sys	etc/conf/sdevice.d/kma
+644	root	sys	etc/conf/sdevice.d/kmacct
+644	root	sys	etc/conf/sdevice.d/ldterm
+644	root	sys	etc/conf/sdevice.d/lp
+644	root	sys	etc/conf/sdevice.d/mem
+644	root	sys	etc/conf/sdevice.d/merge
+644	root	sys	etc/conf/sdevice.d/msg
+644	root	sys	etc/conf/sdevice.d/nmi
+644	root	sys	etc/conf/sdevice.d/nsxt
+644	root	sys	etc/conf/sdevice.d/nxt
+644	root	sys	etc/conf/sdevice.d/osm
+644	root	sys	etc/conf/sdevice.d/pipemod
+644	root	sys	etc/conf/sdevice.d/prf
+644	root	sys	etc/conf/sdevice.d/raio
+644	root	sys	etc/conf/sdevice.d/rmc
+644	root	sys	etc/conf/sdevice.d/rt
+644	root	sys	etc/conf/sdevice.d/rtc
+644	root	sys	etc/conf/sdevice.d/sad
+644	root	sys	etc/conf/sdevice.d/sem
+644	root	sys	etc/conf/sdevice.d/shm
+644	root	sys	etc/conf/sdevice.d/sxt
+644	root	sys	etc/conf/sdevice.d/sysmsg
+644	root	sys	etc/conf/sdevice.d/ts
+644	root	sys	etc/conf/sdevice.d/ttcompat
+644	root	sys	etc/conf/sdevice.d/vx
+644	root	sys	etc/conf/sdevice.d/weitek
+644	root	sys	etc/conf/sdevice.d/ws
+644	root	sys	etc/conf/sdevice.d/xque
+644	root	sys	etc/conf/sdevice.d/xout
+644	root	sys	etc/conf/sdevice.d/xt
+755	root	sys	etc/conf/sfsys.d	d
+644	root	sys	etc/conf/sfsys.d/bfs
+644	root	sys	etc/conf/sfsys.d/events
+644	root	sys	etc/conf/sfsys.d/fdfs
+644	root	sys	etc/conf/sfsys.d/fifofs
+644	root	sys	etc/conf/sfsys.d/namefs
+644	root	sys	etc/conf/sfsys.d/nfa
+644	root	sys	etc/conf/sfsys.d/nfs
+644	root	sys	etc/conf/sfsys.d/proc
+644	root	sys	etc/conf/sfsys.d/RFS
+644	root	sys	etc/conf/sfsys.d/s5
+644	root	sys	etc/conf/sfsys.d/specfs
+644	root	sys	etc/conf/sfsys.d/ufs
+644	root	sys	etc/conf/sfsys.d/xnamfs
+755	root	sys	etc/cron.d	d
+644	bin	bin	etc/cron.d/.proto
+644	bin	bin	etc/cron.d/at.allow
+644	bin	bin	etc/cron.d/at.deny
+644	bin	bin	etc/cron.d/cron.allow
+644	bin	bin	etc/cron.d/cron.deny
+544	root	sys	etc/cron.d/logchecker
+644	bin	bin	etc/cron.d/queuedefs
+644	root	sys	etc/cshrc
+444	root	sys	etc/datemsk
+755	root	bin	etc/default	d
+644	bin	bin	etc/default/cron
+644	bin	bin	etc/default/dump
+444	root	sys	etc/default/init
+644	bin	bin	etc/default/login
+644	bin	bin	etc/default/passwd
+644	bin	bin	etc/default/su
+644	bin	bin	etc/default/tar
+444	root	sys	etc/default/workstations
+644	root	bin	etc/device.tab	v
+775	root	sys	etc/dfs	d
+644	bin	bin	etc/dfs/dfstab
+644	root	bin	etc/dgroup.tab	v
+755	root	sys	etc/fs/bfs	d
+555	root	sys	etc/fs/bfs/fstyp
+755	root	sys	etc/fs/fdfs	d
+555	root	sys	etc/fs/fdfs/mount
+755	root	sys	etc/fs/proc	d
+555	root	sys	etc/fs/proc/mount
+555	root	sys	etc/fs/s5/clri
+555	root	sys	etc/fs/s5/df
+555	root	sys	etc/fs/s5/fsdb
+555	root	sys	etc/fs/s5/fstyp
+555	root	sys	etc/fs/ufs/df
+644	root	sys	etc/gettydefs
+755	root	sys	etc/idrc.d	d
+755	root	sys	etc/idsd.d	d
+755	root	sys	etc/init.d	d
+744	root	sys	etc/init.d/ANNOUNCE
+744	root	sys	etc/init.d/MOUNTFSYS
+744	root	sys	etc/init.d/README
+744	root	sys	etc/init.d/RMTMPFILES
+744	root	sys	etc/init.d/acct
+744	root	sys	etc/init.d/cron
+744	root	sys	etc/init.d/disks
+744	root	sys	etc/init.d/firstcheck
+744	root	sys	etc/init.d/osm
+744	root	sys	etc/init.d/perf
+744	root	sys	etc/init.d/sysetup
+744	root	sys	etc/init.d/uucp
+644	root	sys	etc/inittab3	x
+644	root	sys	etc/issue
+555	root	sys	etc/links	x
+444	bin	bin	etc/magic
+755	bin	mail	etc/mail	d
+444	bin	mail	etc/mail/binarsys
+775	root	sys	etc/mail/lists	d
+444	bin	mail	etc/mail/mailsurr
+644	bin	mail	etc/mail/namefiles
+644	root	sys	etc/motd
+755	root	sys	etc/opt	d
+755	bin	bin	etc/perms	d
+444	root	sys	etc/profile
+775	root	sys	etc/rc0.d	d
+555	root	sys	etc/rc0.d/K74smtpd
+775	root	sys	etc/rc1.d	d
+775	root	sys	etc/rc2.d	d
+775	root	sys	etc/rc2.d/S88smtpd
+775	root	sys	etc/rc2.d/S15mkdtab
+775	root	sys	etc/rc3.d	d
+755	bin	bin	etc/saf	d
+555	bin	bin	etc/saf/_sactab
+555	root	sys	etc/setmods.elf	x
+755	bin	bin	etc/skel	d
+644	root	other	etc/skel/.profile
+644	root	sys	etc/stdprofile
+555	bin	bin	etc/sulogin
+444	bin	bin	etc/ttydefs
+644	root	sys	etc/ttysrch
+644	root	other	etc/ttytype
+755	uucp	uucp	etc/uucp	d
+444	uucp	uucp	etc/uucp/Config
+444	uucp	uucp	etc/uucp/Devconfig
+444	uucp	uucp	etc/uucp/Devices
+444	uucp	uucp	etc/uucp/Dialcodes
+444	uucp	uucp	etc/uucp/Dialers
+444	uucp	uucp	etc/uucp/Grades
+444	uucp	uucp	etc/uucp/Limits
+400	uucp	uucp	etc/uucp/Permissions
+444	uucp	uucp	etc/uucp/Poll
+444	uucp	uucp	etc/uucp/Sysfiles
+400	uucp	uucp	etc/uucp/Systems
+777	root	root	export	d
+755	root	other	install	d
+775	root	bin	lib	d
+777	root	root	opt	d
+755	root	sys	opt/bin	d
+555	root	root	proc	d
+755	bin	bin	sbin	d
+755	root	sys	sbin/adduser
+744	root	sys	sbin/bcheckrc
+744	root	sys	sbin/brc
+744	root	sys	sbin/cleanup
+555	bin	bin	sbin/clri
+555	bin	bin	sbin/conflgs
+755	root	sys	sbin/deluser
+4555	root	bin	sbin/df
+555	root	sys	sbin/dfspace
+755	root	sys	sbin/diskadd
+511	root	sys	sbin/dumpcheck
+744	root	sys	sbin/dumpsave
+500	root	bin	sbin/edvtoc
+555	bin	bin	sbin/flop_num
+744	root	sys	sbin/fsanck
+555	bin	bin	sbin/fsck
+555	bin	bin	sbin/fsstat
+644	root	sys	sbin/fstab
+555	bin	bin	sbin/fstyp
+755	bin	bin	sbin/getclk
+544	root	bin	sbin/getty
+555	bin	bin	sbin/grep
+755	root	bin	sbin/isat386
+555	bin	bin	sbin/ldsysdump
+500	root	bin	sbin/mkpart
+744	root	sys	sbin/mountall
+500	root	bin	sbin/prtvtoc
+744	root	sys	sbin/rc0
+744	root	sys	sbin/rc1
+744	root	sys	sbin/rc2
+744	root	sys	sbin/rc3
+744	root	sys	sbin/rc6
+0100	root	sys	sbin/restore
+755	bin	bin	sbin/rstab
+555	bin	bin	sbin/setclk
+755	root	sys	sbin/shutdown
+4555	root	sys	sbin/su
+744	root	sys	sbin/umountall
+544	root	bin	sbin/vtgetty
+555	bin	bin	sbin/who
+755	bin	bin	shlib	d
+555	bin	bin	shlib/libc_s
+555	bin	bin	shlib/libnsl_s
+755	root	sys	stand	d
+1777	sys	sys	tmp	d
+444	root	sys	tmp/default	x
+775	root	sys	usr	d
+755	root	sys	usr/admin	d
+755	root	sys	usr/admin/menu	d
+755	root	sys	usr/admin/menu/packagemgmt	d
+755	root	sys	usr/admin/menu/packagemgmt/rfsmgmt	d
+755	root	sys	usr/alarm	d
+755	root	sys	usr/alarm/actions	d
+755	root	sys	usr/alarm/bin	d
+755	root	sys	usr/alarm/events	d
+755	root	sys	usr/alarm/events/gen	d
+755	root	sys	usr/alarm/events/gen/shutdown	d
+600	root	sys	usr/alarm/events/gen/shutdown/ACTIVE
+775	bin	bin	usr/bin	d
+755	bin	bin	usr/bin/.backup
+755	bin	bin	usr/bin/.restore
+755	bin	bin	usr/bin/acctcom
+555	bin	bin	usr/bin/ar
+4555	root	sys	usr/bin/at
+4555	root	sys	usr/bin/atq
+4555	root	sys	usr/bin/atrm
+555	bin	bin	usr/bin/banner
+555	bin	bin	usr/bin/basename
+555	bin	bin	usr/bin/batch
+555	bin	bin	usr/bin/bdiff
+555	bin	bin	usr/bin/bc
+555	bin	bin	usr/bin/bfs
+555	bin	bin	usr/bin/cal
+555	bin	bin	usr/bin/calendar
+555	bin	bin	usr/bin/captoinfo
+555	bin	bin	usr/bin/cat
+555	bin	bin	usr/bin/checkeq
+555	bin	bin	usr/bin/chrtbl
+555	bin	bin	usr/bin/ckdate
+555	bin	bin	usr/bin/ckgid
+555	bin	bin	usr/bin/ckint
+555	bin	bin	usr/bin/ckitem
+555	bin	bin	usr/bin/ckkeywd
+555	bin	bin	usr/bin/ckpath
+555	bin	bin	usr/bin/ckrange
+555	bin	bin	usr/bin/ckstr
+555	bin	bin	usr/bin/cktime
+555	bin	bin	usr/bin/ckuid
+555	bin	bin	usr/bin/ckyorn
+555	bin	bin	usr/bin/clear
+555	bin	bin	usr/bin/cmp
+555	bin	bin	usr/bin/col
+555	bin	bin	usr/bin/colltbl
+555	bin	bin	usr/bin/comm
+555	bin	bin	usr/bin/compress
+555	bin	bin	usr/bin/cpset
+4555	root	sys	usr/bin/crontab
+555	bin	bin	usr/bin/csh
+555	bin	bin	usr/bin/csplit
+4111	root	sys	usr/bin/ct
+4111	uucp	sys	usr/bin/cu
+555	bin	bin	usr/bin/cut
+555	bin	bin	usr/bin/date
+555	bin	bin	usr/bin/dc
+555	bin	bin	usr/bin/dd.arch
+555	bin	bin	usr/bin/devattr
+555	bin	bin	usr/bin/devfree
+555	bin	bin	usr/bin/devreserv
+555	bin	bin	usr/bin/diff
+555	bin	bin	usr/bin/diff3
+555	bin	bin	usr/bin/dircmp
+555	bin	bin	usr/bin/dirname
+555	bin	bin	usr/bin/displaypkg
+555	bin	bin	usr/bin/du
+555	bin	bin	usr/bin/echo
+555	bin	bin	usr/bin/egrep
+555	bin	bin	usr/bin/env
+555	bin	bin	usr/bin/exstr
+555	bin	bin	usr/bin/factor
+555	bin	bin	usr/bin/false
+755	bin	bin	usr/bin/fdetach
+555	bin	bin	usr/bin/fgrep
+555	bin	bin	usr/bin/file
+555	bin	bin	usr/bin/fmt
+555	bin	bin	usr/bin/fmtmsg
+555	bin	bin	usr/bin/fold
+555	bin	bin	usr/bin/gcore
+555	bin	bin	usr/bin/gencat
+555	bin	bin	usr/bin/getdev
+555	bin	bin	usr/bin/getdgrp
+555	bin	bin	usr/bin/getopt
+555	bin	bin	usr/bin/gettxt
+555	bin	bin	usr/bin/getvol
+555	bin	bin	usr/bin/graph
+555	bin	bin	usr/bin/groups
+555	bin	bin	usr/bin/head
+555	root	bin	usr/bin/i286emul
+555	bin	bin	usr/bin/iconv
+555	bin	bin	usr/bin/id
+555	bin	bin	usr/bin/idas
+555	bin	bin	usr/bin/idcc
+555	bin	bin	usr/bin/idld
+555	bin	bin	usr/bin/infocmp
+555	bin	bin	usr/bin/installpkg
+555	root	sys	usr/bin/ipcrm
+2555	root	sys	usr/bin/ipcs
+555	bin	bin	usr/bin/join
+555	bin	bin	usr/bin/kbdcomp
+555	bin	bin	usr/bin/kill
+555	bin	bin	usr/bin/ksh
+555	bin	bin	usr/bin/last
+4555	root	bin	usr/bin/license
+555	bin	bin	usr/bin/line
+555	bin	bin	usr/bin/listdgrp
+555	bin	bin	usr/bin/listusers
+4555	root	bin	usr/bin/login
+555	bin	bin	usr/bin/logins
+555	bin	bin	usr/bin/logname
+555	bin	bin	usr/bin/ls
+2511	bin	mail	usr/bin/mail
+555	bin	bin	usr/bin/mailalias
+2511	bin	mail	usr/bin/mailx
+555	bin	bin	usr/bin/mcs
+555	bin	bin	usr/bin/mesg
+555	bin	bin	usr/bin/message
+555	bin	bin	usr/bin/mkfifo
+555	bin	bin	usr/bin/mkmsgs
+555	bin	bin	usr/bin/montbl
+555	bin	bin	usr/bin/more
+755	bin	bin	usr/bin/nawk
+555	bin	bin	usr/bin/newform
+4555	root	sys	usr/bin/newgrp
+555	bin	bin	usr/bin/news
+555	bin	bin	usr/bin/newvt
+555	bin	bin	usr/bin/nice
+555	bin	bin	usr/bin/nl
+555	bin	bin	usr/bin/nohup
+555	bin	bin	usr/bin/notify
+555	bin	bin	usr/bin/oawk
+555	bin	bin	usr/bin/od
+555	bin	bin	usr/bin/pack
+6555	root	sys	usr/bin/passwd
+555	bin	bin	usr/bin/paste
+555	bin	bin	usr/bin/pg
+555	bin	sys	usr/bin/pkginfo
+555	bin	bin	usr/bin/pkgmk
+555	root	sys	usr/bin/pkgparam
+555	bin	bin	usr/bin/pkgproto
+555	bin	bin	usr/bin/pkgtrans
+555	bin	bin	usr/bin/pr
+555	bin	bin	usr/bin/printf
+4555	root	root	usr/bin/priocntl
+4555	root	sys	usr/bin/ps
+550	root	bin	usr/bin/putdev
+550	root	bin	usr/bin/putdgrp
+555	bin	bin	usr/bin/pwd
+555	bin	bin	usr/bin/pwdmenu
+555	bin	bin	usr/bin/removepkg
+555	bin	bin	usr/bin/rmdir
+555	bin	bin	usr/bin/script
+555	bin	bin	usr/bin/sdiff
+555	bin	bin	usr/bin/sed
+555	bin	bin	usr/bin/setpgrp
+555	bin	bin	usr/bin/setuname
+4555	root	sys	usr/bin/shl
+555	bin	bin	usr/bin/sort
+555	bin	bin	usr/bin/spline
+555	bin	bin	usr/bin/split
+555	bin	bin	usr/bin/srchtxt
+555	bin	bin	usr/bin/strchg
+555	bin	bin	usr/bin/strconf
+555	bin	bin	usr/bin/strings
+555	bin	bin	usr/bin/sum
+555	bin	bin	usr/bin/tabs
+555	bin	bin	usr/bin/tail
+555	bin	bin	usr/bin/tee
+555	bin	bin	usr/bin/test
+555	bin	bin	usr/bin/tic
+555	bin	bin	usr/bin/time
+555	bin	bin	usr/bin/timex
+555	bin	bin	usr/bin/touch
+555	bin	bin	usr/bin/tplot
+555	bin	bin	usr/bin/tput
+555	bin	bin	usr/bin/tr
+555	bin	bin	usr/bin/true
+555	bin	bin	usr/bin/truss
+555	root	sys	usr/bin/tty
+555	bin	bin	usr/bin/uname
+555	bin	bin	usr/bin/units
+555	bin	bin	usr/bin/uniq
+555	bin	bin	usr/bin/unpack
+4111	uucp	uucp	usr/bin/uucp
+555	uucp	uucp	usr/bin/uudecode
+555	uucp	uucp	usr/bin/uuencode
+544	root	bin	usr/bin/uugetty
+4111	uucp	uucp	usr/bin/uuglist
+555	uucp	uucp	usr/bin/uulog
+4111	uucp	uucp	usr/bin/uuname
+555	uucp	uucp	usr/bin/uupick
+4111	uucp	uucp	usr/bin/uustat
+555	uucp	uucp	usr/bin/uuto
+4111	uucp	uucp	usr/bin/uux
+555	bin	bin	usr/bin/vacation
+2555	bin	tty	usr/bin/vtlmgr
+555	bin	bin	usr/bin/wc
+555	bin	bin	usr/bin/what
+2555	bin	tty	usr/bin/write
+555	root	bin	usr/bin/x286
+555	bin	bin	usr/bin/xargs
+755	bin	bin	usr/bin/xtract
+755	bin	bin	usr/ccs	d
+755	bin	bin	usr/ccs/bin	d
+755	root	sys	usr/etc	d
+775	bin	bin	usr/include	d
+444	bin	bin	usr/include/archives.h
+444	bin	bin	usr/include/deflt.h
+444	bin	bin	usr/include/devmgmt.h
+775	bin	bin	usr/include/fs	d
+444	bin	bin	usr/include/fs/fs_subr.h
+755	bin	bin	usr/include/fs/proc	d
+444	bin	bin	usr/include/fs/proc/prdata.h
+444	bin	bin	usr/include/libgenIO.h
+444	bin	bin	usr/include/libw.h
+444	bin	bin	usr/include/maillock.h
+444	bin	bin	usr/include/nserve.h
+444	bin	bin	usr/include/pn.h
+775	bin	bin	usr/include/rpc	d
+444	bin	bin	usr/include/rpc/auth.h
+444	bin	bin	usr/include/rpc/auth_des.h
+444	bin	bin	usr/include/rpc/auth_sys.h
+444	bin	bin	usr/include/rpc/auth_unix.h
+444	bin	bin	usr/include/rpc/clnt.h
+444	bin	bin	usr/include/rpc/clnt_soc.h
+444	bin	bin	usr/include/rpc/key_prot.h
+444	bin	bin	usr/include/rpc/nettype.h
+444	bin	bin	usr/include/rpc/pmap_clnt.h
+444	bin	bin	usr/include/rpc/pmap_prot.h
+444	bin	bin	usr/include/rpc/pmap_rmt.h
+444	bin	bin	usr/include/rpc/raw.h
+444	bin	bin	usr/include/rpc/rpc.h
+444	bin	bin	usr/include/rpc/rpc_com.h
+444	bin	bin	usr/include/rpc/rpc_msg.h
+444	bin	bin	usr/include/rpc/rpcb_clnt.h
+444	bin	bin	usr/include/rpc/rpcb_prot.h
+444	bin	bin	usr/include/rpc/rpcent.h
+444	bin	bin	usr/include/rpc/svc.h
+444	bin	bin	usr/include/rpc/svc_auth.h
+444	bin	bin	usr/include/rpc/svc_soc.h
+444	bin	bin	usr/include/rpc/types.h
+444	bin	bin	usr/include/rpc/xdr.h
+444	bin	bin	usr/include/std.h
+444	bin	bin	usr/include/sum.h
+775	bin	bin	usr/include/sys	d
+444	bin	bin	usr/include/sys/acct.h
+444	bin	bin	usr/include/sys/adv.h
+444	bin	bin	usr/include/sys/alttbl.h
+444	bin	bin	usr/include/sys/ansi.h
+444	bin	bin	usr/include/sys/ascii.h
+444	bin	bin	usr/include/sys/asy.h
+444	bin	bin	usr/include/sys/asyncio.h
+444	bin	bin	usr/include/sys/asyncsys.h
+444	bin	bin	usr/include/sys/at_ansi.h
+444	bin	bin	usr/include/sys/auxv.h
+444	bin	bin	usr/include/sys/bitmap.h
+444	bin	bin	usr/include/sys/bitmasks.h
+444	bin	bin	usr/include/sys/boot.h
+444	bin	bin	usr/include/sys/boothdr.h
+444	bin	bin	usr/include/sys/bootinfo.h
+444	bin	bin	usr/include/sys/buf.h
+444	bin	bin	usr/include/sys/callo.h
+444	bin	bin	usr/include/sys/cdump.h
+444	bin	bin	usr/include/sys/chanmux.h
+444	bin	bin	usr/include/sys/char.h
+444	bin	bin	usr/include/sys/class.h
+444	bin	bin	usr/include/sys/clock.h
+444	bin	bin	usr/include/sys/cmn_err.h
+444	bin	bin	usr/include/sys/conf.h
+444	bin	bin	usr/include/sys/cram.h
+444	bin	bin	usr/include/sys/cred.h
+444	bin	bin	usr/include/sys/crtctl.h
+444	bin	bin	usr/include/sys/ddi.h
+444	bin	bin	usr/include/sys/debug.h
+444	bin	bin	usr/include/sys/debugreg.h
+444	bin	bin	usr/include/sys/dir.h
+444	bin	bin	usr/include/sys/dirent.h
+444	bin	bin	usr/include/sys/disp.h
+444	bin	bin	usr/include/sys/dl.h
+444	bin	bin	usr/include/sys/dlpi.h
+444	bin	bin	usr/include/sys/dma.h
+444	bin	bin	usr/include/sys/dmaable.h
+444	bin	bin	usr/include/sys/dnlc.h
+444	bin	bin	usr/include/sys/elf.h
+444	bin	bin	usr/include/sys/elf_386.h
+444	bin	bin	usr/include/sys/elftypes.h
+444	bin	bin	usr/include/sys/elog.h
+444	bin	bin	usr/include/sys/emap.h
+444	bin	bin	usr/include/sys/erec.h
+444	bin	bin	usr/include/sys/err.h
+444	bin	bin	usr/include/sys/errno.h
+444	bin	bin	usr/include/sys/ertyp.h
+444	bin	bin	usr/include/sys/euc.h
+444	bin	bin	usr/include/sys/eucioctl.h
+444	bin	bin	usr/include/sys/evc.h
+444	bin	bin	usr/include/sys/evecb.h
+444	bin	bin	usr/include/sys/events.h
+444	bin	bin	usr/include/sys/evsys.h
+444	bin	bin	usr/include/sys/evsyscall.h
+444	bin	bin	usr/include/sys/exec.h
+444	bin	bin	usr/include/sys/fault.h
+444	bin	bin	usr/include/sys/fblk.h
+444	bin	bin	usr/include/sys/fbuf.h
+444	bin	bin	usr/include/sys/fcntl.h
+444	bin	bin	usr/include/sys/fd.h
+444	bin	bin	usr/include/sys/fdisk.h
+444	bin	bin	usr/include/sys/file.h
+444	bin	bin	usr/include/sys/filio.h
+444	bin	bin	usr/include/sys/filsys.h
+444	bin	bin	usr/include/sys/flock.h
+444	bin	bin	usr/include/sys/fp.h
+775	bin	bin	usr/include/sys/fs	d
+444	bin	bin	usr/include/sys/fs/bfs.h
+444	bin	bin	usr/include/sys/fs/bfs_compact.h
+444	bin	bin	usr/include/sys/fs/fifonode.h
+444	bin	bin	usr/include/sys/fs/namenode.h
+444	bin	bin	usr/include/sys/fs/rf_acct.h
+444	bin	bin	usr/include/sys/fs/rf_vfs.h
+444	bin	bin	usr/include/sys/fs/s5dir.h
+444	bin	bin	usr/include/sys/fs/s5fblk.h
+444	bin	bin	usr/include/sys/fs/s5filsys.h
+444	bin	bin	usr/include/sys/fs/s5ino.h
+444	bin	bin	usr/include/sys/fs/s5inode.h
+444	bin	bin	usr/include/sys/fs/s5macros.h
+444	bin	bin	usr/include/sys/fs/s5param.h
+444	bin	bin	usr/include/sys/fs/snode.h
+444	bin	bin	usr/include/sys/fs/ufs_fs.h
+444	bin	bin	usr/include/sys/fs/ufs_fsdir.h
+444	bin	bin	usr/include/sys/fs/ufs_inode.h
+444	bin	bin	usr/include/sys/fs/ufs_quota.h
+444	bin	bin	usr/include/sys/fs/xnamnode.h
+444	bin	bin	usr/include/sys/fsiboot.h
+444	bin	bin	usr/include/sys/fsid.h
+444	bin	bin	usr/include/sys/fstyp.h
+444	bin	bin	usr/include/sys/gdpstr.h
+444	bin	bin	usr/include/sys/genvid.h
+444	bin	bin	usr/include/sys/getpages.h
+444	bin	bin	usr/include/sys/hd.h
+444	bin	bin	usr/include/sys/hetero.h
+444	bin	bin	usr/include/sys/hrtcntl.h
+444	bin	bin	usr/include/sys/hrtsys.h
+444	bin	bin	usr/include/sys/i8237A.h
+444	bin	bin	usr/include/sys/idtab.h
+444	bin	bin	usr/include/sys/immu.h
+444	bin	bin	usr/include/sys/info.h
+444	bin	bin	usr/include/sys/inline.h
+444	bin	bin	usr/include/sys/ino.h
+444	bin	bin	usr/include/sys/inode.h
+444	bin	bin	usr/include/sys/iobuf.h
+444	bin	bin	usr/include/sys/ioccom.h
+444	bin	bin	usr/include/sys/ioctl.h
+444	bin	bin	usr/include/sys/ipc.h
+444	bin	bin	usr/include/sys/ipl.h
+444	bin	bin	usr/include/sys/istk.h
+444	bin	bin	usr/include/sys/jioctl.h
+444	bin	bin	usr/include/sys/kb.h
+444	bin	bin	usr/include/sys/kd.h
+444	bin	bin	usr/include/sys/kmacct.h
+444	bin	bin	usr/include/sys/kmem.h
+444	bin	bin	usr/include/sys/ldterm.h
+444	bin	bin	usr/include/sys/lihdr.h
+444	bin	bin	usr/include/sys/list.h
+444	bin	bin	usr/include/sys/lock.h
+444	bin	bin	usr/include/sys/locking.h
+444	bin	bin	usr/include/sys/log.h
+444	bin	bin	usr/include/sys/lp.h
+444	bin	bin	usr/include/sys/macro.h
+444	bin	bin	usr/include/sys/map.h
+#444	bin	bin	usr/include/sys/merge386.h
+444	bin	bin	usr/include/sys/mkdev.h
+444	bin	bin	usr/include/sys/mman.h
+444	bin	bin	usr/include/sys/mntent.h
+444	bin	bin	usr/include/sys/mnttab.h
+444	bin	bin	usr/include/sys/mode.h
+444	bin	bin	usr/include/sys/mount.h
+444	bin	bin	usr/include/sys/mouse.h
+444	bin	bin	usr/include/sys/msg.h
+444	bin	bin	usr/include/sys/nami.h
+444	bin	bin	usr/include/sys/netconfig.h
+444	bin	bin	usr/include/sys/netcspace.h
+444	bin	bin	usr/include/sys/nserve.h
+444	bin	bin	usr/include/sys/nsxt.h
+444	bin	bin	usr/include/sys/nxt.h
+444	bin	bin	usr/include/sys/nxtproto.h
+444	bin	bin	usr/include/sys/open.h
+444	bin	bin	usr/include/sys/page.h
+444	bin	bin	usr/include/sys/param.h
+444	bin	bin	usr/include/sys/pathname.h
+444	bin	bin	usr/include/sys/pfdat.h
+444	bin	bin	usr/include/sys/pic.h
+444	bin	bin	usr/include/sys/pit.h
+444	bin	bin	usr/include/sys/poll.h
+444	bin	bin	usr/include/sys/pp_dep.h
+444	bin	bin	usr/include/sys/priocntl.h
+444	bin	bin	usr/include/sys/proc.h
+444	bin	bin	usr/include/sys/procfs.h
+444	bin	bin	usr/include/sys/procset.h
+444	bin	bin	usr/include/sys/proctl.h
+444	bin	bin	usr/include/sys/protosw.h
+444	bin	bin	usr/include/sys/prsystm.h
+444	bin	bin	usr/include/sys/ptem.h
+444	bin	bin	usr/include/sys/ptms.h
+444	bin	bin	usr/include/sys/que.h
+444	bin	bin	usr/include/sys/queue.h
+444	bin	bin	usr/include/sys/recover.h
+444	bin	bin	usr/include/sys/reg.h
+444	bin	bin	usr/include/sys/region.h
+444	bin	bin	usr/include/sys/regset.h
+444	bin	bin	usr/include/sys/resource.h
+444	bin	bin	usr/include/sys/rf_adv.h
+444	bin	bin	usr/include/sys/rf_cirmgr.h
+444	bin	bin	usr/include/sys/rf_comm.h
+444	bin	bin	usr/include/sys/rf_debug.h
+444	bin	bin	usr/include/sys/rf_messg.h
+444	bin	bin	usr/include/sys/rf_sys.h
+444	bin	bin	usr/include/sys/rt.h
+444	bin	bin	usr/include/sys/rtc.h
+444	bin	bin	usr/include/sys/rtpriocntl.h
+444	bin	bin	usr/include/sys/sad.h
+444	bin	bin	usr/include/sys/sd.h
+444	bin	bin	usr/include/sys/seg.h
+444	bin	bin	usr/include/sys/select.h
+444	bin	bin	usr/include/sys/sem.h
+444	bin	bin	usr/include/sys/sema.h
+444	bin	bin	usr/include/sys/session.h
+444	bin	bin	usr/include/sys/shm.h
+444	bin	bin	usr/include/sys/sigaction.h
+444	bin	bin	usr/include/sys/siginfo.h
+444	bin	bin	usr/include/sys/signal.h
+444	bin	bin	usr/include/sys/socket.h
+444	bin	bin	usr/include/sys/socketvar.h
+444	bin	bin	usr/include/sys/sockio.h
+444	bin	bin	usr/include/sys/sockmod.h
+444	bin	bin	usr/include/sys/stat.h
+444	bin	bin	usr/include/sys/statfs.h
+444	bin	bin	usr/include/sys/statvfs.h
+444	bin	bin	usr/include/sys/stermio.h
+444	bin	bin	usr/include/sys/stream.h
+444	bin	bin	usr/include/sys/strlog.h
+444	bin	bin	usr/include/sys/strmdep.h
+444	bin	bin	usr/include/sys/stropts.h
+444	bin	bin	usr/include/sys/strppc.h
+444	bin	bin	usr/include/sys/strstat.h
+444	bin	bin	usr/include/sys/strsubr.h
+444	bin	bin	usr/include/sys/strtty.h
+444	bin	bin	usr/include/sys/swap.h
+444	bin	bin	usr/include/sys/sxt.h
+444	bin	bin	usr/include/sys/sys.s
+444	bin	bin	usr/include/sys/syscall.h
+444	bin	bin	usr/include/sys/sysconfig.h
+444	bin	bin	usr/include/sys/sysi86.h
+444	bin	bin	usr/include/sys/sysinfo.h
+444	bin	bin	usr/include/sys/sysmacros.h
+444	bin	bin	usr/include/sys/sysmsg.h
+444	bin	bin	usr/include/sys/systeminfo.h
+444	bin	bin	usr/include/sys/systm.h
+444	bin	bin	usr/include/sys/t_kuser.h
+444	bin	bin	usr/include/sys/tape.h
+444	bin	bin	usr/include/sys/termio.h
+444	bin	bin	usr/include/sys/termios.h
+444	bin	bin	usr/include/sys/termiox.h
+444	bin	bin	usr/include/sys/ticlts.h
+444	bin	bin	usr/include/sys/ticots.h
+444	bin	bin	usr/include/sys/ticotsord.h
+444	bin	bin	usr/include/sys/tihdr.h
+444	bin	bin	usr/include/sys/time.h
+444	bin	bin	usr/include/sys/timeb.h
+444	bin	bin	usr/include/sys/times.h
+444	bin	bin	usr/include/sys/timod.h
+444	bin	bin	usr/include/sys/tirdwr.h
+444	bin	bin	usr/include/sys/tiuser.h
+444	bin	bin	usr/include/sys/trace.h
+444	bin	bin	usr/include/sys/trap.h
+444	bin	bin	usr/include/sys/ts.h
+444	bin	bin	usr/include/sys/tspriocntl.h
+444	bin	bin	usr/include/sys/tsproc.h
+444	bin	bin	usr/include/sys/tss.h
+444	bin	bin	usr/include/sys/ttcompat.h
+444	bin	bin	usr/include/sys/ttold.h
+444	bin	bin	usr/include/sys/tty.h
+444	bin	bin	usr/include/sys/ttychars.h
+444	bin	bin	usr/include/sys/ttydev.h
+444	bin	bin	usr/include/sys/tuneable.h
+444	bin	bin	usr/include/sys/types.h
+444	bin	bin	usr/include/sys/uadmin.h
+444	bin	bin	usr/include/sys/ucontext.h
+444	bin	bin	usr/include/sys/uio.h
+444	bin	bin	usr/include/sys/ulimit.h
+444	bin	bin	usr/include/sys/unistd.h
+444	bin	bin	usr/include/sys/user.h
+444	bin	bin	usr/include/sys/ustat.h
+444	bin	bin	usr/include/sys/utime.h
+444	bin	bin	usr/include/sys/utsname.h
+444	bin	bin	usr/include/sys/utssys.h
+444	bin	bin	usr/include/sys/v86.h
+444	bin	bin	usr/include/sys/var.h
+444	bin	bin	usr/include/sys/vdc.h
+444	bin	bin	usr/include/sys/vfs.h
+444	bin	bin	usr/include/sys/vfstab.h
+444	bin	bin	usr/include/sys/vid.h
+444	bin	bin	usr/include/sys/vm.h
+444	bin	bin	usr/include/sys/vmmac.h
+444	bin	bin	usr/include/sys/vmmeter.h
+444	bin	bin	usr/include/sys/vmparam.h
+444	bin	bin	usr/include/sys/vmsystm.h
+444	bin	bin	usr/include/sys/vnode.h
+444	bin	bin	usr/include/sys/vt.h
+444	bin	bin	usr/include/sys/vtoc.h
+444	bin	bin	usr/include/sys/wait.h
+444	bin	bin	usr/include/sys/weitek.h
+755	bin	bin	usr/include/sys/ws	d
+444	bin	bin	usr/include/sys/ws/8042.h
+444	bin	bin	usr/include/sys/ws/chan.h
+444	bin	bin	usr/include/sys/ws/tcl.h
+444	bin	bin	usr/include/sys/ws/ws.h
+444	bin	bin	usr/include/sys/x.out.h
+444	bin	bin	usr/include/sys/xdebug.h
+444	bin	bin	usr/include/sys/xque.h
+444	bin	bin	usr/include/sys/xt.h
+444	bin	bin	usr/include/sys/xtproto.h
+444	bin	bin	usr/include/tiuser.h
+444	bin	bin	usr/include/table.h
+444	bin	bin	usr/include/userdefs.h
+755	bin	bin	usr/include/vm	d
+444	bin	bin	usr/include/vm/anon.h
+444	bin	bin	usr/include/vm/as.h
+444	bin	bin	usr/include/vm/bootconf.h
+444	bin	bin	usr/include/vm/cpu.h
+444	bin	bin	usr/include/vm/debugger.h
+444	bin	bin	usr/include/vm/faultcatch.h
+444	bin	bin	usr/include/vm/faultcode.h
+444	bin	bin	usr/include/vm/hat.h
+444	bin	bin	usr/include/vm/kernel.h
+444	bin	bin	usr/include/vm/mp.h
+444	bin	bin	usr/include/vm/page.h
+444	bin	bin	usr/include/vm/pte.h
+444	bin	bin	usr/include/vm/pvn.h
+444	bin	bin	usr/include/vm/reboot.h
+444	bin	bin	usr/include/vm/rm.h
+444	bin	bin	usr/include/vm/seg.h
+444	bin	bin	usr/include/vm/seg_dev.h
+444	bin	bin	usr/include/vm/seg_kmem.h
+444	bin	bin	usr/include/vm/seg_map.h
+444	bin	bin	usr/include/vm/seg_objs.h
+444	bin	bin	usr/include/vm/seg_u.h
+444	bin	bin	usr/include/vm/seg_vn.h
+444	bin	bin	usr/include/vm/seg_vpix.h
+444	bin	bin	usr/include/vm/trace.h
+444	bin	bin	usr/include/vm/vm_hat.h
+444	bin	bin	usr/include/vm/vmlog.h
+444	bin	bin	usr/include/vm/vpage.h
+775	bin	bin	usr/lbin	d
+555	bin	bin	usr/lbin/Install.sh
+555	bin	bin	usr/lbin/Install.tape
+555	bin	bin	usr/lbin/fsinfo
+555	bin	bin	usr/lbin/get_sel
+555	bin	bin	usr/lbin/installpkg.r
+555	bin	bin	usr/lbin/removepkg.r
+775	root	bin	usr/lib	d
+775	bin	bin	usr/lib/acct	d
+755	bin	bin	usr/lib/acct/acctcms
+755	bin	bin	usr/lib/acct/acctcon
+755	bin	bin	usr/lib/acct/acctcon1
+755	bin	bin	usr/lib/acct/acctcon2
+755	bin	bin	usr/lib/acct/acctdisk
+755	bin	bin	usr/lib/acct/acctdusg
+755	bin	bin	usr/lib/acct/acctmerg
+4555	root	adm	usr/lib/acct/accton
+755	bin	bin	usr/lib/acct/acctprc
+755	bin	bin	usr/lib/acct/acctprc1
+755	bin	bin	usr/lib/acct/acctprc2
+755	bin	bin	usr/lib/acct/acctwtmp
+755	bin	bin	usr/lib/acct/chargefee
+755	bin	bin	usr/lib/acct/ckpacct
+755	bin	bin	usr/lib/acct/closewtmp
+755	bin	bin	usr/lib/acct/diskusg
+755	bin	bin	usr/lib/acct/dodisk
+755	bin	bin	usr/lib/acct/fwtmp
+755	bin	bin	usr/lib/acct/lastlogin
+755	bin	bin	usr/lib/acct/monacct
+755	bin	bin	usr/lib/acct/nulladm
+755	bin	bin	usr/lib/acct/prctmp
+755	bin	bin	usr/lib/acct/prdaily
+755	bin	bin	usr/lib/acct/prtacct
+755	bin	bin	usr/lib/acct/ptecms.awk
+755	bin	bin	usr/lib/acct/ptelus.awk
+755	bin	bin	usr/lib/acct/remove
+755	bin	bin	usr/lib/acct/runacct
+755	bin	bin	usr/lib/acct/shutacct
+755	bin	bin	usr/lib/acct/startup
+755	bin	bin	usr/lib/acct/turnacct
+755	bin	bin	usr/lib/acct/utmp2wtmp
+755	bin	bin	usr/lib/acct/wtmpfix
+755	bin	bin	usr/lib/calprog
+755	root	sys	usr/lib/class	d
+755	root	sys	usr/lib/class/RT	d
+555	bin	bin	usr/lib/class/RT/RTdispadmin
+555	bin	bin	usr/lib/class/RT/RTpriocntl
+755	root	sys	usr/lib/class/TS	d
+555	bin	bin	usr/lib/class/TS/TSdispadmin
+555	bin	bin	usr/lib/class/TS/TSpriocntl
+555	bin	bin	usr/lib/diff3prog
+555	bin	bin	usr/lib/diffh
+755	root	sys	usr/lib/fs	d
+755	root	sys	usr/lib/fs/bfs	d
+555	root	sys	usr/lib/fs/bfs/fstyp
+755	root	sys	usr/lib/fs/fdfs	d
+755	root	sys	usr/lib/fs/proc	d
+755	root	sys	usr/lib/fs/s5	d
+555	root	sys	usr/lib/fs/s5/dcopy
+555	root	sys	usr/lib/fs/s5/ff
+555	root	sys	usr/lib/fs/s5/ncheck
+555	root	sys	usr/lib/fs/s5/volcopy
+755	root	sys	usr/lib/fs/ufs	d
+555	root	sys	usr/lib/fs/ufs/clri
+555	root	sys	usr/lib/fs/ufs/edquota
+555	root	sys	usr/lib/fs/ufs/ff
+555	root	sys	usr/lib/fs/ufs/fsdb
+555	root	sys	usr/lib/fs/ufs/fstyp
+555	root	sys	usr/lib/fs/ufs/ncheck
+555	root	sys	usr/lib/fs/ufs/quot
+555	root	sys	usr/lib/fs/ufs/quota
+555	root	sys	usr/lib/fs/ufs/quotacheck
+555	root	sys	usr/lib/fs/ufs/quotaon
+555	root	sys	usr/lib/fs/ufs/repquota
+555	root	sys	usr/lib/fs/ufs/tunefs
+555	root	sys	usr/lib/fs/ufs/ufsdump
+555	root	sys	usr/lib/fs/ufs/ufsrestore
+755	bin	bin	usr/lib/fs/ufs/volcopy
+755	bin	bin	usr/lib/getoptcvt
+755	bin	bin	usr/lib/iconv	d
+755	bin	bin	usr/lib/iconv/codesets	d
+444	bin	bin	usr/lib/iconv/codesets/646da.8859.p
+444	bin	bin	usr/lib/iconv/codesets/646de.8859.p
+444	bin	bin	usr/lib/iconv/codesets/646en.8859.p
+444	bin	bin	usr/lib/iconv/codesets/646es.8859.p
+444	bin	bin	usr/lib/iconv/codesets/646fr.8859.p
+444	bin	bin	usr/lib/iconv/codesets/646it.8859.p
+444	bin	bin	usr/lib/iconv/codesets/646sv.8859.p
+444	bin	bin	usr/lib/iconv/codesets/8859.646.p
+444	bin	bin	usr/lib/iconv/codesets/8859.646da.p
+444	bin	bin	usr/lib/iconv/codesets/8859.646de.p
+444	bin	bin	usr/lib/iconv/codesets/8859.646en.p
+444	bin	bin	usr/lib/iconv/codesets/8859.646es.p
+444	bin	bin	usr/lib/iconv/codesets/8859.646fr.p
+444	bin	bin	usr/lib/iconv/codesets/8859.646it.p
+444	bin	bin	usr/lib/iconv/codesets/8859.646sv.p
+444	bin	bin	usr/lib/iconv/iconv_data
+555	bin	bin	usr/lib/idacomp
+755	root	root	usr/lib/installed	d
+755	root	root	usr/lib/installed/CONTENTS	v
+755	root	root	usr/lib/installed/Files	d
+755	root	root	usr/lib/installed/Remove	d
+755	bin	bin	usr/lib/ld.so.1
+755	bin	bin	usr/lib/lib.b
+644	bin	bin	usr/lib/lib300.a
+644	bin	bin	usr/lib/lib300s.a
+644	bin	bin	usr/lib/lib4014.a
+644	bin	bin	usr/lib/lib450.a
+644	bin	bin	usr/lib/libTL.a
+644	bin	bin	usr/lib/libadm.a
+644	bin	bin	usr/lib/libcmd.a
+644	bin	bin	usr/lib/libgenIO.a
+644	bin	bin	usr/lib/libmail.a
+644	bin	bin	usr/lib/libns.a
+644	bin	bin	usr/lib/libnsl_i.so
+644	bin	bin	usr/lib/libpkg.a
+644	bin	bin	usr/lib/libplot.a
+644	bin	bin	usr/lib/libvt0.a
+644	bin	bin	usr/lib/libw.a
+755	root	other	usr/lib/locale	d
+755	root	other	usr/lib/locale/C	d
+755	bin	bin	usr/lib/locale/C/LC_TIME
+755	bin	bin	usr/lib/locale/C/LC_MESSAGES	d
+755	bin	bin	usr/lib/locale/C/colltbl_C
+755	bin	bin	usr/lib/locale/C/chrtbl_C
+755	bin	bin	usr/lib/locale/C/montbl_C
+755	bin	bin	usr/lib/locale/C/time_C
+755	root	other	usr/lib/locale/DE	d
+755	root	other	usr/lib/locale/FR	d
+755	root	other	usr/lib/locale/IT	d
+755	root	other	usr/lib/locale/TZ	d
+644	bin	bin	usr/lib/locale/TZ/asia
+644	bin	bin	usr/lib/locale/TZ/australasia
+644	bin	bin	usr/lib/locale/TZ/europe
+644	bin	bin	usr/lib/locale/TZ/etcetera
+644	bin	bin	usr/lib/locale/TZ/northamerica
+644	bin	bin	usr/lib/locale/TZ/pacificnew
+644	bin	bin	usr/lib/locale/TZ/southamerica
+755	root	other	usr/lib/locale/Xopen	d
+777	root	other	usr/lib/locale/Xopen/LC_MESSAGES	d
+755	root	other	usr/lib/locale/Xopen1	d
+777	root	other	usr/lib/locale/Xopen1/LC_MESSAGES	d
+755	root	other	usr/lib/locale/french	d
+755	root	other	usr/lib/locale/german	d
+755	root	other	usr/lib/locale/italian	d
+755	root	other	usr/lib/locale/japan	d
+775	root	mail	usr/lib/mail	d
+4511	root	mail	usr/lib/mail/mail_pipe
+555	bin	bin	usr/lib/mail/notify2
+775	root	mail	usr/lib/mail/surrcmd	d
+555	bin	mail	usr/lib/mail/surrcmd/ckbinarsys
+555	bin	bin	usr/lib/mail/surrcmd/fromsmtp
+2555	bin	mail	usr/lib/mail/surrcmd/smtp
+555	bin	bin	usr/lib/mail/surrcmd/smtpd
+2555	bin	mail	usr/lib/mail/surrcmd/smtpqer
+6555	root	mail	usr/lib/mail/surrcmd/smtpsched
+555	bin	bin	usr/lib/mail/surrcmd/tosmtp
+555	bin	bin	usr/lib/mail/vacation2
+755	bin	mail	usr/lib/mailx	d
+644	bin	bin	usr/lib/more.help
+644	bin	bin	usr/lib/npack.so
+775	root	bin	usr/lib/rfs	d
+775	adm	sys	usr/lib/sa	d
+555	bin	bin	usr/lib/sa/sa1
+555	bin	bin	usr/lib/sa/sa2
+2555	bin	sys	usr/lib/sa/sadc
+775	root	bin	usr/lib/saf	d
+755	root	sys	usr/lib/saf/sac
+544	root	sys	usr/lib/saf/ttymon
+755	bin	bin	usr/lib/t300
+755	bin	bin	usr/lib/t300s
+755	bin	bin	usr/lib/t4014
+755	bin	bin	usr/lib/t450
+755	uucp	uucp	usr/lib/uucp	d
+555	uucp	uucp	usr/lib/uucp/SetUp
+555	uucp	uucp	usr/lib/uucp/Teardown
+555	uucp	uucp	usr/lib/uucp/Uutry
+110	uucp	uucp	usr/lib/uucp/bnuconvert
+4111	uucp	uucp	usr/lib/uucp/remote.unknown
+110	uucp	uucp	usr/lib/uucp/uucheck
+4111	uucp	uucp	usr/lib/uucp/uucico
+110	uucp	uucp	usr/lib/uucp/uucleanup
+555	uucp	uucp	usr/lib/uucp/uudemon.admin
+555	uucp	uucp	usr/lib/uucp/uudemon.cleanup
+555	uucp	uucp	usr/lib/uucp/uudemon.hour
+555	uucp	uucp	usr/lib/uucp/uudemon.poll
+4111	uucp	uucp	usr/lib/uucp/uusched
+4111	uucp	uucp	usr/lib/uucp/uuxqt
+755	bin	bin	usr/lib/vplot
+775	root	mail	usr/mail	d
+755	bin	bin	usr/mail/:saved	d
+775	root	sys	usr/net	d
+775	root	sys	usr/net/nls	d
+775	root	sys	usr/options	d
+755	bin	bin	usr/sadm	d
+755	bin	bin	usr/sadm/bin	d
+555	bin	bin	usr/sadm/bin/puttext
+755	bin	bin	usr/sadm/install	d
+755	bin	bin	usr/sadm/install/bin	d
+555	bin	bin	usr/sadm/install/bin/ie_build
+555	bin	bin	usr/sadm/install/bin/intf_inst
+555	bin	bin	usr/sadm/install/bin/intf_reloc
+555	bin	bin	usr/sadm/install/bin/intf_remove
+555	bin	bin	usr/sadm/install/bin/mod_menus
+500	root	sys	usr/sadm/install/bin/pkginstall
+555	root	sys	usr/sadm/install/bin/pkgname
+500	root	sys	usr/sadm/install/bin/pkgremove
+555	bin	bin	usr/sadm/install/bin/reloc_menus
+755	bin	bin	usr/sadm/install/scripts	d
+500	root	sys	usr/sadm/install/scripts/cmdexec
+644	bin	bin	usr/sadm/install/scripts/i.OAMmif
+500	root	sys	usr/sadm/install/scripts/i.awk
+500	root	sys	usr/sadm/install/scripts/i.build
+500	root	sys	usr/sadm/install/scripts/i.sed
+644	bin	bin	usr/sadm/install/scripts/r.OAMintf
+500	root	sys	usr/sadm/install/scripts/r.awk
+500	root	sys	usr/sadm/install/scripts/r.build
+500	root	sys	usr/sadm/install/scripts/r.sed
+755	bin	bin	usr/sadm/sysadm	d
+755	bin	bin	usr/sadm/sysadm/install	d
+755	bin	bin	usr/sadm/sysadm/install/bin	d
+755	bin	bin	usr/sadm/sysadm/bin	d
+500	root	sys	usr/sadm/sysadm/bin/addgrpmem
+500	root	sys	usr/sadm/sysadm/bin/expdate
+500	root	sys	usr/sadm/sysadm/bin/findgid
+500	root	sys	usr/sadm/sysadm/bin/finduid
+500	root	sys	usr/sadm/sysadm/bin/getngroups
+500	root	sys	usr/sadm/sysadm/bin/getprimary
+500	root	sys	usr/sadm/sysadm/bin/getusrdefs
+755	bin	bin	usr/sadm/sysadm/bin/isoam.ins
+755	bin	bin	usr/sadm/sysadm/bin/mkdtab
+500	root	sys	usr/sadm/sysadm/bin/putusrdefs
+755	bin	bin	usr/sadm/sysadm/menu	d
+755	bin	bin	usr/sadm/sysadm/menu/applmgmt	d
+644	bin	bin	usr/sadm/sysadm/menu/applmgmt/Help
+644	root	sys	usr/sadm/sysadm/menu/applmgmt/appl.menu
+644	bin	bin	usr/sadm/sysadm/menu/express
+644	root	sys	usr/sadm/sysadm/menu/main.menu	v
+444	bin	bin	usr/sadm/ugdates
+775	root	sys	usr/sbin	d
+555	bin	bin	usr/sbin/.cpiopc
+555	bin	bin	usr/sbin/chroot
+755	bin	bin	usr/sbin/ckbupscd
+555	bin	bin	usr/sbin/crash
+500	root	sys	usr/sbin/cron
+555	bin	bin	usr/sbin/delsysadm
+555	bin	bin	usr/sbin/dfsck
+555	bin	bin	usr/sbin/dispadmin
+555	bin	bin	usr/sbin/edsysadm
+555	bin	bin	usr/sbin/ff
+555	bin	bin	usr/sbin/format
+755	bin	bin	usr/sbin/fsba
+555	bin	bin	usr/sbin/fuser
+500	root	sys	usr/sbin/groupadd
+500	root	sys	usr/sbin/groupdel
+500	root	sys	usr/sbin/groupmod
+755	bin	bin	usr/sbin/grpck
+555	bin	bin	usr/sbin/install
+500	root	sys	usr/sbin/installf
+555	bin	bin	usr/sbin/killall
+555	root	sys	usr/sbin/link
+755	bin	bin	usr/sbin/lnsxts
+755	bin	bin	usr/sbin/lnttys
+544	root	bin	usr/sbin/mvdir
+555	bin	bin	usr/sbin/menu_add
+500	root	sys	usr/sbin/passmgmt
+500	root	sys	usr/sbin/pkgadd
+555	root	sys	usr/sbin/pkgchk
+500	root	sys	usr/sbin/pkgrm
+555	bin	bin	usr/sbin/pmadm
+755	bin	bin	usr/sbin/prfdc
+755	bin	bin	usr/sbin/prfld
+755	bin	bin	usr/sbin/prfpr
+755	bin	bin	usr/sbin/prfsnap
+755	bin	bin	usr/sbin/prfstat
+555	bin	bin	usr/sbin/pwck
+500	root	sys	usr/sbin/pwconv
+4755	root	sys	usr/sbin/sacadm
+2555	bin	sys	usr/sbin/sadp
+555	bin	bin	usr/sbin/sag
+555	bin	bin	usr/sbin/sar
+555	bin	bin	usr/sbin/setmnt
+555	bin	bin	usr/sbin/sttydefs
+555	bin	bin	usr/sbin/swap
+555	bin	bin	usr/sbin/sysdef
+555	bin	bin	usr/sbin/tar
+555	bin	bin	usr/sbin/ttyadm
+555	bin	bin	usr/sbin/ttyconv
+555	root	sys	usr/sbin/unlink
+500	root	sys	usr/sbin/useradd
+500	root	sys	usr/sbin/userdel
+500	root	sys	usr/sbin/usermod
+555	bin	bin	usr/sbin/volcopy
+2555	bin	tty	usr/sbin/wall
+4555	root	bin	usr/sbin/whodo
+555	bin	bin	usr/sbin/zic
+555	bin	bin	usr/sbin/zdump
+755	bin	bin	usr/share	d
+755	bin	bin	usr/share/lib	d
+644	bin	bin	usr/share/lib/ascii
+755	bin	mail	usr/share/lib/mail	d
+644	bin	mail	usr/share/lib/mail/std_vac_msg
+775	bin	mail	usr/share/lib/mailx	d
+644	bin	bin	usr/share/lib/mailx/mailx.help
+644	bin	bin	usr/share/lib/mailx/mailx.help.~
+775	bin	bin	usr/share/lib/terminfo	d
+775	bin	bin	usr/share/lib/terminfo/1	d
+775	bin	bin	usr/share/lib/terminfo/2	d
+775	bin	bin	usr/share/lib/terminfo/3	d
+775	bin	bin	usr/share/lib/terminfo/4	d
+644	root	other	usr/share/lib/terminfo/4/40-132-6
+644	root	other	usr/share/lib/terminfo/4/40-132-8
+644	root	other	usr/share/lib/terminfo/4/40-80-6
+644	root	other	usr/share/lib/terminfo/4/40-80-8
+# 644	root	other	usr/share/lib/terminfo/4/435
+# 644	root	other	usr/share/lib/terminfo/4/43ro
+# 644	root	other	usr/share/lib/terminfo/4/442
+# 644	root	other	usr/share/lib/terminfo/4/444
+# 644	root	other	usr/share/lib/terminfo/4/446
+# 644	root	other	usr/share/lib/terminfo/4/447
+644	root	other	usr/share/lib/terminfo/4/455
+644	root	other	usr/share/lib/terminfo/4/457
+644	root	other	usr/share/lib/terminfo/4/458
+644	root	other	usr/share/lib/terminfo/4/470
+644	root	other	usr/share/lib/terminfo/4/471
+644	root	other	usr/share/lib/terminfo/4/473
+644	root	other	usr/share/lib/terminfo/4/474
+644	root	other	usr/share/lib/terminfo/4/475
+644	root	other	usr/share/lib/terminfo/4/476
+644	root	other	usr/share/lib/terminfo/4/477
+644	root	other	usr/share/lib/terminfo/4/477-455
+644	root	other	usr/share/lib/terminfo/4/477-470
+644	root	other	usr/share/lib/terminfo/4/477ibmc
+644	root	other	usr/share/lib/terminfo/4/477ibmg
+644	root	other	usr/share/lib/terminfo/4/477qume
+644	root	other	usr/share/lib/terminfo/4/478
+644	root	other	usr/share/lib/terminfo/4/479
+644	root	other	usr/share/lib/terminfo/4/495hp
+644	root	other	usr/share/lib/terminfo/4/495ibm
+644	root	other	usr/share/lib/terminfo/4/495qume
+775	bin	bin	usr/share/lib/terminfo/5	d
+644	root	other	usr/share/lib/terminfo/5/5310
+644	root	other	usr/share/lib/terminfo/5/5320
+775	bin	bin	usr/share/lib/terminfo/6	d
+775	bin	bin	usr/share/lib/terminfo/7	d
+644	root	other	usr/share/lib/terminfo/7/705
+# 644	root	other	usr/share/lib/terminfo/7/7475
+775	bin	bin	usr/share/lib/terminfo/8	d
+775	bin	bin	usr/share/lib/terminfo/9	d
+775	bin	bin	usr/share/lib/terminfo/A	d
+644	root	other	usr/share/lib/terminfo/A/AT386
+644	root	other	usr/share/lib/terminfo/A/AT386-M
+# 644	root	other	usr/share/lib/terminfo/A/AT386-UL
+775	bin	bin	usr/share/lib/terminfo/B	d
+775	bin	bin	usr/share/lib/terminfo/M	d
+775	bin	bin	usr/share/lib/terminfo/P	d
+775	bin	bin	usr/share/lib/terminfo/a	d
+644	root	other	usr/share/lib/terminfo/a/ansi
+775	bin	bin	usr/share/lib/terminfo/b	d
+775	bin	bin	usr/share/lib/terminfo/c	d
+775	bin	bin	usr/share/lib/terminfo/d	d
+644	root	other	usr/share/lib/terminfo/d/dumb
+775	bin	bin	usr/share/lib/terminfo/e	d
+775	bin	bin	usr/share/lib/terminfo/f	d
+775	bin	bin	usr/share/lib/terminfo/g	d
+775	bin	bin	usr/share/lib/terminfo/h	d
+644	root	other	usr/share/lib/terminfo/h/hplaserjet
+775	bin	bin	usr/share/lib/terminfo/i	d
+644	root	other	usr/share/lib/terminfo/i/ibmgraphics
+644	root	other	usr/share/lib/terminfo/i/ibmproprinter
+775	bin	bin	usr/share/lib/terminfo/j	d
+775	bin	bin	usr/share/lib/terminfo/k	d
+775	bin	bin	usr/share/lib/terminfo/l	d
+775	bin	bin	usr/share/lib/terminfo/m	d
+775	bin	bin	usr/share/lib/terminfo/n	d
+775	bin	bin	usr/share/lib/terminfo/o	d
+775	bin	bin	usr/share/lib/terminfo/p	d
+775	bin	bin	usr/share/lib/terminfo/q	d
+775	bin	bin	usr/share/lib/terminfo/r	d
+775	bin	bin	usr/share/lib/terminfo/s	d
+644	root	other	usr/share/lib/terminfo/s/sprint11
+775	bin	bin	usr/share/lib/terminfo/t	d
+775	bin	bin	usr/share/lib/terminfo/u	d
+644	root	other	usr/share/lib/terminfo/u/unknown
+775	bin	bin	usr/share/lib/terminfo/v	d
+775	bin	bin	usr/share/lib/terminfo/w	d
+775	bin	bin	usr/share/lib/terminfo/x	d
+775	bin	bin	usr/share/lib/terminfo/y	d
+775	bin	bin	usr/share/lib/terminfo/z	d
+444	bin	bin	usr/share/lib/unittab
+775	root	sys	var	d
+775	root	sys	var/adm	d
+775	root	sys	var/adm/acct	d
+775	adm	adm	var/adm/acct/fiscal	d
+775	adm	adm	var/adm/acct/nite	d
+775	adm	adm	var/adm/acct/sum	d
+775	adm	adm	var/adm/log	d
+775	root	sys	var/adm/sa	d
+755	root	root	var/cron	d
+644	root	root	var/cron/log
+755	root	sys	var/installed	d
+775	root	mail	var/mail	d
+775	root	mail	var/mail/:saved	d
+777	bin	bin	var/news	d
+777	bin	bin	var/preserve	d
+755	bin	bin	var/sadm	d
+755	bin	bin	var/sadm/install	d
+755	bin	bin	var/sadm/install/admin	d
+444	root	sys	var/sadm/install/admin/default
+755	root	sys	var/sadm/install/logs	d
+755	root	other	var/sadm/pkg	d
+755	root	other	var/sadm/pkg/dfm	d
+644	root	other	var/sadm/pkg/dfm/pkginfo
+755	root	other	var/sadm/pkg/sys	d
+755	root	other	var/sadm/pkg/usrenv	d
+755	bin	bin	var/saf	d
+775	root	bin	var/spool	d
+700	root	sys	var/spool/cron	d
+755	root	sys	var/spool/cron/atjobs	d
+755	root	sys	var/spool/cron/crontabs	d
+644	root	sys	var/spool/cron/crontabs/adm
+644	root	sys	var/spool/cron/crontabs/root
+644	root	sys	var/spool/cron/crontabs/sys
+755	uucp	sys	var/spool/locks	d
+777	bin	bin	var/spool/pkg	d
+775	root	mail	var/spool/smtpq
+755	uucp	uucp	var/spool/uucp	d
+777	uucp	uucp	var/spool/uucppublic	d
+1777	sys	sys	var/tmp	d
+755	uucp	uucp	var/uucp	d
+755	uucp	uucp	var/uucp/.Admin	d
+755	uucp	uucp	var/uucp/.Corrupt	d
+755	uucp	uucp	var/uucp/.Log	d
+755	uucp	uucp	var/uucp/.Log/uucico	d
+755	uucp	uucp	var/uucp/.Log/uucp	d
+755	uucp	uucp	var/uucp/.Log/uux	d
+755	uucp	uucp	var/uucp/.Log/uuxqt	d
+755	uucp	uucp	var/uucp/.Old	d
+755	uucp	uucp	var/uucp/.Sequence	d
+755	uucp	uucp	var/uucp/.Status	d
+755	uucp	uucp	var/uucp/.Workspace	d
+755	uucp	uucp	var/uucp/.Xqtdir	d
+
+# Keep these three always last.
+755	bin	bin	tmp/INSTALL3	x
+644	root	sys	tmp/Plist.dev	x
+644	root	sys	var/sadm/install/contents	v

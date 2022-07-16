@@ -1,0 +1,17 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/inet/Menu.inet	1.1"
+
+###############################################################################
+menu="Internet Protocol Address Management"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/ssmenu.msg | message -p`
+
+name=hosts
+description=Create Machine Address Information for the Internet Protocol
+action=OPEN FORM "$INTFBASE/netservices/name_to_addr/inet/Form.inethost"
+lininfo=menu:host
+
+name=services
+description=Create Service Port Information for the Internet Protocol
+action=OPEN FORM "$INTFBASE/netservices/name_to_addr/inet/Form.inetserv"
+lininfo=menu:services

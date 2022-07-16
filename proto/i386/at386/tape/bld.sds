@@ -1,0 +1,60 @@
+#ident	"@(#)proto:i386/at386/tape/bld.sds	1.1"
+
+if [ "${LOAD}" = "" ]
+then LOAD=STC
+fi
+
+PKG_LIST=/tmp/pkglist
+ans=no
+if [ -r /dev/rmt/c0s0 ]
+then if [ -r /dev/scsi/qtape1 ]
+     then echo "Please specify the Tape Device to write to:"
+          echo "  t - /dev/rmt/c0s0 (Usually the Non-SCSI Cartridge Tape)"
+          echo "  s - /dev/scsi/qtape1 (Usually the SCSI Cartridge Tape)"
+          echo "> \c"
+	  read ans
+     else
+          ans=t
+     fi
+else if [ -r /dev/scsi/qtape1 ]
+     then ans=s
+     fi
+fi
+case "$ans" in
+t) DRIVE=/dev/rmt/c0s0
+   TAPECNTL=/usr/lib/tape/tapecntl
+   DEVICEN=""
+	;;
+s) DRIVE=/dev/scsi/qtape1
+   TAPECNTL=/usr/lib/scsi/scsitapecntl
+   DEVICEN="-y ${DEVICE}n"
+	;;
+*) DRIVE=""
+	;;
+esac
+if [ "$DRIVE" = "" ]
+then echo "No Tape Drive available"
+     exit 1
+fi
+
+TAPE=${DRIVE}n
+TITLE="Software Development Set"
+
+echo "Insert Cartridge Tape into the Drive ($DRIVE) and press return\c"
+read x;
+< ${DRIVE}
+${TAPECNTL} -e ${DEVICEN}
+if [ $? != 0 ]
+then echo "Can't erase the tape"
+     exit 1
+fi
+
+echo "Creating a Binary Tape for ${TITLE}"
+cd $ROOT/usr/src/pkg/scde
+pkgmk -o -v${LOAD} -r$ROOT -d$ROOT/tmp/pkg
+echo "go" |
+pkgtrans -s $ROOT/tmp/pkg ctape scde
+
+
+< ${DRIVE}
+echo "Add-on Tape is complete"

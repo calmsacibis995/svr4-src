@@ -1,0 +1,15 @@
+#ident	"@(#)/usr/src/add-on/pkg.xx/pkginfo.sl 1.1 4.0 12/08/90 1043 AT&T-USL"
+
+#
+# "must" parameters
+#
+
+PKG="xcp"
+CLASSES="none"
+NAME="XENIX Compatibility Package"
+RELEASE="4.0"
+VERSION="1"
+VENDOR="AT&T-SF"
+CATEGORY=system
+ARCH="i386"
+PREDEPEND="xcp"

@@ -1,0 +1,303 @@
+#ident	"@(#)mbus:proto/i386/Plists/Plist.MB2	1.2.4.3"
+# MB2 directories
+#
+755	root	sys	etc/conf/pack.d/atcs	d
+755	root	sys	etc/conf/pack.d/cci	d
+755	root	sys	etc/conf/pack.d/rci	d
+755	root	sys	etc/conf/pack.d/i410	d
+755	root	sys	etc/conf/pack.d/mpc	d
+755	root	sys	etc/conf/pack.d/i258	d
+755	root	sys	etc/conf/pack.d/i258tp	d
+755	root	sys	etc/conf/pack.d/ics	d
+755	root	sys	etc/conf/pack.d/i354	d
+755	root	sys	etc/conf/pack.d/console	d
+755	root	sys	etc/conf/pack.d/ramd	d
+755	root	sys	etc/conf/pack.d/csmclk	d
+755	root	sys	etc/conf/pack.d/clock	d
+755	root	sys	etc/conf/pack.d/mb2stai	d
+755	root	sys	etc/conf/pack.d/mb2tsm	d
+755	root	sys	etc/conf/pack.d/iasy	d
+755	root	sys	etc/conf/pack.d/i350	d
+755	root	sys	etc/conf/pack.d/mps	d
+755	root	sys	etc/conf/pack.d/d258	d
+755	root	sys	etc/conf/pack.d/bps	d
+755	root	sys	usr/lib/tai	d
+755	root	sys	usr/lib/tai/example	d
+755	root	sys	usr/lib/i279	d
+755	root	sys	usr/lib/cci	d
+755	root	sys	usr/lib/tape	d
+755	root	sys	usr/lib/cci/server	d
+755	root	sys	usr/lib/cci/example	d
+755	root	sys	etc/default/bootserver	d
+#
+# startup files
+#
+750	root	sys	etc/init.d/mb2_init
+750	root	sys	etc/rc2.d/S41mb2_init	l	etc/init.d/mb2_init
+750	root	sys	etc/inittab
+750	root	sys	etc/init.d/bootserver
+750	root	sys	etc/rc2.d/S06bootserver	l	etc/init.d/bootserver
+#
+# initial setup files 
+#
+750	root	sys	opt	d
+750	root	sys	opt/unix	d
+750	root	sys	opt/unix/setup
+750	root	sys	opt/unix/Plist
+750	root	sys	opt/unix/Plist.dev
+750	root	sys	etc/setmods
+#
+# MB2 kernel files
+#
+644	root	sys	etc/conf/pack.d/atcs/space.c
+644	root	sys	etc/conf/pack.d/atcs/Driver.o
+644	root	sys	etc/conf/pack.d/cci/Driver.o
+644	root	sys	etc/conf/pack.d/rci/Driver.o
+644	root	sys	etc/conf/pack.d/mpc/space.c
+644	root	sys	etc/conf/pack.d/mpc/Driver.o
+644	root	sys	etc/conf/pack.d/i410/Driver.o
+644	root	sys	etc/conf/pack.d/i410/space.c
+644	root	sys	etc/conf/pack.d/i258/Driver.o
+644	root	sys	etc/conf/pack.d/i258/space.c
+644	root	sys	etc/conf/pack.d/i258tp/Driver.o
+644	root	sys	etc/conf/pack.d/ics/Driver.o
+644	root	sys	etc/conf/pack.d/ics/space.c
+644	root	sys	etc/conf/pack.d/i354/space.c
+644	root	sys	etc/conf/pack.d/i354/Driver.o
+644	root	sys	etc/conf/pack.d/console/space.c
+644	root	sys	etc/conf/pack.d/console/Driver.o
+644	root	sys	etc/conf/pack.d/ramd/space.c
+644	root	sys	etc/conf/pack.d/ramd/Driver.o
+644	root	sys	etc/conf/pack.d/csmclk/Driver.o
+644	root	sys	etc/conf/pack.d/clock/Driver.o
+644	root	sys	etc/conf/pack.d/mb2stai/space.c
+644	root	sys	etc/conf/pack.d/mb2stai/Driver.o
+644	root	sys	etc/conf/pack.d/mb2tsm/space.c
+644	root	sys	etc/conf/pack.d/mb2tsm/Driver.o
+644	root	sys	etc/conf/pack.d/iasy/space.c
+644	root	sys	etc/conf/pack.d/iasy/Driver.o
+644	root	sys	etc/conf/pack.d/i350/space.c
+644	root	sys	etc/conf/pack.d/i350/Driver.o
+644	root	sys	etc/conf/pack.d/dma/space.c
+644	root	sys	etc/conf/pack.d/d258/space.c
+644	root	sys	etc/conf/pack.d/d258/Driver.o
+644	root	sys	etc/conf/pack.d/mps/space.c
+644	root	sys	etc/conf/pack.d/mps/Driver.o
+644	root	sys	etc/conf/pack.d/bps/space.c
+644	root	sys	etc/conf/pack.d/bps/Driver.o
+644	root	sys	etc/conf/pack.d/bps/stubs.c
+
+644	root	sys	etc/conf/sdevice.d/d258
+644	root	sys	etc/conf/sdevice.d/bps
+644	root	sys	etc/conf/sdevice.d/mps
+644	root	sys	etc/conf/sdevice.d/atcs
+644	root	sys	etc/conf/sdevice.d/console
+644	root	sys	etc/conf/sdevice.d/cci
+644	root	sys	etc/conf/sdevice.d/rci
+644	root	sys	etc/conf/sdevice.d/mpc
+644	root	sys	etc/conf/sdevice.d/i410
+644	root	sys	etc/conf/sdevice.d/ics
+644	root	sys	etc/conf/sdevice.d/i354
+644	root	sys	etc/conf/sdevice.d/ramd
+644	root	sys	etc/conf/sdevice.d/csmclk
+644	root	sys	etc/conf/sdevice.d/clock
+644	root	sys	etc/conf/sdevice.d/i258
+644	root	sys	etc/conf/sdevice.d/i258tp
+644	root	sys	etc/conf/sdevice.d/mb2stai
+644	root	sys	etc/conf/sdevice.d/mb2tsm
+644	root	sys	etc/conf/sdevice.d/iasy
+644	root	sys	etc/conf/sdevice.d/i350
+644	root	sys	etc/conf/node.d/ramd
+644	root	sys	etc/conf/node.d/clock
+644	root	sys	etc/conf/node.d/mb2stai
+# 644	root	sys	etc/conf/init.d/atcs
+# 644	root	sys	etc/conf/init.d/i354
+#
+# ICS support and other mb2 specific routines
+#
+700	root	sys	sbin/mt
+700	root	sys	sbin/icswr
+700	root	sys	sbin/icsrd
+700	root	sys	sbin/cpout
+700	root	sys	sbin/lckld
+700	root	sys	sbin/icsgetrec
+700	root	sys	sbin/icsslot
+700	root	sys	sbin/cpunum
+700	root	sys	sbin/sgib
+#700	root	sys	sbin/ckperms
+700	root	sys	sbin/hdformat
+700	root	sys	sbin/mdl
+700	root	sys	sbin/bootserver
+755	root	sys	sbin/iasyports
+700	root	sys	usr/lbin/.AD.base
+700	root	sys	usr/lbin/.RM.base
+700	root	sys	usr/lbin/reset
+700	root	sys	usr/lbin/dbon
+700	root	sys	usr/lbin/initbp
+711	root	sys	usr/lbin/mpscnv
+644	bin	bin	usr/lib/libmb2.a
+644	bin	bin	usr/lib/libbps.a
+#
+# 279 files and tape files
+#
+755	root	sys	usr/lib/tape/tapecntl
+644	root	sys	usr/lib/i279/menu
+#
+# TAI examples
+#
+644	root	sys	usr/lib/tai/example/README
+644	root	sys	usr/lib/tai/example/common.c
+644	root	sys	usr/lib/tai/example/ft.h
+644	root	sys	usr/lib/tai/example/makefile
+644	root	sys	usr/lib/tai/example/rec.c
+644	root	sys	usr/lib/tai/example/send.c
+#
+# CCI files
+#
+711	root	sys	sbin/ttyswitch
+700	root	sys	sbin/lckld
+700	root	sys	usr/lib/cci/410.fw
+700	root	sys	usr/lib/cci/450.fw
+700	root	sys	usr/lib/cci/run450.fw
+700	root	sys	usr/lib/cci/mix386.fw
+644	root	sys	usr/lib/cci/mix450.bt
+644	root	sys	usr/lib/cci/mix.stg2
+700	root	sys	usr/lib/cci/ccisrvinfo
+700	root	sys	usr/lib/cci/ccildlist
+700	root	sys	usr/lib/cci/cciload
+700	root	sys	usr/lib/cci/ccildinfo
+700	root	sys	usr/lib/cci/ccilinfo
+700	root	sys	usr/lib/cci/ccisubinfo
+700	root	sys	usr/lib/cci/ccifree
+700	root	sys	usr/lib/cci/ccibind
+700	root	sys	usr/lib/cci/cciunbind
+700	root	sys	usr/lib/cci/cciattach
+700	root	sys	usr/lib/cci/ccidetach
+700	root	sys	usr/lib/cci/cciswitch
+700	root	sys	usr/lib/cci/download
+750	root	sys	usr/lib/cci/server/cci
+640	root	sys	usr/lib/cci/server/mpifl.lib
+640	root	sys	usr/lib/cci/server/rpifc.lib
+640	root	sys	usr/lib/cci/server/mpifc.lib
+640	root	sys	usr/lib/cci/server/rmx.ext
+640	root	sys	usr/lib/cci/server/rpifl.lib
+644	root	sys	usr/lib/cci/example/example.csd
+644	root	sys	usr/lib/cci/example/example.lit
+644	root	sys	usr/lib/cci/example/example.p86
+#
+# msa bootloaders
+#
+644	root	sys	etc/tsboot
+644	root	sys	etc/dsboot
+644	root	sys	etc/bsboot
+#
+# bootserver files
+#
+644	root	sys	etc/default/download
+#644	root	sys	etc/default/bootserver/config
+#644	root	sys	etc/default/bootserver/pci258
+#644	root	sys	etc/default/bootserver/pci258.1m
+# 
+# /stand support
+#
+755	root	sys	stand	d
+744	root	sys	stand/config
+755	root	sys	stand/unix
+744	root	sys	stand/pci258
+744	root	sys	stand/pci258.1m
+#
+# mb2 specific system include files
+#
+444	bin	bin	usr/include/sys/clockcal.h
+444	bin	bin	usr/include/sys/atcs.h
+444	bin	bin	usr/include/sys/atcsmp.h
+444	bin	bin	usr/include/sys/bbh.h
+444	bin	bin	usr/include/sys/bps.h
+444	bin	bin	usr/include/sys/bolt.h
+444	bin	bin	usr/include/sys/mps.h
+444	bin	bin	usr/include/sys/cci.h
+444	bin	bin	usr/include/sys/ccimp.h
+444	bin	bin	usr/include/sys/i258.h
+444	bin	bin	usr/include/sys/i354.h
+444	bin	bin	usr/include/sys/i82258.h
+444	bin	bin	usr/include/sys/i82530.h
+444	bin	bin	usr/include/sys/ics.h
+444	bin	bin	usr/include/sys/ivlab.h
+444	bin	bin	usr/include/sys/mb2taiusr.h
+444	bin	bin	usr/include/sys/mpc.h
+444	bin	bin	usr/include/sys/ramd.h
+444	bin	bin	usr/include/sys/rcimp.h
+444	bin	bin	usr/include/sys/iasy.h
+444	bin	bin	usr/include/sys/lp_i350.h
+444	bin	bin	usr/include/sys/serial.h
+444	bin	bin	usr/include/sys/mb2stai.h
+#
+# add clone device
+#
+755	root	sys	etc/conf/pack.d/clone	d
+644	root	sys	etc/conf/pack.d/clone/Driver.o
+644	root	sys	etc/conf/sdevice.d/clone
+#
+# Theses are on the AT boot media
+# and not in the plist files
+#
+# ETC
+#
+744	bin	bin	etc/emulator
+444	bin	bin	etc/ioctl.syscon
+644	bin	bin	etc/inittab
+444	root	sys	etc/TIMEZONE
+644	root	sys	etc/ap/chan.ap
+644	root	sys	etc/group
+444	root	sys	etc/passwd
+555	root	sys	etc/fs/s5/mount
+555	root	sys	etc/conf/cf.d/sdevice
+#
+555	root	sys	etc/fs/s5/fsck
+555	root	sys	etc/fs/s5/labelit
+555	root	sys	etc/fs/s5/mkfs
+555	root	sys	etc/fs/bfs/fsck
+555	root	sys	etc/fs/bfs/mkfs
+555	root	sys	etc/fs/bfs/mount
+555	root	sys	etc/fs/ufs/fsck
+555	root	sys	etc/fs/ufs/labelit
+555	root	sys	etc/fs/ufs/mkfs
+555	root	sys	etc/fs/ufs/mount
+#
+# SBIN
+#
+555	root	sys	sbin/autopush
+555	bin	bin	sbin/sh
+555	bin	bin	sbin/uadmin
+555	bin	bin	sbin/umount
+555	bin	bin	sbin/sync
+555	root	bin	sbin/init
+#
+555	bin	bin	sbin/flop_disk
+555	bin	bin	sbin/disksetup
+555	bin	bin	sbin/mknod
+555	bin	bin	sbin/mount
+555	root	bin	sbin/memsize
+#
+# USR/BIN
+#
+555	bin	bin	usr/bin/stty
+555	bin	bin	usr/bin/mv
+555	bin	bin	usr/bin/cp	l	usr/bin/mv
+555	bin	bin	usr/bin/ln	l	usr/bin/mv
+555	bin	bin	usr/bin/rm
+#
+555	bin	bin	usr/bin/chmod
+555	bin	bin	usr/bin/chgrp
+555	bin	bin	usr/bin/chown
+555	bin	bin	usr/bin/find
+555	bin	bin	usr/bin/cpio
+555	bin	bin	usr/bin/mkdir
+555	bin	bin	usr/bin/ed
+555	bin	bin	usr/bin/dd
+555	bin	bin	usr/bin/sleep
+555	bin	bin	usr/bin/expr
+#
+# USR/LIB
+#
+755	bin	bin	usr/lib/libc.so.1

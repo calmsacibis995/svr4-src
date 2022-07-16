@@ -1,0 +1,126 @@
+#ident	"@(#)boot:boot/at386/Gensymvals	1.1"
+
+# This shell script generates .set values for variable offsets
+# then generates #defines for local header file.
+# modeled after kern-ml Gensymvals
+
+SYMVALS=bsymvals
+
+cat <<EOF >$$.1.c
+#include	"sys/types.h"
+#include        "sys/bootinfo.h"
+#include	"../sys/boot.h"
+EOF
+
+# propagate cross-environment passwd on the command line.
+while [ "$*" ]
+do
+	front=`expr "${1}" : '\([^=]*\)=.*'`
+	back=`expr "${1}" : '[^=]*=\(.*\)'`
+	if [ x${CCSTYPE} = xELF ]
+	then
+		back=`echo $back | sed 's/-O//g'`
+	fi
+	eval ${front}=\"${back}\"
+	shift
+done
+
+${CC} ${CFLAGS} -S -g $$.1.c
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+# extract lines with the needed symbols
+if [ x${CCSTYPE} = xELF ]
+then
+	tool/setfilter $$.1.s > bsymvals.s << EOF
+hdp_ncyl
+hdp_nhead
+hdp_nsect
+hdp_precomp
+hdp_lz
+EOF
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+else
+
+fgrep 'hdp_ncyl
+hdp_nhead
+hdp_nsect
+hdp_precomp
+hdp_lz' $$.1.s >$$.2.s
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+# symbol value definitions into assembler .set pseudo ops
+
+# Watch out for the tabs below:
+sed -e 's|[ 	][ 	]*| |g
+        s| *\.def *\([a-zA-Z0-9_.]*\); *\.val *\([0-9]*\).*|	.set	\1,\2|' \
+$$.2.s >${SYMVALS}.s
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+fi
+
+# generate header file 
+fgrep \
+'BOOTIND
+GDTSIZE
+RELSECT
+HDBIOS_NCYL
+HDBIOS_NHEAD
+HDBIOS_SPT
+HDBIOS_PRECOMP
+HDBIOS_LZ
+BKI_MAGIC
+SECSIZE
+PROTMASK
+NOPROTMASK
+STACK
+BOOTDRIVE
+NUMPART
+BOOTSZ
+ACTIVE
+DISKBUF
+KB_STAT
+KB_INBF
+KB_WOP
+KB_OUT
+KB_IDAT
+#if
+#e
+' ${INCRT}/sys/bootinfo.h ${INCRT}/sys/fdisk.h ../sys/boot.h ${INCRT}/sys/hd.h ${INCRT}/sys/kd.h >$$.3.h
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+sed -n	-e 's/^.*://
+	    s/((unsigned)\([0-9A-FLXa-flx]*\))/\1/
+	    s/((paddr_t)\([0-9A-FLXa-flx]*\))/\1/
+	    s/\([ 	]\{1,\}[0-9A-FXa-fx]\{1,\}\)[Ll]/\1/
+	     /^#if/p
+	     /^#e/p
+	     /^#define/p' \
+$$.3.h >${SYMVALS}.h
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+rm -fr $$.*

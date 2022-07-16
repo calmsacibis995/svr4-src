@@ -1,0 +1,30 @@
+#ident	"@(#)/usr/src/pkg/terminf/request.sl 1.1 4.0 12/08/90 43964 AT&T-USL"
+
+#	request script for terminf package installation
+
+trap 'exit 3' 15
+
+TINTERACT=n
+TALL=`ckyorn -d y -p "Do you wish to install all the terminfo files?" \
+-h "If yes, all files will be installed automatically."` || exit $?
+if [ "${TALL}" = "n" ]
+then
+	TANY=`ckyorn -d y -p "Do you wish to install the terminfo files \
+interactively?" \
+-h "If no is specified, no files will be installed. If you need these \
+files at a later date, the package must be installed again. \
+If yes is specified, the terminfo menu will be presented during the actual \
+installation of the package. You may then choose to install selected \
+files or no terminfo files at all."` || exit $?
+	if [ "${TANY}" = "n" ]
+	then 
+		echo "TANY=$TANY" >>$1 || exit 1
+	else
+		TINTERACT=y
+	fi
+else
+	echo "TALL=$TALL" >>$1 || exit 1
+fi
+echo "TINTERACT=$TINTERACT" >>$1 || exit 1
+exit 0
+

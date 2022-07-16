@@ -1,0 +1,35 @@
+#ident	"@(#)/usr/src/pkg/face/postremove.sl 1.1 4.0 12/08/90 20671 AT&T-USL"
+
+trap 'exit 3' 1 2 3 15
+
+err=0
+
+userdel vmsys
+
+if [ "$?" -ne "0" ]
+then
+	echo >&2 "WARNING: unable to remove login vmsys"
+	echo >&2 "         This login and its home directory"
+	echo >&2 "         /home/vmsys must be removed before"
+	echo >&2 "         FACE can be re-installed."
+	echo >&2 "         Package removal continues."
+	err=2
+fi
+
+rm -rf /home/vmsys > /dev/null 2>&1
+
+userdel oasys
+
+if [ "$?" -ne "0" ]
+then
+	echo >&2 "WARNING: unable to remove login oasys"
+	echo >&2 "         This login and its home directory"
+	echo >&2 "         /home/oasys must be removed before"
+	echo >&2 "         FACE can be re-installed."
+	echo >&2 "         Package removal continues."
+	err=2
+fi
+
+rm -rf /home/oasys > /dev/null 2>&1
+
+exit $err

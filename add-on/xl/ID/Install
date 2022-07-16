@@ -1,0 +1,177 @@
+#ident	"@(#)xl:ID/Install	1.1"
+
+#	Archive XL floppy Tape Install Package
+#
+TMP=/tmp/ftapedrv.err
+CONFDIR=/etc/conf/cf.d
+ERROR1=" Errors have been written to the file $TMP."
+rm -f $TMP > /dev/null 2>&1
+NAME="`cat Name`"
+PKG="Archive XL floppy Tape Utilities"
+echo "\n\n\n\nInstalling ${NAME} ...\n\n"
+if [ -x /etc/conf/bin/idcheck -a -x /etc/conf/bin/idbuild -a -x /etc/conf/bin/idinstall ]
+then 
+	:
+else
+	message "The Installable Driver feature has been removed.  The ${NAME} cannot be installed."
+	exit 1
+fi
+
+RELEASE=`uname -v`
+
+RETVCHK=0
+
+/etc/conf/bin/idcheck -p xl > /dev/null 2>&1
+RETTP=$?
+
+ERROR=""
+if [ $RETTP != 0 ]
+then 
+	ERROR="has already been installed.  You cannot install this package on top \
+of the old package.  You must remove the old ${PKG} before you can install the \
+new one"
+
+	message "The ${PKG} ${ERROR}.  \
+Use Remove Installed Software to remove the existing driver before attempting \
+to install the ${NAME} again."
+	chmod +x Remove
+	./Remove NOBUILD
+	exit 1
+fi
+
+message -c "You are installing the ${NAME}. \
+The floppy disk controller will be shared by both floppy disk and floppy \
+tape drives."
+
+if [ $? != 0 ]
+then
+	exit 1
+fi
+
+echo "Substituting existing floppy disk driver...\n"
+
+if [ -f ${CONFDIR}/mdevice ]
+then
+	ed - "${CONFDIR}"/mdevice <<- ! >/dev/null 2>&1
+		/fd/s/iHrbc/DiHrbc/g
+		w
+		q
+	!
+else
+	message "File \"mdevice\" is not found in directory ${CONFDIR}. \
+The floppy disk driver must be installed before installing the ${PKG}."
+	chmod +x Remove
+	./Remove NOBUILD
+	exit 1
+fi
+
+mv /etc/conf/pack.d/fd/Driver.o /etc/conf/pack.d/fd/Driver.o.orig
+cp Driver.o.fd /etc/conf/pack.d/fd/Driver.o
+
+echo "Installing tape utility...\n"
+if [ ! -d /usr/lib/tape ]
+then
+	mkdir /usr/lib/tape >/dev/null 2>&1
+	chown bin /usr/lib/tape
+	chgrp bin /usr/lib/tape
+	chmod 755 /usr/lib/tape
+	if [ $? != 0 ]
+	then
+        	message "The installation is unable to create the /usr/lib/tape \
+directory for the program files.  Please try the installation again.  If the \
+problem occurs again, contact your AT&T Service Representative or AT&T \
+Personal Computer Dealer."
+		chmod +x Remove
+		./Remove NOBUILD
+        	exit 1
+	fi
+	sync; sync
+fi
+
+mv /usr/lib/tape/ftapecntl /usr/tmp/ftape$$ > /dev/null 2>&1
+rm -f /usr/tmp/ftape$$ > /dev/null 2>&1
+mv ftapecntl /usr/lib/tape > /dev/null 2>&1
+chown bin /usr/lib/tape/ftapecntl > /dev/null 2>&1
+chgrp bin /usr/lib/tape/ftapecntl > /dev/null 2>&1
+chmod 755 /usr/lib/tape/ftapecntl > /dev/null 2>&1
+
+echo "Installing header files...\n"
+
+mv ftape.h /usr/include/sys
+chmod 444 /usr/include/sys/ftape.h
+chown bin /usr/include/sys/ftape.h
+chgrp bin /usr/include/sys/ftape.h
+
+if [ "$RELEASE" = 1 ]
+then
+	mv backup /usr/bin/backup
+	chmod 755 /usr/bin/backup
+	chown bin /usr/bin/backup
+	chgrp bin /usr/bin/backup
+fi
+
+#####
+# Install the tape control funcions to the user interface if
+# FACE is already installed.
+
+FACEDIR="/usr/vmsys/OBJECTS"
+if [ -d "$FACEDIR" ]
+then
+	echo "Installing the tape control functions to the user interface...\n"
+	FTAPE="${FACEDIR}"/ftape
+	if [ ! -d  "$FTAPE" ]
+	then
+		mkdir ${FTAPE} >/dev/null 2>&1
+		chmod 755 "${FTAPE}"
+		chown bin "${FTAPE}"
+		chgrp bin "${FTAPE}"
+	fi
+
+	for i in Menu.tape Text.tape Text.fop Text.sop
+	do
+		mv "$i" "${FTAPE}"
+		chmod 755 "${FTAPE}/${i}"
+		chown bin "${FTAPE}/${i}"
+		chgrp bin "${FTAPE}/${i}"
+	done
+	
+	if [ -f "${FACEDIR}/Menu.admin" ]
+	then
+		ed - "${FACEDIR}"/Menu.admin <<- !
+			/^name=User Logins/-r admin
+			w
+			q
+		!
+	fi
+fi
+############
+
+/etc/conf/bin/idinstall -a xl 2>> $TMP
+if [ $? != 0 ]
+then
+        message "The installation cannot be completed due to an error in the \
+driver installation. $ERROR1  Please try the installation again.  If the \
+error occurs again, contact your AT&T Service Representative or AT&T Personal \
+Computer Dealer."
+	chmod +x Remove
+	./Remove NOBUILD
+        exit 1
+fi
+
+echo "Rebuilding UNIX kernel...\n\n\n"
+
+/etc/conf/bin/idbuild 2>> $TMP
+if [ $? != 0 ]
+then
+        message "The installation cannot be completed due to an error in the \
+kernel reconfiguration. $ERROR1  Please try the installation again.  If the \
+error occurs again, contact your AT&T Service Representative or AT&T Personal \
+Computer Dealer."
+	chmod +x Remove
+	./Remove NOBUILD
+        exit 1
+fi
+
+rm -f $TMP
+exit 0
+

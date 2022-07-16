@@ -1,0 +1,15 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/starlan/Text.h_exists	1.1"
+title="ISO Starlan Protocol File Error"
+columns=55
+rows=11
+text="
+The machine name entered already exists in
+
+	/etc/net/starlan/hosts
+
+and
+
+	/etc/net/starlandg/hosts
+
+If you want to remove them, please edit these files.
+"

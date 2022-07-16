@@ -1,0 +1,8 @@
+#ident	"@(#)/usr/src/add-on/pkg.dfs/postinstall.sl 1.1 4.0 12/08/90 57673 AT&T-USL"
+#
+# Initialize FAILURE to 1 (fatal error)
+#
+FAILURE=1
+
+installf -f $PKGINST || exit FAILURE
+exit 	0

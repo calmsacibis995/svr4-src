@@ -1,0 +1,65 @@
+#ident	"@(#)/usr/src/add-on/pkg.qt/request.sl 1.1 4.0 12/08/90 48960 AT&T-USL"
+
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+#	request script for qt package installation
+
+trap 'exit 3' 15
+
+#
+# Prompt script to allow the user to select installation
+# of the oam QT forms and menus only if FACE is installed
+#
+
+# check to see if face is installed
+
+FACE=`/usr/bin/pkginfo face >/dev/null 2>&1; echo $?`
+
+if [ ${FACE} -eq 0 ]
+then
+	ANS=`getyorn -d y \
+	-p  "You have the Framed Access Command Environment (FACE) \
+	package installed.  Would you like to add the tape control functions \
+	to the user interface?\n"
+	` || exit $?
+else
+	ANS=n
+fi
+
+if [ "$ANS" = n ]
+then
+	CLASSES="none"
+else
+	CLASSES="none OAMadmin OAMmif"
+fi
+echo "CLASSES=$CLASSES" >> $1
+
+REQINTV=`ckitem -u -l "These interrupts may be available" -p "Type the interrupt at which your tape controller is jumpered.\n" -d 5 "2" "3" "5" "7"` || exit $? 
+
+echo "REQINTV=$REQINTV" >>$1 || exit 1
+
+# Prompt script to allow the user to select installation
+# of addresses of their choice 
+#
+
+echo "\n\nThe following is a list of I/O high and low addresses" 
+echo "at which your tape controller may be jumpered"
+
+REQLADD=`ckitem -l "low addr    high addr" \
+-p "Type the menu number for the address you are using.\n" \
+-h "Type the menu number that corresponds to the address at which your tape \
+controller is jumpered." \
+-d 300 "300 301" "288 289" "298 299" "2A8 2A9" "2B8 2B9" "2C8 2C9" "2D8 2D9" "2E8 2E9" "2F8 2F9" "278 279" "268 269" "258 259" "248 249" "238 239" "228 229" "218 219" "208 209"` || exit $?
+
+echo "REQLADD=$REQLADD" >>$1 || exit 1
+
+exit 0
+

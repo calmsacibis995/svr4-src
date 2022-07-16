@@ -1,0 +1,165 @@
+#ident	"@(#)xl:README	1.1"
+
+         Archive XL Floppy Tape Utilities - Version 1.0
+
+
+
+
+
+
+
+
+		   I N T R O D U C T I O N
+
+
+
+
+
+The Archive XL Floppy Tape Utility supports Archive model 3800 streaming
+1/4-inch mini cartridge tape drives, or any floppy tape drive that 
+supports the QIC-107 physical and QIC-117 logical interface specifications
+and QIC-80 or QIC-40 recording format standards. 
+
+The Archive model 3800 drive is compatible with QIC-80 (both read and write)
+QIC-40 (read only) recording formats. These industry standards govern the 
+physical and logical configuration of recording data on a standard 1/4-
+inch mini data cartridge such as 3M's DC-2000.
+
+The floppy tape is a low cost tape device which operates at 500 Kbps
+transfer rate, about 1/4 of the standard full size 1/4-inch tape speed.
+The speed difference is mainly due to the fact that the floppy drive sharing
+the floppy disk controller with the floppy disk drives. The elimination
+of the cost of a separate tape controller keeps the total system cost
+to minimum.
+
+
+
+
+
+
+
+
+         		August 22, 1989
+
+1. Missing Items
+
+   Three ioctl's: XL_ERASE, XL_AMOUNT and XL_RFM are not implemented. 
+   The ERASE ioctl was left out due to the absence of the erase head in 
+   the Archive XL-80 drive.
+
+
+2. Problems with this release
+
+2.1 Floppy tape can not operate simultaneously with floppy disk:
+
+    The floppy tape driver, xl, was written as an independent device 
+    to the floppy disk controller even though the controller is 
+    being shared by both the floppy disk and the floppy tape drives. 
+    The floppy disk driver, fd, and the floppy tape driver, xl, each
+    maintains a queue to process the requests. There is no provision
+    to allow command interleaving between floppy disk and tape drives.
+
+    Furthermore, due to the fact that both the xl and fd are independent
+    drivers, to avoid floppy disk operations interfere with the
+    floppy tape operations, the standard fd driver must be modified 
+    to prevent both fd and xl device opened at the same time. 
+
+    The modified fd.c is included in this package. It should be kept
+    current with the official fd.c release.
+
+2.2 Fdcerr occurs on a busy system:
+
+    On a busy system, the following error message occasionally happens:
+
+	fdcerr: ST0=00000041 ST1=00000004 ST2=00000004
+
+    This will slow down the tape operation substantially. However,
+    the xl driver usually will retry and always be able to recover.
+
+2.3 Timeout with excessive ECC error:
+
+    Normally the xl driver will make many attempts to recover itself 
+    from ECC error. However, if the problem persists for a long time,
+    xl driver eventually will timeout and issues a timeout message.
+    The system may appear to be hanging during the retry.
+    
+    The timeout error has been known to happen in the following situations:
+
+	1. Bad DC-2000 tape
+
+	   A tape may be improperly formatted, unformatable due to
+	   damaged media, or other tape related problem.
+
+	2. Bad floppy tape drive
+
+	   The read/write head alignment problem is the most often 
+           found problem with the floppy tape drive. A tape formatted
+	   by one drive may not be read or write flawlessly on another i
+	   drive.
+
+	   This problem ususally can be corrected by reformat the 
+	   tape on the target tape drive again.
+
+
+3. Generations Instructions
+
+
+   To make installpkg binary:
+
+	# make -f xl.mk install package
+
+   then copy installpkg binary to floppy:
+
+	# dd if=/tmp/*.xl of=/dev/dsk/f0q15d bs=4096
+
+   To install the driver:
+
+	Insert the installpkg floppy in driver 0, then type
+
+	# installpkg
+
+   To clear up all directories:
+
+	# make -f xl.mk clobber
+
+
+4. Components of this delivery
+
+add-on
+add-on/xl
+add-on/xl/ID
+add-on/xl/ID/Files.sh
+add-on/xl/ID/Install
+add-on/xl/ID/Makefile
+add-on/xl/ID/Master.sh
+add-on/xl/ID/Name.sh
+add-on/xl/ID/Node.sh
+add-on/xl/ID/Remove
+add-on/xl/ID/Size.sh
+add-on/xl/ID/Space.c
+add-on/xl/ID/System.sh
+add-on/xl/cmd
+add-on/xl/cmd/Makefile
+add-on/xl/cmd/ftapecntl.c
+add-on/xl/io
+add-on/xl/io/Makefile
+add-on/xl/io/awk.sh
+add-on/xl/io/xl.c
+add-on/xl/io/xl.h
+add-on/xl/io/xl_dec.c
+add-on/xl/io/xla.orig.s
+add-on/xl/io/fd.c
+add-on/xl/pkg
+add-on/xl/pkg/Makefile
+add-on/xl/README
+add-on/xl/sys
+add-on/xl/sys/Makefile
+add-on/xl/sys/ftape.h
+add-on/xl/uface
+add-on/xl/uface/Makefile
+add-on/xl/uface/Menu.tape
+add-on/xl/uface/Text.fop
+add-on/xl/uface/Text.sop
+add-on/xl/uface/Text.tape
+add-on/xl/uface/admin.sh
+add-on/xl/xl.mk

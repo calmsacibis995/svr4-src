@@ -1,0 +1,99 @@
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+#ident	"@(#)/usr/src/add-on/pkg.inet/request.sl 1.1 4.0 12/08/90 735 AT&T-USL"
+trap 'exit 3' 15
+
+#
+# Prompt script to allow the user to select installation
+# of the oam netinet forms and menus only if OAM is installed
+#
+
+# check to see if fmli and oam are installed
+OAM=`/usr/bin/pkginfo oam >/dev/null 2>&1; echo $?`
+FMLI=`/usr/bin/pkginfo fmli >/dev/null 2>&1; echo $?`
+
+if [ ${OAM} -eq 0 -a ${FMLI} -eq 0 ]
+then
+	ans=`getyorn -d y \
+	-p  "You have the Operations, Administration, and Maintenance \
+	package installed.  Would you like to add the Internet Utilities \
+	 interface Forms and Menus?"
+	` || exit $?
+fi
+
+if [ "$ANS" = n ]
+then
+	CLASSES="none build"
+else
+	CLASSES="none build sysadm"
+fi
+echo "CLASSES=$CLASSES" > $1
+
+#
+#	if the admin knows the ip address, put it in /etc/hosts
+#
+NODENAME=`uname -n`
+
+IPHELP="
+The IP address is the address by which host ${NODENAME} will be known on 
+the Internet.  These addresses must be administered by a central authority 
+on your network. IP addresses are written as four decimal integers, 
+separated by  decimal points (e.g., 128.10.2.70)."
+
+if [ -n "${NODENAME}" ]
+then
+	IPANS=`getyorn -d y -p  "Do you want to initialize the IP address for host ${NODENAME}?" -h "${IPHELP}" || exit $?`
+fi
+
+#warn user if do not chose to enter inet address
+if [ "${IPANS}" = "n" ]
+then
+	IPANS=`getyorn -d y -p  "<WARNING>It is important you give inet address now for seting up system files.\nDo you want to initialize the IP address for host ${NODENAME}?" -h "${IPHELP}" || exit $?`
+fi
+
+if [ "${IPANS}" = "y" ]
+then
+	IPADDR=`ckstr -l15 -d 0.0.0.0 -p "Enter the IP address for host ${NODENAME}"` || exit $?
+	echo "IPADDR=$IPADDR" >>$1 || exit 1
+fi
+
+# set up the tcp listener for tcp
+LISTEN="
+The network listener can provide network services for use with
+Network Files System (NFS) and Remote File Sharing (RFS).\n"
+
+LISTEN_NOIP="
+You have not initialized the IP address for your host.  You will now 
+be prompted for setting up listener files.  If you chose to set up the 
+listener files, then the /etc/saf/tcp/_pmtab file will have a string 
+\"***IP Hex addr***\" substituted for your host's eight digit hexadecimal 
+address. (Refer Network Users and Administrators Guide for guidance in setting 
+up this file.)\n\n"
+
+if [ -n "${IPADDR}" ]
+then
+	echo "${LISTEN}"
+else
+	echo "${LISTEN_NOIP}"
+	echo "Hit <ret> to continue:\c"
+	read none
+	echo "${LISTEN}"
+
+fi	
+
+LANS=`getyorn -d y \
+	-p  "Do you want to setup the network listener for TCP?" \
+	-h "If this system will be used as a network tcp server, you \
+	should answer y"` || exit $?
+echo "LANS=$LANS" >>$1 || exit 1
+
+exit 0
+

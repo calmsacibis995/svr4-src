@@ -1,0 +1,142 @@
+#ident	"@(#)/usr/src/add-on/pkg.nfs/postinstall.sl 1.1 4.0 12/08/90 22814 AT&T-USL"
+
+# install a module.  $1 is the module name
+
+do_install() {
+	ERR=/tmp/${1}.err
+	OPTS=""	
+	IDCOMPS="Driver.o Master System Mfsys Sfsys Node"
+	if
+		[ -f ${1}.Dr ]
+	then
+		mv ${1}.Dr Driver.o
+	fi
+	if
+		[ -f ${1}.Sp ]
+	then
+		mv ${1}.Sp Space.c
+	fi
+	if
+		[ -f ${1}.Ma ]
+	then
+		grep -v "^[\*#]ident" ${1}.Ma > Master
+		rm -rf ${1}.Ma
+	fi
+	if
+		[ -f ${1}.Sy ]
+	then
+		grep -v "^[\*#]ident" ${1}.Sy |
+			sed "${SEDCMD1}" >System
+		rm -rf ${1}.Sy
+	fi
+	if
+		[ -f ${1}.Mf ]
+	then
+		grep -v "^[\*#]ident" ${1}.Mf > Mfsys
+		rm -rf ${1}.Mf
+		OPTS="-c"
+	fi
+	if
+		[ -f ${1}.Sf ]
+	then
+		grep -v "^[\*#]ident" ${1}.Sf |
+			sed "${SEDCMD2}" >Sfsys
+		rm -rf ${1}.Sf
+		OPTS=${OPTS}"l"
+	fi
+	if
+		[ -f ${1}.No ]
+	then
+		grep -v "^[\*#]ident" ${1}.No > Node
+		rm -rf ${1}.No
+	fi
+	echo "Installing ${NAME} ${1} module ..."
+	${CONFBIN}/idcheck -p ${1} > ${ERR} 2>&1
+	if [ $? = 0 ]
+	then
+		${CONFBIN}/idinstall -a ${OPTS} ${1} 2> ${ERR}
+		RET=$?
+	else
+		${CONFBIN}/idinstall -u ${1} 2> ${ERR}
+		RET=$?
+	fi
+	rm -rf ${IDCOMPS}
+	if [ ${RET} != 0 ]
+	then
+		message "The installation cannot be completed due to \
+an error in the driver installation during the installation of the ${1} \
+module of the ${NAME}.  The file ${ERR} contains the errors."
+		exit ${FAILURE}
+	fi
+	rm -rf ${ERR}
+}
+
+FAILURE=1	# fatal error
+
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be installed."
+
+SEDCMD1="s/[	 ]N[	 ]/	Y	/"
+SEDCMD2="s/[	 ]N/	Y/"
+
+VOLATILES=`echo /tmp/nfs/*`
+
+cd /var/sadm/pkg/${PKG}/install
+
+# determine that ID/TP tools are available
+
+if
+	[ ! -x ${CONFBIN}/idbuild -o ! -x ${CONFBIN}/idinstall \
+		-o ! -x ${CONFBIN}/idcheck ]
+then
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+
+cd /tmp/nfs
+
+# install modules
+
+for module in nfs klm
+do
+	do_install $module 
+done
+
+#	add entry in /etc/dfs/fstypes
+
+if
+	[ ! -d /etc/dfs ]
+then
+	mkdir /etc/dfs
+fi
+
+if
+	[ -s /etc/dfs/fstypes ]
+then	
+	grep "^$PKG" /etc/dfs/fstypes > /dev/null 2>&1
+	if
+		[ "$?" -ne "0" ]
+	then
+		echo "$PKG	$NAME: $VERSION" >> /etc/dfs/fstypes
+	fi
+else
+	echo "$PKG	$NAME: $VERSION" > /etc/dfs/fstypes
+fi
+
+# rebuild for changes to take effect
+TMP=/tmp/nfs.$$
+${CONFBIN}/idbuild 2>${TMP}
+if
+	[ "$?" -ne "0" ]
+then
+	echo "The attempt to rebuild the kernel has failed. Errors have been written"
+	echo "to the file " ${TMP}
+	exit ${FAILURE}
+fi
+removef ${PKGINST} ${VOLATILES} >/dev/null 2>&1
+removef ${PKGINST} /tmp/nfs >/dev/null 2>&1
+removef -f ${PKGINST} >/dev/null 2>&1
+exit 10

@@ -1,0 +1,33 @@
+#ident	"@(#)pkg4.i386:scde/postinstall	1.2"
+#-------
+# Take care of /usr/lib/cpp.
+#-------
+
+if	[ ! -f /usr/lib/cpp -a ! -h /usr/lib/cpp -a -f /usr/ccs/lib/cpp ]
+then	ln -s /usr/ccs/lib/cpp /usr/lib/cpp
+fi
+
+#-------
+# Take care of libcrypt.a.
+#-------
+if	[ ! -f /usr/lib/libcrypt_d.a ]
+then	ln /usr/lib/libcrypt_i.a /usr/lib/libcrypt.a
+fi
+
+#-------
+# Take care of symbolic links for stuff in /usr/ccs/bin (transitional aid)
+#   to be removed next release
+#-------
+if [ ! -f /bin/cc ]
+then
+a=`pwd`
+cd /usr/ccs/bin
+for i in *
+do
+if [ ! -f /usr/bin/$i -a ! -h /usr/bin/$i ]
+then	ln -s /usr/ccs/bin/$i /usr/bin/$i
+fi
+done
+cd $a
+fi
+exit 0

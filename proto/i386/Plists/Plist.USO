@@ -1,0 +1,4 @@
+#ident	"@(#)proto:i386/Plists/Plist.USO	1.1"
+555	root	sys	etc/fs/events	d
+554	root	sys	sbin/evgainit
+755	root	sys	usr/lib/fs/events	d

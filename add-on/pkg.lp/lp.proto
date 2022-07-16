@@ -1,0 +1,189 @@
+#ident	"@(#)pkg.lp:pkg.lp/lp.proto	1.2"
+
+
+##########
+##
+## LP Commands, scripts, etc.
+##
+##########
+
+!default 555 lp lp
+
+#####
+#
+# LP commands for the system administrator
+#####
+
+f none $USRSBIN/lpadmin=$T/$USRSBIN/lpadmin
+f none $USRSBIN/lpsystem=$T/$USRSBIN/lpsystem
+f none $USRSBIN/lpforms=$T/$USRSBIN/lpforms
+f none $USRSBIN/lpmove=$T/$USRSBIN/lpmove
+f none $USRSBIN/lpshut=$T/$USRSBIN/lpshut
+f none $USRSBIN/lpusers=$T/$USRSBIN/lpusers
+f none $USRSBIN/accept=$T/$USRSBIN/accept
+l none $USRSBIN/reject=$USRSBIN/accept
+f none $USRSBIN/lpfilter=$T/$USRSBIN/lpfilter
+
+d none $USRLIB/lp
+f none $USRLIB/lp/lpsched=$T/$USRLIB/lp/lpsched 4111 root lp
+f none $USRLIB/lp/lpNet=$T/$USRLIB/lp/lpNet 111 lp lp
+f none $USRLIB/lp/lpdata=$T/$USRLIB/lp/lpdata 110 lp lp
+
+#####
+#
+# Symbolic links for some of the above, for SVR3.2 compatibility
+#####
+s none $USRLIB/lpadmin=$USRSBIN/lpadmin
+s none $USRLIB/lpforms=$USRSBIN/lpforms
+s none $USRLIB/lpmove=$USRSBIN/lpmove
+s none $USRLIB/lpshut=$USRSBIN/lpshut
+s none $USRLIB/lpusers=$USRSBIN/lpusers
+s none $USRLIB/accept=$USRSBIN/accept
+s none $USRLIB/reject=$USRSBIN/reject
+s none $USRLIB/lpfilter=$USRSBIN/lpfilter
+s none $USRLIB/lpsched=$USRLIB/lp/lpsched
+
+#####
+#
+# LP commands for regular users
+#
+# Note: enable/disable are made setuid in postinstall, by user choice.
+#####
+f none $USRBIN/enable=$T/$USRSBIN/accept
+l none $USRBIN/disable=$USRBIN/enable
+f none $USRBIN/cancel=$T/$USRBIN/cancel
+f none $USRBIN/lp=$T/$USRBIN/lp
+f none $USRBIN/lpstat=$T/$USRBIN/lpstat
+
+#####
+#
+# LP commands for regular BSD-bred users
+#####
+f none $USRUCB/lpc=$T/$USRUCB/lpc
+f none $USRUCB/lpq=$T/$USRUCB/lpq
+f none $USRUCB/lpr=$T/$USRUCB/lpr
+f none $USRUCB/lprm=$T/$USRUCB/lprm
+f none $USRUCB/lptest=$T/$USRUCB/lptest
+
+#####
+#
+# Utility programs used internally
+#####
+d none $USRLIB/lp/bin=$T/$USRLIB/lp/bin
+f none $USRLIB/lp/bin/alert.proto=$T/$USRLIB/lp/bin/alert.proto 0444 lp lp
+f none $USRLIB/lp/bin/drain.output=$T/$USRLIB/lp/bin/drain.output
+f none $USRLIB/lp/bin/lp.cat=$T/$USRLIB/lp/bin/lp.cat
+f none $USRLIB/lp/bin/lp.set=$T/$USRLIB/lp/bin/lp.set
+f none $USRLIB/lp/bin/lp.tell=$T/$USRLIB/lp/bin/lp.tell
+f none $USRLIB/lp/bin/slow.filter=$T/$USRLIB/lp/bin/slow.filter
+f none $USRSBIN/dumpolp=$T/$USRSBIN/dumpolp
+
+f none $USRLIB/lp/bin/5310=$T/$USRLIB/lp/bin/5310
+f none $USRLIB/lp/bin/hp2631a=$T/$USRLIB/lp/bin/hp2631a
+f none $USRLIB/lp/bin/pprx=$T/$USRLIB/lp/bin/pprx
+f none $USRLIB/lp/bin/prx=$T/$USRLIB/lp/bin/prx
+f none $USRLIB/lp/bin/455_filter=$T/$USRLIB/lp/bin/455_filter
+f none $USRLIB/lp/bin/473_filter=$T/$USRLIB/lp/bin/473_filter
+f none $USRLIB/lp/bin/475_filter=$T/$USRLIB/lp/bin/475_filter
+f none $USRLIB/lp/bin/ATT_s_filter=$T/$USRLIB/lp/bin/ATT_s_filter
+f none $USRLIB/lp/bin/HP_filter=$T/$USRLIB/lp/bin/HP_filter
+f none $USRLIB/lp/bin/435_table=$T/$USRLIB/lp/bin/435_table
+f none $USRLIB/lp/bin/455_table=$T/$USRLIB/lp/bin/455_table
+f none $USRLIB/lp/bin/473_table=$T/$USRLIB/lp/bin/473_table
+f none $USRLIB/lp/bin/475_table=$T/$USRLIB/lp/bin/475_table
+f none $USRLIB/lp/bin/HP_table=$T/$USRLIB/lp/bin/HP_table
+#####
+#
+# System startup/shutdown scripts
+#
+# Note: Give the startup script a high number so that LP is one of the
+# last utilities to start; conversely, give the shutdown script a low
+# number so that LP is one of the first to stop. This makes sure that
+# anything that LP needs is available.
+#####
+d none $ETC/init.d=$T/$ETC/init.d ? ? ?
+f none $ETC/init.d/lp=$T/$ETC/init.d/lp 755 root sys
+d none $ETC/rc0.d=$T/$ETC/rc0.d ? ? ?
+d none $ETC/rc1.d=$T/$ETC/rc1.d ? ? ?
+d none $ETC/rc2.d=$T/$ETC/rc2.d ? ? ?
+l none $ETC/rc0.d/K20lp=$ETC/init.d/lp
+l none $ETC/rc1.d/K20lp=$ETC/init.d/lp
+l none $ETC/rc2.d/S80lp=$ETC/init.d/lp
+
+##########
+##
+## LP print service configuration directories and initial files
+##
+##########
+
+!default 775 lp lp
+
+#####
+#
+# Configuration directories
+#####
+d none $ETC/lp=$T/$ETC/lp
+d none $ETC/lp/classes=$T/$ETC/lp/classes
+d none $ETC/lp/forms=$T/$ETC/lp/forms
+d none $ETC/lp/interfaces=$T/$ETC/lp/interfaces
+d none $ETC/lp/printers=$T/$ETC/lp/printers
+d none $ETC/lp/pwheels=$T/$ETC/lp/pwheels
+
+#####
+#
+# Log directory
+#####
+d none $VAR/lp=$T/$VAR/lp
+d none $VAR/lp/logs=$T/$VAR/lp/logs
+
+#####
+#
+# Spooling directories
+#####
+d none $VARSPOOL/lp=$T/$VARSPOOL/lp
+d none $VARSPOOL/lp/admins=$T/$VARSPOOL/lp/admins
+d none $VARSPOOL/lp/fifos=$T/$VARSPOOL/lp/fifos
+d none $VARSPOOL/lp/fifos/private=$T/$VARSPOOL/lp/fifos/private 771 lp lp
+d none $VARSPOOL/lp/fifos/public=$T/$VARSPOOL/lp/fifos/public 773 lp lp
+d none $VARSPOOL/lp/requests=$T/$VARSPOOL/lp/requests
+d none $VARSPOOL/lp/system=$T/$VARSPOOL/lp/system
+d none $VARSPOOL/lp/tmp=$T/$VARSPOOL/lp/tmp 711 lp lp
+d none $VARSPOOL/lp/tmp/.net=$T/$VARSPOOL/lp/tmp/.net 770 lp lp
+d none $VARSPOOL/lp/tmp/.net/tmp=$T/$VARSPOOL/lp/tmp/.net/tmp 770 lp lp
+d none $VARSPOOL/lp/tmp/.net/requests=$T/$VARSPOOL/lp/tmp/.net/requests 770 lp lp
+
+#####
+#
+# Initial configuration files
+#
+# Note: Initial filter table entries are kept in the source tree
+# as separate files, one per filter, in ``source'' form. These
+# source files are fed to the lpfilter command ON THE TARGET MACHINE.
+# (Sorry, but the cross environment doesn't have an lpfilter command!)
+# The installation thus has to put the source filter table entries
+# in a temporary directory on the target machine, then run lpfilter
+# (see postinstall). We make this temporary directory here, but note
+# that other places in the prototype files deal with the filter
+# table entries. (This is done so that the filter table entries can
+# be grouped with their corresponding filter commands; e.g. the
+# PostScript stuff.)
+#####
+v none $ETC/lp/Systems=$T/$ETC/lp/Systems 664 lp lp
+d none $USRLIB/lp/model=$T/$USRLIB/lp/model
+f none $USRLIB/lp/model/standard=$T/$USRLIB/lp/model/standard
+d none $ETC/lp/fd=$T/$ETC/lp/fd
+
+#####
+#
+# Symbolic links for some of the above, for SVR3.2 compatibility
+#####
+s none $ETC/lp/model=$USRLIB/lp/model
+s none $ETC/lp/logs=$VAR/lp/logs
+s none $VARSPOOL/lp/bin=$USRLIB/lp/bin
+s none $VARSPOOL/lp/admins/lp=$ETC/lp
+
+#####
+#
+# Crontab entries for cleaning out log files, etc.
+#####
+e cron $VARSPOOL/cron/crontabs/lp=$T/$VARSPOOL/cron/crontabs/lp

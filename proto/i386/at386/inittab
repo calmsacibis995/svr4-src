@@ -1,0 +1,4 @@
+ap::sysinit:/sbin/autopush -f /etc/ap/chan.ap > /dev/console 2>&1
+ak::sysinit:/sbin/wsinit > /etc/wsinit.err 2>&1
+is:0:initdefault:
+r0:0:respawn:/sbin/-sh </dev/console >/dev/console 2>&1

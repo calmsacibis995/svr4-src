@@ -1,0 +1,190 @@
+#ident	"@(#)proto:i386/at386/tape/INSTALL4	1.2.4.5"
+
+PATH=/sbin:/etc:/usr/sbin:/usr/bin
+export PATH
+
+idoops() {
+if [ $# -ne 1 ]; then
+	return 1
+fi
+if [ -d /etc/conf/sdevice.old ]
+then
+cd /etc/conf/sdevice.old
+for i in *
+do
+if [ -f ../sdevice.d/$i ]
+then rm -f $i
+fi
+done
+mv * ../sdevice.d > /dev/null 2>&1
+cd /
+rm -rf /etc/conf/sdevice.old
+fi
+
+if [ -d /etc/conf/mfsys.old ]
+then
+cd /etc/conf/mfsys.old
+for i in *
+do
+if [ -f ../mfsys.d/$i ]
+then rm -f $i
+fi
+done
+mv * ../mfsys.d > /dev/null 2>&1
+cd /
+rm -rf /etc/conf/mfsys.old
+fi
+
+if [ -d /etc/conf/sfsys.old ]
+then
+cd /etc/conf/sfsys.old
+for i in *
+do
+if [ -f ../sfsys.d/$i ]
+then rm -f $i
+fi
+done
+mv * ../sfsys.d > /dev/null 2>&1
+cd /
+rm -rf /etc/conf/sfsys.old
+fi
+
+if [ $1 -ne 0 ]
+then
+/usr/bin/message "The rebuilding of the UNIX Operating System kernel failed.  \
+Please remove some driver packages."
+fi
+return 0
+}
+
+if [ -x /etc/initial ]
+then /etc/initial
+fi
+mkdir -p /usr/lib/tape > /dev/null 2>&1
+
+mv /sbin/tapecntl /usr/lib/tape/tapecntl
+rm -rf /usr/sbin/tapecntl /sbin/tapecntl
+if [ ! -f /etc/conf/bin/S.idreboot ]
+then
+mv /etc/conf/bin/idreboot /etc/conf/bin/S.idreboot
+fi
+if [ ! -f /etc/conf/bin/S.idbuild ]
+then
+mv /etc/conf/bin/idbuild /etc/conf/bin/S.idbuild
+fi
+cp /bin/true /etc/conf/bin/idreboot
+ln /etc/conf/bin/idreboot /etc/conf/bin/idbuild
+chmod 755 /etc/conf/bin/idreboot
+
+ONEMB=1048576
+MEM=`memsize`
+if [ `expr $MEM % $ONEMB` -ne 0 ]
+then
+	MEM=`expr $MEM / $ONEMB + 1`
+else
+	MEM=`expr $MEM / $ONEMB`
+fi
+
+MEMSZFLG=0
+
+if [ $MEM -ge 8 ] 
+then
+	MEMSZFLG=1
+fi
+if [ $MEM -ge 16 ]
+then
+	MEMSZFLG=2
+fi
+
+if [ $MEMSZFLG -eq 1 ] # machines has between 8 and 16 meg of memory
+then
+	echo "BUFHWM	400" >> /etc/conf/cf.d/stune
+	echo "NINODE	500" >> /etc/conf/cf.d/stune
+	echo "UFSNINODE	500" >> /etc/conf/cf.d/stune
+fi
+
+if [ $MEMSZFLG -eq 2 ] 
+then
+	echo "BUFHWM	1024" >> /etc/conf/cf.d/stune
+	echo "NINODE	600" >> /etc/conf/cf.d/stune
+	echo "UFSNINODE	600" >> /etc/conf/cf.d/stune
+fi
+	
+
+if [ -f /tmp/tape.count ]
+then
+VMSYS=/usr/vmsys; export VMSYS
+echo "ctape1:/dev/rmt/c0s0:::desc=\"Cartridge Tape Drive\" norewind=\"/dev/rmt/c0s0n\" \
+type=\"ctape\" display=\"true\" volume=\"cartridge tape\" bufsize=\"10240\" capacity=\"120000\"" >> /etc/device.tab
+sync
+/usr/sbin/pkgadd -O -d ctape1
+( < /dev/rmt/c0s0 ) > /dev/null 2>&1
+grep -v "^ctape1" /etc/device.tab > /etc/DEV
+cat /etc/DEV > /etc/device.tab
+rm -f /etc/DEV
+
+rm /etc/conf/bin/idbuild
+mv /etc/conf/bin/S.idbuild /etc/conf/bin/idbuild
+
+message -c "Installation of the Foundation Set is now complete.\n\n\
+You will now be prompted to install the Cartridge Tape Utilities Package from \
+floppy disk.\n\n\
+WARNING:  This step is ESSENTIAL to enable you to continue to use your tape \
+drive after the system has been rebuilt and rebooted.\n\n\
+If you skip this step, or abandon it at any point, it is highly recommended that \
+you install the Cartridge Tape Utilities Package floppy disk at your earliest convenience."
+if [ $? != 0 ]
+then
+	/etc/conf/bin/idbuild 2>/dev/null
+	idoops $?
+	rm -rf /usr/lib/tape/tapecntl
+	rmdir /usr/lib/tape /usr/lib > /dev/null 2>&1
+else
+     /etc/conf/bin/idinstall -d qt > /dev/null 2>&1
+     while [ 1 ]
+     do
+        echo "\nVerifying the Cartridge Tape Package floppy disk.\n\n"
+	seq=`dd if=/dev/dsk/f0t bs=512 count=1 2>/dev/null`
+	if [ "23" = `expr "$seq" : "# PaCkAgE DaTaStReAm\nqt"` ]
+	then 	flg=1
+		break
+	fi
+	message -c "Please insert the Cartridge Tape Utilities Package floppy disk."
+	if [ "$?" != "0" ]
+	then break
+	fi
+     done
+     if [ "$flg" = 1 ]
+     then /usr/sbin/pkgadd -O -d diskette1
+     fi
+     /etc/conf/bin/idcheck -p qt
+     if [ $? != 31 ]
+     then /etc/conf/bin/idbuild 2>/dev/null
+	  idoops $?
+	  rm -rf /usr/lib/tape/tapecntl
+	  rmdir /usr/lib/tape /usr/lib > /dev/null 2>&1
+     else
+	  idoops 0
+     fi
+fi
+	echo "It is safe to remove the cartridge tape."
+
+else
+
+rm /etc/conf/bin/idbuild
+mv /etc/conf/bin/S.idbuild /etc/conf/bin/idbuild
+
+	/etc/conf/bin/idbuild 2>/dev/null
+	idoops $?
+	rm -rf /usr/lib/tape/tapecntl
+	rmdir /usr/lib/tape /usr/lib > /dev/null 2>&1
+fi
+
+cd /
+rm -rf /usr/src/pkg
+mv /etc/conf/bin/S.idreboot /etc/conf/bin/idreboot
+#
+# move archive lib version of dd (dd.arch) on top of shlib version.
+mv /usr/bin/dd.arch /usr/bin/dd
+sync
+rm -rf /dev/rmt /etc/initial

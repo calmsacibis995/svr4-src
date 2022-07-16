@@ -1,0 +1,6 @@
+#ident	"@(#)master:kdb-util/sdev	1.1"
+#if MB1
+kdb-util	Y	1	1	1	1	0	0	0	0
+#else
+kdb-util	Y	1	0	0	0	0	0	0	0
+#endif

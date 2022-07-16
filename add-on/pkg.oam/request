@@ -1,0 +1,234 @@
+#ident	"@(#)/usr/src/add-on/pkg.oam/request.sl 1.1 4.0 12/08/90 7011 AT&T-USL"
+
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+#
+# Prompt script to allow the user to select a flavor
+# of the oam interface.
+#
+
+CLASSES="`pkgparam oam CLASSES 2>/dev/null`"
+
+INTFBIN=usr/sadm/sysadm/bin
+MENU=usr/sadm/sysadm/menu
+PKGBIN=usr/sadm/install/bin
+PKGSCR=usr/sadm/install/scripts
+VMSYS=/usr/vmsys
+
+endok() {
+exit 0
+}
+
+endnotok() {
+exit 3
+}
+
+trap 'endnotok' 1 2 3 15
+
+echo "
+You are about to install the Operations, Administration and Maintenance
+(OA&M) user interface.
+
+OA&M can be installed in one of two ways.
+
+The BASIC user interface provides a concise set of tools for basic
+system administration. This will help you conserve disk space.
+
+The EXTENDED user interface provides extensions to the BASIC interface
+and access to the full OA&M feature set. BASIC installs automatically
+if you choose EXTENDED.
+"
+case "${CLASSES}" in
+OAM_basic|"OAM_basic OAM_bhelp")
+	echo "
+The BASIC OA&M user interface is currently installed on your machine.
+"
+	SYSADM="retain"
+	ans=`getyorn -d y \
+	-p "Do you wish to install the EXTENDED interface?\n"`
+
+	case "${ans}" in
+	n|N|no|No)
+		ans=`getyorn -d y \
+		-p "Do you wish to re-install the BASIC interface?\n"`
+		case "$ans" in
+		y|Y|yes|Yes)
+			break;
+			;;
+		*)
+			endnotok;
+			break;
+			;;
+		esac
+
+		break;
+		;;
+
+	y|Y|yes|Yes)
+		if [ -z "`echo \"${CLASSES}\" | grep help`" ]
+		then
+			CLASSES="OAM_basic OAM_extended OAMmif"
+		else
+			CLASSES="OAM_basic OAM_extended OAMmif OAM_bhelp"
+		fi
+		break;
+		;;
+
+	*)
+		endnotok;
+		break;
+		;;
+	esac
+
+	break;
+	;;
+
+OAM_extended|"OAM_extended OAM_ehelp")
+	echo "ERROR: inconsistent installation.
+
+The EXTENDED OA&M user interface is installed but the BASIC is not.
+This must be corrected by first removing the EXTENDED interface and
+then re-installing BASIC or both BASIC and EXTENDED.
+"
+	endnotok
+	break;
+	;;
+
+"OAM_basic OAM_extended OAMmif"|"OAM_basic OAM_extended OAMmif OAM_bhelp"|"OAM_basic OAM_extended OAMmif OAM_bhelp OAM_ehelp")
+	echo "
+You have already installed both the BASIC and EXTENDED portions of
+the OA&M user interface.
+"
+	SYSADM="retain"
+	ans=`getyorn -d y \
+	-p "Do you wish to overlay the existing installation?\n"`
+	case "${ans}" in
+	y|Y|yes|Yes)
+		break;
+		;;
+	*)
+		endnotok
+		break;
+		;;
+	esac
+
+	break;
+	;;
+
+*)
+	SYSADM="replace"
+	ans=`getyorn -d y \
+	-p "Do you wish to install both the BASIC and EXTENDED portions of the OA&M user interface?\n"`
+	case "${ans}" in
+	n|N|no|No)
+		echo "
+Only the BASIC interface will be installed.
+"
+		CLASSES="OAM_basic"
+		sleep 3
+		break
+		;;
+	y|Y|yes|Yes)
+		CLASSES="OAM_basic OAM_extended OAMmif"
+		break;
+		;;
+	*)
+		endnotok
+		break;
+		;;
+	esac
+
+	break;
+	;;
+esac
+
+ans=`getyorn -d y \
+             -p "Do you wish to install on-line help for OA&M?\n"`
+case "${ans}" in
+	n|N|no|No)
+		break
+		;;
+	y|Y|yes|Yes)
+		case "${CLASSES}" in
+		OAM_basic)
+			CLASSES="${CLASSES} OAM_bhelp"
+			break
+			;;
+		"OAM_basic OAM_extended OAMmif"|"OAM_basic OAM_extended OAMmif OAM_bhelp")
+			CLASSES="OAM_basic OAM_extended OAMmif OAM_bhelp OAM_ehelp"
+			break
+			;;
+		*)
+			break
+			;;
+		esac
+		break;
+		;;
+	*)
+		endnotok
+		break;
+		;;
+esac
+
+cat > $1 <<!
+CLASSES='$CLASSES'
+INTFBIN='$INTFBIN'
+MENU='$MENU'
+PKGBIN='$PKGBIN'
+PKGSCR='$PKGSCR'
+VMSYS='$VMSYS'
+SYSADM='$SYSADM'
+!
+
+#
+# Create the sysadm login and set a password prior to installing
+# the OA&M files. Trap interrupts.
+#
+
+# need to copy /bin/sh to /usr/sbin/sysadm for useradd to work
+# no need to do this if we're extending the interface
+
+if [ "${SYSADM}" = "replace" ]
+then
+	cp /bin/sh /usr/sbin/sysadm
+fi
+
+useradd -o -u 0 -g root -c "general system administration" -d /usr/admin -s /usr/sbin/sysadm -m sysadm > /dev/null 2>&1
+ret=$?
+
+case "${ret}" in
+	0)
+		echo >&2 "
+Please set a password for your OA&M administrative login <sysadm> now.
+"
+		passwd sysadm
+		break
+		;;
+	9)
+		echo >&2 "
+The OA&M administrative login <sysadm> already exists.
+Please re-set the password for it now.
+"
+		passwd sysadm
+		break
+		;;
+	*)
+		echo >&2 "
+ERROR:	cannot create the OA&M administrative login <sysadm>.
+	This login must be available for installation of OA&M to continue.
+Installation terminated.
+"
+		endnotok
+		break
+		;;
+esac
+
+endok

@@ -1,0 +1,132 @@
+#ident	"@(#)pkg.xx:prototype	1.2.1.1"
+# packaging files
+i pkginfo
+i preinstall
+i postinstall
+i preremove
+i postremove
+i copyright
+
+d none /tmp/xx	755	bin	bin
+v none /tmp/xx/Driver.o=/usr/src/pkg/xx/Driver.o ? ? ?
+v none /tmp/xx/Mfsys=/usr/src/pkg/xx/Mfsys ? ? ?
+v none /tmp/xx/Sfsys=/usr/src/pkg/xx/Sfsys ? ? ?
+v none /tmp/xx/Space.c=/usr/src/pkg/xx/Space.c ? ? ?
+d none /tmp/xnamfs	755	bin	bin
+v none /tmp/xnamfs/Driver.o=/etc/conf/pack.d/xnamfs/Driver.o ? ? ?
+v none /tmp/xnamfs/Space.c=/etc/conf/pack.d/xnamfs/space.c ? ? ?
+
+# directory references
+d none	/etc/perms	755	bin	bin
+d none	/usr/lib/custom	755	bin	bin
+d none	/usr/lib/console	755	bin	bin
+d none	/usr/lib/keyboard	755	bin	bin
+d none	/usr/lib/vidi	755	bin	bin
+
+# package objects:
+!default 555 bin bin
+d none	/etc/fs/XENIX	755	root	sys
+d none	/usr/lib/fs/XENIX	755	root	sys
+f none	/etc/perms/inst	644	bin	bin
+f none	/etc/fs/XENIX/fsck=/usr/src/pkg/xx/fsck	555	bin	bin
+f none	/etc/fs/XENIX/mount=/usr/src/pkg/xx/mount	555	bin	bin
+f none	/usr/include/xcurses.h	444	bin	bin
+f none	/usr/include/sys/fs/xxfblk.h=/usr/src/pkg/xx/xxfblk.h	444	bin	bin
+f none	/usr/include/sys/fs/xxfilsys.h=/usr/src/pkg/xx/xxfilsys.h	444	bin	bin
+f none	/sbin/xinstall
+f none	/sbin/custom
+f none	/sbin/fixperm
+f none	/usr/lib/custom/help	644	bin	bin
+f none	/usr/lib/console/screens	644	bin	bin
+f none	/usr/lib/libxcurses.a	644	bin	bin
+f none	/usr/lib/libxtermlib.a	644	bin	bin
+f none	/usr/lib/keyboard/keys	644	bin	bin
+f none	/usr/lib/keyboard/strings	644	bin	bin
+f none	/usr/lib/vidi/font8x8	644	bin	bin
+f none	/usr/lib/vidi/font8x14	644	bin	bin
+f none	/usr/lib/vidi/font8x16	644	bin	bin
+f none	/usr/bin/copy	555	bin	bin
+f none	/usr/bin/hd
+f none	/usr/bin/tset
+f none	/usr/bin/yes
+f none	/usr/bin/random
+f none	/usr/bin/xrestor
+f none	/usr/bin/x286emul	555	root	bin
+f none	/usr/bin/setcolor	511	bin	bin
+f none	/usr/bin/scompat	511	bin	bin
+f none	/usr/bin/vidi	511	bin	bin
+f none	/usr/bin/mapstr		511	bin	bin
+f none	/usr/bin/mapscrn	511	bin	bin
+f none	/usr/bin/mapkey		511	bin	bin
+f none	/usr/bin/mapchan		511	bin	bin
+f none	/usr/bin/trchan		511	bin	bin
+f none	/usr/bin/doscat	511	bin	bin
+f none	/usr/bin/doscp	511	bin	bin
+f none	/usr/bin/dosdir	511	bin	bin
+f none	/usr/bin/dosformat	511	bin	bin
+f none	/usr/bin/dosls	511	bin	bin
+f none	/usr/bin/dosmkdir	511	bin	bin
+f none	/usr/bin/dosrm	511	bin	bin
+f none	/usr/bin/dosrmdir	511	bin	bin
+f none	/usr/lib/libx.a	644	bin	bin
+f none	/usr/lib/libp/libx.a	644	bin	bin
+f none	/etc/default/msdos	644	bin	bin
+f none	/etc/default/xrestor	644	bin	bin
+
+# linked files
+s none	/usr/lib/fs/XENIX/fsck=/etc/fs/XENIX/fsck
+s none	/usr/lib/fs/XENIX/mount=/etc/fs/XENIX/mount
+l none	/usr/bin/lc=/usr/bin/ls
+l none	/usr/bin/settime=/usr/bin/touch
+s none  /etc/xinstall=/sbin/xinstall
+s none  /etc/custom=/sbin/custom
+s none  /etc/fixperm=/sbin/fixperm
+l none	/usr/bin/xrestore=/usr/bin/xrestor
+l none	/usr/bin/setcolour=/usr/bin/setcolor
+l none	/usr/lib/libxtermcap.a=/usr/lib/libxtermlib.a
+
+# linked nodes
+l none	/dev/hd00=/dev/dsk/0s0
+l none	/dev/hd01=/dev/dsk/0s3
+l none	/dev/hd02=/dev/dsk/0s4
+l none	/dev/hd03=/dev/dsk/0s5
+l none	/dev/hd04=/dev/dsk/0s6
+l none	/dev/rhd00=/dev/rdsk/0s0
+l none	/dev/rhd01=/dev/rdsk/0s3
+l none	/dev/rhd02=/dev/rdsk/0s4
+l none	/dev/rhd03=/dev/rdsk/0s5
+l none	/dev/rhd04=/dev/rdsk/0s6
+
+l none	/dev/install=/dev/dsk/f0t
+l none	/dev/fd048ds8=/dev/dsk/f0d8dt
+l none	/dev/fd048ds9=/dev/dsk/f0d9dt
+l none	/dev/fd048=/dev/dsk/f0d9dt
+l none	/dev/fd096ds15=/dev/dsk/f0q15dt
+l none	/dev/fd096=/dev/dsk/f0q15dt
+l none	/dev/fd0135ds18=/dev/dsk/f03ht
+l none	/dev/fd096ds18=/dev/dsk/f03ht
+l none	/dev/dsk/f0q18dt=/dev/dsk/f03ht
+l none	/dev/fd0135ds9=/dev/dsk/f03dt
+l none	/dev/fd096ds9=/dev/dsk/f03dt
+l none	/dev/dsk/f0q9dt=/dev/dsk/f03dt
+l none	/dev/fd048ss8=/dev/dsk/f0d8dt
+l none	/dev/dsk/f0d8t=/dev/dsk/f0d8dt
+l none	/dev/fd048ss9=/dev/dsk/f0d9dt
+l none	/dev/dsk/f0d9t=/dev/dsk/f0d9dt
+
+l none	/dev/rinstall=/dev/rdsk/f0t
+l none	/dev/rfd048ds8=/dev/rdsk/f0d8dt
+l none	/dev/rfd048ds9=/dev/rdsk/f0d9dt
+l none	/dev/rfd048=/dev/rdsk/f0d9dt
+l none	/dev/rfd096ds15=/dev/rdsk/f0q15dt
+l none	/dev/rfd096=/dev/rdsk/f0q15dt
+l none	/dev/rfd0135ds18=/dev/rdsk/f03ht
+l none	/dev/rfd096ds18=/dev/rdsk/f03ht
+l none	/dev/rdsk/f0q18dt=/dev/rdsk/f03ht
+l none	/dev/rfd0135ds9=/dev/rdsk/f03dt
+l none	/dev/rfd096ds9=/dev/rdsk/f03dt
+l none	/dev/rdsk/f0q9dt=/dev/rdsk/f03dt
+l none	/dev/rfd048ss8=/dev/rdsk/f0d8dt
+l none	/dev/rdsk/f0d8t=/dev/rdsk/f0d8dt
+l none	/dev/rfd048ss9=/dev/rdsk/f0d9dt
+l none	/dev/rdsk/f0d9t=/dev/rdsk/f0d9dt

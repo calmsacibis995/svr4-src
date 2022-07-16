@@ -1,0 +1,33 @@
+	cat >plist.sed <<-HERE
+	/[ 	]etc\/.fboot/d
+	/[ 	]etc\/.wboot/d
+	/[ 	]etc\/boot/d
+	/[ 	]etc\/conf\/node.d\/asy$/d
+	/[ 	]etc\/conf\/node.d\/lp$/d
+	/[ 	]etc\/conf\/pack.d\/asy[	/]/d
+	/[ 	]etc\/conf\/pack.d\/cmux[	/]/d
+	/[ 	]etc\/conf\/pack.d\/cram[	/]/d
+	/[ 	]etc\/conf\/pack.d\/fd[	/]/d
+	/[ 	]etc\/conf\/pack.d\/gvid[	/]/d
+	/[ 	]etc\/conf\/pack.d\/hd[	/]/d
+	/[ 	]etc\/conf\/pack.d\/kd[	/]/d
+	/[ 	]etc\/conf\/pack.d\/kdvm[	/]/d
+	/[ 	]etc\/conf\/pack.d\/lp[	/]/d
+	/[ 	]etc\/conf\/pack.d\/rtc[	/]/d
+	/[ 	]etc\/conf\/sdevice.d\/asy$/d
+	/[ 	]etc\/conf\/sdevice.d\/cmux$/d
+	/[ 	]etc\/conf\/sdevice.d\/cram$/d
+	/[ 	]etc\/conf\/sdevice.d\/fd$/d
+	/[ 	]etc\/conf\/sdevice.d\/gvid$/d
+	/[ 	]etc\/conf\/sdevice.d\/hd$/d
+	/[ 	]etc\/conf\/sdevice.d\/kd$/d
+	/[ 	]etc\/conf\/sdevice.d\/kdvm$/d
+	/[ 	]etc\/conf\/sdevice.d\/lp$/d
+	/[ 	]etc\/conf\/sdevice.d\/rtc$/d
+	/[ 	]etc\/inittab3/d
+	/[ 	]usr\/bin\/vtlmgr/d
+	/[ 	]tmp\//d
+HERE
+	[ -f Plist.master ] || mv Plist Plist.master
+	sed -f plist.sed  Plist.master >Plist.base
+	rm -f plist.sed

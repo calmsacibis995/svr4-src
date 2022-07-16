@@ -1,0 +1,37 @@
+:
+#ident	"@(#)mbus:cmd/initpkg/init.d/firstcheck	1.1"
+#
+#	Perform the "never have been run before" checks.
+
+set `who -r`
+if [ $9 != "S" ]
+then
+	exit
+fi
+
+sleep 20
+echo 'Checking file systems:
+'
+sync
+if  /etc/fsck -y -D /dev/root `sed '	/^#/d
+			s/[ 	].*//' /etc/fstab`
+then
+	echo '\n'
+else
+	echo '
+        WARNING: The file system check has identified serious problems.
+        We strongly recommend that you contact your service representative
+        before using the machine.
+
+The system will now be shutdown.
+'
+	sleep 4
+	/etc/uadmin 2 0
+fi
+#
+# make sure all the device nodes an init entries are in place.
+#
+/etc/conf/bin/idmknod
+/etc/conf/bin/idmkinit
+cp /etc/conf/cf.d/inittab /etc
+rm -f /etc/rc2.d/S00firstcheck 

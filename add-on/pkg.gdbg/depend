@@ -1,0 +1,4 @@
+#ident	"@(#)/usr/src/add-on/pkg.gdbg/depend.sl 1.1 4.0 12/08/90 30938 AT&T-USL"
+
+P kdb-util	Kernel Debugger Support Utilities
+		4.0 2.0

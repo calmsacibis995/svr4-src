@@ -1,0 +1,17 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/starlan/Text.badport	1.1"
+title="ISO Starlan Protocol Port Error"
+rows=13
+columns=55
+text="
+The service port string entered is not of the correct
+format.  ISO Starlan port strings are simple strings
+(for this menu, they cannot contain white space nor
+a dot (".")).  For example, the port string of service
+"rpc" is
+
+		rpc
+
+and the port number of service "listen" is
+
+		serve
+"

@@ -1,0 +1,17 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/inet/Text.badaddr	1.1"
+title="Internet Protocol Address Error"
+columns=55
+rows=12
+text="
+The address entered is not of the correct format.
+Internet addresses are a sequence of four integers
+(separated by dots (".")).  Within a small network,
+the first three integers are the same.  For example,
+the address of machine "elvis" might be
+
+	192.11.109.01
+
+and the address of machine "james" might be
+
+	192.11.109.02
+"

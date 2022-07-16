@@ -1,0 +1,6 @@
+*ident	"@(#)master:fp/sdev	1.1"
+#ifdef AT386
+fp	Y	1	1	1	13	0	0	0	0
+#else
+fp	Y	1	1	0	0	0	0	0	0
+#endif

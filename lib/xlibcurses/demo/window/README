@@ -1,0 +1,48 @@
+#ident	"@(#)curses:demo/window/README	1.2"
+The window manager divides up ordinary dumb terminals into windows,
+sort of like a bitmapped workstation (but obviously not as good).
+It works best on terminals with insert/delete line (or scrolling
+regions, e.g. the vt100.)
+
+This program should be viewed as a quickie demo, not as a polished
+product.  It is in fact a usable tool, but chances are that you won't
+want to run in this mode all the time (although it is possible).
+It runs on cbosgd, which is a 4.1BSD VAX 11/750 with a few local mods.
+The important local mods are that it has the fast timer driver installed
+(see ../ft) and an improved pty driver (pty.c).  4.1BSD comes with a
+pty driver (/sys/dev/pty.c) which is undocumented but works fine for
+many applications.  However, the pty driver needs a few enhancements
+to handle windows well - FIONREAD has to work (to simulate select) and
+the JWINSIZE and JSWINSIZE ioctls need to be implemented so the window
+can tell how big it is.  This way, vi and other programs using curses
+will automatically know the proper window size.  (If you have trouble
+installing this, one stopgap fix is to do "setenv LINES 11; setenv COLUMNS 80"
+in each window, specifying the proper dimensions for your window.)
+
+The window manager has not been tested on any other machine.  I am
+enclosing the files I think you will need (pty.c) and our ioctl.h
+and tty.h (there are fields that need to be added - search for WINDOW).
+pty's are psuedo devices and are added much the same as the ft, but
+note that they act like two devices - be sure to read the comments
+in pty.c.
+
+The key to this window manager (note that it's only 500 lines of code)
+is that all the work that has nothing to do with managing windows is
+done by somebody else.  window makes heavy use of curses (to manage the
+screen and to implement operations like insert line in a window), select
+(so it doesn't have to deal with interrupts) and ptys (so it doesn't
+have to reimplement the whole tty driver in user code).  Yet everything
+that works on a real tty works in a window, including vi, rogue, page
+mode (on cbosgd), and recursive calls to window itself!
+
+There is much that could be done to make this window manager better.
+Perhaps someday I will have time to do it.  Pads could be used to
+implement memory in windows.  The user interface could be improved
+to allow dynamic creation/moving/deletion of windows.  Windows are
+currently always the full width of the screen (current terminals would
+probably perform poorly with partial width windows) but this restriction
+could be removed.  Please let me know of any improvements you make.
+
+	Mark Horton
+	10/11/82
+	CB x4276

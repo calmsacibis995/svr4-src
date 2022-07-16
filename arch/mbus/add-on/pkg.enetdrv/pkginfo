@@ -1,0 +1,14 @@
+#ident	"@(#)mbus:add-on/pkg.enetdrv/pkginfo	1.1.1.1"
+
+# enetdrv pkginfo
+
+PKG="enetdrv"
+NAME="i530 Ethernet Driver"
+ARCH="i386"
+VERSION="1.0"
+VENDOR="Intel Corporation"
+CATEGORY="system,utilities"
+CLASSES="none build"
+BASEDIR=""
+PREDEPEND="enetdrv"
+MAXINST="1"

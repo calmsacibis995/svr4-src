@@ -1,0 +1,31 @@
+#ident	"@(#)source:fixcode	1.1"
+
+#
+# This program 'fixes' up the source code so that it can be distributed.  We must
+# modify the source code so it:
+#   a) uses mcs instead of pstamp
+#   b) does not distribute source to code we don't 'own'.
+#
+
+DIRECTION=$1
+WHERE=$2
+
+if [ "$DIRECTION" = "change" ]
+then 
+cd $ROOT/usr/src/proto/i386
+if [ ! -f prep1 ]
+then
+mv prep prep1
+cp ${WHERE}/prep prep
+chmod 644 prep
+fi
+cp ${WHERE}/.setup $ROOT/usr/src/.setup
+chmod 777 $ROOT/usr/src/.setup
+
+else
+# Undo above changes.
+cd $ROOT/usr/src/proto/i386
+mv prep1 prep
+rm $ROOT/usr/src/.setup
+fi
+exit 0

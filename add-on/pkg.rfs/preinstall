@@ -1,0 +1,48 @@
+#ident	"@(#)/usr/src/add-on/pkg.rfs/preinstall.sl 1.1 4.0 12/08/90 50469 AT&T-USL"
+
+#	The new location of "/usr/nserve" is "/etc/rfs", 
+#	so copy over any files in /usr/nserve to the
+#	new location
+
+mkdir /etc/rfs >/dev/null 2>/dev/null
+if
+	[ -d /usr/nserve -a ! -h /usr/nserve ]
+then
+	mv /usr/nserve /usr/Onserve
+	(
+		cd /usr/Onserve
+		find . -print | cpio -pdm /etc/rfs
+	)
+	rm -fr /usr/Onserve
+fi
+ln -s /etc/rfs /usr/nserve 2>/dev/null
+if
+	[ -f /etc/rfs/netspec ]
+then 
+	mtp=`grep , /etc/rfs/netspec`
+	if
+		[ -z "$mtp" ]  #only one tp
+	then
+		if
+			[ ! -d /etc/rfs/`cat /etc/rfs/netspec` ]
+		then
+			mkdir /etc/rfs/`cat /etc/rfs/netspec` 2>/dev/null
+			if
+				[ -f /etc/rfs/rfmaster ]
+			then 
+				mv /etc/rfs/rfmaster /etc/rfs/`cat /etc/rfs/netspec` 2>/dev/null
+				ln -s /etc/rfs/`cat /etc/rfs/netspec`/rfmaster /etc/rfs/rfmaster 2>/dev/null
+			fi
+			if
+				[ -f /etc/rfs/loc.passwd ]
+			then
+				mv /etc/rfs/loc.passwd /etc/rfs/`cat /etc/rfs/netspec` 2>/dev/null
+			fi
+		fi
+	fi
+fi
+
+#	remove name server processes and link them from /usr/lib/rfs later
+
+rm -f /etc/rfs/nserve /etc/rfs/TPnserve /etc/rfs/rfudaemon
+exit 0

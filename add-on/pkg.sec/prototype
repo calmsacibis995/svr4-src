@@ -1,0 +1,16 @@
+#ident	"@(#)pkg.sec:prototype	1.2"
+
+i pkginfo
+i copyright
+i postinstall
+i postremove
+
+d none tmp/des 755 bin bin
+v none tmp/des/Driver_d.o=/etc/conf/pack.d/des/Driver_d.o 0644 bin bin
+f none usr/bin/crypt=/usr/bin/crypt 0555 bin bin
+f none usr/lib/libcrypt_d.a=/usr/lib/libcrypt_d.a 0444 bin bin
+f none usr/lib/makekey=/usr/lib/makekey 0555 bin bin
+f none usr/lib/libnsl_d.so=/usr/lib/libnsl_d.so 0444 bin bin
+
+l none usr/lib/libcrypt.a=usr/lib/libcrypt_d.a 0444 bin bin
+l none usr/lib/libnsl.so=usr/lib/libnsl_d.so 0444 bin bin

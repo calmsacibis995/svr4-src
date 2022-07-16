@@ -1,0 +1,19 @@
+#ident	"@(#)/usr/src/add-on/pkg.oam/postremove.sl 1.1 4.0 12/08/90 52380 AT&T-USL"
+
+#
+# Remove the sysadm login and line out of etc/profile.
+#
+
+trap 'exit 3' 1 2 3 15
+
+# now, replace the 3.2 versions of the commands, remove class doesn't matter.
+ln /usr/bin/.backup /usr/bin/backup
+ln /usr/bin/.restore /usr/bin/restore
+
+userdel sysadm || echo >&2 "
+WARNING:	Unable to remove <sysadm> login.
+"
+
+rm -f ${MENU}/netservices/basic_networking > /dev/null 2>&1
+
+exit 0

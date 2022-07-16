@@ -1,0 +1,73 @@
+#ident	"@(#)/usr/src/add-on/pkg.nfs/preremove.sl 1.1 4.0 12/08/90 54781 AT&T-USL"
+
+FAILURE=1	# fatal error
+
+REBUILD=0
+
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+ERR=/tmp/nfs.error
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be removed."
+
+# determine that ID/TP tools are available
+
+if
+	[ ! -x ${CONFBIN}/idbuild -o ! -x ${CONFBIN}/idinstall \
+		-o ! -x ${CONFBIN}/idcheck ]
+then
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+
+for MODULE in nfs klm
+do
+	${CONFBIN}/idcheck -p ${MODULE}
+	RES="$?"
+	if
+		[ "${RES}" -ne "100" -a "${RES}" -ne "0" ]
+	then
+		if [ "${MODULE}" = "nfs" ]
+		then
+			# NFS cannot be completely removed. A stub
+			# must remain configured for nfssys()
+			OPTS="op" 
+			${CONFBIN}/idinstall -gl nfs | /bin/sed -e	\
+				"s/Y/N/" > Sfsys 2> /dev/null
+			${CONFBIN}/idinstall -ul nfs > ${ERR} 2>&1
+			if [ $? != 0 ]
+			then
+				message "The remove of NFS cannot be \
+completed due to an error in the removal of the driver module for NFS. \
+The file ${ERR} contains the errors."
+				exit $FAILURE
+			fi
+		else
+			OPTS=""
+		fi
+		${CONFBIN}/idinstall -d${OPTS} ${MODULE}
+		echo "Removing ${NAME} ${MODULE} module ..."
+		REBUILD=1
+	fi
+done
+
+#remove nfs from /etc/dfs/fstypes
+/usr/bin/egrep -v '^nfs' /etc/dfs/fstypes > /etc/dfs/tmpfstypes && mv /etc/dfs/tmpfstypes /etc/dfs/fstypes
+
+if
+	[ "${REBUILD}" = "1" ]
+then
+	# rebuild for changes to take effect
+	
+	${CONFBIN}/idbuild
+	if
+		[ "$?" -ne "0" ]
+	then
+		exit ${FAILURE}
+	else
+		exit 10
+	fi
+else
+	exit 0
+fi

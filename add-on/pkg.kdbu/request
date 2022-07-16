@@ -1,0 +1,48 @@
+#ident	"@(#)/usr/src/add-on/pkg.kdbu/request.sl 1.1 4.0 12/08/90 1150 AT&T-USL"
+
+trap 'exit 3' 15
+
+#
+# Prompt script to determine whether user wants kdb security mode or not
+#
+
+echo "
+To prevent unauthorized users from invoking the kernel debugger,
+KDB provides optional security checks which cause attempts to enter
+the kernel debugger from a console key sequence to be rejected.
+Even with these security checks enabled, you can still invoke the
+debugger with the \"kdb\" command, which requires super-user privilege.
+Also, the debugger will still be entered as a result of a kernel panic.
+"
+ANS=`ckyorn -d y \
+	-p "Do you want these security checks turned on?" \
+	-h "If you don't turn on the security checks, the kernel debugger \
+	will be able to be entered from a key sequence on the console, \
+	presenting a breach in security if your console is not physically secure."
+    ` || exit $?
+
+if [ "$ANS" = y ]
+then
+	KDBSECURITY=1
+	s1=off; v1=0
+	s2=on; v2=1
+else
+	KDBSECURITY=0
+	s1=on; v1=1
+	s2=off; v2=0
+fi
+
+echo "
+If you want to turn KDB security mode $s1 at a later time, type:
+
+     /etc/conf/bin/idtune KDBSECURITY $v1
+
+To turn KDB security mode back $s2, type:
+
+     /etc/conf/bin/idtune KDBSECURITY $v2
+
+After using idtune, you must rebuild the kernel and reboot.
+"
+
+echo "KDBSECURITY=$KDBSECURITY" >> $1
+exit 0

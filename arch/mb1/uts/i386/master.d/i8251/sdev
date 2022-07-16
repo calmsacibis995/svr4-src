@@ -1,0 +1,9 @@
+*ident	"@(#)mb1:uts/i386/master.d/i8251/sdev	1.1.1.1"
+*
+* Each 8251 is consuming 2 lines here. This is because we want to specify input 
+* and output interrupt vectors for each 8251.
+*
+i8251	Y	1	6	1	14	d4  da	0	0
+i8251	Y	1	6	1	15	0	0	0	0
+i8251	N	1	6	1	12	0	0	0	0
+i8251	N	1	6	1	11	0	0	0	0

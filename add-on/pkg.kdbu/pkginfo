@@ -1,0 +1,15 @@
+#ident	"@(#)/usr/src/add-on/pkg.kdbu/pkginfo.sl 1.1 4.0 12/08/90 53520 AT&T-USL"
+
+# kdb-util pkginfo
+
+PKG="kdb-util"
+NAME="Kernel Debugger Support Utilities"
+ARCH="i386"
+RELEASE="4.0"
+VERSION="4.0 2.0"
+VENDOR="AT&T-SF"
+CATEGORY="system,utilities"
+CLASSES="none"
+BASEDIR=""
+MAXINST="1"
+

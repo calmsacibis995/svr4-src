@@ -1,0 +1,20 @@
+#iden	"@(#)proto:i386/at386/tape/tape.idins	1.2.1.1"
+
+DSP=$2
+case "$1" in
+"-d") rm -rf $ROOT/etc/conf/pack.d/${DSP}
+      rm -rf $ROOT/etc/conf/sdevice.d/${DSP}
+      grep -v "^${DSP}	" $ROOT/etc/conf/cf.d/mdevice > /tmp/T$$
+      cat /tmp/T$$ > $ROOT/etc/conf/cf.d/mdevice
+      grep -v "^${DSP}	" $ROOT/etc/conf/cf.d/sdevice > /tmp/T$$
+      cat /tmp/T$$ > $ROOT/etc/conf/cf.d/sdevice
+      rm -rf /tmp/T$$ ;;
+"-a") mkdir $ROOT/etc/conf/pack.d/${DSP}
+      mv Driver.o $ROOT/etc/conf/pack.d/${DSP}/Driver.o
+      mv Space.c $ROOT/etc/conf/pack.d/${DSP}/space.c
+      mv System $ROOT/etc/conf/sdevice.d/${DSP}
+      cat Master >> $ROOT/etc/conf/cf.d/mdevice
+      rm -rf Master ;;
+*) echo "Usage: $0 -d or -a DSP" ;;
+esac
+exit 0

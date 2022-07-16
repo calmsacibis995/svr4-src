@@ -1,0 +1,47 @@
+#ident	"@(#)qt:uface/Text.fop	1.1"
+title="System Message"
+lifetime=shortterm
+altslks=true
+rows=6
+columns=58
+
+
+`message Strike the CONT function key to continue.`
+
+text=" 
+ The Cartridge Tape $ARG1 failed. Please check 
+ that the cartridge is properly inserted and the cables 
+ to the Tape Unit are not loose.
+
+ Strike CONT to continue."
+
+name=""
+button=9
+action=nop
+
+name=CONT
+button=11
+action=return cancel
+
+name=""
+button=16
+
+name=""
+button=10
+action=nop
+
+name=""
+button=12
+action=nop
+
+name=""
+button=13
+action=nop
+
+name=""
+button=14
+action=nop
+
+name=""
+button=15
+action=nop

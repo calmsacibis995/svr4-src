@@ -1,0 +1,7 @@
+MORECPP=-DAT386 -D_KERNEL -DSYSV
+
+/etc/conf/pack.d/smse/Driver.o:	mymse.o 
+	$(LD) -r -o $@ mymse.o
+
+mymse.o:	mymse.c mse.h $(FRC)
+	$(CC) -c -O $(MORECPP) mymse.c

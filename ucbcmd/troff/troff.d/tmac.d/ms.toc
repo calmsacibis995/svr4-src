@@ -1,0 +1,91 @@
+'\"#ident	"@(#)ucbtroff:troff.d/tmac.d/ms.toc	1.1"
+'\"		PROPRIETARY NOTICE (Combined)
+'\"
+'\"This source code is unpublished proprietary information
+'\"constituting, or derived under license from AT&T's UNIX(r) System V.
+'\"In addition, portions of such source code were derived from Berkeley
+'\"4.3 BSD under license from the Regents of the University of
+'\"California.
+'\"
+'\"
+'\"
+'\"		Copyright Notice 
+'\"
+'\"Notice of copyright on this source code product does not indicate 
+'\"publication.
+'\"
+'\"	(c) 1986,1987,1988,1989  Sun Microsystems, Inc
+'\"	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+'\"	          All rights reserved.
+.	\" XS - begin index entry
+.de XS
+.if !\\n(1T .BG
+.ds XL \\n(PN
+.if \\n(.$ .ds XL \\$1
+.nr SJ \\n(.j
+.nr PF \\n(.f
+.nr PX \\n(.s
+.nr SL \\n(.l
+.ls 1
+.br
+.da XT
+.if \\n(.$-1 \{\
+.	nr X? 1
+.	in \\$2n
+.\}
+.ft 1
+.ps \\n(PS
+.ll \\n(LLu-8n
+.na
+.br
+..
+.	\" XA - add index entry
+.de XA
+.if !\\*(XLno \\a\\t\\*(XL
+.if \\n(.$ .ds XL \\$1
+.br
+.if \\n(.$-1 \{\
+.	nr X? 1
+.	in \\$2n
+.\}
+..
+.	\" XE - end index entry
+.de XE
+.if !\\*(XLno \\a\\t\\*(XL
+.br
+.da
+.ls
+.ad \\n(SJ
+.ft \\n(PF
+.ps \\n(PX
+.ll \\n(SLu
+.if \\n(X? \{\
+.	nr X? 0
+.	in 0
+.\}
+..
+.	\" PX - print index (table of contents)
+.de PX
+.if \\n(VS>=40 .vs \\n(VSu
+.if \\n(VS<=39 .vs \\n(VSp
+.ll \\n(LLu
+.lt \\n(LTu
+.ta \\n(LLu-5n \\n(LLuR
+.in 0
+.nf
+.rs
+.if !\\$1no \{\
+.	sp .5i
+.	tl ''\f3\s+2Table of Contents\s-2\f1''
+.	sp .5i
+.\}
+.XT
+.rm XT
+.RT
+..
+.	\" TC - table of contents at end of paper
+.de TC
+.af PN i
+.bp 1
+.PX \\$1
+..

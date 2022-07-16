@@ -1,0 +1,60 @@
+#ident	"@(#)mbus:proto/i386/mbus/cmd/AD.base	1.1.2.2"
+
+trap 'exit 3' 1 2 3 15
+
+set -a
+PKG_BASE="ed terminf termcap fmli oam nsu dfs compat lp xcp rpc rfs nfs inet enetdrv ots kdb-util kdb scde geus gpp gcontrib"
+PKG_RESP=/var/spool/response
+PKG_DEFAULT=/tmp/deflt.$$
+set +a
+
+make_default () {
+cat >$PKG_DEFAULT << END
+mail=root
+instance=overwrite
+partial=nocheck
+runlevel=nocheck
+idepend=ask
+rdepend=ask
+space=ask
+setuid=nocheck
+conflict=nocheck
+action=nocheck
+basedir=default
+END
+}
+
+make_response () {
+	[ -d $PKG_RESP ] || mkdir $PKG_RESP
+	rm -f $PKG_RESP/*
+	cd /var/spool/pkg
+	for i in  *
+	do
+		if [ -f /var/spool/pkg/$i/install/request ];then
+			pkgask -a $PKG_DEFAULT -r $PKG_RESP/$i $i
+		fi
+	done
+}
+
+make_pkg () {
+	IDCMD=/etc/conf/bin
+	[ -f $IDCMD/S.idbuild ] || cp $IDCMD/idbuild $IDCMD/S.idbuild
+	>$IDCMD/idbuild
+	cd /var/spool/pkg
+	for i in  $PKG_BASE
+	do
+		[ -d $i ] || continue
+		if [ -f $PKG_RESP/$i ];then
+			pkgadd -r$PKG_RESP/$i -a$PKG_DEFAULT $i
+		else
+			pkgadd -a$PKG_DEFAULT  $i
+		fi
+	done
+	cp /etc/conf/bin/S.idbuild /etc/conf/bin/idbuild
+	rm -f $PKG_DEFAULT
+}
+
+make_default
+make_response
+make_pkg
+/etc/conf/bin/idbuild

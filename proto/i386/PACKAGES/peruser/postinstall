@@ -1,0 +1,57 @@
+#ident	"@(#)proto:i386/PACKAGES/peruser/postinstall	1.1.1.1"
+
+FLG=0
+if [ "`uname -r`" != "4.0" ]
+then FLG=1
+fi
+
+if [ "$FLG" = "1" ]
+then message "The ${NAME} can only \
+be installed on a Release 4.0 system with a version number of 1 or higher."
+	exit 1;
+fi
+
+cd /var/sadm/pkg/${PKG}/install
+chmod 755 preremove
+mv preremove update
+echo "cd `pwd`; ./Remove" > preremove
+./update
+if [ $? != 0 ]
+then exit 1
+fi
+/etc/conf/bin/idbuild 2> /tmp/err.3.2.2
+if [ $? != 0 ]
+then ./update 16
+     message "The installation of the ${NAME} was not successful.\n\n\
+Look at /tmp/err.3.2.2 for possible reasons."
+     exit 1
+fi
+./update 1 2 3 > /dev/null 2>&1
+TNAME=$?
+mv update Remove
+if [ "$TNAME" != "0" ]
+then
+   if [ "$TNAME" = "100" ]
+   then SNAME="Unlimited"
+   else SNAME="$TNAME"
+   fi
+   HERE=`pwd`
+   cd /usr/options
+   for i in *
+   do
+      grep "^UNIX System V/386 Release 4.0 $SNAME User License Package" $i > /dev/null 2>&1
+      if [ $? = 0 ]
+      then KEY2=$i
+           break
+      fi
+   done
+   if [ -n "$KEY2" ]
+   then 
+   rm -f /usr/lib/installed/Remove/"${KEY2}" /usr/lib/installed/Files/"${KEY2}" /usr/options/"${KEY2}"
+   fi
+   cd $HERE
+fi
+rm -f /tmp/err.3.2.2
+message "The ${NAME} has now been successfully installed.\n\n\
+The new user configuration will take effect the next time you reboot the UNIX System."
+exit 10

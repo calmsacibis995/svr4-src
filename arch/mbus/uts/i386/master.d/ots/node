@@ -1,0 +1,5 @@
+*ident	"@(#)mbus:uts/i386/master.d/ots/node	1.1.1.1"
+clone	ots-vc	c	ots
+ots	ots-00	c	0
+clone	oti-vc	c	ots
+ots	oti-00	c	0

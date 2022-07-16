@@ -1,0 +1,13 @@
+*ident	"@(#)mb1:uts/i386/master.d/i546/init	1.1"
+23:off:/etc/getty tty000 9600
+23:off:/etc/getty tty001 9600
+23:off:/etc/getty tty002 9600
+23:off:/etc/getty tty003 9600
+23:off:/etc/getty tty100 9600
+23:off:/etc/getty tty101 9600
+23:off:/etc/getty tty102 9600
+23:off:/etc/getty tty103 9600
+23:off:/etc/getty tty104 9600
+23:off:/etc/getty tty105 9600
+23:off:/etc/getty tty106 9600
+23:off:/etc/getty tty107 9600

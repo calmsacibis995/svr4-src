@@ -1,0 +1,91 @@
+The WD8003 driver currently implements a Style 1 DLPI driver which
+supports both Ethernet and IEEE 802.3 (with 802.2) link level
+protocols.  There is still some work to do and some questions to be
+answered.
+
+TODO:
+	- Test multiple boards.
+
+	- Convert to a Style 2 driver for better multi-board support
+	  and easier configuration.
+
+	- Consider LLC2 implementation and add the connection oriented
+	  DLPI primitives.
+
+	- Add "transparent" ioctl support for all ioctls.
+
+	- Final installation building.  The "prototype" file makes an
+	  assumption about the build environment which is probably not
+	  true.  The "PACKDIR" parameter needs to be changed to
+	  reflect the real build envirnoment.
+
+	- Final man page and any other documentation necessary.  What
+	  do we need to provide?
+
+	- Add SNAP addressing via DL_SUBS_BIND_REQ.
+
+	- Find out if multiple boards can share a single IRQ level if
+	  the interrupt handler is changed to check ALL boards on that
+	  IRQ.
+
+QUESTIONS:
+	- What are the standard "ioctl" calls that need to be
+	  supported?
+
+	- DLSAP format
+	  + 802 media: what should the format of a complete DLSAP be?
+	    The question wouldn't arise if the amount of information
+	    was the same in all cases.  LSAPs are either 1 octet for
+	    the simple case or 1 octet to indicate SNAP mode plus 5
+	    octets of SNAP identifier.  The possibilities are:
+	    . 6 octets LAN address + 4 octets LSAP value [+ optionally
+	      5 octets SNAP]
+	    . 6 octets LAN address + 1 octet LSAP value  [+ optionally
+	      5 octets SNAP]
+	  + Ethernet/802.3: since the two types of hardware can be
+	    used interchangeably as long as the "link" protocols are
+	    handled separately, the LSAP is either a 1 octet 802.2
+	    value or a 2 octet Ethernet type value.  Should these be
+	    in the same format and identified by value or should the
+	    LSAP field be of a different length?
+	  + What format should be used in the DL_INFO_ACK?
+
+	- 802.2 Control Functions
+	  There needs to be some mechanism for sending/receiving the
+	  802.2 XID and TEST messages and indicating whether it is a
+	  request or response.  Other link protocols such as HDLC have
+	  similar control functions.
+
+	  Should these functions be supported and if so how?
+	  [note: at least one STREAMS protocol package uses them]
+
+	- Driver statistics
+	  There needs to be a common mechanism to read driver
+	  statistics.  There are also a common set of statistics that
+	  can be kept and are meaningful for ALL interfaces.  How
+	  should this be done and what is the set of common statistics?
+
+	- Set/Get physical address
+	  There needs to be a common mechanism for getting and setting
+	  the physical address.  XNS and DECNET require setting the
+	  address and a number of protocols would like to be able to
+	  get it.  What is the standard way to do this?  When should
+	  setting be allowed?  My assumption - only when there are no
+	  "bound" streams.
+
+	- Multicast address support
+	  There needs to be a common mechanism for setting, getting
+	  and deleting multicast addresses for interfaces that support
+	  the concept (all of the 802 LANs, Ethernet, and FDDI).
+
+OTHER NOTES:
+	- To use with the "inet" package:
+	  . add the following line to the file "/etc/strcf":
+		cenet ip /dev/wd wd 0
+	  . configure the "wd" driver into the "inet" startup script
+	    in "/etc/rc2.d/S69inet".  What is needed is an "ifconfig"
+	    line of the form:
+		 ifconfig wd0 <hostname or internet address>
+	  . if the "pc586" was configured but should no longer be
+	    used, remove references to it in the files "/etc/strcf"
+	    and "/etc/rc2.d/S69inet".

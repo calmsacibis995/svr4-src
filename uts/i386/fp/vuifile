@@ -1,0 +1,12 @@
+/*
+#ident	"@(#)kern-fp:vuifile	1.1"
+*/
+
+SECTIONS
+{
+
+	.text 0x0:
+	{
+	}
+
+}

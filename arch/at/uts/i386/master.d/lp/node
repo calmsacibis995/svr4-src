@@ -1,0 +1,5 @@
+*ident	"@(#)at:uts/i386/master.d/lp/node	1.1"
+lp	lp0	c	0
+lp	lp	c	0
+lp	lp1	c	1
+lp	lp2	c	2

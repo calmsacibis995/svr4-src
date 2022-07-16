@@ -1,0 +1,298 @@
+#ident	"@(#)/usr/src/add-on/pkg.qt/postinstall.sl 1.1 4.0 12/08/90 41906 AT&T-USL"
+
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+FAILURE=1	# fatal error
+
+BINDIR=/usr/bin
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be installed."
+
+TMP=/tmp/tapedrv.err
+PACK=${CONFDIF}/pack.d
+ERROR1=" Errors have been written to the file $TMP."
+ESC=
+
+BASE1="ERROR: The ${NAME} is not compatible with this release \
+of the UNIX System V operating system \
+and can not be used with this system."
+
+rm -f $TMP > /dev/null 2>&1
+
+# determine that ID/TP tools are available
+
+if
+	[ -x ${CONFBIN}/idcheck -a -x ${CONFBIN}/idbuild -a -x ${CONFBIN}/idinstall ]
+then 
+	:
+else
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+
+cd /tmp/qt
+
+OSVER=`uname -a | cut -d " " -f3`
+
+case ${OSVER} in
+
+	4.0*) ;;
+	4.1*) ;;
+	*) message ${BASE1};
+	   exit $FAILURE;;
+esac
+
+errflag=0
+
+RETVCHK=0
+RETADD=1
+
+${CONFBIN}/idcheck -p qt > /dev/null 2>&1
+if [ $? != 0 ]
+then
+	message "The ${PKG} has already been installed. You must \
+remove the old ${PKG} before you install the new one"
+	exit 1
+fi
+
+${CONFBIN}/idcheck -d 1 > /dev/null 2>&1
+if [ $? != 0 ]
+then 
+	message "The ${PKG} cannot be installed because another device \
+uses the DMA Channel 1"
+	exit 1
+fi
+# find out if interrupts 2, 3, 5 and 7 are available and then
+# prompt the user to select one
+
+if [ "${REQINTV}" = 2 ]
+then
+	INT=9
+else
+	INT=${REQINTV}
+fi
+${CONFBIN}/idcheck -v ${INT}
+if [ "$?" != 0 ]
+then
+	VECTMSG=""
+	for VECT in 9 3 5 7
+	do
+		${CONFBIN}/idcheck -v $VECT
+		RETVCHK=$?
+		if [ "$VECT" = 9 ]
+		then
+			VECT=2
+		fi
+		if [ "$RETVCHK" = 0 ]
+		then
+			VECTMSG="${VECTMSG}\n\tIRQ ${VECT}"
+			VECTLIST="${VECTLIST} ${VECT}"
+		fi
+	done
+	
+	if [ "$VECTLIST" = "" ]
+	then
+		message "The ${PKG} cannot be installed because interrupts \
+2, 3, 5 and 7 are in use"
+		exit 1
+	else
+		while true
+		do
+			VANSWER=""
+			message -d "Available interrupt(s) for the ${NAME}: \
+${VECTMSG}\n\nPlease type one of the above and strike the ENTER key or\n\
+type Q to cancel installation."
+			read VANSWER
+			if [ "x$VANSWER" != xQ -a "x$VANSWER" != xq ]
+			then
+				for i in $VECTLIST
+				do
+					if [ "x$VANSWER" = "x$i" ]
+					then
+						INT="$VANSWER"
+						break 2
+					fi
+				done
+			else
+				exit 1
+			fi
+			message -d "Invalid Answer"
+		done
+	fi
+fi
+
+# find out if selected addresses are available and then
+# prompt the user to select one
+
+if [ -f ${BINDIR}/dc ]
+then
+	REQHADD=`${BINDIR}/dc <<HERE
+16o
+16i
+$REQLADD
+1
++
+p
+HERE
+`
+else
+	message -d "The utility to convert the addresses is not present - if you are using \n2A8, 2B8, 2C8, 2D8, 2E8 or 2F8 the address will be incorrect.  Change to another \naddress or call your Service Representative"  
+	REQHADD=`expr $REQLADD + 1`
+fi
+${CONFBIN}/idcheck -a -l ${REQLADD} -u ${REQHADD}
+if [ "$?" = 0 ]
+then
+	LADD=${REQLADD}
+	HADD=${REQHADD}
+else
+	INTMSG=""
+	for LADR in 300 288 298 2A8 2B8 2C8 2D8 2E8 2F8 278 268 258\
+                    248 238 228 218 208
+	do
+		if [ -f ${BINDIR}/dc ]
+		then
+			HADR=`${BINDIR}/dc <<HERE
+16o
+16i
+$X
+1
++
+p
+HERE
+`
+		else
+			message -d "The utility to convert the addresses is not present - if you are using \n2A8, 2B8, 2C8, 2D8, 2E8 or 2F8 the address will be incorrect.  Change to another \naddress or call your Service Representative"  
+			HADR=`expr $LADR + 1`
+		fi
+		${CONFBIN}/idcheck -a -l $LADR -u $HADR > /dev/null 2>&1
+		if [ "$?" = 0 ]
+		then
+			INTMSG="${INTMSG}\n\tLAD ${LADR} HAD ${HADR}"
+			INTLIST="${INTLIST} ${LADR}"
+		fi
+	done
+	if [ "$INTLIST" = "" ]
+	then
+		message "The ${PKG} cannot be installed because all available \
+I/O addresses are in use"
+		exit 1
+	else
+		while true
+		do
+			RANS=""
+			message -d "Available address(es) for the ${NAME}: \
+${INTMSG}\n\nPlease type the low address and strike the ENTER key or\n\
+type Q to cancel installation."
+			read RANS
+			if [ "x$RANS" != xQ -a "x$RANS" != xq ]
+			then
+				for i in $INTLIST
+				do
+					VANSWER=`echo "$RANS"|tr '[a-f]' '[A-F]' `
+					if [ "$VANSWER" = "$i" ]
+					then
+						LADD=$VANSWER
+						if [ -f ${BINDIR}/dc ]
+						then
+							HADD=`${BINDIR}/dc <<HERE
+16o
+16i
+$LADD
+1
++
+p
+HERE
+`
+						else
+							HADD=`expr $LADD + 1`
+						fi
+						break 2
+					fi
+				done
+			else
+				exit 1
+			fi
+			message -d "Invalid Answer"
+		done
+	fi
+fi
+
+if [ $? != 0 ]
+then
+	exit 1
+fi
+
+# Make sure to switch interrupt 2 to 9 so that idbuild will not fail.
+if [ "$INT" = 2 ]
+then
+	INT=9
+fi
+
+sed -e "s/LADD/${LADD}/" -e "s/HADD/${HADD}/" -e "s/INT/${INT}/" < System > Sys.$$
+cat Sys.$$ > System
+rm -f Sys.$$
+
+#####
+# Install the tape control funcions to the user interface if
+# FACE is already installed.
+
+FACEDIR="/usr/vmsys/OBJECTS"
+	
+if [ -f "${FACEDIR}/tape/admin" ]
+then
+	ed - "${FACEDIR}"/Menu.admin <<- !
+		/^name=User Logins/-r ${FACEDIR}/tape/admin
+		w
+		q
+	!
+fi
+
+/etc/conf/bin/idinstall -a qt 2>> $TMP
+if [ $? != 0 ]
+then
+        message "The installation cannot be completed due to an error in the \
+driver installation. $ERROR1  Please try the installation again.  If the \
+error occurs again, contact your Service Representative."
+	exit $FAILURE
+fi
+
+/etc/conf/bin/idbuild 2>> $TMP
+if [ $? != 0 ]
+then
+        message "The installation cannot be completed due to an error in the \
+kernel reconfiguration. $ERROR1  Please try the installation again.  If the \
+error occurs again, contact your Service Representative." 
+	exit $FAILURE
+fi
+errflag=`expr ${errflag:=0} + 10`
+#installf $PKGINST /usr/options/$PKG.name
+
+#this is no longer needed - now being done in pkginfo 
+#echo $NAME > /usr/options/$PKG.name
+
+installf -f $PKGINST
+
+#
+# Now clean up
+#
+removef $PKGINST /tmp/qt/* >/dev/null 2>&1
+for i in Driver.o Master Space.c System Node
+do
+	removef $PKGINST /tmp/qt/$i >/dev/null 2>&1
+done
+removef $PKGINST /tmp/qt >/dev/null 2>&1
+removef -f $PKGINST >/dev/null 2>&1
+rm -f $TMP 1>/dev/null 2>&1
+exit ${errflag} 
+

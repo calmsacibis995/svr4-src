@@ -1,0 +1,35 @@
+#ident	"@(#)kdb:kdb/README	1.1.1.1"
+
+			   KDB
+
+This module implements the KDB kernel debugger, previously known as
+DEBUGGER (originally, the ISM debugger from Intel Corp.).  KDB is a
+sophisticated RPN-style kernel debugger.
+
+
+Each of the source files are described below:
+
+db.c            is the entry point into the debugger from the kernel
+		and implements debugger operations that are kernel-specific.
+
+dbcon.c         is the debugger's console I/O support.
+
+dbintrp.c       is the debugger interpreter.
+
+dblex.c         is the debugger's lexical analyzer.
+
+debugger.h      is the debugger's main include file.
+
+dbcmd.h		is the include file for the debugger's command table.
+
+dbshow.c	display kernel objects.
+dbshow2.c
+
+dis.h		are the include files for the disassembler.
+structs.h
+
+bits.c		are the debugger's disassembler.
+extn.c
+opset.c
+tbls.c
+utls.c

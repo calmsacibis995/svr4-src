@@ -1,0 +1,16 @@
+#	ident	"@(#)proto:i386/at386/disk.ele	1.2.6.2"
+#	Large Disk Information	>= 130 Meg
+#	Element	Name	     Req/Opt	Disk0	Disk1	SLICE	SZ	MINSZ	Valid Fst
+/stand	Boot File System     	R	Yes	No	10	5M	5	bfs
+/dev/swap	Swap Slice           	R	Yes	No	2	2m	8
+/	Root File System     	R	Yes	No	1	30W	31	s5, ufs, s52k
+/usr	usr File System      	O	Yes	Yes	3	55W	45	s5, ufs, s52k
+/home	User File System     	O	Yes	Yes	4	30W	20	s5, ufs, s52k
+#	Reserved for DOS	O	-	-	5
+/dev/dump	Dump Slice           	O	Yes	Yes	6	1m	4
+#	Reserved for BOOTSLICE	O	-	-	7
+#	Reserved for ALTSLICES	O	-	-	8
+#	Reserved for TALTSLICE	O	-	-	9
+/var	Add-ons File System  	O	Yes	Yes	11	30W	20	s5, ufs, s52k
+/home2	2nd User File System 	O	Yes	Yes	12	25W	10	s5, ufs, s52k
+/tmp	Temporary File System	O	Yes	Yes	13	10W	5	s5, ufs, s52k

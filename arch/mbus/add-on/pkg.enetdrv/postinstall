@@ -1,0 +1,141 @@
+#ident	"@(#)mbus:add-on/pkg.enetdrv/postinstall	1.1.2.2"
+
+# install a module.  $1 is the module name
+
+do_install() {
+	ERR=/tmp/${1}.err
+	IDCOMPS="Driver.o Master System Mfsys Sfsys Node Space.c"
+	if
+		[ -f ${1}.Dr ]
+	then
+		mv ${1}.Dr Driver.o
+	fi
+	if
+		[ -f ${1}.Sp ]
+	then
+		mv ${1}.Sp Space.c
+	fi
+	if
+		[ -f ${1}.Ma ]
+	then
+		grep -v "^[\*#]ident" ${1}.Ma > Master
+		rm -rf ${1}.Ma
+	fi
+	if
+		[ -f ${1}.Sy ]
+	then
+		grep -v "^[\*#]ident" ${1}.Sy |
+			sed "${SEDCMD1}"  > System
+		rm -rf ${1}.Sy
+	fi
+	if
+		[ -f ${1}.Mf ]
+	then
+		grep -v "^[\*#]ident" ${1}.Mf > Mfsys
+		rm -rf ${1}.Mf
+	fi
+	if
+		[ -f ${1}.Sf ]
+	then
+		grep -v "^[\*#]ident" ${1}.Sf |
+			sed "${SEDCMD2}" > Sfsys
+		rm -rf ${1}.Sf
+	fi
+	if
+		[ -f ${1}.No ]
+	then
+		grep -v "^[\*#]ident" ${1}.No > Node
+		rm -rf ${1}.No
+	fi
+	echo "Installing ${NAME} ${1} module ..."
+	${CONFBIN}/idcheck -p ${1} > ${ERR} 2>&1
+	if [ $? = 0 ]
+	then
+		${CONFBIN}/idinstall -a ${1} > ${ERR} 2>&1
+		RET=$?
+	else
+		${CONFBIN}/idinstall -u ${1} > ${ERR} 2>&1
+		RET=$?
+	fi
+	rm -rf ${IDCOMPS}
+	if [ ${RET} != 0 ]
+	then
+		message "The installation cannot be completed due to \
+an error in the driver installation during the installation of the ${1} \
+module of the ${NAME}.  The file ${ERR} contains the errors."
+			exit ${FAILURE}
+	fi
+	rm -rf ${ERR}
+}
+
+do_strcf() {
+if [ -f /etc/inet/strcf ]
+then 
+	cp /etc/inet/strcf /etc/inet/.strcf.old
+	sed "/\# i386\/$1/s/^#//" < /etc/inet/.strcf.old > /etc/inet/strcf 
+fi
+}
+
+FAILURE=1	# fatal error
+
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be installed."
+
+SEDCMD1="s/[	 ]N[	 ]/	Y	/"
+SEDCMD2="s/[	 ]N/	Y/"
+
+cd /var/sadm/pkg/${PKG}/install
+
+errflag=0
+
+# determine that ID/TP tools are available
+
+if
+	[ ! -x ${CONFBIN}/idbuild -o ! -x ${CONFBIN}/idinstall \
+		-o ! -x ${CONFBIN}/idcheck ]
+then
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+
+cd /tmp/enetdrv
+# install drivers/modules
+
+for MODULE in i530 edlina
+do
+	do_install ${MODULE}
+done
+
+do_strcf EDL
+
+# rebuild for changes to take effect
+
+${CONFBIN}/idbuild
+if
+	[ "$?" -ne "0" ]
+then
+	exit ${FAILURE}
+fi
+errflag=`expr ${errflag:=0} + 10`
+
+installf -f $PKGINST
+
+# Now clean up
+#
+removef $PKGINST /tmp/enetdrv/* >/dev/null 2>&1
+removef $PKGINST /etc/inet.d/ina961 >/dev/null 2>&1
+for i in i530.Dr i530.Sp i530.Ma i530.Sy i530.No 
+do
+	removef $PKGINST /tmp/enetdrv/$i >/dev/null 2>&1
+done
+for i in edlina.Dr edlina.Sp edlina.Ma edlina.Sy edlina.No  
+do
+	removef $PKGINST /tmp/enetdrv/$i >/dev/null 2>&1
+done
+removef $PKGINST /tmp/enetdrv >/dev/null 2>&1
+removef -f $PKGINST >/dev/null 2>&1
+exit ${errflag}
+

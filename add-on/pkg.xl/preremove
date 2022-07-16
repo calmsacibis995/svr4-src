@@ -1,0 +1,100 @@
+#ident	"@(#)/usr/src/add-on/pkg.xl/preremove.sl 1.1 4.0 12/08/90 41785 AT&T-USL"
+
+FAILURE=1	# fatal error
+
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+PACKD=${CONFDIR}/pack.d
+TMP=/tmp/ftapedrv.err
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be removed."
+
+ERROR1="An an error was encountered removing the Floppy Tape Driver.\
+  The file $TMP contains errors reported by the system."
+ERROR2="The kernel rebuild failed.  However all software dealing with the \
+Floppy tape has been removed. The file \
+$TMP contains error reported by the system."
+
+# determine that ID/TP tools are available
+
+if
+	[ ! -x ${CONFBIN}/idbuild -o ! -x ${CONFBIN}/idinstall ]
+then
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+
+rm -f $TMP > /dev/null 2>&1
+if [ $# != 1 ]
+then echo "\n\n\n\n\n\nRemoving Floppy Tape Utilities - Version 1.0 ...\n\n"
+fi
+
+if [ -x /etc/conf/bin/idcheck -a -x /etc/conf/bin/idbuild -a -x /etc/conf/bin/idinstall ]
+then 
+	:
+else 
+	message "The Installable Driver feature has been removed.  The Floppy Tape Driver cannot be removed."
+	exit ${FAILURE} 
+fi
+
+echo "Removing the floppy tape driver...\n"
+/etc/conf/bin/idcheck -p xl 2>/dev/null
+if [ $? = 0 ]
+then
+	exit 0
+fi
+
+if [ $# = 0 ]
+then
+/etc/conf/bin/idinstall -d xl 2>> $TMP
+if [ $? != 0 ]
+then
+	message $ERROR1
+	exit  ${FAILURE}
+fi
+else
+	/etc/conf/bin/idinstall -e -d xl > /dev/null 2>&1
+fi
+
+if [ -d /dev/rmt ]
+then
+	rm -f /dev/rmt/f1q80 /dev/rmt/f1q80n /dev/rmt/f1q80r /dev/rmt/f1q80nr
+	if [ 3 -eq `expr \`ls -al /dev/rmt | wc -l\`` ]
+	then
+		rm -rf /dev/rmt
+	fi
+fi
+
+#restore original fd functionality
+
+mv ${CONFDIR}/cf.d/mdevice.orig ${CONFDIR}/cf.d/mdevice
+mv ${PACKD}/fd/Driver.o.orig ${PACKD}/fd/Driver.o
+
+#####
+# Remove the tape control funcions to the user interface if
+# FACE is already installed.
+
+FACEDIR="/usr/vmsys/OBJECTS"
+
+if [ -f "${FACEDIR}/Menu.admin" ]
+then
+	ed - "${FACEDIR}"/Menu.admin <<- !
+		g/^name=Floppy Tape Operations/d
+		g/^action=.*tape.Menu.tape.*$/.,+1d
+		w
+		q
+	!
+fi
+############
+
+echo "Rebuilding UNIX kernel...\n\n\n"
+/etc/conf/bin/idbuild 2>> $TMP
+if [ $? != 0 ]
+then
+	message $ERROR2
+	exit ${FAILURE} 
+else
+	exit 10
+fi
+

@@ -1,0 +1,16 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/inet/Text.badport	1.1"
+title="Internet Protocol Address Error"
+rows=11
+columns=55
+text="
+The service port number entered is not of the correct
+format.  Internet service port numbers are simple
+integers (and they must be the same on each machine).
+For example, the port number of service "rpc" is
+
+		111
+
+and the port number of service "listen" is
+
+		1025
+"

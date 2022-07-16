@@ -1,0 +1,12 @@
+#ident	"@(#)/usr/src/add-on/pkg.fmli/pkginfo.sl 1.1 4.0 12/08/90 26993 AT&T-USL"
+
+PKG="fmli"
+PREDEPEND="fmli"
+NAME="AT&T Form and Menu Language Interpreter"
+ARCH="i386"
+RELEASE="4.0"
+VERSION="1"
+VENDOR="AT&T-SF"
+
+CLASSES="fmli"
+CATEGORY="application"

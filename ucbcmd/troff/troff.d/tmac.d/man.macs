@@ -1,0 +1,169 @@
+'\"#ident	"@(#)ucbtroff:troff.d/tmac.d/man.macs	1.1"
+'\"		PROPRIETARY NOTICE (Combined)
+'\"
+'\"This source code is unpublished proprietary information
+'\"constituting, or derived under license from AT&T's UNIX(r) System V.
+'\"In addition, portions of such source code were derived from Berkeley
+'\"4.3 BSD under license from the Regents of the University of
+'\"California.
+'\"
+'\"
+'\"
+'\"		Copyright Notice 
+'\"
+'\"Notice of copyright on this source code product does not indicate 
+'\"publication.
+'\"
+'\"	(c) 1986,1987,1988,1989  Sun Microsystems, Inc
+'\"	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+'\"	          All rights reserved.
+.ds ]W Sun Release 2.0 \s+4\(*a\s-4
+.if t .tr *\(**
+.ie n \{\
+.	ds lq \&"\"
+.	ds rq \&"\"
+.\}
+.el \{\
+.	ds rq ''
+.	ds lq ``
+.\}
+'	# reset the basic page layout
+.de }E
+.in \\n()Ru+\\n(INu
+.ll \\n(LLu
+..
+'	# default tabs
+.de DT
+'ta .5i 1i 1.5i 2i 2.5i 3i 3.5i 4i 4.5i 5i 5.5i 6i 6.5i
+..
+'	# handle the head of the page
+.de }H
+.ev 1
+.}C
+'sp .5i
+.ft 1
+.ps 10
+.tl \\*(]H\\*(]D\\*(]H
+'sp .5i
+.ev
+.ns
+..
+'	# handle the foot of the page
+.de }F
+.ev 1
+.ft 1
+.ps 10
+'sp .5i
+.if !\\nD .tl \\*(]W\\*(]L\\*(PN%
+.if  \\nD .if o .tl \\*(]W\\*(]L\\*(PN%
+.if  \\nD .if e .tl \\*(PN%\\*(]L\\*(]W
+.if !\\nX 'bp
+.if \\nX .if \\n%>=\\nX \{\
+.ds PN \\n%
+.pn 1
+.af % a
+.nr X 0
+'bp 1\}
+.if \\nX .if \\n%<\\nX 'bp
+.ev
+..
+'	# set title and heading
+.de TL
+.ds ]H \\$1\|(\|\\$2\|)
+.ds ]D UNKNOWN SECTION OF THE MANUAL
+.if '\\$2'1C' .ds ]D USER COMMANDS
+.if '\\$2'1G' .ds ]D USER COMMANDS
+.if '\\$2'1S' .ds ]D SUN-SPECIFIC USER COMMANDS
+.if '\\$2'1V' .ds ]D VAX-SPECIFIC USER COMMANDS
+.if '\\$2'1' .ds ]D USER COMMANDS
+.if '\\$2'6' .ds ]D GAMES AND DEMOS
+.if '\\$2'7' .ds ]D TABLES
+.if '\\$2'2' .ds ]D SYSTEM CALLS
+.if '\\$2'3' .ds ]D SUBROUTINES
+.if '\\$2'3C' .ds ]D COMPATIBILITY ROUTINES
+.if '\\$2'3F' .ds ]D FORTRAN LIBRARY ROUTINES
+.if '\\$2'3S' .ds ]D STANDARD I/O LIBRARY
+.if '\\$2'3M' .ds ]D MATHEMATICAL FUNCTIONS
+.if '\\$2'3N' .ds ]D NETWORK FUNCTIONS
+.if '\\$2'3X' .ds ]D MISCELLANEOUS FUNCTIONS
+.if '\\$2'5' .ds ]D FILE FORMATS
+.if '\\$2'4' .ds ]D SPECIAL FILES
+.if '\\$2'4F' .ds ]D SPECIAL FILES
+.if '\\$2'4I' .ds ]D SPECIAL FILES
+.if '\\$2'4P' .ds ]D SPECIAL FILES
+.if '\\$2'4N' .ds ]D SPECIAL FILES
+.if '\\$2'4S' .ds ]D SPECIAL FILES
+.if '\\$2'4V' .ds ]D SPECIAL FILES
+.if '\\$2'8' .ds ]D MAINTENANCE COMMANDS
+.if '\\$2'8C' .ds ]D MAINTENANCE COMMANDS
+.if '\\$2'8S' .ds ]D MAINTENANCE COMMANDS
+.if !\\n(nl .if \\nP .pn \\nP
+.if \\nX .if \\nP>=\\nX \{\
+.ds PN \\nP
+.pn 1
+.af % a
+.nr X 0 \}
+.if !\\n(nl .if \\nP .nr P 0
+.if  \\nC .if \\n(nl .bp
+.if  !\\nC .if \\n(nl .bp 1
+.ds ]L Last change: \\$3
+.}E
+.EH \\\\*(]H\\\\*(]D\\\\*(]H
+.OH \\\\*(]H\\\\*(]D\\\\*(]H
+.OF \\\\*(]W\\\\*(]L\\\\*(PN%
+.EF \\\\*(PN%\\\\*(]L\\\\*(]W
+.DT
+.nr )I .5i
+.nr )R 0
+..
+'	# section heading
+.de SH
+.H 3 "\&\\$1 \|\\$2 \|\\$3 \|\\$4 \|\\$5 \|\\$6"
+.LP
+..
+'	# subroutine for section heading
+.de }X
+.}E
+.ti \\$1
+.sp \\n()Pu
+.ne 2
+.nr )R 0
+.fi
+.it 1 }N
+.SM
+.B
+..
+'	# hanging indent
+.de HP
+.sp \\n()Pu
+.ne 2
+.if !"\\$1"" .nr )I \\$1n
+.ll \\n(LLu
+.in \\n()Ru+\\n(INu+\\n()Iu
+.ti \\n()Ru+\\n(INu
+..
+'	# hanging label
+.de TP
+.RT
+.if !"\\$1"" .nr I\\n(IR \\$1n
+.sp \\n(PDu
+.if !\\n(IP .nr IP +1
+.ns
+.it 1 }1
+.di ]B
+..
+'	# end of TP
+.de }1
+.br
+.di
+.ta \\n(GIu+\\n(I\\n(IRu
+.ds HT \&\\*(]B\\
+.in +\\n(I\\n(IRu
+.ti -(\\n(GIu+\\n(I\\n(IRu)
+\\*(HT\t\c
+.if \w\\*(HTu>(\\n(GIu+\\n(I\\n(IRu) .br
+..
+.nr )p 0 1
+.ds ]I \\\\n(]
+.ds ]R \\\\n()
+.ds S \s10

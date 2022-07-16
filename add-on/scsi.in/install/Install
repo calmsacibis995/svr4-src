@@ -1,0 +1,294 @@
+#ident	"@(#)scsi.in:install/Install	1.1"
+#	SCSI Drivers Install Package
+#
+
+TMP=/tmp/scsidrv.err
+ERROR1=" Errors have been written to the file $TMP."
+rm -f $TMP > /dev/null 2>&1
+NAME="`cat Name`"
+PKG="SCSI Utility Package"
+echo "\n\n\n\nInstalling ${NAME}\n\n"
+if [ -x /etc/conf/bin/idcheck -a -x /etc/conf/bin/idbuild -a -x /etc/conf/bin/idinstall ]
+then 
+	:	
+else
+	message "The Installable Driver feature has been removed.  The ${NAME} cannot be installed."
+	exit 1
+fi
+
+RELEASE=`uname -v`
+
+RETVCHK=0
+RETADD=1
+RETDMA=0
+
+DRVLIST=""
+# find out which drivers are to be installed
+VANSWER=""
+for DRVNAME in scsi sd01 st01 sc01 sw01
+do
+	message -d "Do you want to install '${DRVNAME}' driver?(y or n)"
+	read VANSWER
+	if [ "x$VANSWER" = xY -o "x$VANSWER" = xy ]
+	then
+		DRVLIST="${DRVLIST} ${DRVNAME}"
+	fi
+done
+
+for DRIVER in ${DRVLIST}
+do
+	/etc/conf/bin/idcheck -p $DRIVER > /dev/null 2>&1
+	RETTP=$?
+	if [ $RETTP != 0 ]
+	then
+		break 2
+	fi
+done
+
+if [ $RETTP = 0 ]
+then
+	################
+	# find out if DMA channel 0, 5, 6, and 7 are available
+	DMACMSG=""
+	for DMAC in 0 5 6 7
+	do
+		/etc/conf/bin/idcheck -d 5 > /dev/null 2>&1
+		RETDMA=$?
+		if [ "$RETDMA" = 0 ]
+		then
+			DMACMSG="${DMACMSG}\n\tDMA ${DMAC}"
+			DMACLIST="${DMACLIST} ${DMAC}"
+		fi
+	done
+
+	if [ "$DMACLIST" != "" ]
+	then
+		while true
+		do
+			VANSWER=""
+			message -d "Available DMA channel(s) for the ${NAME}\
+are:\n ${DMACMSG}\n\nType the DMA channel number(default 5) and strike the \
+ENTER key or type Q to cancel installation."
+			read VANSWER
+			if [ "x$VANSWER" != xQ -a "x$VANSWER" != xq ]
+			then
+				for i in $DMACLIST
+				do
+					if [ "x$VANSWER" = "x$i" ]
+					then
+						DMAC="$VANSWER"
+						break 2
+					fi
+				done
+			else
+				exit 1
+			fi
+			message -d "Invalid Answer"
+		done
+	fi
+
+	################
+	# find out if interrupts 9, 10, 11, 12, 14 and 15 are available and then
+	# prompt the user to select one
+	VECTMSG=""
+	for VECT in 9 10 11 12 14 15
+	do
+		/etc/conf/bin/idcheck -v $VECT >/dev/null 2>&1
+		RETVCHK=$?
+		if [ "$VECT" = 9 ]
+		then
+			VECT=2
+		fi
+		if [ "$RETVCHK" = 0 ]
+		then
+			VECTMSG="${VECTMSG}\n\tIRQ ${VECT}"
+			VECTLIST="${VECTLIST} ${VECT}"
+		fi
+	done
+	
+	if [ "$VECTLIST" != "" ]
+	then
+		while true
+		do
+			VANSWER=""
+			message -d "Available interrupt(s) for the ${NAME}are:\
+\n ${VECTMSG}\n\nType the interrupt number(default 11) and strike the ENTER \
+key or type Q to cancel installation."
+			read VANSWER
+			if [ "x$VANSWER" != xQ -a "x$VANSWER" != xq ]
+			then
+				for i in $VECTLIST
+				do
+					if [ "x$VANSWER" = "x$i" ]
+					then
+						INT="$VANSWER"
+						break 2
+					fi
+				done
+			else
+				exit 1
+			fi
+			message -d "Invalid Answer"
+		done
+	fi
+        #####################
+
+	set `echo \`cat address\``
+	while [ $# != 0 ]
+	do
+		IOA=$1
+		IOE=$2
+		message -d "Default addresses are $IOA to $IOE. Type the \
+low address number or strike ENTER to accept the default."
+		read VANSWER
+		if [ "x$VANSWER" != "x" ]
+		then
+	            while true
+		    do		
+			ADDCHK=`grep -h $VANSWER address`
+			if [ "x$ADDCHK" != "x" ]
+			then
+				set `echo $ADDCHK`
+				IOA=$1
+				IOE=$2
+				break 
+			else
+				message -d "Invalid number. Please select a\
+ valid port addresses from the following list:\n"
+				cat address
+				message -d "Enter port address:"
+				read VANSWER
+			fi	
+		    done
+		fi
+		/etc/conf/bin/idcheck -a -l $IOA -u $IOE > /dev/null 2>&1
+		if [ $? = 0 ]
+		then
+			RETADD=0
+			break 
+		fi
+		shift 2
+	done
+fi
+
+ERROR=""
+if [ $RETTP != 0 ]
+then 
+	ERROR="has already been installed.  You cannot install this package \
+on top of the old package.  You must remove the old ${PKG} before you can \
+install the new one"
+
+else
+	if [ "$VECTLIST" = "" ]
+	then
+		ERROR="cannot be installed because interrupts 9, 10, 11, 12, 14\
+ and 15 are in use"
+		if [ $RETADD != 0 -o $RETDMA != 0 ]
+		then
+			ERROR="${ERROR} and"
+		fi
+	fi
+	if [ $RETADD != 0 ]
+	then 
+		ERROR="${ERROR} cannot be installed because all usable addresses are in use"
+			ERROR="${ERROR} and"
+	fi
+	if [ $RETDMA != 0 ]
+	then 
+		ERROR="${ERROR} cannot be installed because DMA Channel \
+0, 5, 6, and 7 are in use"
+	fi
+fi
+
+if [ \( "$VECTLIST" = "" \) -o $RETADD != 0 -o $RETDMA != 0 -o $RETTP != 0 ]
+then
+	message "The ${PKG} ${ERROR}.  \
+Use Remove Installed Software to remove the existing driver before attempting \
+to install the ${NAME} again."
+	exit 1
+fi
+
+message -c "You are installing the ${NAME} \
+using DMA channel ${DMAC}, hardware interrupt number ${INT} and addresses\
+ ${IOA} through ${IOE}.  \
+Be sure that these values are not in use by another add-on board."
+
+if [ $? != 0 ]
+then
+	exit 1
+fi
+
+# Make sure to switch interrupt 2 to 9 so that idbuild will not fail.
+if [ "$INT" = 2 ]
+then
+	INT=9
+fi
+
+sed -e "s/IOA/${IOA}/" -e "s/IOE/${IOE}/" -e "s/INT/${INT}/" \
+< scsi/System > Sys.$$
+cat Sys.$$ > scsi/System
+rm -f Sys.$$
+
+sed -e "s/DMA/${DMAC}/" < scsi/Master > Sys.$$
+cat Sys.$$ > scsi/Master
+rm -f Sys.$$
+
+if [ $RETTP != 0 ]
+then
+	chmod +x Remove
+	./Remove NOBUILD
+fi
+
+############
+echo "\nInstalling '${DRVLIST}' drivers."
+for DIR in ${DRVLIST}
+do
+	cd $DIR
+	case $DIR in
+		sd01)	[ -c /dev/rdsk/c0t0d0s0 ] && rm Node;;
+		st01)	[ -c /dev/rdsk/c0t3d0s0 ] && rm Node;;
+	esac
+	/etc/conf/bin/idinstall -a $DIR 2>> $TMP
+	if [ $? != 0 ]
+	then
+        	message "The installation cannot be completed due to an error\
+ in the '$DIR' driver installation. $ERROR1  Please try the installation again.\
+ If the error occurs again, contact your AT&T Service Representative or \
+AT&T Personal Computer Dealer."
+		chmod +x ../Remove
+		../Remove NOBUILD
+		exit 1
+	fi
+	cd ..
+done
+
+echo "\nInstalling /usr/include/sys files."
+cd sys
+chmod 444 *
+chown bin *
+chgrp bin *
+mv * /usr/include/sys
+
+echo "\nInstalling /etc/scsi files."
+cd ../cmd
+	[ -d /etc/scsi ] || mkdir /etc/scsi
+	find . -print|cpio -pdu /etc/scsi
+	mv /etc/scsi/DISK /etc/scsi/format.d
+cd ..
+
+echo "\nComplete.\n\n\n"
+
+/etc/conf/bin/idbuild 2>> $TMP
+if [ $? != 0 ]
+then
+        message "The installation cannot be completed due to an error in the \
+kernel reconfiguration. $ERROR1  Please try the installation again.  If the \
+error occurs again, contact your AT&T Service Representative or AT&T Personal \
+Computer Dealer."
+	chmod +x Remove
+	./Remove NOBUILD
+        exit 1
+fi
+
+rm -f $TMP
+exit 0

@@ -1,0 +1,5 @@
+#ident	"@(#)depend	1.2	91/11/28	JPB"
+#ident	"@(#)/usr/src/add-on/pkg.kdb/depend.sl 1.1 4.0 12/08/90 39130 AT&T-USL"
+
+P kdb-util	Kernel Debugger Support Utilities
+		4.0 2.0

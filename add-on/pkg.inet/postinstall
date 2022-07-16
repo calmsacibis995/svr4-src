@@ -1,0 +1,296 @@
+#ident	"@(#)/usr/src/add-on/pkg.inet/postinstall.sl 1.1 4.0 12/08/90 5436 AT&T-USL"
+ 
+#
+# Initialize FAILURE to 1 (fatal error)
+#
+FAILURE=1
+#
+# Install INET drivers
+#
+CONF=/etc/conf
+TMP=/tmp/tcp.err
+
+cd /tmp/inet
+NOTOOLS="ERROR: The Installable Driver feature has been removed.  The ${NAME} cannot be installed."
+
+#########################################
+## Make sure ID/TP tools are available ##
+#########################################
+if [ -x ${CONF}/bin/idbuild -a -x ${CONF}/bin/idinstall ]
+then
+	:
+else
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+
+
+SDEV=/etc/conf/sdevice.d
+for DRV in app arp icmp ip llcloop rawip tcp udp
+do
+	mv ${DRV}.o Driver.o
+
+	grep -v "^[\*#]ident" ${DRV}.Master > Master
+	rm -rf ${DRV}.Master
+	
+	if [ -f ${DRV}.Space ]
+	then
+		mv ${DRV}.Space Space.c
+	fi
+	if [ -f ${DRV}.Node ]
+	then
+		grep -v "^[\*#]ident" ${DRV}.Node > Node
+		rm -rf ${DRV}.Node
+	fi
+
+	grep -v "^[\*#]ident" ${DRV}.System |
+		sed 's/	N	/	Y	/'  > ./System
+	rm -f ${DRV}.System
+
+	echo "Installing ${NAME} ${DRV} driver ...."
+	${CONF}/bin/idinstall -a ${DRV} 2>> $TMP
+	if [ $? != 0 ]
+	then
+		${CONF}/bin/idinstall -u ${DRV} 2>> $TMP
+		if [ $? != 0 ]
+		then
+			message "The installation cannot be completed due \
+to an error in the \
+driver installation during the installation of the ${DRV} driver \
+of the ${NAME}."
+		 	exit $FAILURE
+		fi
+	fi	
+	rm -f Driver.o Master Space.c System Node
+done
+	rm -f Driver.o Master Space.c System Node
+
+#
+#	add the appropriate entries to /etc/netconfig
+#
+
+if grep '[ 	]inet[ 	][ 	]*tcp[ 	][ 	]*/dev/tcp[ 	]' /etc/netconfig >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "tcp	tpi_cots_ord	v	inet	tcp	/dev/tcp	/usr/lib/tcpip.so" >>/etc/netconfig
+fi
+
+if grep '[ 	]inet[ 	][ 	]*udp[ 	][ 	]*/dev/udp[ 	]' /etc/netconfig >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "udp	tpi_clts  	v	inet	udp	/dev/udp	/usr/lib/tcpip.so" >>/etc/netconfig
+fi
+
+
+if grep '[ 	]inet[ 	][ 	]*-[ 	][ 	]*/dev/rawip[ 	]' /etc/netconfig >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "rawip	tpi_raw  	-	inet	-	/dev/rawip	/usr/lib/tcpip.so" >>/etc/netconfig
+fi
+
+if grep '[ 	]inet[ 	][ 	]*icmp[ 	][ 	]*/dev/icmp[ 	]' /etc/netconfig >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "icmp	tpi_raw  	-	inet	icmp	/dev/icmp	/usr/lib/tcpip.so" >>/etc/netconfig
+fi
+
+#
+#	Update the OAM Scripts to know about us...
+#
+MAPMENU=/usr/sadm/sysadm/menu/netservices/name_to_addr/map.menu
+if [ -f $MAPMENU ]
+then
+	if grep 'inet^Internet Protocols (TCP and UDP)^inet/Menu.inet' $MAPMENU >/dev/null 2>&1
+	then
+		: Already there!
+	else
+		echo "inet^Internet Protocols (TCP and UDP)^inet/Menu.inet" >>$MAPMENU
+		installf -c OAMintf $PKGINST $MAPMENU f
+	fi
+fi
+NODENAME=`uname -n`
+
+if [ -n "${IPADDR}" ]
+then
+	echo "${IPADDR}\t${NODENAME}" >> /etc/hosts 
+	echo "Added \"${IPADDR}\t${NODENAME}\" to /etc/hosts"
+fi
+
+# set up the tcp listener for tcp
+
+# if they already have a tcp _pmtab file don't mess with it
+sacadm -l -p tcp >/dev/null 2>&1
+
+if [ $? != 0 ]
+then
+	`sacadm -a -p tcp -t listen -c "/usr/lib/saf/listen tcp" \
+		-v4 -y"tcp listener"`
+
+	if [ -n "${IPADDR}" ]
+	then
+
+		echo ${IPADDR}|awk -F. ' { 
+			printf "obase=16\n%d\n%d\n%d\n%d\nquit\n", \
+				$1,$2,$3,$4 }' > /tmp/bc.file
+
+		for hex in `bc /tmp/bc.file`
+		do
+			c=`expr "$hex" : '.*'`
+			if [ "$c" -eq 1 ]
+			then
+				NEWSTRING=${NEWSTRING:-}0${hex}
+			else
+				NEWSTRING=${NEWSTRING:-}${hex}
+			fi
+		done
+	else
+		NEWSTRING="***IP Hex addr***"
+	fi
+
+	if [ "${LANS}" = "y" ]
+	then
+		echo "# VERSION=4
+0::root:reserved:reserved:reserved:\x02000ACE${NEWSTRING}::c::/usr/lib/saf/nlps_server #NLPS SERVER\n" >/etc/saf/tcp/_pmtab
+		echo "# VERSION=4
+lp::root:reserved:reserved:reserved:::::/var/spool/lp/fifos/listenS5 #NLPS SERVER\n" >>/etc/saf/tcp/_pmtab
+	fi
+fi
+
+
+#
+#	Add /dev/inet/to /etc/ttysrch to speed up ttyname
+#
+echo "/dev/inet MF" >>/etc/ttysrch
+
+#
+#	Create /etc/passwd and /etc/group entry for uid_nobody
+#	so in.fingerd can run
+#
+uid_nobody="`grep '^nobody:' /etc/passwd | cut -d: -f3`"
+gid_nobody="`grep '^nobody:' /etc/group | cut -d: -f3`"
+
+#if no nobody in /etc/passwd then create one
+if [ -z "$uid_nobody" ]
+then
+	# create nobody user with other as group id - it is changed below
+	passmgmt -a -c 'unprivileged user' -h /nonexistent -s /noshell  nobody
+fi
+
+#if no nobody grp in /etc/group, then get a unique group id and create an entry.
+if [ -z "$gid_nobody" ]
+then
+	for used_gid in `cut -d: -f3 </etc/group`
+	do
+		if [ ${gid_nobody:=0} -le $used_gid ]
+		then	
+			gid_nobody=`expr $used_gid + 1`
+		fi
+	done
+
+	echo "nobody::${gid_nobody}:" >>/etc/group
+fi
+
+#match nobody's group id in /etc/group with that of nobody user in /etc/passwd
+passmgmt -m -g  ${gid_nobody} nobody
+
+#
+#	Add root to list of users denied ftp access
+#
+if grep "root" /etc/ftpusers >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "root" >>/etc/inet/ftpusers
+	ln -s /etc/inet/ftpusers /etc/ftpusers
+fi
+
+#
+#	Create inetd as a port monitor.  Version doesn't matter
+#	since inetd doesn't usr _pmtab.
+#
+
+
+sacadm -l -p inetd >/dev/null 2>&1
+if [ $? != 0 ]
+then
+	sacadm -a -p inetd -t inetd -c /usr/sbin/inetd -v 1 -y "internet daemon"
+fi
+# iduild required
+#
+/etc/conf/bin/idbuild 2>> $TMP
+if [ $? != 0 ]
+then
+	message "The installation cannot be completed due to an error in the \
+kernel reconfiguration.  Please try the installation again.  If the \
+error occurs again, contact your AT&T Service Representative or AT&T Personal \
+Computer Dealer."
+ 	exit $FAILURE
+fi
+
+# make the nodes so that shutdown doesn't complain
+mkdir /tmp/inet/nodes
+for DRV in arp icmp ip llcloop rawip tcp udp
+do
+cp $CONF/node.d/$DRV /tmp/inet/nodes
+done
+$CONF/bin/idmknod -s -e /tmp/inet/nodes > /dev/null 2>&1 
+
+#give correct permission to /dev/rawip file
+chmod 600 /dev/rawip
+
+installf -f $PKGINST
+
+#
+# Now clean up
+#
+removef $PKGINST /tmp/pc586/* >/dev/null 2>&1
+echo "Removing temporary package files - please wait..."
+for i in app.o app.Master app.System 
+do
+	removef $PKGINST /tmp/inet/$i >/dev/null 2>&1
+	echo ".\c"
+done
+for i in arp.o arp.Master arp.Space arp.System arp.Node
+do
+	removef $PKGINST /tmp/inet/$i >/dev/null 2>&1
+	echo ".\c"
+done
+for i in icmp.o icmp.Master icmp.System icmp.Node
+do
+	removef $PKGINST /tmp/inet/$i >/dev/null 2>&1
+	echo ".\c"
+done
+for i in ip.o ip.Master ip.System ip.Node ip.Space
+do
+	removef $PKGINST /tmp/inet/$i >/dev/null 2>&1
+	echo ".\c"
+done
+for i in llcloop.o llcloop.Master llcloop.System llcloop.Node llcloop.Space
+do
+	removef $PKGINST /tmp/inet/$i >/dev/null 2>&1
+	echo ".\c"
+done
+for i in rawip.o rawip.Master rawip.System rawip.Node
+do
+	removef $PKGINST /tmp/inet/$i >/dev/null 2>&1
+	echo ".\c"
+done
+for i in tcp.o tcp.Master tcp.System tcp.Node tcp.Space
+do
+	removef $PKGINST /tmp/inet/$i >/dev/null 2>&1
+	echo ".\c"
+done
+for i in udp.o udp.Master udp.System udp.Node udp.Space
+do
+	removef $PKGINST /tmp/inet/$i >/dev/null 2>&1
+	echo ".\c"
+done
+removef $PKGINST /tmp/inet >/dev/null 2>&1
+removef -f $PKGINST >/dev/null 2>&1
+rm -f $TMP 1>/dev/null 2>&1
+exit 	10
+

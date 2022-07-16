@@ -1,0 +1,33 @@
+#	Copyright (c) 1988  Intel Corporation
+#	All Rights Reserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+#ident	"@(#)mbus:cmd/bootutils/config.d/config.mdp	1.1"
+#
+# sample configuration file  for SYPMDP
+#
+#	This configuration file is set up to work with both configurations  
+#	of the SYPMDP. 
+#
+[BL_Host_id=GLOBAL];
+	unix_hosta = 3;
+	unix_hostb = 5;
+	i224a_host = 7;
+
+# Unix Host 
+
+[BL_Host_id=$unix_hosta];
+	BL_Target_file = /unix;
+
+# Unix Host 
+
+[BL_Host_id=$unix_hostb];
+	BL_Target_file = /unix;
+	BL_quasi_server_id = $i224a_host;
+
+

@@ -1,0 +1,171 @@
+#ident	"@(#)mb1:proto/i386/Plists/Plist.MB1	1.2.2.1"
+#
+# MB1 directories
+#
+755	root	sys	etc/conf/pack.d/i214tp	d
+755	root	sys	etc/conf/pack.d/i214	d
+755	root	sys	etc/conf/pack.d/i546	d
+755	root	sys	etc/conf/pack.d/console	d
+755	root	sys	etc/conf/pack.d/iasy	d
+755	root	sys	etc/conf/pack.d/i8251	d
+755	root	sys	etc/conf/pack.d/ramd	d
+755	root	sys	etc/conf/pack.d/clock	d
+755	root	sys	etc/conf/pack.d/bps	d
+755	root	sys	etc/conf/pack.d/lma	d
+#
+# MB1 kernel files
+#
+644	root	sys	etc/conf/sdevice.d/i214
+644	root	sys	etc/conf/sdevice.d/i214tp
+644	root	sys	etc/conf/sdevice.d/i546
+644	root	sys	etc/conf/sdevice.d/console
+644	root	sys	etc/conf/sdevice.d/iasy
+644	root	sys	etc/conf/sdevice.d/i8251
+644	root	sys	etc/conf/sdevice.d/ramd
+644	root	sys	etc/conf/sdevice.d/clock
+644	root	sys	etc/conf/sdevice.d/bps
+644	root	sys	etc/conf/sdevice.d/lma
+755	root	sys	etc/conf/pack.d/i214/space.c
+755	root	sys	etc/conf/pack.d/i214/Driver.o
+755	root	sys	etc/conf/pack.d/i214tp/Driver.o
+755	root	sys	etc/conf/pack.d/i546/space.c
+755	root	sys	etc/conf/pack.d/i546/Driver.o
+755	root	sys	etc/conf/pack.d/lma/space.c
+755	root	sys	etc/conf/pack.d/lma/Driver.o
+755	root	sys	etc/conf/pack.d/console/space.c
+755	root	sys	etc/conf/pack.d/console/Driver.o
+644	root	sys	etc/conf/pack.d/iasy/space.c
+644	root	sys	etc/conf/pack.d/iasy/Driver.o
+755	root	sys	etc/conf/pack.d/i8251/space.c
+755	root	sys	etc/conf/pack.d/i8251/Driver.o
+755	root	sys	etc/conf/pack.d/ramd/space.c
+755	root	sys	etc/conf/pack.d/ramd/Driver.o
+755	root	sys	etc/conf/pack.d/clock/Driver.o
+644	root	sys	etc/conf/pack.d/bps/space.c
+644	root	sys	etc/conf/pack.d/bps/Driver.o
+644	root	sys	etc/conf/pack.d/bps/stubs.c
+644	root	sys	etc/conf/node.d/i546
+644	root	sys	etc/conf/node.d/ramd
+644	root	sys	etc/conf/node.d/clock
+#
+#	real	mode	boot	loaders
+#
+644	root	sys	etc/boot
+#
+#	msa	bootloaders
+#
+644	root	sys	etc/tsboot
+644	root	sys	etc/dsboot
+644	root	sys	etc/bsboot
+#
+# tape controle
+#
+755	root	sys	sbin/mt
+755	root	sys	usr/lib/tape	d
+555	root	sys	usr/lib/tape/tapecntl
+
+#
+#Files	missing	from	B10	ATT	Plist
+# These are on the AT boot media
+#
+# ETC
+#
+#
+744	bin	bin	etc/emulator
+444	bin	bin	etc/ioctl.syscon
+644	bin	bin	etc/inittab
+444	root	sys	etc/TIMEZONE
+644	root	sys	etc/ap/chan.ap
+644	root	sys	etc/group
+444	root	sys	etc/passwd
+555	root	sys	etc/fs/s5/mount
+555	root	sys	etc/conf/cf.d/sdevice
+#
+555	root	sys	etc/fs/s5/fsck
+555	root	sys	etc/fs/s5/labelit
+555	root	sys	etc/fs/s5/mkfs
+555	root	sys	etc/fs/bfs/fsck
+555	root	sys	etc/fs/bfs/mkfs
+555	root	sys	etc/fs/bfs/mount
+555	root	sys	etc/fs/ufs/fsck
+555	root	sys	etc/fs/ufs/labelit
+555	root	sys	etc/fs/ufs/mkfs
+555	root	sys	etc/fs/ufs/mount
+555	root	sys	etc/setmods
+#
+# SBIN
+#
+555	root	sys	sbin/autopush
+555	bin	bin	sbin/sh
+555	bin	bin	sbin/uadmin
+555	bin	bin	sbin/umount
+555	bin	bin	sbin/sync
+555	root	bin	sbin/init
+#
+555	bin	bin	sbin/flop_disk
+555	bin	bin	sbin/disksetup
+555	bin	bin	sbin/mknod
+555	bin	bin	sbin/mount
+555	root	bin	sbin/memsize
+#
+# USR/BIN
+#
+555	bin	bin	usr/bin/stty
+555	bin	bin	usr/bin/mv
+555	bin	bin	usr/bin/cp	l	usr/bin/mv
+555	bin	bin	usr/bin/ln	l	usr/bin/mv
+555	bin	bin	usr/bin/rm
+#
+555	bin	bin	usr/bin/chmod
+555	bin	bin	usr/bin/chgrp
+555	bin	bin	usr/bin/chown
+555	bin	bin	usr/bin/find
+555	bin	bin	usr/bin/cpio
+555	bin	bin	usr/bin/mkdir
+555	bin	bin	usr/bin/ed
+555	bin	bin	usr/bin/dd
+555	bin	bin	usr/bin/sleep
+555	bin	bin	usr/bin/expr
+#
+# USR/LIB
+#
+644	bin	bin	usr/lib/libbps.a
+755	bin	bin	usr/lib/libc.so.1
+#
+# opt
+#
+750	root	sys	opt/unix	d
+750	root	sys	opt/unix/setup
+750	root	sys	opt/unix/Plist
+750	root	sys	opt/unix/Plist.dev
+#
+#	Root File-system
+#
+644	root	sys	unix
+#
+# mb1 specific system include files
+#
+444	bin	bin	usr/include/sys/clockcal.h
+444	bin	bin	usr/include/sys/bbh.h
+444	bin	bin	usr/include/sys/bps.h
+444	bin	bin	usr/include/sys/bolt.h
+444	bin	bin	usr/include/sys/i214.h
+444	bin	bin	usr/include/sys/i546.h
+444	bin	bin	usr/include/sys/i8251.h
+444	bin	bin	usr/include/sys/ivlab.h
+444	bin	bin	usr/include/sys/ramd.h
+444	bin	bin	usr/include/sys/iasy.h
+444	bin	bin	usr/include/sys/serial.h
+#
+# add clone device
+#
+755	root	sys	etc/conf/pack.d/clone	d
+644	root	sys	etc/conf/pack.d/clone/Driver.o
+644	root	sys	etc/conf/sdevice.d/clone
+# 
+# /stand support
+#
+755	root	sys	stand	d
+755	root	sys	stand/config
+755	root	sys	stand/unix
+

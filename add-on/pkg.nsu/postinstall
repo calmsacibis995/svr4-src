@@ -1,0 +1,537 @@
+#ident	"@(#)pkg.nsu:postinstall	1.20.13.8"
+
+error() {
+	errflag=1
+	case $1 in
+	1)
+		echo ERROR: drvinstall on $2 failed
+		;;
+	2)
+		echo ERROR: could not create $2
+		;;
+	3)
+		echo ERROR: could not create pseudo-terminal slave devices
+		;;
+	4)
+		echo ERROR: copy failed
+		;;
+	5)
+		# message put out elsewhere
+		;;
+	6)
+		echo ERROR: installation error
+		;;
+	7)
+		echo ERROR:  mkboot on KERNEL failed
+		;;
+	*)
+		echo ERROR: undefined error
+		;;
+	esac
+}
+
+# install a module.  $1 is the module name
+
+do_install() {
+	ERR=/tmp/${1}.err
+	IDCOMPS="Driver.o Master System Mfsys Sfsys Rc Node Space.c"
+	if
+		[ -f ${1}.Dr ]
+	then
+		mv ${1}.Dr Driver.o
+	fi
+	if
+		[ -f ${1}.Sp ]
+	then
+		mv ${1}.Sp Space.c
+	fi
+	if
+		[ -f ${1}.Ma ]
+	then
+		grep -v "^[\*#]ident" ${1}.Ma > Master
+		rm -rf ${1}.Ma
+	fi
+	if
+		[ -f ${1}.Sy ]
+	then
+		grep -v "^[\*#]ident" ${1}.Sy |
+			sed "${SEDCMD1}"  > System
+		rm -rf ${1}.Sy
+	fi
+	if
+		[ -f ${1}.Mf ]
+	then
+		grep -v "^[\*#]ident" ${1}.Mf > Mfsys
+		rm -rf ${1}.Mf
+	fi
+	if
+		[ -f ${1}.Sf ]
+	then
+		grep -v "^[\*#]ident" ${1}.Sf |
+			sed "${SEDCMD2}" > Sfsys
+		rm -rf ${1}.Sf
+	fi
+	if
+		[ -f ${1}.No ]
+	then
+		grep -v "^[\*#]ident" ${1}.No > Node
+		rm -rf ${1}.No
+	fi
+	if
+		[ -f ${1}.Rc ]
+	then
+		grep -v "^[\*#]ident" ${1}.Rc > Rc
+		rm -rf ${1}.Rc
+	fi
+	echo "Installing ${NAME} ${1} module ..."
+	${CONFBIN}/idcheck -p ${1} > ${ERR} 2>&1
+	RET=$?
+	if [ ${RET} = 0 ] || [ ${RET} = 8 ]
+	then
+		${CONFBIN}/idinstall -a ${1} > ${ERR} 2>&1
+		RET=$?
+	else
+		${CONFBIN}/idinstall -u ${1} > ${ERR} 2>&1
+		RET=$?
+	fi
+	rm -rf ${IDCOMPS}
+	if [ ${RET} != 0 ]
+	then
+		message "The installation cannot be completed due to \
+an error in the driver installation during the installation of the ${1} \
+module of the ${NAME}.  The file ${ERR} contains the errors."
+			exit ${FAILURE}
+	fi
+	rm -rf ${ERR}
+}
+
+FAILURE=1	# fatal error
+
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be installed."
+
+SEDCMD1="s/[	 ]N[	 ]/	Y	/"
+SEDCMD2="s/[	 ]N/	Y/"
+
+cd /var/sadm/pkg/${PKG}/install
+
+errflag=0
+
+# determine that ID/TP tools are available
+
+if
+	[ ! -x ${CONFBIN}/idbuild -o ! -x ${CONFBIN}/idinstall \
+		-o ! -x ${CONFBIN}/idcheck ]
+then
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+
+VOLATILES=`echo /tmp/nsu/*`
+cd /tmp/nsu
+# install drivers/modules
+
+for MODULE in clone sockmod timod tirdwr pckt log
+do
+	do_install ${MODULE}
+done
+# update the ptm and ptem files under sdevice.d to specify the number
+# of pseudo terminals selected by the user and saved in PTNUM
+for i in ptm ptem
+do
+	if [ -f "${i}.Sy" ]
+	then
+		line=`grep "^$i[	 ]" $i.Sy 2>/dev/null`
+		set - $line
+		DEFAULT=$3
+		if [ "$DEFAULT" -ne "$PTNUM" ]
+		then
+			ed - $i.Sy 1>/dev/null 2>&1 <<-!
+				/^$i[ 	]/
+				s/$DEFAULT/$PTNUM/
+				.
+				w
+			!
+		fi
+	fi
+done
+# The following is done only if PTNUM > 0
+
+if
+	[ "$PTNUM" -gt 0 ]
+then
+
+	# add /dev/ptmx as major(clone), minor(ptm)
+
+	echo "clone	ptmx	c	ptm" > /tmp/nsu/ptm.No
+
+	# (re-)configure pseudo-terminal master device
+
+	installf ${PKGINST} /dev/pts d 755 root other || error 2 /dev/pts
+
+	TEMP=0
+	until
+		[ "$TEMP" -eq "$PTNUM" ]
+	do
+		echo "pts	pts/${TEMP}	c	${TEMP}" >> /tmp/nsu/pts.No
+		TEMP=`expr $TEMP + 1`
+	done
+
+	> /tmp/nsu/pts.Rc
+	echo "if [ -c /dev/pts000 ]" >> /tmp/nsu/pts.Rc
+	echo "then" >> /tmp/nsu/pts.Rc
+	echo "exit" >> /tmp/nsu/pts.Rc
+	echo "fi" >> /tmp/nsu/pts.Rc
+	echo "cd /dev/pts" >> /tmp/nsu/pts.Rc
+	echo "for i in *" >> /tmp/nsu/pts.Rc
+	echo "do" >> /tmp/nsu/pts.Rc
+	STRING="NUM=\`echo \$i | awk '{printf(\"%.3d\",\$1)}'\`"
+	echo "$STRING" >> /tmp/nsu/pts.Rc
+	echo "ln \$i /dev/pts\${NUM} >> /dev/null 2>&1" >> /tmp/nsu/pts.Rc
+	echo "done" >> /tmp/nsu/pts.Rc
+	
+
+	for MODULE in ptm ptem pts
+	do
+		do_install ${MODULE}
+	done
+	
+fi
+
+#	configure loopback transport providers
+
+for MODULE in ticlts ticots ticotsor
+do
+	do_install ${MODULE}
+done
+
+if [ ! -s /etc/netconfig ]
+then
+	cat >/etc/netconfig <<!
+#
+#	The Network Configuration File.
+#
+# Each entry is of the form:
+#
+# network_id semantics flags protofamily protoname device nametoaddr_libs
+#
+!
+fi
+
+grep '[ 	]loopback[ 	][ 	]*-[ 	][ 	]*/dev/ticlts[ 	]' /etc/netconfig >/dev/null 2>&1
+if
+	[ "$?" -ne "0" ]
+then
+	echo "ticlts	   tpi_clts	  v	loopback	-	/dev/ticlts	/usr/lib/straddr.so" >>/etc/netconfig
+fi
+
+grep '[ 	]loopback[ 	][ 	]*-[ 	][ 	]*/dev/ticots[ 	]' /etc/netconfig >/dev/null 2>&1
+if
+	[ "$?" -ne "0" ]
+then
+	echo "ticots	   tpi_cots	  v	loopback	-	/dev/ticots	/usr/lib/straddr.so" >>/etc/netconfig
+fi
+
+grep '[ 	]loopback[ 	][ 	]*-[ 	][ 	]*/dev/ticotsord[ 	]' /etc/netconfig >/dev/null 2>&1
+if
+	[ "$?" -ne "0" ]
+then
+	echo "ticotsord  tpi_cots_ord	  v	loopback	-	/dev/ticotsord	/usr/lib/straddr.so" >>/etc/netconfig
+fi
+
+#
+#	create the hosts and services files for the loopback drivers...
+#
+
+mkdir /etc/net /etc/net/ticots /etc/net/ticlts /etc/net/ticotsord >/dev/null 2>&1
+
+if grep '^rpcbind	rpc' /etc/net/ticots/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "rpcbind	rpc" >>/etc/net/ticots/services
+fi
+
+if grep '^keyserv	keyserv' /etc/net/ticots/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "keyserv	keyserv" >>/etc/net/ticots/services
+fi
+
+if grep '^listen	serve' /etc/net/ticots/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "listen	serve" >>/etc/net/ticots/services
+fi
+
+if grep '^statd	statd' /etc/net/ticots/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "statd	statd" >>/etc/net/ticots/services
+fi
+
+if grep '^lockd	lockd' /etc/net/ticots/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "lockd	lockd" >>/etc/net/ticots/services
+fi
+
+if grep '^nfsd	nfsd' /etc/net/ticots/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "nfsd	nfsd" >>/etc/net/ticots/services
+fi
+
+if grep '^rpcbind	rpc' /etc/net/ticotsord/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "rpcbind	rpc" >>/etc/net/ticotsord/services
+fi
+
+if grep '^keyserv	keyserv' /etc/net/ticotsord/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "keyserv	keyserv" >>/etc/net/ticotsord/services
+fi
+
+if grep '^listen	serve' /etc/net/ticotsord/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "listen	serve" >>/etc/net/ticotsord/services
+fi
+
+if grep '^statd	statd' /etc/net/ticotsord/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "statd	statd" >>/etc/net/ticotsord/services
+fi
+
+if grep '^lockd	lockd' /etc/net/ticotsord/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "lockd	lockd" >>/etc/net/ticotsord/services
+fi
+
+if grep '^nfsd	nfsd' /etc/net/ticotsord/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "nfsd	nfsd" >>/etc/net/ticotsord/services
+fi
+
+if grep '^rpcbind	rpc' /etc/net/ticlts/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "rpcbind	rpc" >>/etc/net/ticlts/services
+fi
+
+if grep '^keyserv	keyserv' /etc/net/ticlts/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "keyserv	keyserv" >>/etc/net/ticlts/services
+fi
+
+if grep '^listen	serve' /etc/net/ticlts/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "listen	serve" >>/etc/net/ticlts/services
+fi
+
+if grep '^statd	statd' /etc/net/ticlts/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "statd	statd" >>/etc/net/ticlts/services
+fi
+
+if grep '^lockd	lockd' /etc/net/ticlts/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "lockd	lockd" >>/etc/net/ticlts/services
+fi
+
+if grep '^nfsd	nfsd' /etc/net/ticlts/services >/dev/null 2>&1
+then
+	: Already there!
+else
+	echo "nfsd	nfsd" >>/etc/net/ticlts/services
+fi
+
+#
+#	update the hosts files for the loopback drivers...
+#
+
+UNAME=`/usr/bin/uname -n`
+echo "$UNAME	$UNAME" >/etc/net/ticots/hosts
+echo "$UNAME	$UNAME" >/etc/net/ticlts/hosts
+echo "$UNAME	$UNAME" >/etc/net/ticotsord/hosts
+
+#
+#	Modify the OAM menu to include name to address mapping...
+#
+
+NSMENU=/usr/sadm/sysadm/menu/netservices/netserve.menu
+if [ -f $NSMENU -a -f /usr/sadm/sysadm/menu/netservices/name_to_addr/map.menu ]
+then
+  if fgrep 'name_to_address^Machine and Service Address Management^name_to_addr/map.menu' $NSMENU >/dev/null 2>&1
+  then
+	: Already there!
+  else
+	echo "name_to_address^Machine and Service Address Management^name_to_addr/map.menu" >>$NSMENU
+	installf -c OAMintf $PKGINST $NSMENU f
+  fi
+fi
+
+#	install listen id (if not there) and fix up files
+
+/usr/bin/passmgmt -a -u 37 -g 4 -c "Network Admin" -h /usr/net/nls listen \
+	>/dev/null 2>&1
+STEM=$BASEDIR/etc/saf
+sacadm -L -t listen 2>/dev/null | cut -f1 -d: >/tmp/listeners
+
+#	convert the listener files that are already under SAF control
+
+for i in `cat /tmp/listeners`
+do
+	if
+		[ -f $STEM/$i/_pmtab ]
+	then
+		cp $STEM/$i/_pmtab $STEM/$i/_opmtab || error 4
+		/usr/lib/saf/dbfconv $STEM/$i/_opmtab $STEM/$i/_pmtab
+		if
+			[ "$?" -ne "0" ]
+		then
+			error 5
+			echo "ERROR: listener database conversion failed"
+		fi
+	fi
+done
+
+#	now convert any old style listeners into new format
+
+sacadm -L 2>/dev/null | cut -f1 -d: >/tmp/pms
+LHOME=$BASEDIR/usr/net/nls
+for i in $LHOME/*
+do
+	NETSPEC=`basename $i`
+	if
+		[ -d "$i" ]
+	then
+		grep $NETSPEC /tmp/listeners >/dev/null
+		if
+			[ "$?" -eq "0" ]
+		then
+
+#	old listener has already been converted
+
+			continue
+		fi
+
+#	does another port monitor exist with this name?
+
+		grep $NETSPEC /tmp/pms >/dev/null
+		if
+			[ "$?" -eq "0" ]
+		then
+			error 5
+			echo "ERROR: can not convert $NETSPEC listener to new format, tag already exists"
+			continue
+		fi
+
+#	ok to create new port monitor
+
+		COMMAND=/usr/lib/saf/listen
+		if
+			[ "$NETSPEC" = "starlan" ]
+		then
+			COMMAND="$COMMAND -m slan"
+		fi
+		sacadm -a -p $NETSPEC -t listen -c "$COMMAND $NETSPEC" -v `/usr/bin/nlsadmin -V` -y "$NETSPEC listener"
+		if
+			[ "$?" -ne "0" ]
+		then
+			error 5
+			echo "ERROR: can not create new port monitor entry for $NETSPEC"
+			continue
+		fi
+
+#	convert the database file and put it in the right place
+
+		if
+			[ -f "$i/dbf" ]
+		then
+			/usr/lib/saf/dbfconv $i/dbf $STEM/$NETSPEC/_pmtab
+			if
+				[ "$?" -ne "0" ]
+			then
+				error 5
+				echo "ERROR: listener database conversion failed"
+			else
+				sacadm -x -p $NETSPEC
+			fi
+		fi
+	fi
+done
+rm /tmp/listeners
+rm /tmp/pms
+
+# leave symbolic (and hard) links around for compatibility
+
+if [ -d $LHOME ]
+then
+	if [ -f $LHOME/listen ]
+	then
+        	rm $LHOME/listen
+	fi
+	if [ -f $LHOME/dbfconv ]
+	then
+        	rm $LHOME/dbfconv
+	fi
+	if [ -f $LHOME/nlps_server ]
+	then
+        	rm $LHOME/nlps_server
+	fi
+        ln -s $BASEDIR/usr/lib/saf/listen $LHOME/listen
+        ln -s $BASEDIR/usr/lib/saf/dbfconv $LHOME/dbfconv
+        ln -s $BASEDIR/usr/lib/saf/nlps_server $LHOME/nlps_server
+	ln $BASEDIR/usr/sbin/nlsadmin $BASEDIR/usr/bin/nlsadmin
+fi
+
+# rebuild for changes to take effect
+
+TMP=/tmp/nsu.$$
+${CONFBIN}/idbuild 2>>${TMP}
+if
+	[ "$?" -ne "0" ]
+then
+	echo "An error has occurred during the rebuild of the UNIX System."
+	echo "Errors have been written to the file " ${TMP}
+	exit ${FAILURE}
+fi
+
+installf -f ${PKGINST} || error 6
+
+rm -f ${TMP} 1>/dev/null 2>&1
+removef ${PKGINST} ${VOLATILES} >/dev/null 2>&1
+removef ${PKGINST} /tmp/nsu >/dev/null 2>&1
+removef -f ${PKGINST} >/dev/null 2>&1
+
+errflag=`expr ${errflag:=0} + 10`
+exit $errflag

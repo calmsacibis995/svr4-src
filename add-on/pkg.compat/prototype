@@ -1,0 +1,313 @@
+#ident	"@(#)pkg.compat:prototype	1.21.3.5"
+# source locations releative to the prototype file
+
+# packaging files
+i pkginfo
+i copyright
+i depend
+i postinstall
+
+# directories
+d none  /usr/share/man	775	bin	bin
+d none	/usr/ucb	775	root	bin
+d none	/usr/ucblib	775	bin	bin
+d none	/usr/ucblib/pub	775	bin	bin
+d none	/usr/ucblib/dict	775	bin	bin
+d none	/usr/ucblib/mqueue	775	bin	bin
+d none	/usr/ucblib/reftools	775	bin	bin
+d none	/usr/ucblib/reftools/papers	775	bin	bin
+d none	/usr/ucblib/doctools	775	bin	bin
+d none	/usr/ucblib/doctools/font	775	bin	bin
+d none	/usr/ucblib/doctools/font/devaps	775	bin	bin
+d none	/usr/ucblib/doctools/nterm	775	bin	bin
+d none	/usr/ucblib/doctools/tmac	775	bin	bin
+d none	/usr/ucbinclude	775	bin	bin
+d none	/usr/ucbinclude/sys	775	bin	bin
+d none	/usr/ucbinclude/ufs	775	bin	bin
+
+# package objects:
+!default 555 bin bin
+f none	/usr/ucb/arch
+f none	/usr/ucb/basename
+f none	/usr/ucb/checkeq
+f none	/usr/ucb/checknr
+f none	/usr/ucb/deroff
+f none	/usr/ucb/diffmk
+f none	/usr/ucb/du
+f none	/usr/ucb/echo
+f none	/usr/ucb/neqn
+f none	/usr/ucb/eqn
+f none	/usr/ucb/groups
+f none	/usr/ucb/grpck
+f none	/usr/ucb/hostname
+f none	/usr/ucb/lastcomm
+f none	/usr/ucb/ln
+f none	/usr/ucb/look
+f none	/usr/ucb/pagesize
+f none	/usr/ucb/printenv
+f none	/usr/ucb/prt
+f none	/usr/ucb/pwck
+f none	/usr/ucb/refer
+f none	/usr/ucb/addbib
+f none	/usr/ucb/sortbib
+f none	/usr/ucb/roffbib
+f none	/usr/ucb/indxbib
+f none	/usr/ucb/lookbib
+f none	/usr/ucb/sccs
+f none	/usr/ucb/soelim
+f none	/usr/ucb/sum
+f none	/usr/ucb/tbl
+f none	/usr/ucb/test
+f none	/usr/ucb/tr
+f none	/usr/ucb/tset
+l none	/usr/ucb/reset=/usr/ucb/tset
+f none	/usr/ucb/ul
+f none	/usr/ucb/users
+f none	/usr/ucb/whoami
+f none	/usr/ucb/aedplot
+f none	/usr/ucb/atoplot
+f none	/usr/ucb/bgplot
+f none	/usr/ucb/crtplot
+f none	/usr/ucb/dumbplot
+f none	/usr/ucb/gigiplot
+f none	/usr/ucb/hostid
+f none	/usr/ucb/hp7221plot
+f none	/usr/ucb/hpplot
+f none	/usr/ucb/implot
+f none	/usr/ucb/install
+f none	/usr/ucb/catman
+f none	/usr/ucb/man
+l none	/usr/ucb/apropos=/usr/ucb/man
+l none	/usr/ucb/whatis=/usr/ucb/man
+f none	/usr/ucb/plot
+f none	/usr/ucb/plottoa
+f none	/usr/ucb/renice
+f none	/usr/ucb/stty
+f none	/usr/ucb/t300
+f none	/usr/ucb/t300s
+f none	/usr/ucb/t4013
+f none	/usr/ucb/t450
+f none	/usr/ucb/tek
+f none	/usr/ucb/unifdef
+f none	/usr/ucb/uptime
+f none	/usr/ucb/vplot
+f none	/usr/ucb/w
+f none	/usr/ucb/chown
+f none	/usr/ucb/nroff
+f none	/usr/ucb/troff
+f none	/usr/ucb/ta
+f none	/usr/ucb/daps
+f none	/usr/ucb/biff
+f none	/usr/ucb/cc
+f none	/usr/ucb/ld
+f none	/usr/ucb/tcopy
+f none	/usr/ucb/mach
+f none	/usr/ucb/df
+f none	/usr/ucb/reboot
+f none	/usr/ucb/fastboot
+f none	/usr/ucb/halt
+f none	/usr/ucb/fasthalt
+f none	/usr/ucb/fsirand
+f none	/usr/ucb/logger
+f none	/usr/ucb/ls
+f none	/usr/ucb/ps	4755	root	sys
+f none	/usr/ucb/shutdown
+f none	/usr/ucb/which
+f none	/usr/ucb/xstr
+f none	/usr/ucb/expand
+f none	/usr/ucb/unexpand
+f none	/usr/ucb/lint
+f none	/usr/ucbinclude/a.out.h	0444	bin	bin
+f none	/usr/ucbinclude/curses.h	0444	bin	bin
+f none	/usr/ucbinclude/dbm.h	0444	bin	bin
+f none	/usr/ucbinclude/mp.h	0444	bin	bin
+f none	/usr/ucbinclude/setjmp.h	0444	bin	bin
+f none	/usr/ucbinclude/signal.h	0444	bin	bin
+f none	/usr/ucbinclude/stdio.h	0444	bin	bin
+f none	/usr/ucbinclude/strings.h	0444	bin	bin
+f none	/usr/ucbinclude/assert.h	0444	bin	bin
+f none	/usr/ucbinclude/fp.h	0444	bin	bin
+f none	/usr/ucbinclude/ndbm.h	0444	bin	bin
+f none	/usr/ucbinclude/math.h	0444	bin	bin
+f none	/usr/ucbinclude/regexp.h	0444	bin	bin
+f none	/usr/ucbinclude/resolv.h	0444	bin	bin
+f none	/usr/ucbinclude/sgtty.h	0444	bin	bin
+f none	/usr/ucbinclude/struct.h	0444	bin	bin
+f none	/usr/ucbinclude/sunfp.h	0444	bin	bin
+f none	/usr/ucbinclude/sysexits.h	0444	bin	bin
+f none	/usr/ucbinclude/syscall.h	0444	bin	bin
+f none	/usr/ucbinclude/unistd.h	0444	bin	bin
+f none	/usr/ucbinclude/vfont.h	0444	bin	bin
+f none	/usr/ucbinclude/sys/dir.h	0444	bin	bin
+f none	/usr/ucbinclude/sys/reboot.h	0444	bin	bin
+f none	/usr/ucbinclude/sys/resource.h	0444	bin	bin
+f none	/usr/ucbinclude/sys/sysmacros.h	0444	bin	bin
+f none	/usr/ucbinclude/sys/fcntl.h	0444	bin	bin
+f none	/usr/ucbinclude/sys/file.h	0444	bin	bin
+f none	/usr/ucbinclude/sys/ieeefp.h	0444	bin	bin
+f none	/usr/ucbinclude/sys/param.h	0444	bin	bin
+f none	/usr/ucbinclude/sys/types.h	0444	bin	bin
+f none	/usr/ucbinclude/sys/tty.h	0444	bin	bin
+f none	/usr/ucbinclude/sys/ttychars.h	0444	bin	bin
+f none	/usr/ucbinclude/sys/vfs.h	0444	bin	bin
+f none	/usr/ucbinclude/sys/wait.h	0444	bin	bin
+f none	/usr/ucbinclude/sys/signal.h	0444	bin	bin
+f none	/usr/ucbinclude/sys/ioctl.h	0444	bin	bin
+f none	/usr/ucbinclude/ufs/quota.h	0444	bin	bin
+f none	/usr/ucblib/reftools/mkey
+f none	/usr/ucblib/reftools/inv
+f none	/usr/ucblib/reftools/hunt
+f none	/usr/ucblib/reftools/papers/Rbstjissue
+f none	/usr/ucblib/reftools/papers/runinv
+f none	/usr/ucblib/reftools/papers/Rv7man
+f none	/usr/ucblib/doctools/tmac/tmac.bib	0644	bin	bin
+f none	/usr/ucblib/pub/eqnchar
+f none	/usr/ucblib/dict/words
+f none	/usr/ucblib/libucb.a	0644	bin	bin
+f none	/usr/ucblib/libdbm.a	0644	bin	bin
+f none	/usr/ucblib/libmp.a	0644	bin	bin
+f none	/usr/ucblib/librpcsoc.a	0644	bin	bin
+f none	/usr/ucblib/libcurses.a	0644	bin	bin
+f none	/usr/ucblib/libtermcap.a	0644	bin	bin
+l none	/usr/ucblib/libtermlib.a=/usr/ucblib/libtermcap.a
+f none	/usr/ucblib/getNAME
+f none	/usr/ucblib/makewhatis
+f none	/usr/ucblib/doctools/tmac/BIG
+f none	/usr/ucblib/doctools/tmac/acm.me
+f none	/usr/ucblib/doctools/tmac/an
+f none	/usr/ucblib/doctools/tmac/bib
+f none	/usr/ucblib/doctools/tmac/bl
+f none	/usr/ucblib/doctools/tmac/boston
+f none	/usr/ucblib/doctools/tmac/boston.toc
+f none	/usr/ucblib/doctools/tmac/chars.me
+f none	/usr/ucblib/doctools/tmac/deltext.me
+f none	/usr/ucblib/doctools/tmac/e
+f none	/usr/ucblib/doctools/tmac/eqn.me
+f none	/usr/ucblib/doctools/tmac/exp
+f none	/usr/ucblib/doctools/tmac/exp.acc
+f none	/usr/ucblib/doctools/tmac/exp.eqn
+f none	/usr/ucblib/doctools/tmac/exp.ref
+f none	/usr/ucblib/doctools/tmac/exp.tbl
+f none	/usr/ucblib/doctools/tmac/exp.toc
+f none	/usr/ucblib/doctools/tmac/float.me
+f none	/usr/ucblib/doctools/tmac/footnote.me
+f none	/usr/ucblib/doctools/tmac/index.me
+f none	/usr/ucblib/doctools/tmac/local.me
+f none	/usr/ucblib/doctools/tmac/m
+f none	/usr/ucblib/doctools/tmac/man.macs
+f none	/usr/ucblib/doctools/tmac/mmn
+f none	/usr/ucblib/doctools/tmac/mmt
+f none	/usr/ucblib/doctools/tmac/ms.acc
+f none	/usr/ucblib/doctools/tmac/ms.cov
+f none	/usr/ucblib/doctools/tmac/ms.eqn
+f none	/usr/ucblib/doctools/tmac/ms.ref
+f none	/usr/ucblib/doctools/tmac/ms.tbl
+f none	/usr/ucblib/doctools/tmac/ms.ths
+f none	/usr/ucblib/doctools/tmac/ms.toc
+f none	/usr/ucblib/doctools/tmac/null.me
+f none	/usr/ucblib/doctools/tmac/refer.me
+f none	/usr/ucblib/doctools/tmac/s
+f none	/usr/ucblib/doctools/tmac/sh.me
+f none	/usr/ucblib/doctools/tmac/sun
+f none	/usr/ucblib/doctools/tmac/sunman
+f none	/usr/ucblib/doctools/tmac/tbl.me
+f none	/usr/ucblib/doctools/tmac/thesis.me
+f none	/usr/ucblib/doctools/tmac/tx.map
+f none	/usr/ucblib/doctools/tmac/uff
+f none	/usr/ucblib/doctools/tmac/v
+f none	/usr/ucblib/doctools/tmac/xps
+f none	/usr/ucblib/doctools/nterm/tab.8510
+f none	/usr/ucblib/doctools/nterm/tab.2631
+f none	/usr/ucblib/doctools/nterm/tab.2631-c
+f none	/usr/ucblib/doctools/nterm/tab.2631-e
+f none	/usr/ucblib/doctools/nterm/tab.300
+f none	/usr/ucblib/doctools/nterm/tab.300-12
+f none	/usr/ucblib/doctools/nterm/tab.300s
+f none	/usr/ucblib/doctools/nterm/tab.300s-12
+f none	/usr/ucblib/doctools/nterm/tab.37
+f none	/usr/ucblib/doctools/nterm/tab.382
+f none	/usr/ucblib/doctools/nterm/tab.4000a
+f none	/usr/ucblib/doctools/nterm/tab.450
+f none	/usr/ucblib/doctools/nterm/tab.450-12
+f none	/usr/ucblib/doctools/nterm/tab.832
+f none	/usr/ucblib/doctools/nterm/tab.lp
+f none	/usr/ucblib/doctools/nterm/tab.tn300
+f none	/usr/ucblib/doctools/nterm/tab.X
+f none	/usr/ucblib/doctools/nterm/tab.300S
+f none	/usr/ucblib/doctools/nterm/tab.300S-12
+f none	/usr/ucblib/doctools/nterm/tab.4000A
+f none	/usr/ucblib/doctools/font/devaps/B.add
+f none	/usr/ucblib/doctools/font/devaps/B.out
+f none	/usr/ucblib/doctools/font/devaps/C.out
+f none	/usr/ucblib/doctools/font/devaps/G.out
+f none	/usr/ucblib/doctools/font/devaps/H.out
+f none	/usr/ucblib/doctools/font/devaps/I.add
+f none	/usr/ucblib/doctools/font/devaps/I.out
+f none	/usr/ucblib/doctools/font/devaps/R.add
+f none	/usr/ucblib/doctools/font/devaps/R.out
+f none	/usr/ucblib/doctools/font/devaps/S.add
+f none	/usr/ucblib/doctools/font/devaps/S.out
+f none	/usr/ucblib/doctools/font/devaps/BI.out
+f none	/usr/ucblib/doctools/font/devaps/CE.out
+f none	/usr/ucblib/doctools/font/devaps/CI.out
+f none	/usr/ucblib/doctools/font/devaps/CT.add
+f none	/usr/ucblib/doctools/font/devaps/CT.out
+f none	/usr/ucblib/doctools/font/devaps/CW.add
+f none	/usr/ucblib/doctools/font/devaps/CW.out
+f none	/usr/ucblib/doctools/font/devaps/CX.add
+f none	/usr/ucblib/doctools/font/devaps/CX.out
+f none	/usr/ucblib/doctools/font/devaps/GB.add
+f none	/usr/ucblib/doctools/font/devaps/GB.out
+f none	/usr/ucblib/doctools/font/devaps/GI.add
+f none	/usr/ucblib/doctools/font/devaps/GI.out
+f none	/usr/ucblib/doctools/font/devaps/GR.add
+f none	/usr/ucblib/doctools/font/devaps/GR.out
+f none	/usr/ucblib/doctools/font/devaps/GS.add
+f none	/usr/ucblib/doctools/font/devaps/GS.out
+f none	/usr/ucblib/doctools/font/devaps/HB.out
+f none	/usr/ucblib/doctools/font/devaps/HI.add
+f none	/usr/ucblib/doctools/font/devaps/HI.out
+f none	/usr/ucblib/doctools/font/devaps/HK.add
+f none	/usr/ucblib/doctools/font/devaps/HK.out
+f none	/usr/ucblib/doctools/font/devaps/HL.out
+f none	/usr/ucblib/doctools/font/devaps/HM.out
+f none	/usr/ucblib/doctools/font/devaps/HX.add
+f none	/usr/ucblib/doctools/font/devaps/HX.out
+f none	/usr/ucblib/doctools/font/devaps/MB.out
+f none	/usr/ucblib/doctools/font/devaps/MI.out
+f none	/usr/ucblib/doctools/font/devaps/MR.out
+f none	/usr/ucblib/doctools/font/devaps/MX.out
+f none	/usr/ucblib/doctools/font/devaps/PA.out
+f none	/usr/ucblib/doctools/font/devaps/PB.out
+f none	/usr/ucblib/doctools/font/devaps/PI.out
+f none	/usr/ucblib/doctools/font/devaps/PO.add
+f none	/usr/ucblib/doctools/font/devaps/PO.out
+f none	/usr/ucblib/doctools/font/devaps/PX.add
+f none	/usr/ucblib/doctools/font/devaps/PX.out
+f none	/usr/ucblib/doctools/font/devaps/S1.add
+f none	/usr/ucblib/doctools/font/devaps/S1.out
+f none	/usr/ucblib/doctools/font/devaps/SC.add
+f none	/usr/ucblib/doctools/font/devaps/SC.out
+f none	/usr/ucblib/doctools/font/devaps/SM.add
+f none	/usr/ucblib/doctools/font/devaps/SM.out
+f none	/usr/ucblib/doctools/font/devaps/TB.out
+f none	/usr/ucblib/doctools/font/devaps/TX.add
+f none	/usr/ucblib/doctools/font/devaps/TX.out
+f none	/usr/ucblib/doctools/font/devaps/DESC.out
+f none	/usr/ucblib/doctools/font/devaps/version
+f none	/usr/ucblib/sendmail.hf	444	bin	bin
+# f none	/usr/ucblib/sendmail.fc=/dev/null	660	bin	bin
+f none	/usr/ucblib/subsidiary.cf	444	bin	bin
+f none	/usr/ucblib/main.cf	444	bin	bin
+f none	/usr/ucblib/sendmail.cf	444	bin	bin
+f none	/usr/ucblib/aliases
+f none	/usr/ucb/vacation
+f none	/usr/ucb/mconnect
+f none	/usr/ucb/mailstats
+s none	/usr/ucb/newaliases=/usr/ucblib/sendmail
+s none	/usr/ucb/mailq=/usr/ucblib/sendmail
+f none	/usr/ucblib/mailsurr
+f none	/usr/ucblib/sendmail	4551 root sys
+f none	/usr/ucblib/sendmail.mx	4551 root sys
+f none	/usr/ucblib/binmail 	4551 root sys
+f none	/usr/ucblib/binrmail 	4551 root sys

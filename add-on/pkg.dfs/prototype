@@ -1,0 +1,26 @@
+#ident	"@(#)pkg.dfs:prototype	1.1.2.1"
+#
+# information files
+#
+
+i pkginfo
+i copyright
+i postinstall
+i preremove
+#
+# package object files and directories
+#
+!default	775	root	sys
+d	none	/etc	?	?	?
+d	none	/etc/dfs
+d	none	/usr	?	?	?
+d	none	/usr/sbin	?	?	?
+
+!default	555	bin	bin
+f	none	usr/sbin/dfshares
+f	none	usr/sbin/general
+f	none	usr/sbin/share
+f	none	usr/sbin/shareall
+f	none	usr/sbin/unshareall
+l	none	usr/sbin/dfmounts=usr/sbin/dfshares
+l	none	usr/sbin/unshare=usr/sbin/general

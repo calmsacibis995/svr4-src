@@ -1,0 +1,12 @@
+#ident	"@(#)proto:i386/at386/profile	1.1.1.1"
+PATH=/sbin:/usr/bin:/etc:/:/install/sbin:/install/usr/bin:/install/usr/sbin::/tmp
+TERM=AT386-M
+export PATH TERM
+stty sane
+stty erase '^h' echoe -parity -parenb
+stty opost onlcr tab3 brkint ignpar ixon ixany istrip echo echoe echok icanon
+stty isig cs8 cread
+stty -parodd -cstopb -hupcl -clocal -loblk -parext -ignbrk -parmrk -inpck -inlcr
+stty -igncr -iuclc -ixoff -imaxbel -xcase -echonl -noflsh -tostop -echoctl -echoprt
+stty -echoke -defecho -flusho -pendin -iexten -olcuc -ocrnl -onocr -onlret -ofill -ofdel
+INSTALL

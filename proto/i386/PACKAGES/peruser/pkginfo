@@ -1,0 +1,15 @@
+#ident	"@(#)proto:i386/PACKAGES/peruser/pkginfo	1.1"
+
+#
+# "must" parameters
+#
+
+PKG="license"
+CLASSES="none"
+NAME="UNIX System V/386 Release 4.0 Unlimited User License Package"
+RELEASE="4.0"
+VERSION="1.0"
+VENDOR="AT&T"
+CATEGORY=system
+ARCH="i386"
+PREDEPEND="license"

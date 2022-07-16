@@ -1,0 +1,948 @@
+$TITLE('SAMPLE LINE DISCIPLINE SERVER MODULE')
+$ROM COMPACT OPTIMIZE(3) CODE NOINTVECTOR MOD186
+
+/*	Copyright (c) 1987  Intel Corporation	*/
+/*	All Rights Reserved	*/
+
+/*	INTEL CORPORATION PROPRIETARY INFORMATION	*/
+
+/*	This software is supplied to AT & T under the terms of a license   */ 
+/*	agreement with Intel Corporation and may not be copied nor         */
+/*	disclosed except in accordance with the terms of that agreement.   */	
+
+/*
+#ident	"@(#)mbus:cmd/mbusutils/mb2.d/cci.d/example.d/example.p86	1.1"
+*/
+
+ex$mod:DO;
+
+$EJECT
+
+/****************************************************************************/
+/*                                                                          */
+/*          		S E R V E R  M O D U L E			    */
+/*          		------------------------			    */
+/*									    */
+/*	This module contains two tasks: the server task and the cci task.   */
+/*      The server task implements a sample protocol between the host       */
+/*      and the line discipline job.  Messages are exchanged 		    */
+/*      using the MBII Transport Protocol.  Interaction occurs when 	    */
+/*      get CS register value, create segment,				    */
+/*      delete segment, read segment and write segment commands are issued  */
+/*      by the host.                                               	    */
+/*									    */
+/*                                                                          */
+/*      The cci task implements the interaction between the DataComm.       */
+/*      Monitor and the line discipline job.  Messages are exchanged        */
+/*      using RMX mailboxes.  Interaction occurs when 			    */
+/*      bind, attach, switch, detach or unbind commands are issued 	    */
+/*      by the DataComm Monitor.                                  	    */
+/*									    */
+/*      Exported Procedures:                                                */
+/*      --------------------                                                */
+/*                                                                          */
+/*      The are no exported procedures.  		                    */
+/*                                                                          */
+/*                                                                          */
+/****************************************************************************/
+
+$INCLUDE(example.lit)
+$INCLUDE(rmx.ext)
+
+$EJECT
+/****************************************************************************/
+/*                                                                          */
+/*               S E R V E R   M O D U L E				                	*/
+/*               -------------------------                                  */
+/*                                                                          */
+/****************************************************************************/
+
+		/* Global Variables */
+
+DECLARE
+	default_port	WORD,
+	port_tok		TOKEN,
+	buf_pool_tok	TOKEN,
+	active_host		WORD;
+		
+DECLARE
+	excep_info		STRUCTURE(
+						ptr		POINTER,
+						mode	BYTE),
+	msg				TOKEN;
+
+DECLARE
+	data_buf_seg	TOKEN,
+	req_mbx			TOKEN,
+	reply_mbx		TOKEN,
+	task_tok		TOKEN;
+
+/* Global variable declared for data segment used in create task */
+		
+DECLARE
+	dummy			WORD;
+
+/* Message overlays for messages from the CCI server */
+
+DECLARE
+	msg_buf			BASED msg(32)	BYTE,
+	bind_req_buf	BASED msg	bind_req,
+	bind_resp_buf	BASED msg	bind_resp,
+	att_req_buf		BASED msg	attach_req,
+	att_resp_buf	BASED msg	attach_resp,
+	det_req_buf		BASED msg	detach_req,
+	det_resp_buf	BASED msg	detach_resp,
+	sw_req_buf		BASED msg	switch_req,
+	sw_resp_buf		BASED msg	switch_resp,
+	unbind_req_buf	BASED msg	unbind_req,
+	unbind_resp_buf	BASED msg	unbind_resp;
+	
+$EJECT
+
+/****************************************************************************/
+/*                                                                          */
+/*                          GET CODE SEGMENT VALUE                          */
+/*                          ----------------------                          */
+/*                                                                          */
+/*      This procedure returns the CS register value in the control message */
+/*      as part of the reply sent to the host. This value is taken as the   */
+/*      base part of a pointer to one of the procedures in the sample       */
+/*      script module.                                                      */
+/*																			*/
+/*      Invocation:                                                         */
+/*      -----------                                                         */
+/*                                                                          */
+/*                      CALL get_cs_value(msg_buf_p)			            */
+/*                                                                          */
+/*                      where                                               */
+/*                          msg_buf_p	    is a POINTER to a buffer        */
+/*                                      	which contains information      */
+/*                                      	about the received message.     */
+/*																			*/ 
+/****************************************************************************/
+
+get_cs_value: PROCEDURE(msg_buf_p) PUBLIC REENTRANT;
+
+DECLARE
+	msg_buf_p			POINTER,
+	msg_buf				BASED msg_buf_p	info_rec;
+
+DECLARE
+	msg_p				POINTER,
+	cs_req_buf			BASED msg_p cs_req,
+	cs_resp_buf			BASED msg_p cs_resp,
+	tid					WORD,
+	sel_w				WORD,
+	sel					SELECTOR AT (@sel_w),
+	excep				WORD,
+	task_tok			TOKEN;
+
+	/* Get the control message sent from the host */
+
+	msg_p = @msg_buf.msg(0);
+
+	/* Get the CS register value */
+
+	sel = SELECTOROF(@server_task);
+	cs_resp_buf.cs_val = sel_w; 
+	
+	/* Set the status and send the reply */
+
+	cs_resp_buf.status = E$OK;
+	tid = rq$send$reply(port_tok, msg_buf.skt, msg_buf.tid, 
+		                    @msg_buf.msg(0), NIL, 0, 0, @excep);
+						
+
+END get_cs_value;
+
+$EJECT
+
+/****************************************************************************/
+/*                                                                          */
+/*                          CREATE DATA SEGMENT                             */
+/*                          -------------------                             */
+/*                                                                          */
+/*      This procedure uses an RMX 86 Nucleus call to create a segment       */
+/*      of the size requested by the host in the command.  If the system    */
+/*      call failed, an error is returned, else the token for the created   */
+/*      segment is returned as a word value in the reply sent to the host.  */
+/*																			*/
+/*      Invocation:                                                         */
+/*      -----------                                                         */
+/*                                                                          */
+/*                      CALL create_data_seg(msg_buf_p)			            */
+/*                                                                          */
+/*                      where                                               */
+/*                          msg_buf_p	    is a POINTER to a buffer        */
+/*                                      	which contains information      */
+/*                                      	about the received message.     */
+/*																			*/ 
+/****************************************************************************/
+
+create_data_seg: PROCEDURE(msg_buf_p) PUBLIC REENTRANT;
+
+DECLARE
+	msg_buf_p			POINTER,
+	msg_buf				BASED msg_buf_p	info_rec;
+	
+DECLARE
+	msg_p				POINTER,
+	crt_req_buf			BASED msg_p crt_seg_req,
+	crt_resp_buf		BASED msg_p crt_seg_resp,
+	tid					WORD,
+	act_len				WORD,
+	excep				WORD;
+	
+	/* Get the control message sent from the host */
+
+	msg_p = @msg_buf.msg(0);
+
+	/* Create data segment of requested size */
+
+	crt_resp_buf.segtok = rq$create$segment(crt_req_buf.len , @excep);
+    		
+	/* Set the status and send the reply */
+
+	crt_resp_buf.status = excep;
+	crt_resp_buf.len = crt_req_buf.len;
+
+	tid = rq$send$reply(port_tok, msg_buf.skt, msg_buf.tid, 
+		                    @msg_buf.msg(0), NIL, 0, 0, @excep);
+			
+END create_data_seg;
+
+$EJECT
+
+/****************************************************************************/
+/*                                                                          */
+/*                          DELETE DATA SEGMENT                             */
+/*                          -------------------                             */
+/*                                                                          */
+/*      This procedure uses an RMX 86 Nucleus System call to delete a       */
+/*      data segment.  The token for the segment to be deleted is sent as   */
+/*      a word value by the host in the command request.  If the system     */
+/*      call failed, an error is returned, else the token for the deleted   */
+/*      segment is returned in the reply sent to the host.  An error is     */
+/*      also returned if the received token is not valid.                   */
+/*																			*/
+/*      Invocation:                                                         */
+/*      -----------                                                         */
+/*                                                                          */
+/*                      CALL delete_data_seg(msg_buf_p)			            */
+/*                                                                          */
+/*                      where                                               */
+/*                          msg_buf_p	    is a POINTER to a buffer        */
+/*                                      	which contains information      */
+/*                                      	about the received message.     */
+/*																			*/ 
+/****************************************************************************/
+
+delete_data_seg: PROCEDURE(msg_buf_p) PUBLIC REENTRANT;
+
+DECLARE
+	msg_buf_p			POINTER,
+	msg_buf				BASED msg_buf_p	info_rec;
+	
+DECLARE
+	msg_p				POINTER,
+	del_req_buf			BASED msg_p del_seg_req,
+	del_resp_buf		BASED msg_p del_seg_resp,
+	tid					WORD,
+	tok_type			WORD,
+	excep				WORD;
+	
+	/* Get the control message sent from the host */
+
+	msg_p = @msg_buf.msg(0);
+
+	/* Check to ensure a valid token was sent */
+
+	tok_type = rq$get$type(del_req_buf.segtok, @excep);
+    IF (tok_type <> SEG_TYPE) OR (excep <> E$OK) THEN
+		del_resp_buf.status = ERROR;
+	ELSE	
+		/* If token is valid, delete the specified segment */
+
+	    CALL rq$delete$segment(del_req_buf.segtok, @excep);
+
+	/* Set the status and send the reply */
+
+	del_resp_buf.status = excep;
+	tid = rq$send$reply(port_tok, msg_buf.skt, msg_buf.tid, 
+		                    @msg_buf.msg(0), NIL, 0, 0, @excep);
+			
+END delete_data_seg;
+
+$EJECT
+
+/****************************************************************************/
+/*                                                                          */
+/*                          READ DATA SEGMENT                               */
+/*                          -----------------                               */
+/*                                                                          */
+/*      The token for the segment to be read and the requested length are   */
+/*      sent as word values by the host in the command request.  The        */
+/*      protocol returns a control message with the command response and    *
+/*      a data message which the contains the data that was read.  An error */
+/*      is returned if the received token or the requested size is          */
+/*      not valid.                                                          */
+/*																			*/
+/*      Invocation:                                                         */
+/*      -----------                                                         */
+/*                                                                          */
+/*                      CALL read_data_seg(msg_buf_p)			            */
+/*                                                                          */
+/*                      where                                               */
+/*                          msg_buf_p	    is a POINTER to a buffer        */
+/*                                      	which contains information      */
+/*                                      	about the received message.     */
+/*																			*/ 
+/****************************************************************************/
+
+read_data_seg: PROCEDURE(msg_buf_p) PUBLIC REENTRANT;
+
+DECLARE
+	msg_buf_p			POINTER,
+	msg_buf				BASED msg_buf_p	info_rec;
+	
+DECLARE
+	msg_p				POINTER,
+	rd_req_buf			BASED msg_p read_req,
+	rd_resp_buf			BASED msg_p read_resp,
+	tid					WORD,
+	tok_type			WORD,
+	seg_size			WORD,
+	excep				WORD;
+	
+	/* Get the control message sent from the host */
+
+	msg_p = @msg_buf.msg(0);
+
+	/* Validate the segment and its size */
+		
+	tok_type = rq$get$type(rd_req_buf.segtok, @excep);
+	IF (tok_type <> SEG_TYPE) OR (excep <> E$OK) THEN
+		rd_resp_buf.status = ERROR;
+
+	ELSE DO;
+		seg_size = rq$get$size(rd_req_buf.segtok, @excep);
+		IF rd_req_buf.len > seg_size THEN
+			rd_resp_buf.status = ERROR;
+		END;
+	
+	/* If an error is found, return the status but no data */
+
+	IF rd_resp_buf.status = ERROR THEN
+		tid = rq$send$reply(port_tok, msg_buf.skt, msg_buf.tid, 
+	                    @msg_buf.msg(0), NIL, 0, 0, @excep);
+	ELSE DO;
+
+		/* If no error, return the status and a valid data message */
+	
+		rd_resp_buf.status = E$OK;
+		tid = rq$send$reply(port_tok, msg_buf.skt,msg_buf.tid,@msg_buf.msg(0), 
+		          BUILDPTR(rd_req_buf.segtok,0), rd_req_buf.len, 0, @excep);
+		END;
+	
+END read_data_seg;
+
+$EJECT
+
+/****************************************************************************/
+/*                                                                          */
+/*                          WRITE DATA SEGMENT                              */
+/*                          ------------------                              */
+/*                                                                          */
+/*      The token for the segment to be written and the requested length    */
+/*      are sent as word values by the host in the request control message. */
+/*      The data to be written is sent in a data message. A 4K buffer is	*/
+/*		posted at the buffer pool for write requests. If the request is 	*/
+/*		for more than 4K the data is obtained by using the MBII request     */
+/*      fragmentation support.  The protocol returns a control message 		*/
+/*      with the command response.  An error is returned if the receive     */
+/*      token or the requested size is not valid.                           */
+/*																			*/
+/*      Invocation:                                                         */
+/*      -----------                                                         */
+/*                      CALL write_data_seg(msg_buf_p)			            */
+/*                                                                          */
+/*                      where                                               */
+/*                          msg_buf_p	    is a POINTER to a buffer        */
+/*                                      	which contains information      */
+/*                                      	about the received message.     */
+/*																			*/ 
+/****************************************************************************/
+
+write_data_seg: PROCEDURE(msg_buf_p, data_p) PUBLIC REENTRANT;
+
+DECLARE
+	msg_buf_p			POINTER,
+	msg_buf				BASED msg_buf_p	info_rec,
+	data_p				POINTER;
+	
+DECLARE
+	msg_p				POINTER,
+	wr_req_buf			BASED msg_p write_req,
+	wr_resp_buf			BASED msg_p write_resp,
+	tid					WORD,
+	seg_size			WORD,
+	tok_type			WORD,
+	excep				WORD,
+	valid_flg 			BYTE;
+	
+	/* Get the control message sent from the host */
+
+	msg_p = @msg_buf.msg(0);
+	
+	valid_flg = TRUE;
+	
+	/* Validate the segment and its size */
+		
+	tok_type = rq$get$type(wr_req_buf.segtok, @excep);
+	IF (tok_type <> SEG_TYPE) OR (excep <> E$OK) THEN
+		valid_flg = FALSE;
+	
+	ELSE 
+		DO;	
+		seg_size = rq$get$size(wr_req_buf.segtok, @excep);
+		IF msg_buf.len > seg_size THEN
+			valid_flg = FALSE;
+		END;
+
+	/* Normal Case, just copy data from buffer into segment */
+
+	IF msg_buf.status = E$OK THEN
+
+		DO; 
+		IF (valid_flg = TRUE) THEN
+			DO;
+			CALL MOVB(data_p, BUILDPTR(wr_req_buf.segtok,0), 
+					msg_buf.len);
+     
+			CALL rq$release$buffer(buf_pool_tok, SELECTOROF(data_p),
+										0, @excep);
+
+			IF excep <> OK THEN
+    			CAUSE$INTERRUPT(3);
+    		END;
+    			
+		ELSE IF (data_p <> NIL) THEN
+			DO;
+			CALL rq$release$buffer(buf_pool_tok, SELECTOROF(data_p),
+										0, @excep);
+			IF excep <> OK THEN
+    			CAUSE$INTERRUPT(3);
+    		END;
+       			
+		END;
+
+		/* If in Request Fragmentation, use receive fragment to obtain data */
+		
+		ELSE IF msg_buf.status = E$NO$LOCAL$BUFFER THEN
+			DO; 
+
+			/* If valid segment get data directly into the segment */
+			
+			IF (valid_flg = TRUE) THEN
+				CALL rq$receive$fragment(port_tok, msg_buf.skt, 
+							msg_buf.tid, BUILDPTR(wr_req_buf.segtok,0), 
+							msg_buf.len, 0, @excep);
+			ELSE
+			/* Otherwise just do a receive frag of zero to 
+					terminate request */
+
+			CALL rq$receive$fragment(port_tok, msg_buf.skt, 
+								msg_buf.tid, NIL, 0, 0, @excep);
+			
+			IF excep <> E$OK THEN
+				CAUSE$INTERRUPT(3);
+
+			END;
+
+		IF (valid_flg = TRUE) THEN
+			wr_resp_buf.status = OK;
+		ELSE
+			wr_resp_buf.status = ERROR;
+				
+		tid = rq$send$reply(port_tok, msg_buf.skt, msg_buf.tid, 
+	                    @msg_buf.msg(0), NIL, 0, 0, @excep);
+						
+		IF excep <> OK THEN
+			CAUSE$INTERRUPT(3);
+				
+END write_data_seg;
+
+$EJECT
+
+/****************************************************************************/
+/*                                                                          */
+/*                          SERVER TASK                                     */
+/*                          -----------                                     */
+/*                                                                          */
+/*      This routine is executed by the server task.  It does a do forever  */
+/*      loop that waits for a message from the host and calls the           */
+/*      appropriate routine to perform the protocol function.               */
+/*																			*/
+/*      Invocation:                                                         */
+/*      -----------                                                         */
+/*                                                                          */
+/*                      CALL server_task;									*/
+/*                                                                          */
+/****************************************************************************/
+
+server_task: PROCEDURE PUBLIC REENTRANT;
+
+DECLARE
+	data_p			POINTER,
+	msg_info_buf	info_rec,
+	tid				WORD,
+	excep			WORD;
+	
+	DO WHILE 1;
+
+		data_p = rq$receive (port_tok, 0ffffh, @msg_info_buf, @excep);
+
+		/* If already cancelled by the Transport or error, 
+			No action or reply needed */
+
+		IF (excep = OK) AND (msg_info_buf.status <> E$CANCELLED) THEN 
+    		DO;
+
+			IF (LOW(msg_info_buf.skt)) = active_host THEN
+				DO; 
+
+				IF (msg_info_buf.msg(0) = GET_CS) THEN
+					CALL get_cs_value(@msg_info_buf);
+					
+				ELSE IF (msg_info_buf.msg(0) = CRT_SEG) THEN
+					CALL create_data_seg(@msg_info_buf);
+
+				ELSE IF (msg_info_buf.msg(0) = DEL_SEG) THEN
+					CALL delete_data_seg(@msg_info_buf);
+	
+				ELSE IF (msg_info_buf.msg(0) = READ_DATA) THEN
+					CALL read_data_seg(@msg_info_buf);
+				
+				ELSE IF (msg_info_buf.msg(0) = WRITE_DATA) THEN
+					CALL write_data_seg(@msg_info_buf, data_p);
+
+				ELSE /* Illegal message type, send error reply */
+				
+					DO;
+					msg_info_buf.msg(1) = ERROR;
+					IF (data_p <> NIL) THEN
+						DO;
+						CALL rq$release$buffer(buf_pool_tok, 
+										SELECTOROF(data_p), 0, @excep);
+						IF excep <> OK THEN
+    						CAUSE$INTERRUPT(3);
+       					END;
+
+          			tid = rq$send$reply(port_tok, msg_info_buf.skt, 
+				                msg_info_buf.tid, @msg_info_buf.msg(0), NIL, 
+				                                              0, 0, @excep);
+					END;
+
+				END; /* If active host */
+				
+			ELSE	 /* Non active host, send error reply */
+				DO;
+				msg_info_buf.msg(1) = ERROR;
+				IF (data_p <> NIL) THEN
+					DO;
+					CALL rq$release$buffer(buf_pool_tok, 
+									SELECTOROF(data_p), 0, @excep);
+					IF excep <> OK THEN
+    					CAUSE$INTERRUPT(3);
+       				END;
+
+				tid = rq$send$reply(port_tok, msg_info_buf.skt, 
+				                msg_info_buf.tid, @msg_info_buf.msg(0), NIL, 
+				                                               0, 0, @excep);
+				END;
+
+		END; /* If excep = OK */
+		
+	END; /* While 1 */
+		
+END server_task;
+
+/****************************************************************************/
+/*                                                                          */
+/*                          INITIALIZE                                      */
+/*                          ----------                                      */
+/*                                                                          */
+/*      This is the initialization procedure for the cci task.			    */
+/*      It initializes the exception handler and gets the task tokens       */
+/*      for the request and reply mailboxes that are the communication      */
+/*      link between the Data Com Monitor and the line discipline job.      */
+/*																			*/
+/*      Invocation:                                                         */
+/*      -----------                                                         */
+/*                                                                          */
+/*                      CALL initialize;                                    */
+/*                                                                          */
+/****************************************************************************/
+
+initialize: PROCEDURE PUBLIC REENTRANT;
+
+DECLARE
+	param_obj_seg	TOKEN,
+	param_obj		BASED param_obj_seg 	param_rec,
+	excep			WORD;
+
+	/* Set up an exception handler to trap errors */
+	
+	excep_info.ptr = NIL;
+	excep_info.mode = 0;
+
+	CALL rq$set$exception$handler(@excep_info, @excep);
+	if (excep <> OK) THEN
+		cause$interrupt(3);
+
+	/* Get the mailbox tokens sent by the CCI server in the parameter object */
+	
+	param_obj_seg = rq$get$task$tokens(2, @excep);
+	if (excep <> OK) THEN
+		cause$interrupt(3);
+	
+	req_mbx = param_obj.req_mbx;
+	reply_mbx = param_obj.reply_mbx;
+
+	/* Call the CCI message task */
+	
+	CALL cci_msg_task;
+	
+END initialize;
+
+$EJECT
+
+/****************************************************************************/
+/*                                                                          */
+/*                          DO ATTACH                                       */
+/*                          ---------                                       */
+/*                                                                          */
+/*      This is the initialization procedure for the subchannel being       */
+/*      attached.  A port and buffer pool are created to enable				*/ 
+/*		communication between the host and subchannel.  The server task     */
+/*      is also created to execute the sample script features.		        */
+/*																			*/
+/*      Invocation:                                                         */
+/*      -----------                                                         */
+/*                                                                          */
+/*                      CALL do_attach;							            */
+/*                                                                          */
+/*																			*/ 
+/****************************************************************************/
+
+do_attach: PROCEDURE PUBLIC REENTRANT;
+
+DECLARE
+	excep			WORD,
+	p_crt_buf		p_crt_rec,
+	p_info_buf		p_info_rec;
+
+	
+	/* Create a port - the RMX Transport assigns a portid  */
+	/* Type is Data Transport Service, queue size = 10     */ 
+	/* Flags = 04h => FIFO queue, no fragmentation */
+	
+	p_crt_buf.pid = 0;
+	p_crt_buf.type = XPORT_SERV;
+	p_crt_buf.res = 0;
+	p_crt_buf.flag = NO_FRAG;
+	
+	port_tok = rq$create$port(MSG_Q_SIZE, @p_crt_buf, @excep);
+	IF excep <>	OK THEN
+		CAUSE$INTERRUPT(3);
+	
+	/* Read an info record to find the assigned portid */
+
+	CALL rq$get$port$attributes(port_tok, @p_info_buf, @excep);
+	IF excep <> OK THEN
+		CAUSE$INTERRUPT(3);
+    
+	/* Create a data segment of size 4K for write requests */
+
+	data_buf_seg = rq$create$segment(MAX_BUF_LEN, @excep);
+	IF excep <> OK THEN
+		CAUSE$INTERRUPT(3);
+    
+	CALL SETB (00, BUILDPTR(data_buf_seg,0), MAX_BUF_LEN);  
+
+	/* Create buffer pool for incoming write requests, max buffers = 1 */
+	/* Flags = 00h => no automatic allocation of buffers */
+
+	buf_pool_tok = rq$create$buffer$pool(MAX_BUF, 00h, @excep);
+	IF excep <> OK THEN
+   		CAUSE$INTERRUPT(3);
+ 
+	/* Attach buffer pool to assigned port */
+    
+	CALL rq$attach$buffer$pool(buf_pool_tok, port_tok, @excep);
+	IF excep <> OK THEN
+   		CAUSE$INTERRUPT(3);
+
+	/* Release created data buffer into buffer pool */
+    
+	CALL rq$release$buffer(buf_pool_tok, data_buf_seg, 0, @excep);
+	IF excep <> OK THEN
+    	CAUSE$INTERRUPT(3);
+    	
+	/* Save active hostid and default portid from CCI server. 
+		The host is marked as the active host. The default portid
+		is not used by this example. */
+    
+	active_host = att_req_buf.host;
+	default_port = att_req_buf.portid;
+	
+	/* Create a task - priority is same as calling task's job */
+	/* RMX Nucleus allocates a stack of 600 bytes  */
+	/* Start address is the server_task procedure in the protocol module */ 
+	/* Flags = 00h => no floating point */
+	
+	task_tok = rq$create$task(0, @server_task, SELECTOR$OF(@dummy), NIL, 
+	                          STACK_SIZE, 0, @excep);
+	IF excep <>	OK THEN
+		CAUSE$INTERRUPT(3);
+	
+	/* Prepare attach response message; send server portid to the CCI server */
+    
+	att_resp_buf.status = 0;
+	att_resp_buf.port_id = p_info_buf.pid;
+
+	/* This is the line discipline specific info to be sent back to the host;
+		This example sends the write request buffer size and the size
+		of the port message queue. The version number Vx.y 
+		is also sent as 16*x+y */
+    
+	att_resp_buf.tx_size = MAX_BUF_LEN/256;
+	att_resp_buf.port_q_size =  MSG_Q_SIZE;
+	att_resp_buf.rx_size = 0;
+	att_resp_buf.version =  (1)*16 + 0;
+				
+END do_attach;
+
+$EJECT
+
+/****************************************************************************/
+/*                                                                          */
+/*                          DO CHANGE HOST                                  */
+/*                          --------------                                  */
+/*                                                                          */
+/*      This procedure implements the switch function for the line       	*/
+/*		discipline job when there is a change of host on a subchannel.      */
+/*      The new host id and default port id are stored for   				*/ 
+/*		communication between the new host and subchannel. 			        */
+/*																			*/
+/*      Invocation:                                                         */
+/*      -----------                                                         */
+/*                                                                          */
+/*                      CALL do_change_host;							    */
+/*                                                                          */
+/*																			*/ 
+/****************************************************************************/
+
+do_change_host: PROCEDURE PUBLIC REENTRANT;
+
+	/* Save new host and port id from monitor */
+    
+	active_host = sw_req_buf.host;
+	default_port = sw_req_buf.portid;
+	
+	/* Prepare change response message to monitor */
+    
+	sw_resp_buf.status = 0;
+			
+END do_change_host;
+
+$EJECT
+
+/****************************************************************************/
+/*                                                                          */
+/*                          DO DETACH                                       */
+/*                          ---------                                       */
+/*                                                                          */
+/*      This is the closing procedure for the subchannel being detached.    */
+/*      The port, buffer pool and task are deleted and the memory resources */
+/*		are released.  The assigned portid is no longer valid and the 		*/ 
+/*		session is terminated.												*/
+/*																			*/
+/*      Invocation:                                                         */
+/*      -----------                                                         */
+/*                                                                          */
+/*                      CALL detach;				                        */
+/*                                                                          */
+/*                                                                          */
+/****************************************************************************/
+
+do_detach: PROCEDURE PUBLIC REENTRANT;
+
+DECLARE
+	excep			WORD;
+
+	/* Terminate the session for this subchannel */
+
+	/* Delete server task */
+    
+    CALL rq$delete$task(task_tok, @excep); 
+	IF excep <> E$OK THEN
+			CAUSE$INTERRUPT(3);
+
+	/* Check buffer pool for segment and delete if present */
+
+    data_buf_seg = rq$request$buffer(buf_pool_tok, MAX_BUF_LEN, @excep); 
+	IF excep =  E$OK THEN
+		DO;
+		CALL rq$delete$segment(data_buf_seg, @excep); 
+		IF excep <> E$OK THEN
+			CAUSE$INTERRUPT(3);
+		END;	
+			
+	/* Detach buffer pool from port */
+
+    buf_pool_tok = rq$detach$buffer$pool(port_tok, @excep);
+	IF excep <> E$OK THEN
+			CAUSE$INTERRUPT(3);
+
+	/* Delete all object tokens: buffer pool, port */
+
+    CALL rq$delete$buffer$pool(buf_pool_tok, @excep); 
+	IF excep <> E$OK THEN
+			CAUSE$INTERRUPT(3);
+
+	CALL rq$delete$port(port_tok, @excep); 
+	IF excep <> E$OK THEN
+			CAUSE$INTERRUPT(3);
+
+	/* Prepare detach response message to monitor */
+    
+	det_resp_buf.status = 0;
+			
+END do_detach;
+
+$EJECT
+
+/****************************************************************************/
+/*                                                                          */
+/*                          DO UNBIND                                       */
+/*                          ---------                                       */
+/*                                                                          */
+/*      This is the closing procedure for the line being unbound.		    */
+/*      Any line specific cleanup should be executed here. 				    */
+/*																			*/
+/*      Invocation:                                                         */
+/*      -----------                                                         */
+/*                                                                          */
+/*                      CALL unbind;				                        */
+/*                                                                          */
+/*                                                                          */
+/****************************************************************************/
+
+do_unbind: PROCEDURE PUBLIC REENTRANT;
+
+	/* Line specific cleanup goes here. This example has none. */
+    
+	/* Prepare unbind response message to monitor */
+    
+	unbind_resp_buf.status = 0;
+	
+	
+END do_unbind;
+
+$EJECT
+
+/****************************************************************************/
+/*                                                                          */
+/*                          DO BIND                                         */
+/*                          -------                                         */
+/*                                                                          */
+/*      This is the initialization procedure for the line being bound.      */
+/*      Any line specific initialization should be executed  here.		    */
+/*																			*/
+/*      Invocation:                                                         */
+/*      -----------                                                         */
+/*                                                                          */
+/*                      CALL do_bind;				                        */
+/*                                                                          */
+/*                                                                          */
+/****************************************************************************/
+
+do_bind: PROCEDURE PUBLIC REENTRANT;
+
+	/* Line specific initialization goes here. This example has none. */
+    
+	/* Prepare bind response message to monitor */
+    
+	bind_resp_buf.status	= 0;
+	bind_resp_buf.max_subch = 1;
+			
+END do_bind;
+
+$EJECT
+
+/****************************************************************************/
+/*                                                                          */
+/*                          CCI MESSAGE TASK                                */
+/*                          ----------------                                */
+/*                                                                          */
+/*      This routine executes a do forever loop that waits for a 		    */
+/*      message from the CCI Server and performs the necessary		 		*/
+/*      actions.  It then sends a reply back to the CCI server.             */
+/*																			*/
+/*      Invocation:                                                         */
+/*      -----------                                                         */
+/*                                                                          */
+/*                      CALL cci_msg_task;                                  */
+/*                                                                          */
+/*                                                                          */
+/****************************************************************************/
+
+cci_msg_task : PROCEDURE PUBLIC REENTRANT;
+
+DECLARE
+	excep			WORD;
+	
+	
+	DO WHILE 1;
+		msg = rq$receive$message(req_mbx, 0ffffh, NIL, @excep);
+		if (excep <> OK) THEN
+			cause$interrupt(3);
+
+		if (msg <> SELECTOROF(NIL)) THEN
+			DO;
+			if (msg_buf(0) = LDI_BIND) THEN
+				CALL do_bind;
+
+			else if (msg_buf(0) = LDI_ATTACH) THEN
+				CALL do_attach;
+				
+			else if (msg_buf(0) = LDI_SWITCH) THEN
+				CALL do_change_host;
+
+			else if (msg_buf(0) = LDI_DETACH) THEN
+				CALL do_detach;
+
+			else if (msg_buf(0) = LDI_UNBIND) THEN
+				CALL do_unbind;
+				
+			else
+				cause$interrupt(3);
+			
+			CALL rq$send$message(reply_mbx, msg, SELECTOROF(NIL), @excep);
+			if (excep <> OK) THEN
+				cause$interrupt(3);
+
+			END;
+
+		END;
+		
+END cci_msg_task;
+
+/* Main program starts here */
+
+CALL initialize;
+
+END ex$mod;
+
+$EJECT

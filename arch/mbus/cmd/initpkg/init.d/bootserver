@@ -1,0 +1,59 @@
+#	Copyright (c) 1987, 1988  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+
+#ident	"@(#)mbus:cmd/initpkg/init.d/bootserver	1.1"
+
+USAGE="Usage: /etc/init.d/bootserver {start | stop}"
+LOGDIR=/var/tmp
+#
+# acceptable levels are 0-2
+#
+DEBUG_LEVEL=0
+
+if [ $# -lt 1 ]
+then
+	echo "$USAGE"
+	exit 1
+fi
+OPTION=$1
+set `who -r`
+if [ "$9" != "S" -o "$8" != "0" ] ; then
+	exit 
+fi
+if [ ! -d $LOGDIR ] ; then	
+	LOGFILE="" 
+else
+	LOGFILE="-l ${LOGDIR}/boot.log"
+fi
+case $OPTION in
+'start')
+
+#	Start bootserver daemon
+ 
+ 	if [ -f /sbin/bootserver ]
+ 	then
+ 		/sbin/bootserver -x $DEBUG_LEVEL $LOGFILE >/dev/null
+ 	fi
+	;;
+
+'stop')
+ #	kill the bootserver daemon if it is still running
+ 	pid=`/bin/ps -ef 2>/dev/null |/bin/grep bootserver | /bin/grep -v grep \
+ 			| /bin/sed -e 's/  *[a-z0-9]*  *//' -e 's/ .*//'`
+ 	if [ "${pid}" != "" ]
+ 	then
+ 		/bin/kill ${pid}
+		exit
+ 	fi
+	;;
+*)
+	echo "$USAGE"
+	exit 1
+	;;
+esac

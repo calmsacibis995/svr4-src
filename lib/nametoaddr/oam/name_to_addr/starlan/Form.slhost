@@ -1,0 +1,47 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/starlan/Form.slhost	1.2"
+form="Create ISO Starlan Protocol Hosts Files"
+close=unset -l H_RET -l CMD
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/form.msg|message -p`
+
+done=`indicator -w;
+	$INTFBASE/netservices/name_to_addr/starlan/bin/starlan.host $F1 $F2 | set -l H_RET;
+	if [ "$H_RET" = "1" ];
+	then
+		set -l CMD="OPEN TEXT $INTFBASE/netservices/name_to_addr/starlan/Text.h_exists";
+	elif [ "$H_RET" = "2" ];
+	then
+		set -l CMD="OPEN TEXT $INTFBASE/netservices/name_to_addr/starlan/Text.badaddr";
+	elif [ "$H_RET" = "3" ];
+	then
+		set -l CMD="OPEN TEXT $INTFBASE/netservices/name_to_addr/starlan/Text.h_only";
+	elif [ "$H_RET" = "4" ];
+	then
+		set -l CMD="OPEN TEXT $INTFBASE/netservices/name_to_addr/starlan/Text.dgh_only";
+	else
+		set -l CMD="OPEN TEXT $INTFBASE/netservices/name_to_addr/starlan/Text.h_success";
+	fi;
+	`$CMD
+
+name="Machine name:"
+nrow=1
+ncol=1
+frow=1
+fcol=15
+rows=1
+columns=14
+valid=`[ "$F1" ]`
+invalidmsg="Fields can not be empty"
+lininfo=starlan:name
+
+name="Machine address:"
+nrow=2
+ncol=1
+frow=2
+fcol=18
+rows=1
+columns=30
+valid=`[ "$F2" ]`
+invalidmsg="Fields can not be empty"
+lininfo=starlan:addr

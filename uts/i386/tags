@@ -1,0 +1,1082 @@
+ACLOCK	os/acct.c	/^#define ACLOCK() { \\$/
+ACUNLOCK	os/acct.c	/^#define ACUNLOCK() { \\$/
+ADDHASH	os/kma.c	/^#define	ADDHASH(p, i) \\$/
+CKPT	os/startup.c	/^#define CKPT(c)	{int i; short *vid = (short *)0xd0/
+CTOI	os/subr.c	/^#define	CTOI(c)		((c) & 0xf)$/
+DEBUGF	os/sysi86.c	/^#define DEBUGF(x) printf x$/
+DELHASH	os/kma.c	/^#define	DELHASH(p, i) \\$/
+DQHASH	fs/ufs/quota.c	/^#define	DQHASH(uid, mp) \\$/
+HASH	os/kma.c	/^#define	HASH(a)		((((ulong)a) >> SHIFT) & (NHASH -/
+HASHPID	os/pid.c	/^#define HASHPID(pid)	(pidhash[((pid)&(HASHSZ-1))])/
+HEADFREE	os/kma.c	/^#define	HEADFREE(list, bufhdr) \\$/
+IB	fs/ufs/ufs_alloc.c	/^#define IB(i)	(NDADDR + (i))	\/* index of i'th indi/
+INOHASH	fs/ufs/ufs_inode.c	/^#define	INOHASH(dev, ino)	(((dev)+(ino))&(INOHSZ-1/
+INS_HASH	fs/dnlc.c	/^#define	INS_HASH(ncp, nch)	nc_inshash(ncp, nch)$/
+INS_LRU	fs/dnlc.c	/^#define	INS_LRU(ncp1, ncp2)	nc_inslru((struct ncac/
+ISVDEV	fs/ufs/ufs_vnops.c	/^#define ISVDEV(t)	((t) == VCHR || (t) == VBLK || (/
+LDIRSIZ	fs/ufs/ufs_dir.c	/^#define LDIRSIZ(len) \\$/
+LOOKUP	os/kma.c	/^#define	LOOKUP(a, p) \\$/
+LTOPBLK	fs/s5/s5vnops.c	/^#define LTOPBLK(blkno, bsize)	(blkno * ((bsize>>SC/
+Mmain	os/main.c	/^main(argc, argv)$/
+NC_HASH	fs/dnlc.c	/^#define	NC_HASH(namep, namelen, vp)	\\$/
+NOMEMWAIT	os/bio.c	/^#define	NOMEMWAIT() (u.u_procp == proc_pageout || /
+NULL_HASH	fs/dnlc.c	/^#define	NULL_HASH(ncp)		(ncp)->hash_next = (ncp)->/
+OTHERQ	os/ddi.c	/^OTHERQ(q)$/
+PAGEOUT	os/bio.c	/^#define	PAGEOUT() (u.u_procp == proc_pageout)$/
+PARANOID	os/kma.c	/^#define	PARANOID(a,b,c,d) \\$/
+PREREAD	os/exec.c	/^#define	PREREAD(size) \\$/
+RD	os/ddi.c	/^RD(q)$/
+RM_HASH	fs/dnlc.c	/^#define	RM_HASH(ncp)		nc_rmhash(ncp)$/
+RM_LRU	fs/dnlc.c	/^#define	RM_LRU(ncp)		nc_rmlru((struct ncache *) nc/
+SAMEOWNER	os/flock.c	/^#define SAMEOWNER(a, b)	(((a)->l_pid == (b)->l_pid/
+SLEEP	os/flock.c	/^#define	SLEEP(ptr, pri)	sleep((caddr_t)(ptr), pri)/
+TAILFREE	os/kma.c	/^#define	TAILFREE(list, bufhdr) \\$/
+TEN_TIMES	os/subr.c	/^#define TEN_TIMES(n)	(((n) << 3) + ((n) << 1))$/
+UNLINK	os/kma.c	/^#define	UNLINK(bufhdr) \\$/
+UNLINKHEAD	os/kma.c	/^#define	UNLINKHEAD(list, bufhdr) \\$/
+VALID	os/kma.c	/^#define	VALID(a, h) \\$/
+WAKEUP	os/flock.c	/^#define	WAKEUP(ptr)	if (ptr->stat.wakeflg) { \\$/
+WR	os/ddi.c	/^WR(q)$/
+XMAP_FROM_LTYPE	fs/vncalls.c	/^#define XMAP_FROM_LTYPE(t) (t==F_UNLCK?XF_UNLCK:(t/
+XMAP_TO_LTYPE	fs/vncalls.c	/^#define XMAP_TO_LTYPE(t) (t==XF_UNLCK?F_UNLCK:(t==/
+Xdbprt	os/cxenix.c	/^Xdbprt(callno)$/
+_insque	fs/ufs/ufs_inode.c	/^_insque(ip, hip)$/
+_nmi_catch	os/nmi.c	/^int _nmi_catch(r0ptr)$/
+_nmi_hook	os/nmi.c	/^int _nmi_hook(r0ptr)$/
+_remque	fs/ufs/ufs_inode.c	/^_remque(ip)$/
+access	fs/vncalls.c	/^access(uap, rvp)$/
+acct	os/acct.c	/^acct(char st)$/
+adjfmtp	os/strsubr.c	/^adjfmtp(str, bp, bytes)$/
+adjtime	os/scalls.c	/^adjtime(uap, rvp)$/
+alarm	os/scalls.c	/^alarm(uap, rvp)$/
+alloc	fs/ufs/ufs_alloc.c	/^alloc(ip, bpref, size, bnp)$/
+allocband	os/strsubr.c	/^allocband()$/
+alloccg	fs/ufs/ufs_alloc.c	/^alloccg(ip, cg, bpref, size)$/
+alloccgblk	fs/ufs/ufs_alloc.c	/^alloccgblk(fs, cgp, bpref)$/
+alloclink	os/strsubr.c	/^alloclink(qup, qdown, fpdown)$/
+allocq	os/strsubr.c	/^allocq()$/
+alloctty	os/session.c	/^alloctty(pp, vp)$/
+amtoseg	os/vm_subr.c	/^amtoseg(prp, amp)$/
+arglistsz	os/execargs.c	/^arglistsz(argv, argc_p, argsize_p, maxsize)$/
+as_shmlookup	os/vm_subr.c	/^as_shmlookup(as, addr)$/
+assfail	os/cmn_err.c	/^assfail(a, f, l)$/
+badblock	fs/s5/s5alloc.c	/^badblock(fp, bn, dev)$/
+bawrite	os/bio.c	/^bawrite(bp)$/
+bcmp	os/subr.c	/^bcmp(s1, s2, len)$/
+bdevbsize	fs/specfs/specsubr.c	/^bdevbsize(dev)$/
+bdwait	os/bio.c	/^bdwait()$/
+bdwrite	os/bio.c	/^bdwrite(bp)$/
+before_device_memory	os/startup.c	/^before_device_memory(p)$/
+bflush	os/bio.c	/^bflush(dev)$/
+binit	os/bio.c	/^binit()$/
+binval	os/bio.c	/^binval(dev)$/
+biodone	os/bio.c	/^biodone(bp)$/
+biowait	os/bio.c	/^biowait(bp)$/
+blkalloc	fs/s5/s5alloc.c	/^blkalloc(vfsp, bnp)$/
+blkatoff	fs/ufs/ufs_dir.c	/^blkatoff(ip, offset, res, fbpp)$/
+blkflush	os/bio.c	/^blkflush(dev, blkno, bsize)$/
+blkfree	fs/s5/s5alloc.c	/^blkfree(vfsp, bno)$/
+blkpref	fs/ufs/ufs_alloc.c	/^blkpref(ip, lbn, indx, bap)$/
+blocked	os/flock.c	/^blocked(flp, lckdat, insrt)$/
+bmap	fs/s5/s5bmap.c	/^bmap(ip, lbn, bnp, rabnp, rw, alloc_only)$/
+bmapalloc	fs/s5/s5bmap.c	/^bmapalloc(ip, first, last, alloc_only, dblist)$/
+bootarg_parse	os/bs.c	/^bootarg_parse()$/
+bp_map	os/machdep.c	/^bp_map(bp, addr)$/
+bp_mapin	os/machdep.c	/^bp_mapin(bp)$/
+bp_mapout	os/machdep.c	/^bp_mapout(bp)$/
+bread	os/bio.c	/^bread(dev, blkno, bsize)$/
+breada	os/bio.c	/^breada(dev, blkno, rablkno, bsize)$/
+brelse	os/bio.c	/^brelse(bp)$/
+brk	os/grow.c	/^brk(uap, rvp)$/
+bs_doarg	os/bs.c	/^bs_doarg(s)$/
+bs_find_bmaj	os/bs.c	/^bs_find_bmaj(dev)$/
+bs_find_cmaj	os/bs.c	/^bs_find_cmaj(dev)$/
+bs_lexnum	os/bs.c	/^bs_lexnum(p, parm)$/
+bs_lexparms	os/bs.c	/^bs_lexparms(s, parms, maxparms)$/
+bs_lexwords	os/bs.c	/^bs_lexwords(s, parms, maxparms)$/
+bs_stratoi	os/bs.c	/^bs_stratoi(p, parm, base)$/
+bs_strchr	os/bs.c	/^bs_strchr(sp, c)$/
+bs_strcmp	os/bs.c	/^bs_strcmp(s1, s2)$/
+bs_syntax	os/bs.c	/^bs_syntax(s)$/
+bt_availbit	os/bitmap.c	/^bt_availbit(bitmap, nbits)$/
+bt_gethighbit	os/bitmap.c	/^bt_gethighbit(mapp, wx, bitposp)$/
+bt_range	os/bitmap.c	/^int $/
+btoc	os/ddi.c	/^btoc(bytes)$/
+btop	os/ddi.c	/^btop (numbytes)$/
+btopr	os/ddi.c	/^btopr (numbytes)$/
+btoq	os/msg.c	/^#define	btoq(X)	(((long)(X) + msginfo.msgssz - 1) /
+buf_breakup	os/bio.c	/^buf_breakup(strat, obp)$/
+bufstats	fs/ufs/ufs_subr.c	/^bufstats()$/
+buscheck	os/machdep.c	/^buscheck(bp)$/
+bwrite	os/bio.c	/^bwrite(bp)$/
+call_demon	os/sysi86.c	/^call_demon()$/
+cantsend	os/strsubr.c	/^#define cantsend(pp,sig) \\$/
+catchmenow	os/cmn_err.c	/^catchmenow() {}$/
+chdir	fs/vncalls.c	/^chdir(uap, rvp)$/
+chdirec	fs/vncalls.c	/^chdirec(vp, vpp)$/
+check_locked	os/shm.c	/^STATIC int $/
+checkpage	os/vm_pageout.c	/^checkpage (pp, whichhand)$/
+checkprocset	os/procset.c	/^checkprocset(psp)$/
+chidt	os/sysi86.c	/^chidt(fun)$/
+chkdq	fs/ufs/quota_ufs.c	/^chkdq(ip, change, force)$/
+chkiq	fs/ufs/quota_ufs.c	/^chkiq(ufsvfsp, ip, uid, force)$/
+chklock	os/flock.c	/^chklock(vp, iomode, offset, len, fmode)$/
+chmfile	os/mapfile.c	/^chmfile(ap, rvp)$/
+chmod	fs/vncalls.c	/^chmod(uap, rvp)$/
+chown	fs/vncalls.c	/^chown(uap, rvp)$/
+chroot	fs/vncalls.c	/^chroot(uap, rvp)$/
+chsize	fs/vncalls.c	/^chsize(uap, rvp)$/
+cleanlocks	os/flock.c	/^cleanlocks(vp, pid, sysid)$/
+cleanup	os/vm_pageout.c	/^cleanup()$/
+clkreld	os/machdep.c	/^clkreld()$/
+clkset	os/machdep.c	/^clkset(oldtime)$/
+clocal	os/local.c	/^clocal(uap, rvp)$/
+clock	os/clock.c	/^clock(pc, cs, flags, oldipl)$/
+clockintr	os/clock.c	/^clockintr()$/
+close	fs/vncalls.c	/^close(uap, rvp)$/
+closeall	os/fio.c	/^closeall(flag)$/
+closedq	fs/ufs/quotacalls.c	/^closedq(ufsvfsp, cr)$/
+closef	os/fio.c	/^closef(fp)$/
+clrblock	fs/ufs/ufs_subr.c	/^clrblock(fs, cp, h)$/
+clrbuf	os/bio.c	/^clrbuf(bp)$/
+cmknod	fs/vncalls.c	/^cmknod(version, fname, fmode, dev, rvp)$/
+cmn_err	os/cmn_err.c	/^cmn_err(int level, char *fmt, ... )$/
+cmpdev	os/ddi.c	/^cmpdev(dev)$/
+common_specvp	fs/specfs/specsubr.c	/^common_specvp(vp)$/
+commonvp	fs/specfs/specsubr.c	/^commonvp(dev, type)$/
+compress	os/acct.c	/^compress(t)$/
+conlayers	os/cmn_err.c	/^conlayers()		\/* is the console running layers?? *\//
+convoff	os/flock.c	/^convoff(vp, lckdat, whence, offset)$/
+copen	fs/vncalls.c	/^copen(fname, filemode, createmode, rvp)$/
+copyarglist	os/execargs.c	/^copyarglist(argc, from_argv, pdelta, to_argv, to_a/
+copyinstr	os/move.c	/^copyinstr(from, to, max, np)$/
+copyio	os/xmmu.c	/^copyio(addr1, addr2, size, mapping)$/
+copyrecords	os/sysi86.c	/^copyrecords(dataddr,buffer,numrcx)$/
+copystr	os/move.c	/^copystr(from, to, max, np)$/
+core	os/core.c	/^core(fp, pp, credp, rlimit, sig)$/
+core_seg	os/core.c	/^core_seg(pp, vp, offset, addr, size, rlimit, credp/
+cpass	os/move.c	/^cpass()$/
+cpathconf	fs/vncalls.c	/^cpathconf(vp, cmd, rvp, cr)$/
+cpreg	os/fork.c	/^cpreg(tp)$/
+crcopy	os/cred.c	/^crcopy(cr)$/
+crdup	os/cred.c	/^crdup(cr)$/
+creat	fs/vncalls.c	/^creat(uap, rvp)$/
+cred_init	os/cred.c	/^cred_init()$/
+crfree	os/cred.c	/^crfree(cr)$/
+crget	os/cred.c	/^crget()$/
+crgetcred	os/cred.c	/^crgetcred()$/
+cstat	fs/vncalls.c	/^cstat(vp, ubp, cr)$/
+cstatfs	fs/vfs.c	/^cstatfs(vfsp, sbp, len)$/
+cstatvfs	fs/vfs.c	/^cstatvfs(vfsp, ubp)$/
+ctob	os/ddi.c	/^ctob(clicks)$/
+cttydev	os/session.c	/^cttydev(pp)$/
+cur_inset_only	os/procset.c	/^cur_inset_only(psp)$/
+cvttoaddr	os/xmmu.c	/^cvttoaddr(addr286)$/
+cvttoint	os/xmmu.c	/^cvttoint(addr286)$/
+cxenix	os/cxenix.c	/^cxenix(uap, rvp)$/
+datalock	os/lock.c	/^datalock()$/
+datamsg	os/ddi.c	/^datamsg(db_type)$/
+db_resume	os/machdep.c	/^db_resume()$/
+deadflck	os/flock.c	/^deadflck(flp, lckdat)$/
+defined	fs/vfs.c	/^#if defined(__STDC__)$/
+delay	os/clock.c	/^delay(ticks)$/
+delflck	os/flock.c	/^delflck(lck_list, fl)$/
+deverr	os/cmn_err.c	/^deverr(dp, o1, o2, dn)$/
+device_close	fs/specfs/specsubr.c	/^device_close(vp, flag, cr)$/
+dfgetuserTSS	os/machdep.c	/^dfgetuserTSS()$/
+dhalt	os/machdep.c	/^dhalt()$/
+diraddentry	fs/s5/s5dir.c	/^diraddentry(tdp, namep, offset, sip, sdp, op)$/
+dirbad	fs/ufs/ufs_dir.c	/^dirbad(ip, how, offset)$/
+dirbadname	fs/ufs/ufs_dir.c	/^dirbadname(sp, l)$/
+dircheckforname	fs/s5/s5dir.c	/^dircheckforname(tdp, namep, offp, tipp)$/
+dircheckpath	fs/s5/s5dir.c	/^dircheckpath(source, target)$/
+dirempty	fs/s5/s5dir.c	/^dirempty(ip, dotflagp)$/
+direnter	fs/s5/s5dir.c	/^direnter(tdp, namep, op, sdp, sip, vap, ipp, cr)$/
+dirfixdotdot	fs/s5/s5dir.c	/^dirfixdotdot(dp, opdp, npdp)$/
+dirlook	fs/s5/s5dir.c	/^dirlook(dp, namep, ipp, cr)$/
+dirmakedirect	fs/s5/s5dir.c	/^dirmakedirect(ip, dp)$/
+dirmakeinode	fs/s5/s5dir.c	/^dirmakeinode(tdp, ipp, vap, op, cr)$/
+dirmangled	fs/ufs/ufs_dir.c	/^dirmangled(dp, ep, entryoffsetinblock, offset)$/
+dirpref	fs/ufs/ufs_alloc.c	/^dirpref(fs)$/
+dirprepareentry	fs/ufs/ufs_dir.c	/^dirprepareentry(dp, slotp)$/
+dirremove	fs/s5/s5dir.c	/^dirremove(dp, namep, oip, cdir, op, cr)$/
+dirrename	fs/s5/s5dir.c	/^dirrename(sdp, sip, tdp, namep, tip, offset, cr)$/
+dirsearch	fs/s5/s5dir.c	/^dirsearch(dip, comp, ipp, offp)$/
+dis_vfs	os/scalls.c	/^dis_vfs(op)$/
+disksort	fs/ufs/ufs_dsort.c	/^disksort(dp, bp)$/
+dispTSS	os/trap.c	/^dispTSS(tss)$/
+dispstring	os/startup.c	/^dispstring(str)$/
+dksize	os/bio.c	/^dksize(dev)$/
+dma_pageio_setup	os/bio.c	/^dma_pageio_setup(bp, pp, len, vp, flags)$/
+dnlc_enter	fs/dnlc.c	/^dnlc_enter(dp, name, vp, cred)$/
+dnlc_init	fs/dnlc.c	/^dnlc_init()$/
+dnlc_lookup	fs/dnlc.c	/^dnlc_lookup(dp, name, cred)$/
+dnlc_purge	fs/dnlc.c	/^dnlc_purge()$/
+dnlc_purge1	fs/dnlc.c	/^dnlc_purge1()$/
+dnlc_purge_vfsp	fs/dnlc.c	/^dnlc_purge_vfsp(vfsp, count)$/
+dnlc_purge_vp	fs/dnlc.c	/^dnlc_purge_vp(vp)$/
+dnlc_remove	fs/dnlc.c	/^dnlc_remove(dp, name)$/
+dnlc_rm	fs/dnlc.c	/^dnlc_rm(ncp)$/
+dnlc_search	fs/dnlc.c	/^dnlc_search(dp, name, namlen, hash, cred)$/
+dodmddelay	os/cmn_err.c	/^dodmddelay()$/
+dofusers	os/scalls.c	/^dofusers(fvp, flags, outbp, rvp)$/
+dotoprocs	os/procset.c	/^dotoprocs(psp, funcp, arg)$/
+dounmount	fs/vfs.c	/^dounmount(vfsp, cr)$/
+dqinsheadfree	fs/ufs/quota.c	/^#define dqinsheadfree(DQP) { \\$/
+dqinstailfree	fs/ufs/quota.c	/^#define dqinstailfree(DQP) { \\$/
+dqinval	fs/ufs/quota.c	/^dqinval(dqp)$/
+dqput	fs/ufs/quota.c	/^dqput(dqp)$/
+dqrele	fs/ufs/quota_ufs.c	/^dqrele(dqp)$/
+dqremfree	fs/ufs/quota.c	/^#define dqremfree(DQP) { \\$/
+dqupdate	fs/ufs/quota.c	/^dqupdate(dqp)$/
+dri_printf	os/cmn_err.c	/^dri_printf(char *fmt, ... )$/
+drv_getparm	os/ddi.c	/^drv_getparm(parm, valuep)$/
+drv_hztousec	os/ddi.c	/^drv_hztousec(ticks)$/
+drv_priv	os/ddi.c	/^drv_priv(cr)$/
+drv_setparm	os/ddi.c	/^int $/
+drv_usectohz	os/ddi.c	/^drv_usectohz(microsecs)$/
+drv_usecwait	os/ddi.c	/^drv_usecwait(count)$/
+dunlock	os/lock.c	/^dunlock()$/
+dup	fs/vncalls.c	/^dup(uap, rvp)$/
+dysize	os/todc.c	/^#define dysize(A) (((A)%4)? 365: 366)$/
+enable_user_alloc	os/mod.c	/^enable_user_alloc(c)$/
+equal	os/bs.c	/^#define equal(a,b)	(bs_strcmp(a, b) == 0)$/
+errprintf	os/cmn_err.c	/^errprintf(fmt, nextarg)$/
+etoimajor	os/ddi.c	/^etoimajor(emajnum)$/
+exec	os/exec.c	/^exec(uap, rvp)$/
+execclose	os/exec.c	/^execclose(fd)$/
+exece	os/exec.c	/^exece(uap, rvp)$/
+execmap	os/exec.c	/^execmap(vp, addr, len, zfodlen, offset, prot)$/
+execopen	os/exec.c	/^execopen(vpp, fdp)$/
+execpermissions	os/exec.c	/^execpermissions(vp, vattrp, ehdp, args)$/
+execseg	os/xsys.c	/^execseg(uap, rvp)$/
+execsetid	os/exec.c	/^execsetid(vp, vattrp, uidp, gidp)$/
+exhd_getfbuf	os/exec.c	/^exhd_getfbuf(ehdap, off, size, keep, mappp)$/
+exhd_getmap	os/exec.c	/^exhd_getmap(ehdap, off, size, flags, cpp)$/
+exhd_nomap	os/exec.c	/^exhd_nomap(ehdap, off, size, flags, cpp)$/
+exhd_release	os/exec.c	/^exhd_release(hdp)$/
+exit	os/exit.c	/^exit(why, what)$/
+expdev	os/ddi.c	/^expdev(dev)$/
+extractarg	os/machdep.c	/^extractarg(args)$/
+falloc	os/fio.c	/^falloc(vp, flag, fpp, fdp)$/
+fassign	os/fio.c	/^fassign(vpp, mode, fdp)$/
+fault_to_info	os/trap.c	/^fault_to_info(flt, infop)$/
+fbawrite	os/fbio.c	/^fbawrite(fbp)$/
+fbiwrite	fs/ufs/ufs_subr.c	/^fbiwrite(fb, ip, bn)$/
+fbread	fs/ufs/ufs_subr.c	/^fbread(vp, off, len, rw, fbpp)$/
+fbrelse	fs/ufs/ufs_subr.c	/^fbrelse(fb, rw)$/
+fbrelsei	os/fbio.c	/^fbrelsei(fbp, rw)$/
+fbwrite	fs/ufs/ufs_subr.c	/^fbwrite(fb)$/
+fbwritei	os/fbio.c	/^fbwritei(fbp)$/
+fbzero	fs/ufs/ufs_subr.c	/^fbzero(vp, off, len, fbpp)$/
+fchdir	fs/vncalls.c	/^fchdir(uap, rvp)$/
+fchmod	fs/vncalls.c	/^fchmod(uap, rvp)$/
+fchown	fs/vncalls.c	/^fchown(uap, rvp)$/
+fcntl	fs/vncalls.c	/^fcntl(uap, rvp)$/
+fdevtoufsvfsp	fs/ufs/quotacalls.c	/^fdevtoufsvfsp(fdev, ufsvfspp)$/
+fdsetattr	fs/vncalls.c	/^fdsetattr(fd, vap)$/
+filesearch	os/fio.c	/^filesearch(vp)$/
+filldir	fs/s5/s5vnops.c	/^filldir(direntp, nmax, directp, nleft, diroff, ndi/
+findhole	os/mapfile.c	/^findhole(p, npgs)$/
+findlinks	os/strsubr.c	/^findlinks(stp, index, type)$/
+findmod	os/strsubr.c	/^findmod(name)$/
+finit	os/fio.c	/^finit()$/
+fix_swtbls	os/predki.c	/^fix_swtbls()$/
+fixuserefl	os/machdep.c	/^void $/
+flckadj	os/flock.c	/^flckadj(lck_list, insrtp, ld)$/
+flush_putbuf	os/cmn_err.c	/^flush_putbuf()$/
+fork	os/fork.c	/^fork(uap, rvp)$/
+fork1	os/fork.c	/^fork1(uap, rvp, isvfork)$/
+fpathconf	fs/vncalls.c	/^fpathconf(uap, rvp)$/
+fpeclean	os/fp.c	/^fpeclean()$/
+fpeinit	os/fp.c	/^fpeinit()$/
+fpexterrflt	os/fp.c	/^fpexterrflt()$/
+fpextovrflt	os/fp.c	/^fpextovrflt(r0ptr)$/
+fpinit	os/fp.c	/^fpinit()$/
+fpintr	os/fp.c	/^fpintr()$/
+fpkreset	os/fp.c	/^fpkreset( )$/
+fpksave	os/fp.c	/^fpksave( )$/
+fpnoextflt	os/fp.c	/^fpnoextflt(r0ptr)$/
+fprestore	os/fp.c	/^fprestore(vmflag)$/
+fpsave	os/fp.c	/^fpsave( )$/
+fpukill	os/fp.c	/^fpukill(regptr)$/
+fragacct	fs/ufs/ufs_subr.c	/^fragacct(fs, fragmap, fraglist, cnt)$/
+fragextend	fs/ufs/ufs_alloc.c	/^fragextend(ip, cg, bprev, osize, nsize)$/
+free	fs/ufs/ufs_alloc.c	/^free(ip, bno, size)$/
+freeband	os/strsubr.c	/^freeband(qbp)$/
+freectty	os/session.c	/^freectty(sp)$/
+freeproc	os/exit.c	/^freeproc(p)$/
+freeq	os/strsubr.c	/^freeq(qp)$/
+freerbuf	os/ddi.c	/^freerbuf(bp)$/
+fs_cmp	fs/fs_subr.c	/^fs_cmp(vp1, vp2)$/
+fs_frlock	fs/fs_subr.c	/^fs_frlock(vp, cmd, bfp, flag, offset, cr)$/
+fs_nosys	fs/fs_subr.c	/^fs_nosys()$/
+fs_pathconf	fs/fs_subr.c	/^fs_pathconf(vp, cmd, valp, cr)$/
+fs_poll	fs/fs_subr.c	/^fs_poll(vp, events, anyyet, reventsp, phpp)$/
+fs_rwlock	fs/fs_subr.c	/^fs_rwlock(vp)$/
+fs_rwunlock	fs/fs_subr.c	/^fs_rwunlock(vp)$/
+fs_setfl	fs/fs_subr.c	/^fs_setfl(vp, oflags, nflags, cr)$/
+fs_sync	fs/fs_subr.c	/^fs_sync(vfsp, flag, cr)$/
+fs_vcode	fs/fs_subr.c	/^fs_vcode(vp, vcp)$/
+fserr	fs/ufs/ufs_alloc.c	/^fserr(fs, cp)$/
+fsflush	fs/fsflush.c	/^fsflush()$/
+fshadbad	os/subr.c	/^fshadbad(dev, bno)$/
+fsig	os/sig.c	/^fsig(p)$/
+fsnull	fs/vfs.c	/^fsnull()$/
+fsstray	fs/vfs.c	/^fsstray()$/
+fstat	fs/vncalls.c	/^fstat(uap, rvp)$/
+fstatfs	fs/vfs.c	/^fstatfs(uap, rvp)$/
+fstatvfs	fs/vfs.c	/^fstatvfs(uap, rvp)$/
+fsync	fs/vncalls.c	/^fsync(uap, rvp)$/
+ftime	os/xsys.c	/^ftime(uap, rvp)$/
+fxstat	fs/vncalls.c	/^fxstat(uap, rvp)$/
+gen_bclose	os/predki.c	/^int $/
+gen_bopen	os/predki.c	/^int $/
+gen_cclose	os/predki.c	/^int $/
+gen_copen	os/predki.c	/^int $/
+gen_ioctl	os/predki.c	/^gen_ioctl(dev, cmd, arg, mode, cr, rvalp)$/
+gen_iodone	os/predki.c	/^gen_iodone(bp)$/
+gen_read	os/predki.c	/^gen_read(dev, uiop, cr)$/
+gen_setup_idinfo	os/predki.c	/^gen_setup_idinfo(cr)$/
+gen_strategy	os/predki.c	/^gen_strategy(bp) $/
+gen_write	os/predki.c	/^gen_write(dev, uiop, cr)$/
+get_ofile	os/subr.c	/^get_ofile()$/
+getablk	os/bio.c	/^getablk(flag)$/
+getblk	os/bio.c	/^getblk(dev, blkno, bsize)$/
+getdents	fs/vncalls.c	/^getdents(uap, rvp)$/
+getdiskquota	fs/ufs/quota.c	/^getdiskquota(uid, ufsvfsp, force, dqpp)$/
+getdscraddr	os/machdep.c	/^getdscraddr(seg)$/
+getdscrbase	os/machdep.c	/^getdscrbase(dscr)$/
+getdscrlimit	os/machdep.c	/^getdscrlimit(seg)$/
+geteblk	os/bio.c	/^geteblk()$/
+geteip	os/sysi86.c	/^asm int $/
+getemajor	os/ddi.c	/^getemajor(dev)$/
+geteminor	os/ddi.c	/^geteminor(dev)$/
+getendq	os/strsubr.c	/^getendq(q)$/
+geterror	os/bio.c	/^geterror(bp)$/
+getf	os/fio.c	/^getf(fd, fpp)$/
+getfreeblk	os/bio.c	/^getfreeblk(bsize)$/
+getgid	os/scalls.c	/^getgid(uap, rvp)$/
+getgroups	os/scalls.c	/^getgroups(uap, rvp)$/
+getinoquota	fs/ufs/quota_ufs.c	/^getinoquota(ip)$/
+getiocd	os/strsubr.c	/^getiocd(bp, arg, copymode, fmt)$/
+getmajor	os/ddi.c	/^getmajor(dev)$/
+getminor	os/ddi.c	/^getminor(dev)$/
+getmsg	fs/strcalls.c	/^getmsg(uap, rvp)$/
+getmyid	os/procset.c	/^getmyid(idtype)$/
+getpagesize	os/grow.c	/^getpagesize(uap, rvp)$/
+getpid	os/scalls.c	/^getpid(uap, rvp)$/
+getpmsg	fs/strcalls.c	/^getpmsg(uap, rvp)$/
+getpof	os/fio.c	/^getpof(fd)$/
+getquota	fs/ufs/quotacalls.c	/^getquota(uid, ufsvfsp, addr,cr)$/
+getrbuf	os/ddi.c	/^getrbuf(sleep)$/
+getrlimit	os/scalls.c	/^getrlimit(uap, rvp)$/
+getudev	os/subr.c	/^getudev()$/
+getuid	os/scalls.c	/^getuid(uap, rvp)$/
+getvfs	fs/vfs.c	/^getvfs(fsid)$/
+gexec	os/exec.c	/^gexec(vpp, args, level, execsz)$/
+groupmember	os/cred.c	/^groupmember(gid, cr)$/
+grow	os/grow.c	/^grow(sp)$/
+gtime	os/scalls.c	/^gtime(uap, rvp)$/
+gtty	fs/vncalls.c	/^gtty(uap, rvp)$/
+hascttyperm	os/session.c	/^hascttyperm(sp, cr, mode)$/
+hashalloc	fs/ufs/ufs_alloc.c	/^hashalloc(ip, cg, pref, size, allocator)$/
+hasprocperm	os/cred.c	/^hasprocperm(tcrp, scrp)$/
+heap_down	os/clock.c	/^heap_down(t, j)$/
+heap_up	os/clock.c	/^heap_up(t, j)$/
+iaccess	fs/s5/s5inode.c	/^iaccess(ip, mode, cr)$/
+ialloc	fs/s5/s5alloc.c	/^ialloc(vfsp, mode, nlink, rdev, uid, gid, ipp)$/
+ialloccg	fs/ufs/ufs_alloc.c	/^ialloccg(ip, cg, ipref, mode)$/
+idrop	fs/ufs/ufs_inode.c	/^idrop(ip)$/
+iflush	fs/s5/s5inode.c	/^iflush(vfsp, force)$/
+ifree	fs/s5/s5alloc.c	/^ifree(ip)$/
+iget	fs/s5/s5inode.c	/^iget(vfsp, ino, ipp)$/
+ihash	fs/s5/s5inode.c	/^#define ihash(X)	(&hinode[(int) (X) & (NHINO-1)])$/
+ihinit	fs/ufs/ufs_inode.c	/^ihinit()$/
+iinactive	fs/s5/s5inode.c	/^iinactive(ip, cr)$/
+ilock	fs/s5/s5inode.c	/^ilock(ip)$/
+incore	os/bio.c	/^incore(dev, blkno, bsize)$/
+indirtrunc	fs/ufs/ufs_inode.c	/^indirtrunc(ip, bn, lastbn, level)$/
+inituname	os/startup.c	/^inituname()$/
+inoinit	fs/s5/s5inode.c	/^inoinit()$/
+insflck	os/flock.c	/^insflck(lck_list, lckdat, fl)$/
+intnull	os/trap.c	/^intnull()$/
+inull	fs/s5/s5inode.c	/^inull(vfsp)$/
+ioctl	fs/vncalls.c	/^ioctl(uap, rvp)$/
+iodone	os/bio.c	/^iodone(bp)$/
+iomove	os/move.c	/^iomove(cp, n, flag)$/
+iowait	os/bio.c	/^iowait(bp)$/
+ipcaccess	os/ipc.c	/^ipcaccess(p, mode, cr)$/
+ipcget	os/ipc.c	/^ipcget(key, flag, base, cnt, size, status, ipcpp)$/
+ipfree	fs/s5/s5inode.c	/^ipfree(ip)$/
+iput	fs/s5/s5inode.c	/^iput(ip)$/
+iread	fs/s5/s5inode.c	/^iread(ip, ino)$/
+irele	fs/ufs/ufs_inode.c	/^irele(ip)$/
+isblock	fs/ufs/ufs_subr.c	/^isblock(fs, cp, h)$/
+isjobstop	os/sig.c	/^isjobstop(sig)$/
+issig	os/sig.c	/^issig(why)$/
+itoemajor	os/ddi.c	/^itoemajor(imajnum, lastemaj)$/
+itrunc	fs/s5/s5inode.c	/^itrunc(ip)$/
+iunhash	fs/s5/s5inode.c	/^iunhash(ip)$/
+iunlock	fs/s5/s5inode.c	/^iunlock(ip)$/
+iupdat	fs/s5/s5inode.c	/^iupdat(ip)$/
+iuptimes	fs/s5/s5inode.c	/^iuptimes(ip)$/
+k_trap	os/trap.c	/^k_trap(r0ptr)$/
+kern_gpfault	os/trap.c	/^kern_gpfault(r0ptr)$/
+kernacc	os/vm_subr.c	/^kernacc(addr, count, access)$/
+kill	os/scalls.c	/^kill(uap, rvp)$/
+kmem_alloc	os/kma.c	/^kmem_alloc(size, flags)$/
+kmem_allocbpool	os/kma.c	/^kmem_allocbpool(flags)$/
+kmem_allocspool	os/kma.c	/^kmem_allocspool(flags)$/
+kmem_avail	os/kma.c	/^kmem_avail()$/
+kmem_coalesce	os/kma.c	/^kmem_coalesce(bufp, listp, tmpsiz, max)$/
+kmem_fast_alloc	os/kma.c	/^kmem_fast_alloc(base, size, chunks, flags)$/
+kmem_fast_free	os/kma.c	/^kmem_fast_free(base, p)$/
+kmem_fast_zalloc	os/kma.c	/^kmem_fast_zalloc(base, size, chunks, flags)$/
+kmem_free	os/kma.c	/^kmem_free(addr, size)$/
+kmem_freepool	os/kma.c	/^kmem_freepool()$/
+kmem_init	os/kma.c	/^kmem_init()$/
+kmem_zalloc	os/kma.c	/^kmem_zalloc(size, flags)$/
+kperf_write	os/kperf.c	/^kperf_write(record_type,kpc,kproc)$/
+krnxmemflt	os/trap.c	/^krnxmemflt(errcode, faultadr)$/
+kshmdt	os/shm.c	/^kshmdt(addr)$/
+kvm_init	os/startup.c	/^kvm_init(nextfree)$/
+kvtophys	os/ddi.c	/^kvtophys(vaddr)$/
+kzero	os/move.c	/^kzero(dst, cnt)$/
+lbfree	os/strsubr.c	/^lbfree(linkp)$/
+lchown	fs/vncalls.c	/^lchown(uap, rvp)$/
+ldtalloc	os/xmmu.c	/^ldtalloc(startsel, cnt)$/
+ldtfree	os/xmmu.c	/^ldtfree(startsel, cnt)$/
+link	fs/vncalls.c	/^link(uap, rvp)$/
+linkcycle	os/strsubr.c	/^linkcycle(upstp, lostp)$/
+loadav	os/vm_meter.c	/^loadav(avg, n)$/
+locc	fs/ufs/ufs_subr.c	/^locc(c, len, cp)$/
+lock_again	os/shm.c	/^STATIC void $/
+lock_mem	os/lock.c	/^lock_mem(uap, rvp)$/
+locking	fs/vncalls.c	/^locking(uap, rvp)$/
+lookupname	fs/lookup.c	/^lookupname(fnamep, seg, followlink, dirvpp, compvp/
+lookuppn	fs/lookup.c	/^lookuppn(pnp, followlink, dirvpp, compvpp)$/
+loutput	os/cmn_err.c	/^#define	loutput(c, tp) \\$/
+lprintf	os/cmn_err.c	/^lprintf(fmt, x1)$/
+lprintn	os/cmn_err.c	/^lprintn(n, b, tp)$/
+ls_ins_after	os/list.c	/^ls_ins_after(old, new)$/
+ls_ins_before	os/list.c	/^ls_ins_before(old, new)$/
+ls_remove	os/list.c	/^ls_remove(p)$/
+ls_remque	os/list.c	/^ls_remque(p)$/
+lseek	fs/vncalls.c	/^lseek(uap, rvp)$/
+lstat	fs/vncalls.c	/^lstat(uap, rvp)$/
+lxstat	fs/vncalls.c	/^lxstat(uap, rvp)$/
+madvise	os/grow.c	/^madvise(uap, rvp)$/
+makectty	fs/specfs/specsubr.c	/^makectty(ovp)$/
+makedevice	os/ddi.c	/^makedevice(maj, minor)$/
+makespecvp	fs/specfs/specsubr.c	/^makespecvp(dev, type)$/
+malloc	os/malloc.c	/^malloc(mp, size)$/
+mapdfile	os/mapfile.c	/^mapdfile(vp, mp)$/
+mapfile	os/mapfile.c	/^mapfile(ap, rvp)$/
+mapinit	os/ddi.c	/^mapinit(mp, mapsiz)$/
+mapnewtss	os/machdep.c	/^mapnewtss(p)$/
+mapphys	os/xmmu.c	/^mapphys(physaddr, nbytes)$/
+mapsearch	fs/ufs/ufs_alloc.c	/^mapsearch(fs, cgp, bpref, allocsiz)$/
+maptfile	os/mapfile.c	/^maptfile(vp, mp, filesz)$/
+mapwant	os/ddi.c	/^mapwant(mp)$/
+max	os/subr.c	/^#define max(a, b)	((a) > (b) ? (a) : (b))$/
+mctl	os/grow.c	/^mctl(uap, rvp)$/
+mem_unlock	os/lock.c	/^mem_unlock(as, addr, attr, arg, bitmap, position, /
+memcntl	os/lock.c	/^memcntl(uap, rvp)$/
+memget	os/xmmu.c	/^memget(clicks)$/
+memialloc	os/vm_subr.c	/^memialloc()$/
+memlow	os/subr.c	/^memlow()$/
+mfree	os/malloc.c	/^mfree(mp, size, a)$/
+mincore	os/grow.c	/^mincore(uap, rvp)$/
+mkdir	fs/vncalls.c	/^mkdir(uap, rvp)$/
+mknod	fs/vncalls.c	/^mknod(uap, rvp)$/
+mktables	os/startup.c	/^mktables(nextfree)$/
+ml_reloc_ktext	os/startup.c	/^ml_reloc_ktext()$/
+ml_unused_mem	os/startup.c	/^ml_unused_mem()$/
+ml_update_avail	os/startup.c	/^ml_update_avail()$/
+mlsetup	os/startup.c	/^mlsetup()$/
+mmap	os/grow.c	/^mmap(uap, rvp)$/
+mount	fs/vfs.c	/^mount(uap, rvp)$/
+mountfs	fs/ufs/ufs_vfsops.c	/^mountfs(vfsp, why, dev, path, cr, isroot)$/
+mprotect	os/grow.c	/^mprotect(uap, rvp)$/
+msgconv	os/msg.c	/^msgconv(id, qpp)$/
+msgctl	os/msg.c	/^msgctl(uap, rvp)$/
+msgfree	os/msg.c	/^msgfree(qp, pmp, mp, wflag)$/
+msgget	os/msg.c	/^msgget(uap, rvp)$/
+msginit	os/msg.c	/^msginit()$/
+msgio	fs/strcalls.c	/^msgio(uap, rvp, mode, prip, flagsp)$/
+msgrcv	os/msg.c	/^msgrcv(uap, rvp)$/
+msgsnd	os/msg.c	/^msgsnd(uap, rvp)$/
+msgsys	os/msg.c	/^msgsys(uap, rvp)$/
+munlink	os/strsubr.c	/^munlink(stp, linkp, flag, crp, rvalp)$/
+munlinkall	os/strsubr.c	/^munlinkall(stp, flag, crp, rvalp)$/
+munmap	os/grow.c	/^munmap(uap, rvp)$/
+mux_addedge	os/strsubr.c	/^mux_addedge(upstp, lostp, muxid)$/
+mux_rmvedge	os/strsubr.c	/^mux_rmvedge(upstp, muxid)$/
+namesetattr	fs/vncalls.c	/^namesetattr(fnamep, followlink, vap, flags)$/
+nap	os/xsys.c	/^nap(uap, rvp)$/
+nc_inshash	fs/dnlc.c	/^nc_inshash(ncp, hp)$/
+nc_inslru	fs/dnlc.c	/^nc_inslru(ncp2, ncp1)$/
+nc_rmhash	fs/dnlc.c	/^nc_rmhash(ncp)$/
+nc_rmlru	fs/dnlc.c	/^nc_rmlru(ncp)$/
+nclick_rtn	os/startup.c	/^nclick_rtn(click)$/
+ncopyin	os/strsubr.c	/^#define ncopyin(A, B, C, D)	copyin(A, B, C)		\/* te/
+ncopyout	os/strsubr.c	/^#define ncopyout(A, B, C, D)	copyout(A, B, C)	\/* t/
+newproc	os/fork.c	/^newproc(cond, pidp, perror)$/
+ngeteblk	os/bio.c	/^ngeteblk(bsize)$/
+nmi_init	os/nmi.c	/^void nmi_init()$/
+nocore	os/core.c	/^nocore(vp, pp, credp, rlimit, sig)$/
+nodev	os/subr.c	/^nodev()$/
+noexec	os/exec.c	/^noexec(vp, args, level, ehdp, setid)$/
+nomemmsg	os/cmn_err.c	/^nomemmsg(func, count, contflg, lockflg)$/
+non_dma_page	os/startup.c	/^non_dma_page(nextfree_ptr)$/
+nopkg	os/trap.c	/^nopkg(uap, rvp)$/
+noreach	os/trap.c	/^noreach()$/
+nosys	os/trap.c	/^nosys(uap, rvp)$/
+nulldev	os/subr.c	/^nulldev()$/
+nullsys	os/trap.c	/^void $/
+numtos	os/subr.c	/^numtos(num, s)$/
+nuname	os/scalls.c	/^nuname(uap, rvp)$/
+nz	os/vm_meter.c	/^#define	nz(x)	((x) != 0 ? (x) : 1)$/
+oem_doarg	os/oem.c	/^oem_doarg(s)$/
+oem_pre_clk_init	os/oem.c	/^oem_pre_clk_init()$/
+oeminit	os/oem.c	/^oeminit()$/
+oemreboot	os/oem.c	/^oemreboot(flag)$/
+open	fs/vncalls.c	/^open(uap, rvp)$/
+opendq	fs/ufs/quotacalls.c	/^opendq(ufsvfsp, addr, cr)$/
+other_specvp	fs/specfs/specsubr.c	/^other_specvp(vp)$/
+output	os/cmn_err.c	/^#define	output(c) \\$/
+ovbcopy	os/move.c	/^ovbcopy(from, to, count)$/
+p0init	os/startup.c	/^p0init()$/
+p0u	os/startup.c	/^p0u(nextfree)$/
+pageio_done	os/bio.c	/^pageio_done(bp)$/
+pageio_setup	os/bio.c	/^pageio_setup(pp, len, vp, flags)$/
+pageout	os/vm_pageout.c	/^pageout()$/
+panic	os/cmn_err.c	/^panic(char *str, ...)$/
+passc	os/move.c	/^passc(c)$/
+pathconf	fs/vncalls.c	/^pathconf(uap, rvp)$/
+pause	os/scalls.c	/^pause()$/
+pexit	os/exit.c	/^pexit()$/
+pgbnd	os/bio.c	/^#define	pgbnd(a)	(NBPP - ((NBPP - 1) & (int)(a)))$/
+pgdetach	os/pgrp.c	/^pgdetach(pp)$/
+pgexit	os/pgrp.c	/^pgexit(prp)$/
+pgfind	os/pid.c	/^pgfind(pgid)$/
+pgjoin	os/pgrp.c	/^pgjoin(p, pgp)$/
+pglinked	os/pgrp.c	/^pglinked(cp)$/
+pgmembers	os/pgrp.c	/^pgmembers(pgid)$/
+pgsignal	os/pgrp.c	/^pgsignal(pidp, sig)$/
+physck	os/vm_subr.c	/^physck(nblocks, rw)$/
+physio	os/vm_subr.c	/^physio(strat, bp, dev, rw)$/
+physiock	os/ddi.c	/^physiock(strat, bp, dev, rw, devsize, uiop) $/
+physmap	os/ddi.c	/^physmap(physaddr, nbytes, flags)$/
+physmap_free	os/ddi.c	/^physmap_free(vaddr, nbytes, flags)$/
+pid_assign	os/pid.c	/^pid_assign(cond, pp)$/
+pid_entry	os/pid.c	/^pid_entry(slot)$/
+pid_exit	os/pid.c	/^pid_exit(prp)$/
+pid_init	os/pid.c	/^pid_init()$/
+pid_lookup	os/pid.c	/^pid_lookup(pid)$/
+pid_rele	os/pid.c	/^pid_rele(pidp)$/
+pid_setmin	os/pid.c	/^pid_setmin()$/
+pioseginit	os/startup.c	/^pioseginit(nextfree)$/
+pipe	os/pipe.c	/^pipe(uap, rvp)$/
+pm_denied	os/pmstub.c	/^pm_denied(cr, priv)$/
+pn_alloc	fs/pathname.c	/^pn_alloc(pnp)$/
+pn_fixslash	fs/pathname.c	/^pn_fixslash(pnp)$/
+pn_free	fs/pathname.c	/^pn_free(pnp)$/
+pn_get	fs/pathname.c	/^pn_get(str, seg, pnp)$/
+pn_getcomponent	fs/pathname.c	/^pn_getcomponent(pnp, component, flags)$/
+pn_getsymlink	fs/pathname.c	/^pn_getsymlink(vp, pnp, crp)$/
+pn_insert	fs/pathname.c	/^pn_insert(pnp, sympnp)$/
+pn_set	fs/pathname.c	/^pn_set(pnp, path)$/
+pn_setlast	fs/pathname.c	/^pn_setlast(pnp)$/
+pn_skipslash	fs/pathname.c	/^pn_skipslash(pnp)$/
+poll	fs/vncalls.c	/^poll(uap, rvp)$/
+polladd	fs/vncalls.c	/^polladd(php, events, fn, arg, pdp)$/
+polldel	fs/vncalls.c	/^polldel(php, pdp)$/
+pollrun	fs/vncalls.c	/^pollrun(p)$/
+polltime	fs/vncalls.c	/^polltime(p)$/
+pollwakeup	os/ddi.c	/^pollwakeup(php, event)$/
+prcom	os/cmn_err.c	/^prcom(prt, bp, er1, er2)$/
+prdev	os/cmn_err.c	/^prdev(str, dev)$/
+prfind	os/pid.c	/^prfind(pid)$/
+printbuf	os/bio.c	/^printbuf()$/
+printf	os/cmn_err.c	/^printf(char *fmt, ... )$/
+printn	os/cmn_err.c	/^printn(n, b, nbytes)$/
+printputbuf	os/cmn_err.c	/^printputbuf()$/
+procdup	os/fork.c	/^procdup(cp, pp, isvfork, no_swap)$/
+procinset	os/procset.c	/^procinset(pp, psp)$/
+proclock	os/lock.c	/^proclock()$/
+proctl	os/xsys.c	/^proctl(uap, rvp)$/
+procxmt	os/sig.c	/^procxmt()$/
+profil	os/scalls.c	/^profil(uap, rvp)$/
+prsignal	os/pid.c	/^prsignal(pidp, sig)$/
+psig	os/sig.c	/^psig()$/
+psignal	os/sig.c	/^psignal(p, sig)$/
+ptmalloc	os/machdep.c	/^ptmalloc(mp, size, mask)$/
+ptob	os/ddi.c	/^ptob (numpages)$/
+ptrace	os/sig.c	/^ptrace(uap, rvp)$/
+punlock	os/lock.c	/^punlock()$/
+putchar	os/cmn_err.c	/^putchar(c)$/
+putiocd	os/strsubr.c	/^putiocd(bp, ebp, arg, copymode, flag, fmt)$/
+putmsg	fs/strcalls.c	/^putmsg(uap, rvp)$/
+putnext	os/ddi.c	/^putnext(q, mp)$/
+putpmsg	fs/strcalls.c	/^putpmsg(uap, rvp)$/
+qattach	os/strsubr.c	/^qattach(qp, devp, flag, table, idx, crp)$/
+qdetach	os/strsubr.c	/^qdetach(qp, clmode, flag, crp)$/
+qsync	fs/ufs/quotacalls.c	/^qsync(ufsvfsp)$/
+querytlb	os/cmn_err.c	/^querytlb()$/
+queuerun	os/strsubr.c	/^queuerun()$/
+quoinit	fs/ufs/quota.c	/^quoinit()$/
+quotactl	fs/ufs/quotacalls.c	/^quotactl(vp, arg, cr)$/
+r0	os/cmn_err.c	/^int r0() {}$/
+rdchk	fs/vncalls.c	/^rdchk(uap, rvp)$/
+rdwr	fs/vncalls.c	/^rdwr(fp, uio, rvp, mode)$/
+rdwri	fs/s5/s5rdwri.c	/^rdwri(rw, ip, base, len, offset, seg, ioflag, ares/
+read	fs/vncalls.c	/^read(uap, rvp)$/
+readi	fs/s5/s5rdwri.c	/^readi(ip, uiop, ioflag)$/
+readlink	fs/vncalls.c	/^readlink(uap, rvp)$/
+readv	fs/vncalls.c	/^readv(uap, rvp)$/
+realloccg	fs/ufs/ufs_alloc.c	/^realloccg(ip, bprev, bpref, osize, nsize, bnp)$/
+realloctty	os/session.c	/^realloctty(frompp, sid)$/
+reclock	os/flock.c	/^reclock(vp, lckdat, cmd, flag, offset)$/
+regflck	os/flock.c	/^regflck(ld, flp)$/
+relvm	os/fork.c	/^relvm(p)$/
+remove_proc	os/exec.c	/^remove_proc(args)$/
+rename	fs/vncalls.c	/^rename(uap, rvp)$/
+restorecontext	os/machdep.c	/^restorecontext(ucp)$/
+restorefp	os/fp.c	/^restorefp( addr )$/
+rexit	os/exit.c	/^rexit(uap, rvp)$/
+rlimit	os/subr.c	/^rlimit(resource, softlimit, hardlimit)$/
+rmalloc	os/malloc.c	/^rmalloc(mp, size)$/
+rmdir	fs/vncalls.c	/^rmdir(uap, rvp)$/
+rmfree	os/malloc.c	/^rmfree(mp, size, a)$/
+rtodc	os/todc.c	/^rtodc(clkp)$/
+runqueues	os/strsubr.c	/^runqueues()$/
+rw	fs/vncalls.c	/^rw(uap, rvp, mode)$/
+rwip	fs/ufs/ufs_vnops.c	/^rwip(ip, uio, rw, ioflag)$/
+rwv	fs/vncalls.c	/^rwv(uap, rvp, mode)$/
+s5access	fs/s5/s5vnops.c	/^s5access(vp, mode, flags, cr)$/
+s5addmap	fs/s5/s5vnops.c	/^s5addmap(vp, off, as, addr, len, prot, maxprot, fl/
+s5allocmap	fs/s5/s5blklist.c	/^s5allocmap(ip)$/
+s5allocstore	fs/s5/s5vnops.c	/^s5allocstore(vp, off, len, cred)$/
+s5bldblklst	fs/s5/s5blklist.c	/^s5bldblklst(lp, ip, nblks)$/
+s5bldindr	fs/s5/s5blklist.c	/^int $/
+s5bloop	fs/s5/s5vnops.c	/^s5bloop(vfsp, bn, f1, f2, blkcntp)$/
+s5close	fs/s5/s5vnops.c	/^s5close(vp, flag, count, offset, cr)$/
+s5create	fs/s5/s5vnops.c	/^s5create(dvp, name, vap, excl, mode, vpp, cr)$/
+s5delmap	fs/s5/s5vnops.c	/^s5delmap(vp, off, as, addr, len, prot, maxprot, fl/
+s5fid	fs/s5/s5vnops.c	/^s5fid(vp, fidpp)$/
+s5flushi	fs/s5/s5vfsops.c	/^s5flushi(flag)$/
+s5flushsb	fs/s5/s5vfsops.c	/^s5flushsb(vfsp)$/
+s5freemap	fs/s5/s5blklist.c	/^s5freemap(ip)$/
+s5freesp	fs/s5/s5alloc.c	/^s5freesp(vp, lp, flag)$/
+s5frlock	fs/s5/s5vnops.c	/^s5frlock(vp, cmd, bfp, flag, offset, cr)$/
+s5fsync	fs/s5/s5vnops.c	/^s5fsync(vp, cr)$/
+s5getapage	fs/s5/s5vnops.c	/^s5getapage(vp, off, protp, pl, plsz, seg, addr, rw/
+s5getattr	fs/s5/s5vnops.c	/^s5getattr(vp, vap, flags, cr)$/
+s5getpage	fs/s5/s5vnops.c	/^s5getpage(vp, off, len, protp, pl, plsz, seg, addr/
+s5getsp	fs/s5/s5vnops.c	/^s5getsp(vp, totp)$/
+s5inactive	fs/s5/s5vnops.c	/^s5inactive(vp, cr)$/
+s5indirtrunc	fs/s5/s5alloc.c	/^s5indirtrunc(vfsp, bn, lastbn, level)$/
+s5init	fs/s5/s5inode.c	/^s5init(vswp, fstype)$/
+s5ioctl	fs/s5/s5vnops.c	/^s5ioctl(vp, cmd, arg, flag, cr, rvalp)$/
+s5link	fs/s5/s5vnops.c	/^s5link(tdvp, svp, tname, cr)$/
+s5lookup	fs/s5/s5vnops.c	/^s5lookup(dvp, name, vpp, pnp, flags, rdir, cr)$/
+s5map	fs/s5/s5vnops.c	/^s5map(vp, off, as, addrp, len, prot, maxprot, flag/
+s5mkdir	fs/s5/s5vnops.c	/^s5mkdir(dvp, dirname, vap, vpp, cr)$/
+s5mount	fs/s5/s5vfsops.c	/^s5mount(vfsp, mvp, uap, cr)$/
+s5mountroot	fs/s5/s5vfsops.c	/^s5mountroot(vfsp, why)$/
+s5open	fs/s5/s5vnops.c	/^s5open(vpp, flag, cr)$/
+s5putpage	fs/s5/s5vnops.c	/^s5putpage(vp, off, len, flags, cr)$/
+s5read	fs/s5/s5vnops.c	/^s5read(vp, uiop, ioflag, cr)$/
+s5readdir	fs/s5/s5vnops.c	/^s5readdir(vp, uiop, cr, eofp)$/
+s5readlink	fs/s5/s5vnops.c	/^s5readlink(vp, uiop, cr)$/
+s5remove	fs/s5/s5vnops.c	/^s5remove(vp, name, cr)$/
+s5rename	fs/s5/s5vnops.c	/^s5rename(sdvp, sname, tdvp, tname, cr)$/
+s5rmdir	fs/s5/s5vnops.c	/^s5rmdir(vp, name, cdir, cr)$/
+s5root	fs/s5/s5vfsops.c	/^s5root(vfsp, vpp)$/
+s5rwlock	fs/s5/s5vnops.c	/^s5rwlock(vp)$/
+s5rwunlock	fs/s5/s5vnops.c	/^s5rwunlock(vp)$/
+s5seek	fs/s5/s5vnops.c	/^s5seek(vp, ooff, noffp)$/
+s5setattr	fs/s5/s5vnops.c	/^s5setattr(vp, vap, flags, cr)$/
+s5space	fs/s5/s5vnops.c	/^s5space(vp, cmd, bfp, flag, offset, cr)$/
+s5statvfs	fs/s5/s5vfsops.c	/^s5statvfs(vfsp, sp)$/
+s5symlink	fs/s5/s5vnops.c	/^s5symlink(dvp, linkname, vap, target, cr)$/
+s5sync	fs/s5/s5vfsops.c	/^s5sync(vfsp, flag, cr)$/
+s5unmount	fs/s5/s5vfsops.c	/^s5unmount(vfsp, cr)$/
+s5update	fs/s5/s5vfsops.c	/^s5update()$/
+s5vfs_init	fs/s5/s5vfsops.c	/^s5vfs_init(s5vfsp, bsize)$/
+s5vget	fs/s5/s5vfsops.c	/^s5vget(vfsp, vpp, fidp)$/
+s5write	fs/s5/s5vnops.c	/^s5write(vp, uiop, ioflag, cr)$/
+s5writelbn	fs/s5/s5vnops.c	/^s5writelbn(ip, bn, pp, len, pgoff, flags)$/
+s_trap	os/trap.c	/^s_trap(r0ptr)$/
+sa_add	os/shm.c	/^sa_add(pp, addr, len, amp)$/
+sa_del	os/shm.c	/^sa_del(pp, addr)$/
+sa_find	os/shm.c	/^sa_find(pp, addr)$/
+savecontext	os/machdep.c	/^savecontext(ucp, mask)$/
+savefp	os/fp.c	/^savefp( addr )$/
+say	os/cmn_err.c	/^say( string, value )$/
+sbupdate	fs/ufs/ufs_vfsops.c	/^sbupdate(vfsp)$/
+scan_block	os/nmi.c	/^asm void scan_block(addr, length)$/
+scanc	fs/ufs/ufs_subr.c	/^scanc(size, cp, table, mask)$/
+scanmem	os/startup.c	/^scanmem(nextclick, firstclick, lastclick)$/
+sched	os/sched.c	/^sched()$/
+schedpaging	os/vm_pageout.c	/^schedpaging()$/
+sdelete	fs/specfs/specsubr.c	/^sdelete(sp)$/
+sealloc	os/strsubr.c	/^sealloc(slpflag)$/
+sefree	os/strsubr.c	/^sefree(sep)$/
+semaoe	os/sem.c	/^semaoe(val, id, num)$/
+semconv	os/sem.c	/^semconv(s, spp)$/
+semctl	os/sem.c	/^semctl(uap, rvp)$/
+semexit	os/sem.c	/^semexit()$/
+semget	os/sem.c	/^semget(uap, rvp)$/
+seminit	os/sem.c	/^seminit()$/
+semop	os/sem.c	/^semop(uap, rvp)$/
+semsys	os/sem.c	/^semsys(uap, rvp)$/
+semundo	os/sem.c	/^semundo(op, n, id, sp)$/
+semunrm	os/sem.c	/^semunrm(id, low, high)$/
+sendsig	os/machdep.c	/^sendsig(sig, sip, hdlr)$/
+sess_create	os/session.c	/^sess_create()$/
+sess_rele	os/session.c	/^sess_rele(sp)$/
+set0emulate	os/exec.c	/^set0emulate(emul, args, execsz)$/
+setblock	fs/ufs/ufs_subr.c	/^setblock(fs, cp, h)$/
+setcontext	os/scalls.c	/^setcontext(uap, rvp)$/
+setdscr	os/sysi86.c	/^setdscr(ap)$/
+setdscracc1	os/machdep.c	/^setdscracc1(dscr, acc1)$/
+setdscracc2	os/machdep.c	/^setdscracc2(dscr, acc2)$/
+setdscrbase	os/machdep.c	/^setdscrbase(dscr, base)$/
+setegid	os/scalls.c	/^setegid(uap, rvp)$/
+setemulate	os/exec.c	/^setemulate(emul, vp, args, execsz)$/
+seterror	os/cmn_err.c	/^seterror(errno)$/
+seteuid	os/scalls.c	/^seteuid(uap, rvp)$/
+setexecenv	os/exec.c	/^setexecenv(ep)$/
+setf	os/fio.c	/^setf(fd, fp)$/
+setgid	os/scalls.c	/^setgid(uap, rvp)$/
+setgroups	os/scalls.c	/^setgroups(uap, rvp)$/
+setmapwant	os/ddi.c	/^setmapwant(mp)$/
+setpgrp	os/scalls.c	/^setpgrp(uap, rvp)$/
+setpof	os/fio.c	/^setpof(int fd, char flags)$/
+setq	os/strsubr.c	/^setq(rq, rinit, winit)$/
+setqback	os/strsubr.c	/^setqback(q, pri)$/
+setquota	fs/ufs/quotacalls.c	/^setquota(cmd, uid, ufsvfsp, addr, cr)$/
+setregs	os/machdep.c	/^setregs(args)$/
+setrlimit	os/scalls.c	/^setrlimit(uap, rvp)$/
+setrun	os/slp.c	/^setrun(pp)$/
+setsigact	os/sig.c	/^setsigact(sig, disp, mask, flags)$/
+setts	os/fp.c	/^setts()$/
+setuctxt	os/fork.c	/^setuctxt(p, up)$/
+setuid	os/scalls.c	/^setuid(uap, rvp)$/
+setupclock	os/vm_pageout.c	/^setupclock()$/
+setxemulate	os/exec.c	/^setxemulate(emul, args, execsz)$/
+sfind	fs/specfs/specsubr.c	/^sfind(dev, type, vp)$/
+shalloc	os/strsubr.c	/^shalloc(qp)$/
+shfree	os/strsubr.c	/^shfree(stp)$/
+shm_lock	os/shm.c	/^shm_lock(amp)$/
+shm_rm_amp	os/shm.c	/^shm_rm_amp(amp, lckflag)$/
+shm_unlock	os/shm.c	/^shm_unlock(amp, lck) $/
+shmat	os/shm.c	/^shmat(uap, rvp)$/
+shmconv	os/shm.c	/^shmconv(s, spp)$/
+shmctl	os/shm.c	/^shmctl(uap, rvp)$/
+shmdt	os/shm.c	/^shmdt(uap, rvp)$/
+shmexec	os/shm.c	/^shmexec(pp)$/
+shmexit	os/shm.c	/^shmexit(pp)$/
+shmfork	os/shm.c	/^shmfork(ppp, cpp)$/
+shmget	os/shm.c	/^shmget(uap, rvp)$/
+shmseg	os/shm.c	/^shmseg()$/
+shmsys	os/shm.c	/^shmsys(uap, rvp)$/
+shutdown_proc	os/scalls.c	/^shutdown_proc(p)$/
+si86_call_demon	os/sysi86.c	/^si86_call_demon()$/
+sigaction	os/scalls.c	/^sigaction(uap, rvp)$/
+sigaddq	os/sig.c	/^sigaddq(p, infop, km_flags)$/
+sigaltstack	os/scalls.c	/^sigaltstack(uap, rvp)$/
+sigappend	os/sig.c	/^sigappend(toks, toqueue, fromks, fromqueue)$/
+sigcld	os/sig.c	/^sigcld(cp)$/
+sigclean	os/machdep.c	/^sigclean(r0ptr)$/
+sigdelq	os/sig.c	/^sigdelq(p, sig)$/
+sigdeq	os/sig.c	/^sigdeq(p, sig, qpp)$/
+sigmask	os/sig.c	/^k_sigset_t cantmask = (sigmask(SIGKILL)|sigmask(SI/
+signal	os/pid.c	/^signal(pgid, sig)$/
+sigpending	os/scalls.c	/^sigpending(uap, rvp)$/
+sigprepend	os/sig.c	/^sigprepend(toks, toqueue, fromks, fromqueue)$/
+sigprocmask	os/scalls.c	/^sigprocmask(uap, rvp)$/
+sigsendproc	os/sig.c	/^sigsendproc(p,pv)$/
+sigsendset	os/sig.c	/^sigsendset(psp, sig)$/
+sigsendsys	os/scalls.c	/^sigsendsys(uap, rvp)$/
+sigsuspend	os/scalls.c	/^sigsuspend(uap, rvp)$/
+sigtoproc	os/sig.c	/^sigtoproc(p, sig, fromuser)$/
+sinsert	fs/specfs/specsubr.c	/^sinsert(sp)$/
+sizeof	os/cxenix.c	/^int ncxentry = sizeof(cxentry)\/sizeof(struct sysen/
+skpc	fs/ufs/ufs_subr.c	/^skpc(c, len, cp)$/
+sleep	os/slp.c	/^sleep(chan, disp)$/
+smark	fs/specfs/specsubr.c	/^smark(sp, flag)$/
+snap	os/cmn_err.c	/^snap(r0ptr,title)$/
+softreset	os/oem.c	/^softreset()$/
+spec_access	fs/specfs/specvnops.c	/^spec_access(vp, mode, flags, cr)$/
+spec_addmap	fs/specfs/specvnops.c	/^spec_addmap(vp, off, as, addr, len, prot, maxprot,/
+spec_allocstore	fs/specfs/specvnops.c	/^spec_allocstore(vp, off, len, cred)$/
+spec_close	fs/specfs/specvnops.c	/^spec_close(vp, flag, count, offset, cr)$/
+spec_delmap	fs/specfs/specvnops.c	/^spec_delmap(vp, off, as, addr, len, prot, maxprot,/
+spec_fid	fs/specfs/specvnops.c	/^spec_fid(vp, fidpp)$/
+spec_frlock	fs/specfs/specvnops.c	/^spec_frlock(vp, cmd, bfp, flag, offset, cr)$/
+spec_fsync	fs/specfs/specvnops.c	/^spec_fsync(vp, cr)$/
+spec_getapage	fs/specfs/specvnops.c	/^spec_getapage(vp, off, protp, pl, plsz, seg, addr,/
+spec_getattr	fs/specfs/specvnops.c	/^spec_getattr(vp, vap, flags, cr)$/
+spec_getpage	fs/specfs/specvnops.c	/^spec_getpage(vp, off, len, protp, pl, plsz, seg, a/
+spec_inactive	fs/specfs/specvnops.c	/^spec_inactive(vp, cr)$/
+spec_ioctl	fs/specfs/specvnops.c	/^spec_ioctl(vp, cmd, arg, mode, cr, rvalp)$/
+spec_map	fs/specfs/specvnops.c	/^spec_map(vp, off, as, addrp, len, prot, maxprot, f/
+spec_open	fs/specfs/specvnops.c	/^spec_open(vpp, flag, cr)$/
+spec_poll	fs/specfs/specvnops.c	/^spec_poll(vp, events, anyyet, reventsp, phpp)$/
+spec_putpage	fs/specfs/specvnops.c	/^spec_putpage(vp, off, len, flags, cr)$/
+spec_rdchk	fs/specfs/specsubr.c	/^spec_rdchk(vp, cr, rvalp)$/
+spec_read	fs/specfs/specvnops.c	/^spec_read(vp, uiop, ioflag, cr)$/
+spec_realvp	fs/specfs/specvnops.c	/^spec_realvp(vp, vpp)$/
+spec_seek	fs/specfs/specvnops.c	/^spec_seek(vp, ooff, noffp)$/
+spec_segmap	fs/specfs/specvnops.c	/^spec_segmap(dev, off, as, addrp, len, prot, maxpro/
+spec_setattr	fs/specfs/specvnops.c	/^spec_setattr(vp, vap, flags, cr)$/
+spec_sync	fs/specfs/specvfsops.c	/^spec_sync(vfsp, flag, cr)$/
+spec_write	fs/specfs/specvnops.c	/^spec_write(vp, uiop, ioflag, cr)$/
+spec_wrtblk	fs/specfs/specvnops.c	/^spec_wrtblk(vp, pp, off, len, flags)$/
+specfind	fs/specfs/specsubr.c	/^specfind(dev, type)$/
+specinit	fs/specfs/specsubr.c	/^specinit(vswp, fstype)$/
+specvp	fs/specfs/specsubr.c	/^specvp(vp, dev, type, cr)$/
+splstr	os/ddi.c	/^splstr()$/
+sqhash	os/slp.c	/^#define sqhash(X)	(&sleepq[((int)X >> 3) & (NSLEEP/
+ssig	os/scalls.c	/^ssig(uap, rvp)$/
+stat	fs/vncalls.c	/^stat(uap, rvp)$/
+statfs	fs/vfs.c	/^statfs(uap, rvp)$/
+statvfs	fs/vfs.c	/^statvfs(uap, rvp)$/
+stillreferenced	fs/specfs/specsubr.c	/^stillreferenced(dev, type)$/
+stime	os/scalls.c	/^stime(uap, rvp)$/
+stoi	os/subr.c	/^stoi(str)$/
+stop	os/sig.c	/^stop(p, why, what, firststop)$/
+stop_on_fault	os/trap.c	/^stop_on_fault(fault, sip)$/
+str2num	os/strsubr.c	/^str2num(str)		\/* string to number, updating pointe/
+str2time	os/strsubr.c	/^str2time(stp)$/
+str3time	os/strsubr.c	/^str3time(stp)$/
+straccess	os/strsubr.c	/^straccess(stp, mode)$/
+stralloctty	os/strsubr.c	/^stralloctty(sp, stp)$/
+stray	os/trap.c	/^stray(addr)$/
+strclean	os/streamio.c	/^strclean(vp)$/
+strclose	os/streamio.c	/^strclose(vp, flag, crp)$/
+strcopyin	os/strsubr.c	/^strcopyin(from, to, len, fmt, copyflag)$/
+strcopyout	os/strsubr.c	/^strcopyout(from, to, len, fmt, copyflag)$/
+strctty	os/strsubr.c	/^strctty(pp, stp)$/
+strdoioctl	os/streamio.c	/^strdoioctl(stp, strioc, ebp, copyflag, fmtp, crp, /
+strdrpost	os/strsubr.c	/^strdrpost(mp)$/
+strevpost	os/strsubr.c	/^strevpost(stp, event, data)$/
+strfreectty	os/strsubr.c	/^strfreectty(stp)$/
+strgetmsg	os/streamio.c	/^strgetmsg(vp, mctl, mdata, prip, flagsp, fmode, rv/
+strgiveback	os/strsubr.c	/^strgiveback()$/
+strhup	os/strsubr.c	/^strhup(stp)$/
+stri386ioctl	os/streamio.c	/^int $/
+strinit	os/strsubr.c	/^strinit()$/
+strioctl	os/streamio.c	/^strioctl(vp, cmd, arg, flag, copyflag, crp, rvalp)/
+strmakemsg	os/strsubr.c	/^strmakemsg(mctl, count, uiop, stp, flag, mpp)$/
+strncmp	os/subr.c	/^strncmp(s1, s2, n)$/
+strncpy	os/subr.c	/^strncpy(s1, s2, n)$/
+stropen	os/streamio.c	/^stropen(vp, devp, flag, crp)$/
+strpoll	os/streamio.c	/^strpoll(stp, events, anyyet, reventsp, phpp)$/
+strpunlink	os/strsubr.c	/^strpunlink(crp)$/
+strputmsg	os/streamio.c	/^strputmsg(vp, mctl, mdata, pri, flag, fmode)$/
+strqbuf	os/strsubr.c	/^strqbuf(stp)$/
+strread	os/streamio.c	/^strread(vp, uiop, crp)$/
+strrput	os/streamio.c	/^strrput(q, bp)$/
+strscan	os/strsubr.c	/^strscan()  {$/
+strsendsig	os/strsubr.c	/^strsendsig(siglist, event, data)$/
+strsignal	os/strsubr.c	/^strsignal(stp, sig, band)$/
+strsink	os/streamio.c	/^strsink(q, bp)$/
+strtime	os/strsubr.c	/^strtime(stp)$/
+strunbcall	os/strsubr.c	/^strunbcall(size, p)$/
+strwaitbuf	os/strsubr.c	/^strwaitbuf(size, pri)$/
+strwaitq	os/strsubr.c	/^strwaitq(stp, flag, count, fmode, done)$/
+strwrite	os/streamio.c	/^strwrite(vp, uiop, crp)$/
+strwsrv	os/streamio.c	/^strwsrv(q)$/
+stty	fs/vncalls.c	/^stty(uap, rvp)$/
+suser	os/cred.c	/^suser(cr)$/
+swapout	os/sched.c	/^swapout(p, ubswapok)$/
+swdone	os/vm_pageout.c	/^swdone(bp)$/
+symlink	fs/vncalls.c	/^symlink(uap, rvp)$/
+sync	fs/vfs.c	/^sync()$/
+syncip	fs/s5/s5inode.c	/^syncip(ip, flags)$/
+sysacct	os/acct.c	/^sysacct(uap, rvp)$/
+sysconfig	os/scalls.c	/^sysconfig(uap, rvp)$/
+sysdump	os/cmn_err.c	/^sysdump()$/
+sysfs	fs/vfs.c	/^sysfs(uap, rvp)$/
+sysfsind	fs/vfs.c	/^sysfsind(uap, rvp)$/
+sysfstyp	fs/vfs.c	/^sysfstyp(uap, rvp)$/
+sysi86	os/sysi86.c	/^sysi86(uap, rvp)$/
+sysin	os/cmn_err.c	/^sysin() {}$/
+sysok	os/cmn_err.c	/^sysok() {}$/
+sysoops	os/cmn_err.c	/^sysoops() {}$/
+sysout	os/cmn_err.c	/^sysout() {}$/
+sysseginit	os/startup.c	/^sysseginit(nextfree)$/
+syssync	fs/vfs.c	/^syssync(uap, rvp)$/
+systeminfo	os/scalls.c	/^systeminfo(uap, rvp)$/
+systrap	os/trap.c	/^systrap(r0ptr)$/
+tclocal	os/local.c	/^tclocal(uap, rvp)$/
+textlock	os/lock.c	/^textlock()$/
+timein	os/clock.c	/^timein()$/
+timeout	os/clock.c	/^timeout(fun, arg, tim)$/
+timepoke	os/clock.c	/^#define timepoke() (dotimein++) \/* set dotimein fl/
+times	os/scalls.c	/^times(uap, rvp)$/
+tloop	fs/s5/s5inode.c	/^tloop(vfsp, bn, f1, f2)$/
+tracing	os/sig.c	/^#define tracing(p, sig) \\$/
+trapsig	os/trap.c	/^trapsig(pp, ip)$/
+traverse	fs/lookup.c	/^traverse(cvpp)$/
+ttimeout	os/clock.c	/^ttimeout(fun, arg, tim)$/
+tunlock	os/lock.c	/^tunlock()$/
+u_trap	os/trap.c	/^u_trap(r0ptr)$/
+uadmin	os/scalls.c	/^uadmin(uap, rvp)$/
+ublock	os/lock.c	/^ublock()$/
+ubunlock	os/lock.c	/^ubunlock()$/
+ufalloc	os/fio.c	/^ufalloc(start, fdp)$/
+ufs_access	fs/ufs/ufs_vnops.c	/^ufs_access(vp, mode, flags, cr)$/
+ufs_addmap	fs/ufs/ufs_vnops.c	/^ufs_addmap(vp, off, as, addr, len, prot, maxprot, /
+ufs_allocmap	fs/ufs/ufs_blklist.c	/^ufs_allocmap(ip)$/
+ufs_allocstore	fs/ufs/ufs_vnops.c	/^ufs_allocstore(vp, off, len, cred)$/
+ufs_badblock	fs/ufs/ufs_subr.c	/^ufs_badblock(fs, bn)$/
+ufs_bldblklst	fs/ufs/ufs_blklist.c	/^ufs_bldblklst(lp, ip, nblks)$/
+ufs_bldindr	fs/ufs/ufs_blklist.c	/^ufs_bldindr(ip, lp, eptr, dev, blknbr, indlvl)$/
+ufs_bmap	fs/ufs/ufs_bmap.c	/^ufs_bmap(ip, lbn, bnp, rabnp, size, rw, alloc_only/
+ufs_close	fs/ufs/ufs_vnops.c	/^ufs_close(vp, flag, count, offset, cr)$/
+ufs_create	fs/ufs/ufs_vnops.c	/^ufs_create(dvp, name, vap, excl, mode, vpp, cr)$/
+ufs_delmap	fs/ufs/ufs_vnops.c	/^ufs_delmap(vp, off, as, addr, len, prot, maxprot, /
+ufs_diraddentry	fs/ufs/ufs_dir.c	/^ufs_diraddentry(tdp, namep, namlen, slotp, sip, sd/
+ufs_dircheckforname	fs/ufs/ufs_dir.c	/^ufs_dircheckforname(tdp, namep, namlen, slotp, ipp/
+ufs_dircheckpath	fs/ufs/ufs_dir.c	/^ufs_dircheckpath(source, target)$/
+ufs_dirempty	fs/ufs/ufs_dir.c	/^ufs_dirempty(ip, parentino, dotflagp)$/
+ufs_direnter	fs/ufs/ufs_dir.c	/^ufs_direnter(tdp, namep, op, sdp, sip, vap, ipp, c/
+ufs_dirfixdotdot	fs/ufs/ufs_dir.c	/^ufs_dirfixdotdot(dp, opdp, npdp)$/
+ufs_dirlook	fs/ufs/ufs_dir.c	/^ufs_dirlook(dp, namep, ipp, cr)$/
+ufs_dirmakedirect	fs/ufs/ufs_dir.c	/^ufs_dirmakedirect(ip, dp)$/
+ufs_dirmakeinode	fs/ufs/ufs_dir.c	/^ufs_dirmakeinode(tdp, ipp, vap, op, cr)$/
+ufs_dirremove	fs/ufs/ufs_dir.c	/^ufs_dirremove(dp, namep, oip, cdir, op, cr)$/
+ufs_dirrename	fs/ufs/ufs_dir.c	/^ufs_dirrename(sdp, sip, tdp, namep, tip, slotp, cr/
+ufs_fid	fs/ufs/ufs_vnops.c	/^ufs_fid(vp, fidpp)$/
+ufs_flushi	fs/ufs/ufs_subr.c	/^ufs_flushi(flag)$/
+ufs_freemap	fs/ufs/ufs_blklist.c	/^ufs_freemap(ip)$/
+ufs_freesp	fs/ufs/ufs_alloc.c	/^ufs_freesp(vp, lp, flag)$/
+ufs_frlock	fs/ufs/ufs_vnops.c	/^ufs_frlock(vp, cmd, bfp, flag, offset, cr)$/
+ufs_fsync	fs/ufs/ufs_vnops.c	/^ufs_fsync(vp, cr)$/
+ufs_getapage	fs/ufs/ufs_vnops.c	/^ufs_getapage(vp, off, protp, pl, plsz, seg, addr, /
+ufs_getattr	fs/ufs/ufs_vnops.c	/^ufs_getattr(vp, vap, flags, cr)$/
+ufs_getpage	fs/ufs/ufs_vnops.c	/^ufs_getpage(vp, off, len, protp, pl, plsz, seg, ad/
+ufs_iaccess	fs/ufs/ufs_inode.c	/^ufs_iaccess(ip, mode, cr)$/
+ufs_ialloc	fs/ufs/ufs_alloc.c	/^ufs_ialloc(pip, ipref, mode, ipp)$/
+ufs_iflush	fs/ufs/ufs_inode.c	/^ufs_iflush(vfsp, iq)$/
+ufs_ifree	fs/ufs/ufs_alloc.c	/^ufs_ifree(ip, ino, mode)$/
+ufs_iget	fs/ufs/ufs_inode.c	/^ufs_iget(vfsp, fs, ino, ipp)$/
+ufs_iinactive	fs/ufs/ufs_inode.c	/^ufs_iinactive(ip)$/
+ufs_ilock	fs/ufs/ufs_inode.c	/^ufs_ilock(ip)$/
+ufs_inactive	fs/ufs/ufs_vnops.c	/^ufs_inactive(vp, cr)$/
+ufs_ioctl	fs/ufs/ufs_vnops.c	/^ufs_ioctl(vp, cmd, arg, flag, cr, rvalp)$/
+ufs_iput	fs/ufs/ufs_inode.c	/^ufs_iput(ip)$/
+ufs_itrunc	fs/ufs/ufs_inode.c	/^ufs_itrunc(oip, length)$/
+ufs_iunlock	fs/ufs/ufs_inode.c	/^ufs_iunlock(ip)$/
+ufs_iupdat	fs/ufs/ufs_inode.c	/^ufs_iupdat(ip, waitfor)$/
+ufs_link	fs/ufs/ufs_vnops.c	/^ufs_link(tdvp, svp, tnm, cr)$/
+ufs_lockctl	fs/ufs/ufs_vnops.c	/^ufs_lockctl(vp, ld, cmd, cred, clid)$/
+ufs_lookup	fs/ufs/ufs_vnops.c	/^ufs_lookup(dvp, nm, vpp, pnp, flags, rdir, cr)$/
+ufs_map	fs/ufs/ufs_vnops.c	/^ufs_map(vp, off, as, addrp, len, prot, maxprot, fl/
+ufs_mkdir	fs/ufs/ufs_vnops.c	/^ufs_mkdir(dvp, dirname, vap, vpp, cr)$/
+ufs_mount	fs/ufs/ufs_vfsops.c	/^ufs_mount(vfsp, mvp, uap, cr)$/
+ufs_mountroot	fs/ufs/ufs_vfsops.c	/^ufs_mountroot(vfsp, why)$/
+ufs_open	fs/ufs/ufs_vnops.c	/^ufs_open(vpp, flag, cr)$/
+ufs_putpage	fs/ufs/ufs_vnops.c	/^ufs_putpage(vp, off, len, flags, cr)$/
+ufs_rdwr	fs/ufs/ufs_vnops.c	/^ufs_rdwr(vp, uiop, rw, ioflag, cr)$/
+ufs_rdwri	fs/ufs/ufs_vnops.c	/^ufs_rdwri(rw, ip, base, len, offset, seg, aresid)$/
+ufs_read	fs/ufs/ufs_vnops.c	/^ufs_read(vp, uiop, ioflag, cr)$/
+ufs_readdir	fs/ufs/ufs_vnops.c	/^ufs_readdir(vp, uiop, cr, eofp)$/
+ufs_readlink	fs/ufs/ufs_vnops.c	/^ufs_readlink(vp, uiop, cr)$/
+ufs_remove	fs/ufs/ufs_vnops.c	/^ufs_remove(vp, nm, cr)$/
+ufs_rename	fs/ufs/ufs_vnops.c	/^ufs_rename(sdvp, snm, tdvp, tnm, cr)$/
+ufs_rmdir	fs/ufs/ufs_vnops.c	/^ufs_rmdir(vp, nm, cdir, cr)$/
+ufs_root	fs/ufs/ufs_vfsops.c	/^ufs_root(vfsp, vpp)$/
+ufs_rwlock	fs/ufs/ufs_vnops.c	/^ufs_rwlock(vp)$/
+ufs_rwunlock	fs/ufs/ufs_vnops.c	/^ufs_rwunlock(vp)$/
+ufs_seek	fs/ufs/ufs_vnops.c	/^ufs_seek(vp, ooff, noffp)$/
+ufs_setattr	fs/ufs/ufs_vnops.c	/^ufs_setattr(vp, vap, flags, cr)$/
+ufs_space	fs/ufs/ufs_vnops.c	/^ufs_space(vp, cmd, bfp, flag, offset, cr)$/
+ufs_statvfs	fs/ufs/ufs_vfsops.c	/^ufs_statvfs(vfsp, sp)$/
+ufs_swapvp	fs/ufs/ufs_vfsops.c	/^ufs_swapvp(vfsp, vpp, nm)$/
+ufs_symlink	fs/ufs/ufs_vnops.c	/^ufs_symlink(dvp, linkname, vap, target, cr)$/
+ufs_sync	fs/ufs/ufs_vfsops.c	/^ufs_sync(vfsp, flag, cr)$/
+ufs_syncip	fs/ufs/ufs_subr.c	/^ufs_syncip(ip, flags)$/
+ufs_unmount	fs/ufs/ufs_vfsops.c	/^ufs_unmount(vfsp, cr)$/
+ufs_update	fs/ufs/ufs_subr.c	/^ufs_update()$/
+ufs_vget	fs/ufs/ufs_vfsops.c	/^ufs_vget(vfsp, vpp, fidp)$/
+ufs_write	fs/ufs/ufs_vnops.c	/^ufs_write(vp, uiop, ioflag, cr)$/
+ufs_writelbn	fs/ufs/ufs_vnops.c	/^ufs_writelbn(ip, bn, pp, len, pgoff, flags)$/
+ufsindirtrunc	fs/ufs/ufs_alloc.c	/^ufsindirtrunc(vfsp, fs, bn, lastbn, level, ip)$/
+ufsinit	fs/ufs/ufs_inode.c	/^ufsinit(vswp, fstype)$/
+uiomove	os/move.c	/^uiomove(cp, n, rw, uio)$/
+uiomvuio	os/move.c	/^uiomvuio(ruio, wuio)$/
+uiophysio	os/vm_subr.c	/^uiophysio(strat, bp, dev, rw, uio)$/
+uioskip	os/move.c	/^uioskip(uiop, n)$/
+ulimit	os/scalls.c	/^ulimit(uap, rvp)$/
+umask	os/scalls.c	/^umask(uap, rvp)$/
+umount	fs/vfs.c	/^umount(uap, rvp)$/
+undma	os/vm_subr.c	/^undma(base, count, rw)$/
+unexecseg	os/xsys.c	/^unexecseg(uap, rvp)$/
+unfalloc	os/fio.c	/^unfalloc(fp)$/
+uniqtime	os/clock.c	/^uniqtime(tv)$/
+unlink	fs/vncalls.c	/^unlink(uap, rvp)$/
+unmapphys	os/xmmu.c	/^void unmapphys(va, nbytes)$/
+unmount1	fs/ufs/ufs_vfsops.c	/^unmount1(vfsp, forcibly, cr)$/
+unsleep	os/slp.c	/^unsleep(pp)$/
+untimeout	os/clock.c	/^untimeout(id)$/
+ureadc	os/move.c	/^ureadc(val, uiop)$/
+useracc	os/vm_subr.c	/^useracc(addr, count, access)$/
+userdma	os/vm_subr.c	/^userdma(base, count, rw)$/
+userwrite	os/machdep.c	/^userwrite(va, nbytes)$/
+usrxmemflt	os/trap.c	/^usrxmemflt(errcode, faultadr, infop)$/
+utime	fs/vncalls.c	/^utime(uap, rvp)$/
+uts_fusers	os/scalls.c	/^uts_fusers(path, flags, outbp, rvp)$/
+utssys	os/scalls.c	/^utssys(uap, rvp)$/
+uwritec	os/move.c	/^uwritec(uiop)$/
+vf_to_stf	fs/vfs.c	/^vf_to_stf(vf)$/
+vfork	os/fork.c	/^vfork(uap, rvp)$/
+vfs_add	fs/vfs.c	/^vfs_add(coveredvp, vfsp, mflag)$/
+vfs_devsearch	fs/vfs.c	/^vfs_devsearch(dev)$/
+vfs_getvfssw	fs/vfs.c	/^vfs_getvfssw(type)$/
+vfs_lock	fs/vfs.c	/^vfs_lock(vfsp)$/
+vfs_mountroot	fs/vfs.c	/^vfs_mountroot()$/
+vfs_remove	fs/vfs.c	/^vfs_remove(vfsp)$/
+vfs_unlock	fs/vfs.c	/^vfs_unlock(vfsp)$/
+vfsinit	fs/vfs.c	/^vfsinit()$/
+vfsstray	fs/vfs.c	/^vfsstray()$/
+vfwait	os/fork.c	/^vfwait(pid)$/
+vmmeter	os/vm_meter.c	/^vmmeter()$/
+vmtotal	os/vm_meter.c	/^vmtotal()$/
+vn_create	fs/vnode.c	/^vn_create(pnamep, seg, vap, excl, mode, vpp, why)$/
+vn_link	fs/vnode.c	/^vn_link(from, to, seg)$/
+vn_open	fs/vnode.c	/^vn_open(pnamep, seg, filemode, createmode, vpp, cr/
+vn_rdwr	fs/vnode.c	/^vn_rdwr(rw, vp, base, len, offset, seg, ioflag, ul/
+vn_rele	fs/vnode.c	/^vn_rele(vp)$/
+vn_remove	fs/vnode.c	/^vn_remove(fnamep, seg, dirflag)$/
+vn_rename	fs/vnode.c	/^vn_rename(from, to, seg)$/
+wait	os/exit.c	/^wait(uap, rvp)$/
+waitid	os/exit.c	/^waitid(idtype, id, ip, options)$/
+waitsys	os/exit.c	/^waitsys(uap, rvp)$/
+wakeprocs	os/slp.c	/^wakeprocs(chan, preemptflg)$/
+wakeup	os/slp.c	/^wakeup(chan)$/
+winfo	os/exit.c	/^winfo(pp, ip, waitflag)$/
+write	fs/vncalls.c	/^write(uap, rvp)$/
+writei	fs/s5/s5rdwri.c	/^writei(ip, uiop, ioflag)$/
+writev	fs/vncalls.c	/^writev(uap, rvp)$/
+wstat	os/exit.c	/^wstat(code, data)$/
+wtodc	os/todc.c	/^wtodc()$/
+wzero	os/machdep.c	/^wzero(ptr, count)$/
+xcmn_err	os/cmn_err.c	/^xcmn_err(level, fmtp)$/
+xcstat	fs/vncalls.c	/^xcstat(vp, ubp, cr)$/
+xmdballoc	os/strsubr.c	/^xmdballoc()$/
+xmknod	fs/vncalls.c	/^xmknod(uap, rvp)$/
+xmsgalloc	os/strsubr.c	/^xmsgalloc()$/
+xmsgsize	os/strsubr.c	/^xmsgsize(mp, fromhead)$/
+xprintf	os/cmn_err.c	/^xprintf(fmt, x1)$/
+xsd86shrgn	os/mapfile.c	/^xsd86shrgn(xsdbp)$/
+xsdlock	os/mapfile.c	/^xsdlock(procp, addr)$/
+xsdswtch	os/mapfile.c	/^xsdswtch(dir)$/
+xsdunlock	os/mapfile.c	/^xsdunlock(procp, addr)$/
+xstat	fs/vncalls.c	/^xstat(uap, rvp)$/

@@ -1,0 +1,15 @@
+#ident	"@(#)pkg.termcap:prototype	1.2.1.1"
+#
+#	packaging and installation stuff
+#
+i pkginfo
+i copyright
+#
+#	directories: use existing permissions/ownership
+#
+d none	/etc	?	?	?
+#
+#	now, the actual file.
+#
+f none /usr/share/lib/termcap 444 root bin
+s none /etc/termcap=/usr/share/lib/termcap

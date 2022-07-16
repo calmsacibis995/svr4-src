@@ -1,0 +1,24 @@
+#ident	"@(#)/usr/src/add-on/pkg.sec/postremove.sl 1.1 4.0 12/08/90 52966 AT&T-USL"
+
+EXITCD=0
+rm -f /etc/conf/pack.d/des/Driver_d.o
+/etc/conf/bin/idcheck -p des
+if [ $? = 31 ]
+then
+	ln /etc/conf/pack.d/des/Driver_i.o /etc/conf/pack.d/des/Driver.o
+	/etc/conf/bin/idbuild
+	EXITCD=10
+fi
+# IF CSDS is installed, retain international libcrypt.a
+
+if [ -f /usr/lib/libcrypt_i.a ]
+then
+	echo "Restoring international version of libcrypt."
+	ln -f /usr/lib/libcrypt_i.a /usr/lib/libcrypt.a
+fi
+if [ -f /usr/lib/libnsl_i.so ]
+then
+	echo "Restoring international version of libnsl."
+	ln -f /usr/lib/libnsl_i.so /usr/lib/libnsl.so
+fi
+exit ${EXITCD}

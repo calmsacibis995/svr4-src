@@ -1,0 +1,15 @@
+_m4_dnl_	#ident	"@(#)xcplibx:i386/mcount.def	1.1"
+_m4_dnl_
+_m4_dnl_   This file is to be run through the m4 macro processor along with
+_m4_dnl_   a i286 assembly language program in the C library to generate a
+_m4_dnl_   profiled version of the C library function.
+_m4_dnl_
+_m4_define_(`UNIQ', 0)_m4_dnl_
+_m4_define_(`MCOUNT', `			/ Keep track of call-counts for profiling
+	.data
+M.UNIQ:	.long 0
+	.text
+	movl	$M.UNIQ,%edx
+	call	_mcount
+	_m4_define_(`UNIQ', _m4_incr_(UNIQ))_m4_dnl_      # Bump UNIQ
+')_m4_dnl_

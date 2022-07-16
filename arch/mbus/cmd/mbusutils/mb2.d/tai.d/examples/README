@@ -1,0 +1,102 @@
+#ident	"@(#)mbus:cmd/mbusutils/mb2.d/tai.d/examples/README	1.1"
+
+**************************EXAMPLE TAI APPLICATION******************************
+
+
+
+THIS IS AN EXAMPLE OF HOW TO USE TAI, NOT A GENERAL PURPOSE FILE TRANSFER
+APPLICATION.
+
+
+
+This directory contains the source code for an example application that
+transfers files over the MBII.  The application uses the transport
+application interface (tai) that comes with System V/386 version 3.1
+for the Multibus II.
+
+The following are the files in this directory:
+README          this file
+common.c        routines used by both send + receive
+ft.h            header file used by all .c files
+makefile        type "make" to build application
+rec.c           source for receive part of application
+send.c          source for send part of application
+
+
+TO COMPILE:
+
+"make" compiles the application.
+Two executables are produced, send and rec, which are used to send
+and receive files respectively.
+
+"make clean" removes the .o files.
+"make clobber" removes the .o files and the executable files.
+
+TO USE:
+
+To use this application, you need a Multibus II system with two
+processors that run System V/386.  The send program runs on one
+of the processors and the rec program on the other.  See the
+comments in the code for the command syntax.  Note that the rec
+program must be running before send is invoked.
+
+OVERVIEW:
+
+Since transport-application interface is used to communicate across the
+MULTIBUS II PSB, two entities are needed to demonstrate the use of
+TAI--one for each end of the communications.   For this application
+this chapter, there are two processors in a MULTIBUS II
+chassis, each running the UNIX operating system.  The application
+transfers files from one processor to the other processor.  The
+application consists of two parts:  the sending part which runs on one
+UNIX processor and the receiving part which runs on the other UNIX
+processor.  Note that it is not necessary for both sides of the
+communication to be using transport-application interface or even be on
+the UNIX operating system.  It is possible for an application to use TAI
+to communicate with another operating system that implements the
+MULTIBUS II  transport protocol (such as RMX or RMK), or with a board
+that implements the transport protocol in firmware (a disk controller,
+for instance).
+
+The transport-application interface is similar to a transport
+implementation in a network in that it provides the capability of moving
+messages from one point to another, but does not define the meaning of
+the messages or specify how the messages are to be used.  It is up to
+the application to define the meaning of the data and a protocol for the
+exchange of messages.
+
+The protocol described below is implemented by the application.
+
+    +   The receiving application is a server that accepts messages sent
+to a well-known address.
+
+    +   The sending application (the client) sends a solicited request
+message to the server address.
+
+        -   The control portion of a solicited message may
+be up to 16 bytes long,  In this application the first two bytes are
+used to specify a command.  (this example only implements one
+command, SEND_FILE.  Designing the protocol with a command allows us to
+easily add functions to the application,  For example, a GET_FILE
+command could be added to the application without changing the protocol we
+have already defined for SEND_FILE.)   The remaining 14 bytes are used
+to specify a name (NULL terminated if less than 14 bytes long).
+
+        -   The data part of the solicited message holds the
+contents of the file that is being transferred.
+
+    +   The server receives the message and creates the file (in a spool
+directory).  It then sends an unsolicited response back to the client.
+
+        -   The control portion of an unsolicited message may be up
+to 20 bytes long.  In this application, the first two bytes of the
+control portion contain a result code that indicates whether the
+transfer succeeded or failed.  The next four bytes contain a count
+of the number of bytes that were written to the disk.
+If the transfer succeeded, the count matches the size of
+the file sent.  If the transfer failed, the count is less than the
+number of bytes sent.  The remaining 14 bytes of the control portion are
+unused.  An unsolicited message has no data portion.
+
+This application uses only synchronous mode transport-application
+interface calls.

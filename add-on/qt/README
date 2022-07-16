@@ -1,0 +1,94 @@
+.ident	"@(#)qt:README	1.1"
+This is a merged version of qt driver which supports both Wangtek PC-36
+and Archive SC499-R controller. The controller type is determined at
+run time instead of at compile time. The board detection is possible due
+to the fact that both controllers are having different register arrangement.
+
+Controller Board Type Detection
+_______________________________
+
+The following is a comparison of the controller register map:
+
+
+	ADDRESS					NAME	
+	(HEX)			WANGTEK			ARCHIVE
+	_______			_______			________
+	300 base	Status/Control/Command		Data/Command
+	301			Data			Control/Status
+	302			--			start DMA
+	303			--			reset DMA
+
+
+Since the control register of both controllers happens to be different, 
+to detect which controller is present one can simply issuing a reset
+command to the control register. For example, assuming 300H is the base
+address, issuing a reset command to register 300H has no effect to the
+ARCHIVE controller and the WANGTEK controller will return with the proper
+POR(Power on reset) reset status, and vice versa.
+
+When UNIX is first brought up, the qtinit() will issue a board reset to
+determine if the WANGTEK controller is present. If the POR(Power on reset) 
+status bit is not set or if the USL(Device Unselected) status is not
+cleared within one second, qtinit() will assume the WANGTEK controller
+is not installed and try to test for ARCHIVE controller. If there is no
+response agian within 5 seconds(ARCHIVE controller performs power on diagnostic,
+it will take up to 5 seconds to complete), then the qt driver will 
+assume no controller is present and disable the driver.
+
+Three files: qt.h, globals.h and qt.c are modified to provide this new
+feature.
+
+
+150 MB Tape Drive Support
+_________________________
+
+The 150 MB 1/4-inch cartidge streaming tape drive is the successor of the
+60 MB drive. It is available with the same QIC-02 interface and supports
+QIC-24/120/150 formats for total backward compatibility. Again, both 
+WANGTEK and ARCHIVE are the major suppliers of this product. The following
+is a table shows the differences between a 60 MB drive and a 150 MB drive:
+
+
+	FEATURE				SPECIFICATION
+			Wangtek	5099EN24		5125EQ/5150EQ
+			Archive	2060L			2150L
+	____________________________________________________________
+	Formatted Capacity	60 MB			120/150 MB
+
+	Track Format		9-Track			18- or 15-track
+
+	Flux Density		10,000 frpi		12,500 frpi
+
+	Data Density		8000 bpi		10,000 bpi
+
+	Recording Format	QIC-24			QIC-120 or QIC-150
+
+	Qualified Tape		DC300XLP or DC600A	DC600A or DC600XTD
+
+	Read Compatibility	QIC-24			QIC-24, QIC-120, or
+							QIC-150
+
+
+Similar to the 60 MB drive, both WANGTEK and ARCHIVE 150 MB drives are 
+fully compatible and totally interchangeable. However, the 150 MB
+tape drive will not work with the existing 60 MB QIC-02 controller.
+Both WANGTEK and ARCHIVE require a new controller to support the 150 MB
+tape drive even though the new drive use the same QIC-02 interface. 
+Fortunately, the new controllers from both firms still maintain the same
+host interface, hence the existing qt driver will work with the 150 MB drive
+without modifications.
+
+The following diagram lists all the possible drive and controller 
+configuration:
+
+
+
+	             |--- PC-36 -----\ /--- 5099EN24
+	             |                X
+	             |--- SC499-R ---/ \--- 2060L
+	             |
+	qt driver  --|
+	             |
+	             |--- EV-811 ----\ /--- 5125EQ/5125EQ
+	             |                X
+	             |--- SC402  ----/ \--- 2150L

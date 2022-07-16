@@ -1,0 +1,77 @@
+#ident	"@(#)proto:i386/at386/cmd/mult.pkg	1.1.2.1"
+#
+# Used to package mult volume floppies on as few disks as possible
+#
+# $ROOT/tmp/pkg contains images of all the floppies in 2360 blocks/floppy 5.25" size.
+# If we're packaging on 2834 blocks/floppy 3.5" size, we'll need to re-pkgmk the
+# addon.
+#
+# Used to package: BSD, LP, OA&M, RFS and INET
+
+DEVICE=$1
+shift
+for j in $*
+do
+if [ -d $ROOT/tmp/pkg/$j/root ]
+then
+echo "5.25\" floppy image is only one floppy, will use that."
+pkgtrans -s $ROOT/tmp/pkg ${DEVICE} $j
+continue
+fi
+(
+eval `grep $DEVICE /etc/device.tab | sed -e 's/.*:desc=/desc=/'`
+if [ $capacity = 2370 ]
+then
+echo "5.25\" floppy image is already set up, will use that."
+pkgtrans -s $ROOT/tmp/pkg ${DEVICE} $j
+exit
+fi
+ 
+if [ "${VERSION}" = "" ]
+then VERSION="4.0 3.0"
+fi
+if [ "${SIZE}" = "" ]
+then SIZE=2834
+fi
+
+SDIR=$ROOT/tmp/pkg.3.5
+if [ ! -d $SDIR ]
+then rm -rf $SDIR
+     mkdir $SDIR
+fi
+
+cd $ROOT/usr/src/add-on
+for k in pkg.*
+do
+grep "^PKG=\"$j\"" $k/pkginfo > /dev/null 2>&1
+if [ $? = 0 ]
+then
+cd $k
+pkgmk -o -v"${VERSION}" -l${SIZE} -r$ROOT -d$SDIR
+cd ..
+break
+fi
+done
+
+if [ ! -d $SDIR/$j ]
+then
+cd $ROOT/usr/src/pkg
+for k in *
+do
+grep "^PKG=\"$j\"" $k/pkginfo > /dev/null 2>&1
+if [ $? = 0 ]
+then
+cd $k
+pkgmk -o -v"${VERSION}" -l${SIZE} -r$ROOT -d$SDIR
+cd ..
+break
+fi
+done
+fi
+
+if [ -d $SDIR/$j ]
+then pkgtrans -s $SDIR ${DEVICE} $j
+else echo "Can't find anything that matches $j"
+fi
+)
+done

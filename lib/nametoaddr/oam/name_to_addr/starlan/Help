@@ -1,0 +1,51 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/starlan/Help	1.1"
+ABSTRACT:
+	This item adds machine and service information to the
+	address files of the ISO Starlan protocols.
+	Once added, applications can obtain machine and service
+	addresses using the name to address mapping facility.
+
+menu:host:Host Information
+	This item adds machine names and addresses into
+	the hosts file for the ISO Starlan protocols.
+
+menu:services:Service Information
+	This item adds service names and port names into
+	the services file for the ISO Starlan protocols.
+
+starlan:name:Machine Information
+	Please enter the name of a machine that is accessable
+	via the ISO Starlan protocols.
+
+starlan:addr:Address Information
+	Please enter the ISO Starlan address for the machine
+	entered on the previous line.
+	ISO Starlan addresses are simple strings.  For this
+	menu, the string cannot contain any white space nor
+	a dot (".").  For example, the address of machine
+	"elvis" might be
+	
+		elvis
+	
+	and the address of machine "james" might be
+	
+		jamesaddr
+
+starlan:service:Service Information
+	Please enter the name of a service available on machines
+	that are accessable via the ISO Starlan protocols.
+
+starlan:port:Port Information
+	Please enter the service port string for the service
+	given in the previous line.
+	ISO Starlan port strings are simple strings
+	(for this menu, they cannot contain white space nor
+	a dot (".")).  For example, the port string of service
+	"rpc" is
+	
+			rpc
+	
+	and the port number of service "listen" is
+	
+			serve
+

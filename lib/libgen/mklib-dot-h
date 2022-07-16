@@ -1,0 +1,23 @@
+#ident	"@(#)libgen:mklib-dot-h	1.1"
+#	Create an include file that declares all the functions contained
+#	in a lint-library file.
+
+echo "/*	$2
+	Declarations of functions in $1
+*/"
+sed -n '
+	/@(#)/s//Based on:	/
+	/^\/\*/p
+	/^#[ 	]*undef/,/^\/\*/d
+	/(.*).*{.*}/{
+		s/^/extern	/
+		/signal/{
+			s/([A-Za-z, ]\{1,\})/( )/
+			s/().*/();/
+		}
+		s/(.*{.*/();/
+		p
+		d
+	}
+	/^#/p
+'

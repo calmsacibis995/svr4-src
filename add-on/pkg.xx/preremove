@@ -1,0 +1,65 @@
+#ident	"@(#)/usr/src/add-on/pkg.xx/preremove.sl 1.1 4.0 12/08/90 40672 AT&T-USL"
+
+trap '' 1 2 3 5 15
+#
+#	386 XENIX File System Remove Script
+#
+
+BLD=$1
+TMP=/tmp/xx.rerr
+ERROR1="An error was encountered removing the XENIX File System package.\
+  The file $TMP contains errors reported by the system."
+ERROR2="The kernel rebuild failed.  However all software dealing with \
+the XENIX File System has been removed.  The file \
+$TMP contains errors reported by the system."
+rm -f $TMP > /dev/null 2>&1
+
+/etc/conf/bin/idinstall -d XENIX 2>> $TMP
+if [ $? != 0 ]
+then
+	echo $ERROR1
+	exit 1
+fi
+
+/etc/conf/bin/idinstall -d -e -op xnamfs 2>> $TMP
+if [ $? != 0 ]
+then
+	echo $ERROR1
+	exit 1
+fi
+
+cd /tmp
+/etc/conf/bin/idinstall -g -e -l xnamfs > SFSYS 2>> $TMP
+if [ $? != 0 ]
+then
+	echo $ERROR1
+	exit 1
+fi
+sed -e 's/	Y/	N/' < SFSYS > Sfsys
+rm -f SFSYS
+/etc/conf/bin/idinstall -u -e -l xnamfs 2>> $TMP
+if [ $? != 0 ]
+then
+	echo $ERROR1
+	exit 1
+fi
+
+if [ "$BLD" != NOBUILD ]
+then
+	/etc/conf/bin/idbuild 2>> $TMP
+	if [ $? != 0 ]
+	then
+		echo $ERROR2
+       		exit 1
+	fi
+fi
+
+rm -f /dev/hd1[0-6] > /dev/null 2>&1
+rm -f /dev/rhd1[0-6] > /dev/null 2>&1
+rm -f /dev/install1 /dev/rinstall1 /dev/fd148ds8 /dev/fd148ds9 /dev/fd148 /dev/rfd148ds8 /dev/rfd148ds9 /dev/rfd148 > /dev/null 2>&1
+rm -f /dev/fd196ds15 /dev/fd196 /dev/rfd196ds15 /dev/rfd196 /dev/rfd148 > /dev/null 2>&1
+rm -f /dev/rfd1135ds18 /dev/rfd196ds18 /dev/rdsk/f1q18dt /dev/rfd1135ds9 /dev/rfd196ds9 /dev/rdsk/f1q9dt /dev/rfd148ss8 /dev/rdsk/f1d8t /dev/rfd148ss9 /dev/rdsk/f1d9t > /dev/null 2>&1
+rm -f /dev/fd1135ds18 /dev/fd196ds18 /dev/dsk/f1q18dt /dev/fd1135ds9 /dev/fd196ds9 /dev/dsk/f1q9dt /dev/fd148ss8 /dev/dsk/f1d8t /dev/fd148ss9 /dev/dsk/f1d9t > /dev/null 2>&1
+
+rm -f $TMP
+exit 10

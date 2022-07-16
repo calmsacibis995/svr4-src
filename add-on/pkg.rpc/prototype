@@ -1,0 +1,115 @@
+#ident	"@(#)pkg.rpc:prototype	1.31.6.2"
+
+!PACKDIR=/etc/conf/pack.d
+!MASTDIR=/usr/src/uts/i386/master.d
+
+# packaging files
+
+i pkginfo
+i copyright
+i depend
+i postinstall
+i preremove
+
+d none	/tmp/rpc	775	bin	bin
+v none	/tmp/rpc/krpc.Dr=$PACKDIR/krpc/Driver.o	755	root sys
+v none	/tmp/rpc/krpc.Ma=$MASTDIR/krpc/mdev	755	root	sys
+v none	/tmp/rpc/krpc.Sy=$MASTDIR/krpc/sdev	755	root	sys
+
+v none	/tmp/rpc/ktli.Dr=$PACKDIR/ktli/Driver.o	755	root	sys
+v none	/tmp/rpc/ktli.Ma=$MASTDIR/ktli/mdev	755	root	sys
+v none	/tmp/rpc/ktli.Sy=$MASTDIR/ktli/sdev	755	root	sys
+
+v none	/tmp/rpc/des.Dr=$PACKDIR/des/Driver.o	755	root sys
+v none	/tmp/rpc/des.Ma=$MASTDIR/des/mdev	755	root	sys
+v none	/tmp/rpc/des.Sy=$MASTDIR/des/sdev	755	root	sys
+
+# directory references
+
+!default		775	root	sys
+d none	/etc		?	?	?
+d none	/etc/net	755	root	sys
+d none	/etc/net/ticots	755	root	sys
+d none	/etc/net/ticotsord	755	root	sys
+d none	/etc/net/ticlts	755	root	sys
+d none	/usr		?	?	?
+d none	/usr/bin	?	?	?
+d none	/usr/sbin	?	?	?
+d none	/usr/lib	?	?	?
+d none	/usr/lib/netsvc	755	root	sys
+d none	/usr/lib/netsvc/spray	755	root	sys
+d none	/usr/lib/netsvc/rusers	755	root	sys
+d none	/usr/lib/netsvc/rwall	755	root	sys
+d none	/usr/lib/netsvc/yp	755	root	sys
+d none	/var		?	?	?
+d none	/var/yp		755	root	sys
+d none	/var/yp/binding		755	root	sys
+d none	usr/include	?	?	?
+d none	usr/include/rpc	775	bin	bin
+d none	usr/include/rpcsvc	775	bin	bin
+
+!default 444 root sys
+f none  /etc/init.d/rpc
+l none  /etc/rc0.d/K50rpc=/etc/init.d/rpc
+l none  /etc/rc1.d/K50rpc=/etc/init.d/rpc
+l none  /etc/rc2.d/S75rpc=/etc/init.d/rpc
+
+#administrative files for yp and loopback drivers
+!default        0644    root    sys
+f       none    /etc/publickey
+f       none    /etc/netid
+f       none    /etc/rpc
+f	none	/etc/slaves 
+f	none	/etc/masters 
+f	none	/var/yp/aliases
+
+!default	0555	root	sys
+f	none	/var/yp/updaters
+f	none	/var/yp/Makefile
+
+# package objects:
+
+!default 555 bin bin
+f none	usr/sbin/rpcbind
+f none	usr/lib/librpcsvc.a
+f none	usr/bin/rpcgen
+f none	usr/bin/rpcinfo
+f none	/usr/lib/netsvc/rwall/rpc.rwalld 0555 root sys
+f none	/usr/lib/netsvc/rusers/rpc.rusersd 0555 root sys
+f none	/usr/lib/netsvc/spray/rpc.sprayd 0555 root sys
+f none	usr/sbin/rwall
+f none	usr/bin/rusers
+f none	usr/sbin/spray
+f none	usr/sbin/keyprop
+f none	usr/bin/chkey
+f none	usr/sbin/newkey 0555 root sys
+f none	usr/bin/domainname
+f none	usr/bin/keylogin
+f none	usr/bin/keylogout
+f none	usr/sbin/keyserv 0555 root sys
+f none	/usr/bin/ypmatch
+f none	/usr/bin/ypwhich
+f none	/usr/bin/ypcat
+f none	/usr/sbin/makedbm
+f none	/usr/sbin/yppoll
+f none	/usr/sbin/yppush
+f none	/usr/sbin/ypset
+f none	/usr/sbin/ypxfr
+f none	/usr/lib/netsvc/yp/ypbind
+f none	/usr/lib/netsvc/yp/ypserv
+f none	/usr/sbin/ypinit
+f none	/usr/sbin/udpublickey
+f none	/usr/sbin/ypalias
+f none	/usr/lib/netsvc/yp/ypupdated
+
+#	header files
+
+!default 0444 bin bin
+f none	usr/include/rpcsvc/mount.h=usr/src/head/rpcsvc/mount.h
+f none	usr/include/rpcsvc/rusers.h=usr/src/head/rpcsvc/rusers.h
+f none	usr/include/rpcsvc/rwall.h=usr/src/head/rpcsvc/rwall.h
+f none	usr/include/rpcsvc/spray.h=usr/src/head/rpcsvc/spray.h
+f none	usr/include/rpcsvc/yp_prot.h=/usr/src/head/rpcsvc/yp_prot.h
+f none	usr/include/rpcsvc/ypclnt.h=/usr/src/head/rpcsvc/ypclnt.h
+f none	usr/include/rpcsvc/ypupd.h=/usr/src/head/rpcsvc/ypupd.h
+f none	usr/include/rpcsvc/dbm.h=/usr/src/head/rpcsvc/dbm.h

@@ -1,0 +1,310 @@
+.\"ident	"@(#)stitam:man3/tam.3c	1.1"
+.deTH
+.PD
+.nrIN \\n()Mu
+.ift .ds ]H \\$1\^(\^\\$2\^)
+.ifn .ds ]H \\$1(\\$2)
+.if\\n()s .ds ]D
+.if\\n()t .ds ]D UNIX System V
+.ifn .ds ]D UNIX System V
+.ds]L
+.if!\\$3 .ds ]L (\^\\$3\^)
+.if!\\$4 .ds ]D \\$4
+.wh0 }H
+.wh-\\n(:mu }F
+.em}M
+.if\\n(nl .bp
+.nr)I \\n()Mu
+.nr)R 0
+.}E
+.DT
+.ifn \{.na
+.nh\}
+.ift \{.bd S 3 3
+.hy14 \}
+..
+.TH TAM 3C 
+.SH NAME
+TAM - TAM transition libraries
+.SH SYNOPSIS
+.B #include <tam.h>
+.PP
+.B cc
+[ flags ] files
+.B \-ltam
+.B \-lcurses
+[ libraries ]
+.SH DESCRIPTION
+These routines are used to convert existing TAM programs such that they
+run on the 3B processor line using any terminal supported by curses(3X).
+After a TAM program has been modified to remove machine specific code,
+the program is then recompiled using the transition header files
+and linked with the transition library.
+.SH FUNCTIONS
+The following is a list of TAM routines supplied in the transition library.
+Those routines marked with an asterisk are macros and don't return any
+value.
+For a full description of each routine see the UNIX PC Programmers
+Reference Manual.
+.nf
+
+\f(CWint addch(wn, c)
+short wn;
+char c;
+
+int addstr(s)
+char *s;
+
+int adf_gttok (ptr, tbl)
+char *ptr;
+struct s_kwtbl *tbl;
+
+char *adf_gtwrd (sptr, dptr)
+char *sptr, dptr;
+
+char *adf_gtxcd (sptr, dptr)
+char *sptr, dptr;
+
+int attroff()
+
+int attron()
+
+int baudrate()
+
+int beep()
+
+int cbreak()
+
+int clear()
+
+clearok(dummy, dummy)\(**
+int dummy;
+
+int clrtobot()
+
+int clrtoeol()
+
+int delch()
+
+int deleteln()
+
+int echo()
+
+int endwin()
+
+int erase()
+
+int exhelp (hfile, htitle)
+char *hfile, htitle;
+
+int fixterm()
+
+int flash()
+
+int flushinp()
+
+int form (form, op)
+form_t *form;
+int op;
+
+int getch()
+
+getyx()\(**
+
+int initscr()
+
+insch()\(**
+
+int insertln()
+
+int iswind()
+
+char *kcodemap (code)
+unsigned char code;
+
+int keypad (dummy, flag)
+int dummy, flag;
+
+leaveok(dummy, dummy)\(** 
+int dummy;
+
+int menu (menu, op)
+menu_t *menu;
+int op;
+
+int message (mtype, hfile, htitle, format [, arg ] ...)
+int mtype;
+char *hfile, htitle, format;
+
+int move()
+
+mvaddch()\(**
+
+mvaddstr()\(**
+
+mvinch()\(**
+
+int nl()
+
+int nocbreak()
+
+int nodelay(dummy, bool)
+int dummy, bool;
+
+int noecho()
+
+int nonl()
+
+int pb_check (stream)
+FILE *stream;
+
+int pb_empty (stream)
+FILE *stream;
+
+int pb_gbuf (ptr, n, fn, stream)
+char *ptr;
+int n;
+int (*fn) ();
+FILE *stream;
+
+char *pb_gets (ptr, n, stream)
+char *ptr;
+int n;
+FILE *stream;
+
+char *pb_name()
+
+FILE *pb_open()
+
+int pb_puts (ptr, stream)
+char *ptr;
+FILE *stream;
+
+int pb_seek (stream)
+FILE *stream;
+
+int pb_weof (stream)
+FILE *stream;
+
+int printw (wn, fmt, arg1 ... argn)
+short wn;
+char *fmt;
+
+int refresh()
+
+int resetterm()
+
+int resetty()
+
+int savetty()
+
+int track (w, trk, op, butptr, whyptr)
+int w, op, *butptr, *whyptr;
+track_t *trk;
+
+int wcmd (wn, cp)
+short wn;
+char *cp;
+
+int wcreate (row, col, height, width, flags)
+short row, col, height, width;
+unsigned short flags;
+
+int wdelete (wn)
+short wn;
+
+void wexit()
+
+int wgetc (wn)
+short wn;
+
+int wgetmouse (wn, ms)
+short wn;
+struct umdata *ms;
+
+int wgetpos (wn, rowp, colp)
+short wn;
+int *rowp, *colp;
+
+int wgetsel()
+
+int wgetstat (wn, wstatp)
+short wn;
+WSTAT *wstatp;
+
+int wgoto (wn, row, col)
+short wn, row, col;
+
+void wicoff (wn, row, col, icp)
+short wn, row, col;
+struct icon *icp;
+
+void wicon (wn, row, col, icp)
+short wn, row, col;
+struct icon *icp;
+
+int wind (type, height width, flags, pfont)
+int type, height, width;
+short flags;
+char *pfont[];
+
+void winit()
+
+int wlabel (wn, cp)
+short wn;
+char *cp;
+
+void wnl (wn, flag)
+short wn;
+int flag;
+
+int wpostwait()
+
+int wprexec()
+
+int wprintf (wn, fmt, arg1 ... argn)
+short wn;
+char *fmt;
+
+int wprompt (wn, cp)
+short wn;
+char *cp;
+
+int wputc (wn, c)
+short wn;
+char c;
+
+int wputs (wn, cp)
+short wn;
+char *cp;
+
+int wreadmouse (wn, xp, yp, bp, rp)
+short wn;
+int *xp, *yp, *bp, *rp;
+
+int wrefresh (wn)
+short wn;
+
+int wselect (wn)
+short wn;
+
+int wsetmouse (wn, ms)
+short wn;
+struct umdata *ms;
+
+int wsetstat (wn, wstatp)
+short wn;
+WSTAT *wstatp;
+
+int wslk (wn, 0, slong1, slong2, sshort)
+short wn;
+char *slong1, *slong2, *sshort;
+
+int wslk (wn, kn, llabel, slabel)
+short wn, kn;
+char *llabel, *slabel;
+
+int wuser (wn, cp)
+short wn;
+char *cp;
+

@@ -1,0 +1,15 @@
+#ident	"@(#)/usr/src/add-on/pkg.rpc/pkginfo.sl 1.1 4.0 12/08/90 53222 AT&T-USL"
+
+# RPC pkginfo
+
+PKG="rpc"
+NAME="Remote Procedure Call Utilities"
+ARCH="i386"
+RELEASE="4.0"
+VERSION="1"
+VENDOR="AT&T-SF"
+CATEGORY="system"
+CLASSES="none"
+PREDEPEND="rpc"
+BASEDIR=""
+MAXINST="1"

@@ -1,0 +1,738 @@
+/*	Copyright (c) 1987  Intel Corporation	*/
+/*	All Rights Reserved	*/
+
+/*	INTEL CORPORATION PROPRIETARY INFORMATION	*/
+
+/*	This software is supplied to AT & T under the terms of a license   */ 
+/*	agreement with Intel Corporation and may not be copied nor         */
+/*	disclosed except in accordance with the terms of that agreement.   */	
+
+#ident	"@(#)mbus:cmd/mbusutils/mb2.d/cci.d/server.d/rmx.ext	1.1"
+
+$SAVE NOLIST
+
+rq$accept$control:  PROCEDURE( region$t,
+                               except$ptr ) EXTERNAL;
+
+DECLARE region$t      TOKEN,
+        except$ptr    POINTER;
+
+END rq$accept$control;
+
+rq$alter$composite:  PROCEDURE( extension$t,
+                                composite$t,
+                                component$index,
+                                replacing$obj,
+                                except$ptr ) EXTERNAL;
+
+DECLARE extension$t      TOKEN,
+        composite$t      TOKEN,
+        component$index  WORD,
+        replacing$obj    TOKEN,
+        except$ptr       POINTER;
+
+END rq$alter$composite;
+
+
+rq$create$composite:  PROCEDURE( extension$t,
+                                 token$list,
+                                 except$ptr ) TOKEN EXTERNAL;
+
+DECLARE extension$t  TOKEN,
+        token$list   POINTER,
+        except$ptr   POINTER;
+
+END rq$create$composite;
+
+rq$create$extension:  PROCEDURE( type$code,
+                                 deletion$mailbox,
+                                 except$ptr ) TOKEN EXTERNAL;
+
+DECLARE type$code            WORD,
+        deletion$mailbox     TOKEN,
+        except$ptr           POINTER;
+
+END rq$create$extension;
+
+rq$create$job:  PROCEDURE( directory$size,
+                           param$obj,
+                           pool$min,
+                           pool$max,
+                           max$objects,
+                           max$tasks,
+                           max$priority,
+                           except$handler,
+                           job$flags,
+                           task$priority,
+                           start$address,
+                           data$seg,
+                           stack$ptr,
+                           stack$size,
+                           task$flags,
+                           except$ptr ) TOKEN EXTERNAL;
+
+DECLARE directory$size        WORD,
+        param$obj             TOKEN,
+        pool$min              WORD,
+        pool$max              WORD,
+        max$objects           WORD,
+        max$tasks             WORD,
+        max$priority          BYTE,
+        except$handler        POINTER,
+        job$flags             WORD,
+        task$priority         BYTE,
+        start$address         POINTER,
+        data$seg              TOKEN,
+        stack$ptr             POINTER,
+        stack$size            WORD,
+        task$flags            WORD,
+        except$ptr            POINTER;
+
+END rq$create$job;
+
+rq$create$mailbox:  PROCEDURE( mailbox$flags, 
+                               except$ptr ) TOKEN EXTERNAL;
+
+DECLARE mailbox$flags    WORD,
+        except$ptr       POINTER;
+
+END rq$create$mailbox;
+
+
+rq$create$region:  PROCEDURE( region$flags,
+                              except$ptr ) TOKEN EXTERNAL;
+
+DECLARE region$flags    WORD,
+        except$ptr      POINTER;
+
+END rq$create$region;
+
+
+rq$create$segment:  PROCEDURE( size,
+                               except$ptr ) TOKEN EXTERNAL;
+
+DECLARE size        WORD,
+        except$ptr  POINTER;
+
+END rq$create$segment;
+
+
+rq$create$semaphore:  PROCEDURE( initial$value,
+                                 max$value,
+                                 semaphore$flags,
+                                 except$ptr ) TOKEN EXTERNAL;
+
+DECLARE initial$value    WORD,
+        max$value        WORD,
+        semaphore$flags  WORD,
+        except$ptr       POINTER;
+        
+END rq$create$semaphore;
+
+
+rq$create$task:  PROCEDURE( priority,
+                            start$address,
+                            data$seg,
+                            stack$ptr,
+                            stack$size,
+                            task$flags,
+                            except$ptr ) TOKEN EXTERNAL;
+
+DECLARE priority        BYTE,
+        start$address   POINTER,
+        data$seg        TOKEN,
+        stack$ptr       POINTER,
+        stack$size      WORD,
+        task$flags      WORD,
+        except$ptr      POINTER;
+
+END rq$create$task;
+
+
+rq$catalog$object:  PROCEDURE( job$t,
+                               object,
+                               name,
+                               except$ptr )  EXTERNAL;
+
+DECLARE job$t       TOKEN,
+        object      TOKEN,
+        name        POINTER,
+        except$ptr  POINTER;
+
+END rq$catalog$object;
+
+
+rq$delete$composite:  PROCEDURE( extension$t,
+                                 composite$t,
+                                 except$ptr ) EXTERNAL;
+
+DECLARE extension$t  TOKEN,
+        composite$t  TOKEN,
+        except$ptr   POINTER;
+
+END rq$delete$composite;
+
+
+rq$delete$extension:  PROCEDURE( extension$t,
+                                 except$ptr ) EXTERNAL;
+
+DECLARE extension$t  TOKEN,
+        except$ptr   POINTER;
+
+END rq$delete$extension;
+
+
+rq$delete$job:  PROCEDURE( job$t, 
+                           except$ptr ) EXTERNAL;
+
+DECLARE job$t       TOKEN,
+        except$ptr  POINTER;
+
+END rq$delete$job;
+
+
+rq$delete$mailbox:  PROCEDURE( mailbox$t, 
+                               except$ptr ) EXTERNAL;
+
+DECLARE mailbox$t     TOKEN,
+        except$ptr    POINTER;
+
+END rq$delete$mailbox;
+
+
+rq$delete$region:  PROCEDURE( region$t,
+                              except$ptr ) EXTERNAL;
+
+DECLARE region$t      TOKEN,
+        except$ptr    POINTER;
+
+END rq$delete$region;
+
+
+rq$delete$segment:  PROCEDURE( segment$t, 
+                               except$ptr ) EXTERNAL;
+
+DECLARE segment$t  TOKEN,
+        except$ptr POINTER;
+
+END rq$delete$segment;
+
+
+rq$delete$semaphore:  PROCEDURE( semaphore$t, 
+                                 except$ptr ) EXTERNAL;
+
+DECLARE semaphore$t  TOKEN,
+        except$ptr   POINTER;
+
+END rq$delete$semaphore;
+
+
+rq$delete$task:  PROCEDURE( task$t, 
+                            except$ptr ) EXTERNAL;
+
+DECLARE task$t      TOKEN,
+        except$ptr  POINTER;
+
+END rq$delete$task;
+
+
+rq$disable:  PROCEDURE( level, 
+                        except$ptr ) EXTERNAL;
+
+DECLARE level         WORD,
+        except$ptr    POINTER;
+
+END rq$disable;
+
+
+rq$disable$deletion:  PROCEDURE( object,
+                                 except$ptr ) EXTERNAL;
+
+DECLARE object        TOKEN,
+        except$ptr    POINTER;
+
+END rq$disable$deletion;
+
+
+rq$end$init$task:  PROCEDURE  EXTERNAL;
+
+END  rq$end$init$task;
+
+
+rq$enable:  PROCEDURE( level,
+                       except$ptr ) EXTERNAL;
+
+DECLARE level         WORD,
+        except$ptr    POINTER;
+
+END rq$enable;
+
+
+rq$enable$deletion:  PROCEDURE( object,
+                                except$ptr ) EXTERNAL;
+
+DECLARE object        TOKEN,
+        except$ptr    POINTER;
+
+END rq$enable$deletion;
+
+
+rq$enter$interrupt:  PROCEDURE( level, 
+                                except$ptr ) EXTERNAL;
+
+DECLARE level         WORD,
+        except$ptr    POINTER;
+
+END rq$enter$interrupt;
+
+
+rq$exit$interrupt:  PROCEDURE( level, 
+                               except$ptr ) EXTERNAL;
+
+DECLARE level         WORD,
+        except$ptr    POINTER;
+
+END rq$exit$interrupt;
+
+
+rq$force$delete:  PROCEDURE( extension$t,
+                             object,
+                             except$ptr ) EXTERNAL;
+
+DECLARE extension$t  TOKEN,
+        object       TOKEN,
+        except$ptr   POINTER;
+
+END rq$force$delete;
+
+
+rq$get$exception$handler:  PROCEDURE( exception$info$ptr,
+                                      except$ptr ) EXTERNAL;
+
+DECLARE exception$info$ptr    POINTER,
+        except$ptr            POINTER;
+
+END rq$get$exception$handler;
+
+
+rq$get$level:  PROCEDURE( except$ptr ) WORD EXTERNAL;
+
+DECLARE except$ptr    POINTER;
+
+END rq$get$level;
+
+
+rq$get$pool$attrib:  PROCEDURE( attrib$ptr, except$ptr ) EXTERNAL;
+
+DECLARE attrib$ptr    POINTER,
+        except$ptr    POINTER;
+
+END rq$get$pool$attrib;
+
+
+rq$get$priority:  PROCEDURE( task$t, 
+                             except$ptr ) BYTE EXTERNAL;
+
+DECLARE task$t        TOKEN,
+        except$ptr    POINTER;
+
+END rq$get$priority;
+
+
+rq$get$size:  PROCEDURE( segment$t, 
+                         except$ptr ) WORD EXTERNAL;
+
+DECLARE segment$t  TOKEN,
+        except$ptr POINTER;
+
+END rq$get$size;
+
+
+rq$get$task$tokens:  PROCEDURE( selection, 
+                                except$ptr ) TOKEN EXTERNAL;
+
+DECLARE selection    BYTE,
+        except$ptr   POINTER;
+
+END rq$get$task$tokens;
+
+
+rq$get$type:  PROCEDURE( object, 
+                         except$ptr ) WORD EXTERNAL;
+
+DECLARE object        TOKEN,
+        except$ptr    POINTER;
+
+END rq$get$type;
+
+
+rq$inspect$composite:  PROCEDURE( extension$t,
+                                  composite$t,
+                                  token$list,
+                                  except$ptr ) EXTERNAL;
+
+DECLARE extension$t  TOKEN,
+        composite$t  TOKEN,
+        token$list   POINTER,
+        except$ptr   POINTER;
+
+END rq$inspect$composite;
+
+
+rq$lookup$object:  PROCEDURE( job$t,
+                              name,
+                              time$limit,
+                              except$ptr ) TOKEN EXTERNAL;
+
+DECLARE job$t       TOKEN,
+        name        POINTER,
+        time$limit  WORD,
+        except$ptr  POINTER;
+
+END rq$lookup$object;
+
+
+rq$offspring:  PROCEDURE( job$t, 
+                          except$ptr ) TOKEN EXTERNAL;
+
+DECLARE job$t         TOKEN,
+        except$ptr    POINTER;
+
+END rq$offspring;
+
+
+rq$receive$control:  PROCEDURE( region$t,
+                                except$ptr ) EXTERNAL;
+
+DECLARE region$t      TOKEN,
+        except$ptr    POINTER;
+
+END rq$receive$control;
+
+
+rq$receive$message:  PROCEDURE( mailbox$t,
+                                time$limit,
+                                response$ptr,
+                                except$ptr ) TOKEN EXTERNAL;
+
+DECLARE mailbox$t       TOKEN,
+        time$limit      WORD,
+        response$ptr    POINTER,
+        except$ptr      POINTER;
+
+END rq$receive$message;
+
+
+rq$receive$units:  PROCEDURE( semaphore$t,
+                              units,
+                              time$limit,
+                              except$ptr ) WORD EXTERNAL;
+
+DECLARE semaphore$t  TOKEN,
+        units        WORD,
+        time$limit   WORD,
+        except$ptr   POINTER;
+
+END rq$receive$units;
+
+
+rq$reset$interrupt:  PROCEDURE( level,
+                                except$ptr ) EXTERNAL;
+
+DECLARE level         WORD,
+        except$ptr    POINTER;
+
+END rq$reset$interrupt;
+
+
+rq$resume$task:  PROCEDURE( task$t, 
+                            except$ptr ) EXTERNAL;
+
+DECLARE task$t        TOKEN,
+        except$ptr    POINTER;
+
+END rq$resume$task;
+
+
+rq$signal$exception:  PROCEDURE( exception$code,
+                                 param$num,
+                                 stack$ptr,
+                                 first$reserved$word,
+                                 second$reserved$word,
+                                 except$ptr ) EXTERNAL;
+
+DECLARE exception$code         WORD,
+        param$num              BYTE,
+        stack$ptr              WORD,
+        first$reserved$word    WORD,
+        second$reserved$word   WORD,
+        except$ptr             POINTER;
+
+END rq$signal$exception;
+
+
+rq$signal$interrupt:  PROCEDURE( level, 
+                                 except$ptr ) EXTERNAL;
+
+DECLARE level         WORD,
+        except$ptr    POINTER;
+
+END rq$signal$interrupt;
+
+
+rq$sleep:  PROCEDURE( time$limit, 
+                      except$ptr ) EXTERNAL;
+
+DECLARE time$limit    WORD,
+        except$ptr    POINTER;
+
+END rq$sleep;
+
+
+rq$send$control:  PROCEDURE( except$ptr ) EXTERNAL;
+
+DECLARE except$ptr    POINTER;
+
+END rq$send$control;
+
+
+rq$send$message:  PROCEDURE( mailbox$t,   
+                             object,
+                             response,
+                             except$ptr ) EXTERNAL;
+
+DECLARE mailbox$t  TOKEN,
+        object     TOKEN,
+        response   TOKEN,
+        except$ptr POINTER;
+
+END rq$send$message;
+
+
+rq$send$units:  PROCEDURE( semaphore$t,
+                           units,
+                           except$ptr ) EXTERNAL;
+
+DECLARE semaphore$t  TOKEN,
+        units        WORD,
+        except$ptr   POINTER;
+
+END rq$send$units;
+
+
+rq$set$exception$handler:  PROCEDURE( exception$info$ptr,
+                                      except$ptr ) EXTERNAL;
+
+DECLARE exception$info$ptr    POINTER,
+        except$ptr            POINTER;
+
+END rq$set$exception$handler;
+
+
+rq$set$interrupt:  PROCEDURE( level,
+                              interrupt$task$flag,
+                              interrupt$handler,
+                              interrupt$handler$ds,
+                              except$ptr ) EXTERNAL;
+
+DECLARE level                   WORD,
+        interrupt$task$flag     BYTE,
+        interrupt$handler       POINTER,
+        interrupt$handler$ds    TOKEN,
+        except$ptr              POINTER;
+
+END rq$set$interrupt;
+
+
+rq$set$os$extension:  PROCEDURE( os$extension,
+                                 start$address,
+                                 except$ptr ) EXTERNAL;
+
+DECLARE os$extension    BYTE,
+        start$address   POINTER,
+        except$ptr      POINTER;
+
+END rq$set$os$extension;
+
+
+rq$set$pool$min:  PROCEDURE( new$min,
+                             except$ptr ) EXTERNAL;
+
+DECLARE new$min    WORD,
+        except$ptr POINTER;
+
+END rq$set$pool$min;
+
+
+rq$set$priority:  PROCEDURE( task$t,
+                             priority,
+                             except$ptr ) EXTERNAL;
+
+DECLARE task$t      TOKEN,
+        priority    BYTE,
+        except$ptr  POINTER;
+
+END rq$set$priority;
+
+
+rq$suspend$task:  PROCEDURE( task$t, 
+                             except$ptr ) EXTERNAL;
+
+DECLARE task$t        TOKEN,
+        except$ptr    POINTER;
+
+END rq$suspend$task;
+
+
+rq$uncatalog$object:  PROCEDURE( job$t, 
+                                 name, 
+                                 except$ptr ) EXTERNAL;
+
+DECLARE job$t         TOKEN,
+        name          POINTER,
+        except$ptr    POINTER;
+
+END rq$uncatalog$object;
+
+
+rq$wait$interrupt:  PROCEDURE( level, 
+                               except$ptr ) EXTERNAL;
+
+DECLARE level         WORD,
+        except$ptr    POINTER;
+
+END rq$wait$interrupt;
+
+rq$create$buffer$pool: PROCEDURE(max$bufs, flags, excep$p) TOKEN EXTERNAL;
+DECLARE	max$bufs	WORD;
+DECLARE	flags		WORD;
+DECLARE	excep$p		POINTER;
+END rq$create$buffer$pool;
+
+rq$delete$buffer$pool: PROCEDURE(buffer$pool, excep$p) EXTERNAL;
+DECLARE	buffer$pool	TOKEN;
+DECLARE	excep$p		POINTER;
+END rq$delete$buffer$pool;
+
+rq$request$buffer: PROCEDURE(pool$t, size, excep$p) TOKEN EXTERNAL;
+DECLARE	pool$t		TOKEN;
+DECLARE	size		DWORD;
+DECLARE	excep$p		POINTER;
+END rq$request$buffer;
+
+rq$release$buffer: PROCEDURE(pool$t, buf$t, flags, excep$p) EXTERNAL;
+DECLARE	pool$t		TOKEN;
+DECLARE	buf$t		TOKEN;
+DECLARE	flags		WORD;
+DECLARE	excep$p		POINTER;
+END rq$release$buffer;
+
+rq$get$interconnect: PROCEDURE(board$id, reg$id, excep$p) BYTE EXTERNAL;
+DECLARE	board$id	BYTE;
+DECLARE	reg$id		WORD;
+DECLARE	excep$p		POINTER;
+END rq$get$interconnect;
+
+rq$set$interconnect: PROCEDURE(value, slot, register, excep$p) EXTERNAL;
+DECLARE	value		BYTE;
+DECLARE	slot		BYTE;
+DECLARE	register	WORD;
+DECLARE	excep$p		POINTER;
+END rq$set$interconnect;
+ 
+rq$attach$buffer$pool: PROCEDURE(buf$pool, port, excep$p ) EXTERNAL;
+
+	DECLARE buf$pool		TOKEN,
+			port			TOKEN,
+			excep$p			POINTER;
+
+END rq$attach$buffer$pool;
+
+rq$create$port: PROCEDURE( queue$size, info$p, excep$p ) TOKEN EXTERNAL;
+
+	DECLARE queue$size		WORD,
+			info$p			POINTER,
+			excep$p			POINTER;
+
+END rq$create$port;
+
+rq$delete$port: PROCEDURE( port, excep$p ) EXTERNAL;
+
+	DECLARE port			TOKEN,
+			excep$p			POINTER;
+
+END rq$delete$port;
+
+rq$detach$buffer$pool: PROCEDURE( port, excep$p ) TOKEN EXTERNAL;
+
+	DECLARE port			TOKEN,
+			excep$p			POINTER;
+
+END rq$detach$buffer$pool;
+
+rq$get$host$id: PROCEDURE( excep$p ) WORD EXTERNAL;
+
+	DECLARE excep$p			POINTER;
+
+END rq$get$host$id;
+
+rq$get$port$attributes: PROCEDURE( port, info$p, excep$p ) EXTERNAL;
+
+	DECLARE port			TOKEN,
+			info$p			POINTER,
+			excep$p			POINTER;
+
+END rq$get$port$attributes;
+
+rq$receive$fragment: PROCEDURE( destination, socket, rsvp$trans$id, 
+								fragment$p, fragment$length, 
+								flags, excep$p ) EXTERNAL;
+			
+	DECLARE	destination		TOKEN,
+			socket			DWORD,
+			rsvp$trans$id	WORD,
+			fragment$p		POINTER,
+			fragment$length	DWORD,
+			flags			WORD,
+			excep$p			POINTER;
+
+END rq$receive$fragment;
+
+rq$receive: PROCEDURE( destination, 
+					   time$limit, info$p, excep$p ) POINTER EXTERNAL;
+			
+	DECLARE	destination		TOKEN,
+			time$limit		WORD,
+			info$p			POINTER,
+			excep$p			POINTER;
+
+END rq$receive;
+
+rq$send: PROCEDURE( source, socket, control$p, data$p, data$length,
+						flags, excep$p) WORD EXTERNAL;
+
+	DECLARE	source			TOKEN,
+			socket			DWORD,
+			control$p		POINTER,
+			data$p			POINTER,
+			data$length		DWORD,
+			flags			WORD,
+			excep$p			POINTER;
+
+END rq$send;
+
+rq$send$reply: PROCEDURE( source, socket, rsvp$trans$id, control$p, data$p,
+							data$length, flags, excep$p ) WORD EXTERNAL;
+
+	DECLARE	source			TOKEN,
+			socket			DWORD,
+			rsvp$trans$id	WORD,
+			control$p		POINTER,
+			data$p			POINTER,
+			data$length		DWORD,
+			flags			WORD,
+			excep$p			POINTER;
+
+END rq$send$reply;
+
+$RESTORE

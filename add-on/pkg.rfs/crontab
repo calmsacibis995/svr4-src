@@ -1,0 +1,60 @@
+#ident	"@(#)/usr/src/add-on/pkg.rfs/crontab.sl 1.1 4.0 12/08/90 7708 AT&T-USL"
+
+# script to install/remove cron entry for rmnttry polling
+
+CRONDIR=/var/spool/cron/crontabs
+CRONTAB=$CRONDIR/root
+TEMPCRON=/usr/tmp/cron.$$
+
+if
+	[ "$1" = install ]
+then
+	POLL='10,25,40,55 * * * * /etc/rfs/rmnttry >/dev/null'
+
+	if
+		[ ! -f "$CRONTAB" ]
+	then
+		> $CRONTAB 2>/dev/null
+	fi
+
+	if
+		[ ! -f "$CRONTAB" ]
+	then
+		echo "** WARNING **  crontab entry cannot be installed"
+		echo "Daemon will not be running when installation is finished"
+		exit 2
+	fi
+
+	grep "rmnttry" $CRONTAB >/dev/null 2>&1
+	if
+		[ "$?" -ne "0" ]
+	then
+
+		# must remove any entry which already exists
+		# since this must be idempotent
+
+		crontab -l | grep -v "/etc/rfs/rmnttry.*#$PKGINST$" \
+			>$TEMPCRON 2>/dev/null
+		echo "$POLL #$PKGINST" >> $TEMPCRON || exit 2
+		cat $TEMPCRON 2>/dev/null || exit 2
+		/usr/bin/rm -f $TEMPCRON
+	fi
+	exit 0
+fi
+
+if
+	[ "$1" = remove ]
+then
+	if
+		[ -f "$CRONTAB" ]
+	then
+		crontab -l | grep -v "/etc/rfs/rmnttry.*#$PKGINST$" \
+			>$TEMPCRON 2>/dev/null
+		cat $TEMPCRON 2>/dev/null || exit 2
+		/usr/bin/rm -f $TEMPCRON
+	fi
+	exit 0
+fi
+
+echo "ERROR: invalid argument supplied to build script" >&2
+exit 1

@@ -1,0 +1,14 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/loopback/Text.exists	1.1"
+title="Loopback Protocol File Error"
+columns=55
+rows=10
+text="
+The service name entered already exists in
+
+	/etc/net/ticots/services
+	/etc/net/ticotsord/services
+and
+	/etc/net/ticlts/services
+
+If you want to remove them, please edit these files.
+"

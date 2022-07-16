@@ -1,0 +1,2 @@
+*ident	"@(#)mbus:uts/i386/master.d/csmclk/mdev	1.1"
+csmclk	Ioc	ioHf	cclk	0	0	1	1	-1

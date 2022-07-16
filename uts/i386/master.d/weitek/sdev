@@ -1,0 +1,10 @@
+*ident	"@(#)master:weitek/sdev	1.1"
+#ifdef MB1
+weitek	N	1	1	1	6	0	0	0	0
+#endif
+#ifdef MB2
+weitek	N	1	1	1	13	0	0	0	0
+#endif
+#ifdef AT386
+weitek	Y	1	0	0	0	0	0	0	0
+#endif

@@ -1,0 +1,569 @@
+#ident	"@(#)proto:i386/README	1.1.1.1"
+.H 1 "Building Binary from Source\*F"
+.FS
+The building of the binary can be done either as root or non root.
+.FE
+.P
+This section describes the procedure for building binaries from the source tape.
+The C Software Development Set Issue 4.1.5 source is part of
+the source tape.
+The system cannot be built with an earlier release of the C Software Development
+Set and cannot be built with the UNIX\(rg System V Release 3.1 C Software Development Set.
+.P
+The international version of the Source Code Provision differs from the domestic
+version in that the following two files are
+.ul
+NOT
+included in the international version:
+.DL
+.LI
+$ROOT/usr/src/cmd/crypt/crypt.c
+.LI
+$ROOT/usr/src/lib/libcrypt/des_decrypt.c
+.LE
+.H 2 "Source Installation"
+.P
+The source tape contains the usr/src directory.  All source code (and some object
+files) are under this.
+.P
+To install the source code from the distributed cartridge tape, perform the following
+steps:
+.AL a
+.LI
+Make a root directory, /usr/src386\*F, for the source tree.
+.FS
+In this document, /usr/src386 is used as an example for the 'root' directory.
+You can use any directory you wish for your 'root' except for /.  If you use a
+root other than /usr/src386, please remember your root as you read this document.
+.FE
+.ti +5
+mkdir /usr/src386
+.LI
+Insert the source tape and retention the source tape.
+.ti +5
+/usr/lib/tape/tapecntl -t
+.LI
+Change into this directory and read in the source tape.
+.in +5
+cd /usr/src386
+.br
+cpio -icBdum < /dev/rmt/c0s0
+.in -5
+.LE
+.P
+The following binaries are included the Source Code Provision:
+.DL
+.LI
+$ROOT/usr/src/uts/i386/io/ansi.o *
+.FS *
+The $ROOT/etc/conf/pack.d/kd/Driver.o consists of the following modules from
+$ROOT/usr/src/uts/i386/io: ansi.o, kd.o, kdkbtables.o, vtgen.o, xque.o
+.FE
+.LI
+$ROOT/usr/src/uts/i386/io/asy.o
+.LI
+$ROOT/usr/src/uts/i386/io/cpyrt.o
+.LI
+$ROOT/usr/src/uts/i386/io/cram.o
+.LI
+$ROOT/usr/src/uts/i386/io/fd.o
+.LI
+$ROOT/usr/src/uts/i386/io/hd.o
+.LI
+$ROOT/usr/src/uts/i386/io/kd.o *
+.LI
+$ROOT/usr/src/uts/i386/io/kdkbtables.o *
+.LI
+$ROOT/usr/src/uts/i386/io/lp.o
+.LI
+$ROOT/usr/src/uts/i386/io/rtc.o
+.LI
+$ROOT/usr/src/uts/i386/io/vtgen.o *
+.LI
+$ROOT/usr/src/uts/i386/io/xque.o *
+.LI
+$ROOT/usr/src/uts/i386/fp/emulator.ms
+.LE
+.H 2 "Building the Release"
+This section describes a way of building the binary release for the UNIX\(rg System
+V/386 Release 3.2\*F.
+.FS
+Only the AT386 bus type is supported by default - without modification
+.FE
+To build a binary release including kernel, commands, libraries,
+C Software Development Set and other
+add-on packages, perform the following steps:
+.AL a
+.LI
+Set and export the environment variable $ROOT to the root of the source tree.
+.ti +5
+ROOT=/usr/src386; export ROOT\*F
+.FS
+Where /usr/src386 is an example of a user defined directory containing a source
+tree and where executables will be placed.
+.FE
+.LI
+Change into the directory containing the build scripts and build the code.
+.in +5
+cd $ROOT/usr/src
+.br
+nohup sh ./:mk &
+.in -5
+.P
+This will build and install the complete UNIX\(rg System V/386 Release 3.2 relative
+to $ROOT.  The
+new binaries will not interfere with the running system.
+This step takes about 24 hours on a 386 system with 2 megabytes of memory.  We
+.ul
+nohup
+the build in background so we can look at the build output later if needed.
+.LE
+.H 2 "Build only the Foundation Set and Extended Terminal Interface Package"
+To Build only the Foundation Set and the Extended Terminal Interface Package and not
+the C Software Development Set, perform the following steps:
+.AL a
+.LI
+Set and export the environment variable $ROOT to the root of the source tree.
+.ti +5
+ROOT=/usr/src386; export ROOT
+.LI
+Change into the directory containing the build scripts and build the code.
+.in +5
+cd $ROOT/usr/src
+.br
+nohup sh ./:mk.fnd &
+.in -5
+.P
+This will build and install the Foundation Set and the Extended Terminal
+Interface Package relative to $ROOT.  The
+new binaries will not interfere with the running system.
+This step takes about 8 hours on a 386 system with 2 megabytes of memory.  We
+.ul
+nohup
+the build in background so we can look at the build output later if needed.
+.LE
+.H 2 "Build only the C Software Development Set"
+To Build only the C Software Development Set and not the Foundation Set nor the
+Extended Terminal Interface Package, perform the following steps:
+.AL a
+.LI
+Install the Extended Terminal Interface Package Version 3.0.  This is needed
+in order to compile the cscope(1) command.
+.LI
+Set and export the environment variable $ROOT to the root of the source tree.
+.ti +5
+ROOT=/usr/src386; export ROOT
+.LI
+Change into the directory containing the build scripts and build the code.
+.in +5
+cd $ROOT/usr/src
+.br
+nohup sh ./:mk.csds &
+.in -5
+.P
+This will build and install the C Software Development Set relative to $ROOT.  The
+new binaries will not interfere with the running system.
+This step takes about 11 hours on a 386 system with 2 megabytes of memory.  We
+.ul
+nohup
+the build in background so we can look at the build output later if needed.
+.LE
+.SK
+.H 2 "Build only the kdb, rfs, nsu, s52k, xx and termpkg Add-ons"
+To Build only the Kernel DeBugger (kdb), Remote File Sharing Package (rfs),
+Network Support
+Utilities Package (nsu), 2 Kilobyte File System Utility Package (s52k),
+XENIX\*(Tm File System Package (xx) and
+the Remote Terminal Package (termpkg), perform the following steps\*F:
+.FS
+Note: The build of kdb, rfs, nsu, s52k and xx depends on the following libraries: libns.a and
+libnsl_s.a.  If you have not already built the Foundation Set, you must build these
+libraries
+.ul
+first
+before you build these packages or else the build
+.ul
+will
+fail.
+.P
+To build these libraries, perform this step before step 'c':
+.in +5
+cd $ROOT/usr/src
+.br
+CH=#; export CH
+.br
+sh ./:mklib libns nsl
+.in -5
+.FE
+.AL a
+.LI
+Set and export the environment variable $ROOT to the root of the source tree.
+.ti +5
+ROOT=/usr/src386; export ROOT
+.LI
+Set up your PATH to include the $ROOT/xenv
+.ti +5
+PATH=$ROOT/xenv:$PATH:/etc; export PATH
+.LI
+Change into the directory containing the build scripts and build the code.
+.in +5
+cd $ROOT/usr/src
+.br
+sh ./.setup\*F
+.FS
+This step sets up the front end scripts to make(1) and cc(1).  Setup also runs
+:mkhead and :mksyshead if needed.
+.FE
+.br
+MCS=mcs; export MCS
+.br
+nohup sh ./:mk.addon kdb rfs nsu s52k xx &\*F
+.FS
+The Remote Terminal Package cannot be built in background.
+.FE
+.in -5
+.P
+This step takes about 2 hours on a 386 system with 2 megabytes of memory.  We
+.ul
+nohup
+the build in background so we can look at the build output later if needed.
+.P
+This will build each of these add-ons and create a floppy image of each under /tmp.
+See Section 7 item l for more details.
+.LI
+Format a 1.2 Meg Floppy diskette.
+.ti +5
+format -i2 /dev/rdsk/f0q15dt
+.LI
+Build the Remote Terminal Package and follow the prompts on the screen.
+.ti +5
+sh ./:mk.addon termpkg
+.LE
+.H 2 "Build only UNIX\(rg Operating System Kernel"
+To Build only the kernel and nothing else, perform the following steps\*F:
+.FS
+Note: The build of the kernel depends on the Installable Driver Commands being
+located relative to $ROOT.  Therefore, if you have
+.ul
+not
+already built the Foundation Set, you must perform the following steps:
+.in +5
+mkdir $ROOT/etc
+.br
+cd /etc
+.br
+find conf/bin -print | cpio -pdum $ROOT/etc
+.in -5
+.FE
+.AL a
+.LI
+Set and export the environment variable $ROOT to the root of the source tree.
+.ti +5
+ROOT=/usr/src386; export ROOT
+.LI
+Set up your PATH to include the $ROOT/xenv
+.ti +5
+PATH=$ROOT/xenv:$PATH:/etc; export PATH
+.LI
+Change into the directory containing the build scripts and build the kernel.
+.in +5
+cd $ROOT/usr/src
+.br
+sh ./.setup
+.br
+nohup sh ./:mkuts AT386 &
+.in -5
+.P
+This will build and install the kernel relative to $ROOT.
+This step takes about 1 hour on a 386 system with 2 megabytes of memory.  We
+.ul
+nohup
+the build in background so we can look at the build output later if needed.
+.LE
+.H 2 "Building Selected Parts of the Source Code Provision"
+.P
+The following commands build individual parts of the system\*F.
+.FS
+Note: Before you run these commands, you must build the front end scripts to
+make(1) and cc(1).  To do this type in:
+.ce
+ ./.setup.
+You must also add $ROOT/xenv and /etc to your PATH.  To do this, type in:
+.ce
+PATH=$ROOT/xenv:$PATH:/etc; export PATH
+.FE
+.TS
+center;
+l l.
+ ./:mklib libcurses	Builds and installs the
+	curses and termcap library.
+
+ ./:mklib lxcurses libm	Builds and installs the
+	XENIX\*(Tm version of curses and
+	the math libraries.
+
+ ./:mklib *	Builds and installs all the libraries
+	found under usr/src/lib
+
+_
+
+ ./:mkcmd *	Builds and installs all the commands
+	found under usr/src/cmd (except .adm).
+
+ ./:mkcmd who	Builds the who command and installs
+	it relative to $ROOT.
+
+_
+
+ ./:mk.addon *	Builds all the add-ons found under
+	usr/src/add-on.  Makes floppy
+	images of each under /tmp.  Prompts
+	the user for the termpkg floppy.
+
+ ./:mk.addon rfs	Builds the Remote File Sharing
+	Package Add-on and makes a floppy image of
+	the installable floppy under /tmp/PID.rfs.
+.TE
+.H 1 "Packaging the binary output"
+To package the newly created binary product, the following steps must be performed:
+.AL a
+.LI
+Use the procedure outlined above,
+.ul
+6.2 Building the Release.
+.LI
+Change into $ROOT/usr/src/proto/i386/at386/cmd
+.ti +5
+cd $ROOT/usr/src/proto/i386/at386/cmd
+.LI
+Become root and set your PATH.
+.in +5
+/bin/su root
+.br
+PATH=$ROOT/xenv:$PATH; export PATH
+.in -5
+.LI
+Compile the setmods program.
+.ti +5
+make -f cmd.mk ../setmods
+.LI
+Prepare the C Software Development Set package\*F:
+.FS
+If the C Software Development Set was not built, they you can skip this
+step.  However, if the C Software Development Set was built, then this step
+must be performed before 'Package the Foundation Set'.  This is because
+some of the Installable Driver Commands are really links to the C
+Software Development Set counter parts.
+.FE
+.in +5
+cd $ROOT/usr/src/proto/i386/at386/PACKAGES/csds
+.br
+echo bin/make | sh ../../../prep NO_UNIX
+.br
+make -f csds.mk prep
+.in -5
+.LI
+Package the Base System Package
+.in +5
+cd $ROOT/usr/src/proto/i386/at386
+.br
+make -f proto.mk package
+.in -5
+.LI
+Format 12 Double Sided, High Density floppy diskettes.
+.ti +5
+format -i2 /dev/rdsk/f0q15dt
+.LI
+Package the following packages:
+.DL
+.LI
+Editing Package
+.LI
+Security Administration Package \*F
+.FS
+For domestic customers only.
+.FE
+.LI
+Extended Terminal Interface Package
+.LE
+.sp
+.in +5
+cd $ROOT/usr/src/proto/i386/at386/PACKAGES
+.br
+make -f PACKAGES.mk install clobber \*F
+.FS
+For the international customer, the packaging of the Security Adminstration Package
+and the Extended Terminal Interface Package will fail.  Therefore, in order for the
+international customer to package the Extended Terminal Interface Package, the
+following steps must be done.
+.DL
+.LI
+cd $ROOT/usr/src/proto/i386/at386/PACKAGES/GPU
+.LI
+make -f GPU.mk install clobber
+.LI
+cd $ROOT/usr/src/proto/i386/at386/PACKAGES
+.LI
+make -f PACKAGES.mk clobber
+.LE
+.FE
+.in -5
+.LI
+Package the C Software Development Set package:
+.in +5
+cd $ROOT/usr/src/proto/i386/at386/PACKAGES/csds
+.br
+make -f csds.mk install clobber
+.in -5
+.LI
+Return from super-user shell
+.ul
+(that was created in step 7c).
+.ti +5
+exit
+.LI
+Build and package the Remote Terminal Package (termpkg)
+.in +5
+cd $ROOT/usr/src
+.br
+PATH=$PATH:/etc; export PATH
+.br
+sh ./:mk.addon termpkg
+.in -5
+.LI
+Package the following packages:
+.DL
+.LI
+Kernel DeBugger (kdb)
+.LI
+Network Support Utilities Package (nsu)
+.LI
+Remote File Sharing Package (rfs)
+.LI
+Two Kilobyte File System Package (s52k)
+.LI
+XENIX\*(Tm File System Package (xx)
+.LE
+.AL a
+.LI
+Determine the files to be put on to the diskettes.
+.in +5
+cd /tmp
+.br
+ls -l *kdb *nsu *rfs *s52k *xx
+.in -5
+.LI
+For each of these files, dd it on to a diskette.
+.ti +5
+dd if=/tmp/NAME of=/dev/rdsk/f0q15d bs=15b
+.sp
+where NAME is the name of the cpio archive for the given package.
+.LE
+.LE
+.H 1 "Freeing Disk Space"
+Several groups of files may be removed after you have built the system
+if disk space is needed.  These groups are located in several areas.
+To remove them change into the $ROOT directory and then perform the following
+steps:
+.H 2 "To clean up space in the kernel build tree"
+.AL a
+.LI
+cd $ROOT/usr/src/uts/i386
+.LI
+make -f unix.mk clean
+.LE
+.H 2 "To clean up space in the shared library build tree"
+.AL a
+.LI
+cd $ROOT/usr/src/lib/shlibc
+.LI
+rm host
+.LE
+.H 2 "To clean up space in the proto build tree"
+.AL a
+.LI
+cd $ROOT/usr/src/proto/i386/at386
+.LI
+make -f proto.mk clobber
+.LE
+.H 2 "To clean up space in /tmp (the add-on floppy images)"
+.AL a
+.LI
+cd /tmp
+.LI
+rm -f *kdb *nsu *rfs *s52k *xx
+.LE
+.H 1 "Warning Messages"
+Warning messages will occur when you build the Source Code Provision.  The errors
+that issue these warning will
+.ul
+not affect
+the build and should be ignored.  These messages are:
+.S -2
+.TS
+box center;
+l c.
+Message	When Building
+=
+line NN: warning: illegal pointer/integer combination, op =	lib/libc lib/libPW lib/shlib
+\^	lib/lxcurses cmd/cscope
+\^	cmd/sgs/mkshlib cmd/sgs/strip
+\^	uts/i386/io/clist.c
+_
+line NN: warning: illegal pointer/integer combination, op ==	lib/libc lib/shlibc
+_
+line NN: warning: loop not entered at top	cmd/xrestore
+_
+warning(NN): template yyy can run out of registers	cmd/sgs/comp2
+_
+*** Error code 2 (ignored)	cmd/login cmd/sccs cmd/spell cmd/tar
+\^	cmd/xrestore uts/i386/boot
+_
+line NN: warning: illegal member use: u_fpstate	cmd/sdb
+_
+Extra token (ignored) after directive	cmd/ls
+_
+mkdir: Failed to make directory "XXXXXX"; File exists	cmd/login cmd/sccs cmd/spell
+\^	cmd/tar cmd/xrestore uts/i386/boot
+_
+line NN hides line yy	cmd/sgs/comp2
+_
+install: -u option available only to root -- ignored
+_
+install: -g option available only to root -- ignored
+_
+strip: Warning - symbol directory deleted from archive libPW.a	lib/libPW
+_
+mcs: Warning archive symbol table deleted from 'NN'	add-on/nsu
+\^	Packaging the Base System
+\^	Packaging the Add-ons
+_
+ssignal.c: 16: MAXSIG redefined	lib/libc lib/shlibc
+_
+param.h: 49: NOFILE redefined	cmd/csh
+_
+lex.c: 14: ECHO redefined	cmd/shl
+_
+**** Build of YYY failed (no makefile found in directory)	cmd/include cmd/lib
+_
+llib-lc(NNN): syntax error	cmd/lint
+_
+tic: Warning: near line 37 (or 39): terminal 'YYY',	cmd/lp
+'YY' defined in more than one entry.	\^
+_
+Null or unknown MCS variable passed to WWW.	Running :mk.addon
+Object comment section will remain unchanged.	\^
+_
+mcs: Couldn't rewrite 'bin/make'	Packaging the CSDS
+_
+ ./usr/include/sti.h: No such file or directory	Packaging the
+\^	Entended Terminal Interface.
+_
+**** Build of crypt failed (make)	cmd/crypt for the international customer.
+_
+Line 1: bin/crypt does not exist	Packaging the security administration
+Line 62: usr/lib/libcrypt.a does not exist	package for the international customer
+.TE
+.S +2
+.P
+Messages that are NOT any of the above must be carefully scrutinized.

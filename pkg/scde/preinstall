@@ -1,0 +1,62 @@
+#ident	"@(#)pkg4.i386:scde/preinstall	1.2"
+#-------
+# preinstall - make the existing CCS coresident with the one
+# about to be installed:
+#
+# a) copy existing /usr/include/*.h files to /usr/occs/include
+# b) mv /usr/bin/cc /usr/occs/bin/cc
+# c) generate new /usr/bin/cc that calls /usr/occs/bin/cc
+#    and tells it where to find its include files.
+#
+# CORESIDENT set by request script
+#-------
+
+#-------
+# mvci4 - relocate the header files for CI4 to /usr/occs/include,
+# and generate a new cc for them.
+#-------
+mvci4()
+{
+(
+	trap "trap 1 2 3 15; exit 3" 1 2 3 15
+
+	BIN=/usr/bin
+	INC=/usr/include
+	SAV=/usr/occs
+
+	if	[ ! -d "$SAV" ]
+	then	mkdir "$SAV"			|| exit 1
+	fi
+	if	[ ! -d "$SAV/bin" ]
+	then	mkdir "$SAV/bin"		|| exit 1
+	fi
+	if	[ ! -d "$SAV/include" ]
+	then	mkdir "$SAV/include"		|| exit 1
+	fi
+
+	cd $INC
+
+	echo "Moving 4.2 headers to /usr/occs/include"
+	ls *.h | cpio -pumd $SAV/include 2>/dev/null	|| exit 1
+
+	echo "Moving 4.2 /bin/cc to /usr/occs/bin/cc"
+	if	[ -f "$BIN/cc" ] && [ ! -f "$SAV/bin/cc" ]
+	then
+		mv "$BIN/cc" "$SAV/bin/cc"	|| exit 1
+		cat > "$BIN/cc" <<-!CC!		|| exit 1
+		exec $SAV/bin/cc -I$SAV/include "\$@"
+		!CC!
+		chmod 755 "$BIN/cc"		|| exit 1
+		chgrp bin "$BIN/cc"		|| exit 1
+		chown bin "$BIN/cc"		|| exit 1
+	fi
+)
+}
+
+#-------
+# This is where the action is.
+#-------
+if	[ "$CORESIDENT" = y ]
+then	mvci4
+fi
+exit 0

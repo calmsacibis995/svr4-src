@@ -1,0 +1,70 @@
+#	Copyright (c) 1987, 1988  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+
+#ident	"@(#)mbus:proto/i386/mbus/cmd/savefile	1.1"
+
+r etc/TIMEZONE
+r etc/gettydefs
+r etc/ttydefs
+r etc/group
+r etc/inittab
+r etc/passwd
+r etc/shadow
+r etc/rstab
+r etc/profile
+r etc/vfstab
+#
+# uucp files
+#
+r usr/lib/uucp/Devconfig
+r usr/lib/uucp/Devices
+r usr/lib/uucp/Dialcodes
+r usr/lib/uucp/Dialers
+r usr/lib/uucp/Maxuuscheds
+r usr/lib/uucp/Maxuuxqts
+r usr/lib/uucp/Permissions
+r usr/lib/uucp/Poll
+r usr/lib/uucp/Sysfiles
+r usr/lib/uucp/Systems
+r usr/lib/uucp/uudemon.*
+#
+# cron and at files
+#
+r usr/lib/cron/at.allow
+r usr/lib/cron/at.deny
+r usr/lib/cron/cron.allow
+r usr/lib/cron/cron.deny
+r usr/spool/cron/crontabs/adm
+r usr/spool/cron/crontabs/root
+r usr/spool/cron/crontabs/sys
+#
+# config files, save only
+#
+s etc/conf/pack.d/*/*.c
+s etc/conf/mfsys.d/*
+s etc/conf/sfsys.d/*
+s etc/conf/sdevice.d/*
+s etc/conf/node.d/*
+s etc/conf/init.d/*
+s etc/conf/cf.d/stune
+s etc/conf/cf.d/mtune
+s etc/conf/cf.d/init.base
+s etc/conf/cf.d/sassign
+s etc/conf/cf.d/mdevice
+#
+# default config files
+#
+r /etc/default/boot
+r /etc/default/csh
+r /etc/default/login
+r /etc/default/passwd
+r /etc/default/su
+r /etc/default/tar
+r /etc/default/xrestor
+r /etc/default/bootserver/*

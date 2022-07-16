@@ -1,0 +1,61 @@
+#ident	"@(#)mbus:add-on/pkg.enetdrv/prototype	1.1.1.1"
+
+!PACKDIR=/etc/conf/pack.d
+!MASTDIR=/usr/src/uts/i386/master.d
+
+i copyright
+i depend
+i pkginfo
+i postinstall
+i preremove
+
+!OAMBASE=/usr/sadm/sysadm
+!PKGINST=enetdrv
+!PKGSAV=/var/sadm/pkg/$PKGINST/save
+
+d none /tmp/enetdrv               775     bin     bin
+
+v none /tmp/enetdrv/i530.Dr=$PACKDIR/i530/Driver.o	?	?	?
+v none /tmp/enetdrv/i530.Sp=$MASTDIR/i530/space.c	?	?	?
+v none /tmp/enetdrv/i530.Ma=$MASTDIR/i530/mdev	?	?	?
+v none /tmp/enetdrv/i530.Sy=$MASTDIR/i530/sdev	?	?	?
+v none /tmp/enetdrv/i530.No=$MASTDIR/i530/node	?	?	?
+
+v none /tmp/enetdrv/edlina.Dr=$PACKDIR/edlina/Driver.o	?	?	?
+v none /tmp/enetdrv/edlina.Sp=$MASTDIR/edlina/space.c	?	?	?
+v none /tmp/enetdrv/edlina.Ma=$MASTDIR/edlina/mdev	?	?	?
+v none /tmp/enetdrv/edlina.Sy=$MASTDIR/edlina/sdev	?	?	?
+v none /tmp/enetdrv/edlina.No=$MASTDIR/edlina/node	?	?	?
+
+#	init script: default owner=root, group=sys, mode=0444
+!default 0444 root sys
+f none	etc/init.d/ina961
+l none	etc/rc2.d/S08ina961=etc/init.d/ina961
+
+#	commands: default owner=root, group=sys, mode=0700
+
+!default 0700 root sys
+f none	usr/sbin/enetinfo 0755 root adm
+s none	usr/bin/enetinfo=usr/sbin/enetinfo
+f none	usr/sbin/enetreset
+s none	usr/bin/enetreset=usr/sbin/enetreset
+f none	usr/sbin/enetload
+s none	usr/bin/enetload=usr/sbin/enetload
+f none	usr/sbin/ina
+s none	usr/bin/ina=usr/sbin/ina
+
+#	header files: default owner=bin group=bin mode=0444
+
+!default 0444 bin bin
+f none	usr/include/sys/enet.h=usr/src/uts/i386/sys/enet.h
+f none	usr/include/sys/enetuser.h=usr/src/uts/i386/sys/enetuser.h
+f none	usr/include/sys/edlina.h=usr/src/uts/i386/sys/edlina.h
+
+#	ina files: default owner=root group=sys mode=644
+
+!default 0644 root sys	
+f none	etc/ina961.36
+f none	etc/ina961.37
+f none	etc/ina961.36.M
+f none	etc/ina961.37.M
+f none	etc/ina961.data

@@ -1,0 +1,49 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/npack/Help	1.1"
+ABSTRACT:
+	This item adds machine and service information to the
+	address files of the NPACK protocol.
+	Once added, applications can obtain machine and service
+	addresses using the name to address mapping facility.
+
+menu:host:Host Information
+	This item adds machine names and addresses into
+	the hosts file for the NPACK protocol.
+
+menu:services:Service Information
+	This item adds service names and port numbers into
+	the services file for the NPACK protocol.
+
+npack:name:Machine Information
+	Please enter the name of a machine that is accessable
+	via the NPACK protocol.
+
+npack:addr:Address Information
+	Please enter the NPACK address for the machine
+	entered on the previous line.
+	NPACK addresses are a sequence of 16 hexadecimal
+	digits.  For example, the address of machine "elvis"
+	might be
+	
+		80001023dc3f0000
+	
+	and the address of machine "james" might be
+	
+		800010f345d60000
+
+npack:service:Service Information
+	Please enter the name of a service available on machines
+	that are accessable via the NPACK protocol.
+
+npack:port:Port Information
+	Please enter the service port number for the service
+	given in the previous line.
+	NPACK service port numbers are a sequence
+	of 8 hexadecimal digits.  For example, the port number
+	of service "rpc" is
+	
+			0000000f
+	
+	and the port number of service "listen" is
+	
+			00000007
+

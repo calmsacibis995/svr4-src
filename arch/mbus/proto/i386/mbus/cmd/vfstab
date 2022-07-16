@@ -1,0 +1,6 @@
+#ident	"@(#)mbus:proto/i386/mbus/cmd/vfstab	1.1"
+/dev/dsk/0s1	/dev/dsk/0s1	/mnt	s5	0	yes	-
+/dev/dsk/1s1	/dev/dsk/1s1	/mnt	s5	0	yes	-
+/dev/dsk/2s1	/dev/dsk/2s1	/mnt	s5	0	yes	-
+/dev/dsk/3s1	/dev/dsk/3s1	/mnt	s5	0	yes	-
+/dev/dsk/f0d9dt	/dev/dsk/f0d9dt	/floppy	s5	0	yes	-

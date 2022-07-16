@@ -1,0 +1,23 @@
+#ident	"@(#)/usr/src/add-on/pkg.compat/pkginfo.sl 1.1 4.0 12/08/90 59869 AT&T-USL"
+#
+# "must" parameters
+#
+
+PKG="compat"
+ARCH="i386"
+VERSION="1"
+NAME="BSD compatibility package"
+RELEASE="4.0"
+VENDOR="AT&T-SF"
+CATEGORY="system"
+CLASSES="none"
+PREDEPEND="compat"
+#if null, it should reset in the "request" file
+MAXINST="1"
+
+# "optional" parameters
+
+
+
+
+

@@ -1,0 +1,152 @@
+#ident	"@(#)pkg.nfs:pkg.nfs/prototype	1.1.3.1"
+
+!PACKDIR=/etc/conf/pack.d
+!MASTDIR=/usr/src/uts/i386/master.d
+
+# information files
+
+i pkginfo
+i depend
+i postinstall
+i preremove
+i copyright
+i request
+
+d none	/tmp/nfs				775	bin	bin
+v none	/tmp/nfs/nfs.Dr=$PACKDIR/nfs/Driver.o	755	root	sys
+v none	/tmp/nfs/nfs.Sp=$MASTDIR/nfs/space.c	755	root	sys
+v none	/tmp/nfs/nfs.Mf=$MASTDIR/nfs/mfsys	755	root	sys
+v none	/tmp/nfs/nfs.Sf=$MASTDIR/nfs/sfsys	755	root	sys
+
+v none	/tmp/nfs/klm.Dr=$PACKDIR/klm/Driver.o	755	root	sys
+v none	/tmp/nfs/klm.Sp=$MASTDIR/klm/space.c	755	root	sys
+v none	/tmp/nfs/klm.Ma=$MASTDIR/klm/mdev	755	root	sys
+v none	/tmp/nfs/klm.Sy=$MASTDIR/klm/sdev	755	root	sys
+
+# package object files and directories
+
+!default			775	root	sys
+d 	none	etc/init.d	755	?	?
+d	none	/etc		?	?	?
+d	none	/usr		?	?	?
+d	none	/usr/bin	?	?	?
+d	none	/usr/sbin	?	?	?
+d	none	/usr/lib	?	?	?
+d	none	/usr/lib/fs	?	?	?
+d	none	/usr/lib/fs/nfs
+d	none	/usr/lib/nfs
+d	none	usr/include/nfs	0755	root	sys
+
+!default			555	bin	bin
+f	none	usr/lib/fs/nfs/dfmounts
+f	none	usr/lib/fs/nfs/dfshares
+f	none	usr/lib/fs/nfs/mount
+f	none	usr/lib/fs/nfs/umount
+f	none	usr/lib/fs/nfs/share
+f	none	usr/lib/fs/nfs/unshare
+f	none	usr/lib/nfs/mountd
+f	none	usr/lib/nfs/automount
+f	none	usr/lib/nfs/nfsd
+f	none	usr/lib/nfs/biod
+f	none	usr/lib/nfs/exportfs
+f	none	usr/lib/nfs/lockd
+f	none	usr/lib/nfs/statd
+f	none	usr/lib/nfs/bootparamd
+f	none	usr/lib/nfs/pcnfsd
+f	none	usr/sbin/showmount
+f	none	usr/sbin/nfsstat	02555	bin	sys
+
+!default 0444 bin bin
+f	none	usr/include/nfs/export.h
+f	none	usr/include/nfs/mount.h
+f	none	usr/include/nfs/nfs.h
+f	none	usr/include/nfs/nfs_clnt.h
+f	none	usr/include/nfs/nfssys.h
+f	none	usr/include/nfs/rnode.h
+
+!default 0775 root sys
+s	none	usr/include/sys/nfs=usr/include/nfs
+
+!default	444	root	sys
+f none	 etc/init.d/nfs
+l none	 etc/rc0.d/K40nfs=etc/init.d/nfs
+l none   etc/rc1.d/K40nfs=etc/init.d/nfs
+l none	 etc/rc2.d/K20nfs=etc/init.d/nfs
+l none	 etc/rc3.d/S22nfs=etc/init.d/nfs
+
+# For B10 all this below comes with base system.
+# This will be changed later.
+#	Simple admin. scripts
+
+!default	755	root	sys
+d       sysadm    usr/sadm/sysadm/menu/netservices/remote_files/remote
+d       sysadm    usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs
+d       sysadm    usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/bin
+d       sysadm    usr/sadm/sysadm/menu/netservices/remote_files/other
+d       sysadm    usr/sadm/sysadm/menu/netservices/remote_files/other/nfs
+d       sysadm    usr/sadm/sysadm/menu/netservices/remote_files/other/nfs/control
+d       sysadm    usr/sadm/sysadm/menu/netservices/remote_files/other/nfs/control/bin
+d       sysadm    usr/sadm/sysadm/menu/netservices/remote_files/setup
+d       sysadm    usr/sadm/sysadm/menu/netservices/remote_files/setup/nfs
+d       sysadm    usr/sadm/sysadm/menu/netservices/remote_files/local	0755	bin	bin
+d       sysadm    usr/sadm/sysadm/menu/netservices/remote_files/local/nfs
+d       sysadm    usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/bin
+
+#nfs admin shell scripts
+
+!default	755	bin	bin
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/other/nfs/control/bin/status
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/bin/a_att
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/bin/auto_attr
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/bin/auto_mod
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/bin/imm_attr
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/bin/ls_resource
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/bin/new_nflist
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/bin/nf_list
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/bin/nf_share
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/bin/nf_unshare
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/bin/valid_client
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/bin/auto_attr
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/bin/auto_mod
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/bin/auto_unmount
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/bin/curr_attr
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/bin/curr_mod
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/bin/ls_remote
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/bin/ls_resource
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/bin/remote_mount
+
+#
+#       fmli scripts for nfs admin
+#
+!default        644     bin     bin
+
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/Form.list
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/Form.modify
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/Form.modify2
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/Form.modify3
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/Form.share
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/Form.share2
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/Form.unshar2
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/Form.unshar3
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/Form.unshare
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/Help
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/Text.list
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/local/nfs/Text.shmsg
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/Form.list
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/Form.modify
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/Form.modify2
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/Form.modify3
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/Form.mount
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/Form.unmnt2
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/Form.unmnt3
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/Form.unmount
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/Help
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/Text.generic
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/remote/nfs/Text.list
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/other/nfs/Help
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/other/nfs/Menu.nfs
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/other/nfs/control/Help
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/other/nfs/control/Text.control
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/other/nfs/control/Menu.control
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/setup/nfs/Help
+f	sysadm	usr/sadm/sysadm/menu/netservices/remote_files/setup/nfs/Menu.setup

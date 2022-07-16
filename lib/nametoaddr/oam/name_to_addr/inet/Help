@@ -1,0 +1,50 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/inet/Help	1.1"
+ABSTRACT:
+	This item adds machine and service information to the
+	address files of the internet protocols.
+	Once added, applications can obtain machine and service
+	addresses using the name to address mapping facility.
+
+menu:host:Host Information
+	This item adds machine names and addresses into
+	the hosts file for the internet protocols.
+
+menu:services:Service Information
+	This item adds service names and port numbers into
+	the services file for the internet protocols.
+
+inet:name:Machine Information
+	Please enter the name of a machine that is accessable
+	via the internet protocol.
+
+inet:addr:Address Information
+	Please enter the internet address for the machine
+	entered on the previous line.
+	Internet addresses are a sequence of four integers
+	(separated by dots (".")).  Within a small network,
+	the first three integers are the same.  For example,
+	the address of machine "elvis" might be
+	
+		192.11.109.01
+	
+	and the address of machine "james" might be
+	
+		192.11.109.02
+
+inet:service:Service Information
+	Please enter the name of a service available on machines
+	that are accessable via the internet protocol.
+
+inet:port:Port Information
+	Please enter the service port number for the service
+	given in the previous line.
+	Internet service port numbers are simple
+	integers (and they must be the same on each machine).
+	For example, the port number of service "rpc" is
+	
+			111
+	
+	and the port number of service "listen" is
+	
+			1025
+

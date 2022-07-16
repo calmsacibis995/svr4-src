@@ -1,0 +1,41 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/npack/Form.npackserv	1.2"
+form="Create NPACK Services File"
+close=unset -l H_RET -l CMD
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/form.msg|message -p`
+
+done=`indicator -w;
+	$INTFBASE/netservices/name_to_addr/npack/bin/npack.services $F1 $F2 | set -l H_RET;
+	if [ "$H_RET" = "1" ];
+	then
+		set -l CMD="OPEN TEXT $INTFBASE/netservices/name_to_addr/npack/Text.s_exists";
+	elif [ "$H_RET" = "2" ];
+	then
+		set -l CMD="OPEN TEXT $INTFBASE/netservices/name_to_addr/npack/Text.badport";
+	else
+		set -l CMD="OPEN TEXT $INTFBASE/netservices/name_to_addr/npack/Text.s_success";
+	fi;
+	`$CMD
+
+name="Service name:"
+nrow=1
+ncol=1
+frow=1
+fcol=15
+rows=1
+columns=14
+valid=`[ "$F1" ]`
+invalidmsg="Fields can not be empty"
+lininfo=npack:service
+
+name="Port number:"
+nrow=2
+ncol=1
+frow=2
+fcol=14
+rows=1
+columns=14
+valid=`[ "$F2" ]`
+invalidmsg="Fields can not be empty"
+lininfo=npack:port

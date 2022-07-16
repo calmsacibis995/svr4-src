@@ -1,0 +1,8 @@
+#ident	"@(#)/usr/src/pkg/face/pkginfo.sl 1.1 4.0 12/08/90 56922 AT&T-USL"
+
+PKG="face"
+VERSION="Release 4 Issue 1"
+NAME="AT&T Framed Access Command Environment"
+CLASSES="none OAMadmin OAMmif"
+CATEGORY=applications
+PREDEPEND=face

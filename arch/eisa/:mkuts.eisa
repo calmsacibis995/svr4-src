@@ -1,0 +1,388 @@
+echo ""
+echo ""
+echo "			Copyright (c) 1984, 1986, 1987, 1988 AT&T"
+echo "			  All Rights Reserved"
+echo ""
+echo "          THIS IS UNPUBLISHED PROPRIETARY SOURCE CODE OF AT&T"
+echo "       The copyright notice above does not evidence any actual or"
+echo "               intended publication of such source code."
+echo ""
+echo "			Copyright (c) 1987, 1988 Microsoft Corporation"
+echo "			  All Rights Reserved"
+echo ""
+echo "		This Module contains Proprietary Information of Microsoft"
+echo "		Corporation and should be treated as Confidential."
+echo ""
+echo ""
+echo ""
+
+#ident	"@(#)eisa::mkuts.eisa	1.1.1.1"
+
+#
+#	Configure and make the UNIX Operating System with various devices
+#
+
+#	Determine the CCSTYPE being used
+${PFX}cc -V 2>&1 | grep 5.0 > /dev/null
+if [ $? -eq 0 ]
+then
+	CCSTYPE=ELF
+else
+	CCSTYPE=COFF
+fi
+export CCSTYPE
+echo 
+echo ====================== CCSTYPE  is  $CCSTYPE =========================
+echo
+
+SHELL=/bin/sh
+REL=
+VER=
+export SHELL REL VER 
+echo $0: started at `date`
+trap "exit 1" 1 2 3 15
+MAKE=${MAKE:-make}
+SRCDIR=${SRC:-$ROOT/usr/src}/uts
+if vax
+then
+#	configure an OS with the general disk/general tape (gdgt) and the
+#	general disk/TS11 tape drive (gdts) units.
+#	Note that the general disk/TU16 tape with TM02 controller (gdht)
+#	is not configured or tested here.
+	cd $SRCDIR/vax/cf
+	for i in gdgt gdts
+	do
+		echo "config $i \n$MAKE install VER=$i"
+		config $i
+		$MAKE install VER=$i
+		if [ $? -ne 0 ]
+		then
+			echo ":mkuts: *** $MAKE of $i failed"
+		fi
+	done
+elif pdp11
+then
+#	configure an OS with the general disk and rp disks
+	cd $SRCDIR/pdp11/cf
+	for i in gdht gdtm rpht rptm
+	do
+                echo "config $i \n$MAKE install VER=$i"
+		config $i
+		$MAKE install VER=$i
+                if [ $? -ne 0 ]
+                then
+                        echo ":mkuts: *** $MAKE of $i failed"
+                fi
+	done
+elif u3b
+then
+#	configure an OS with the Kennedy tape drive (un32) and the
+#	magnetic tape controller configured into DMA channels 11 and 12.
+	cd $SRCDIR/3b/cf
+	for i in un32 mtc11 mtc12
+	do
+		echo "$MAKE clobber"
+		$MAKE clobber
+                echo "config /etc/system.$i"
+		config $ROOT/etc/system.$i
+		if [ "$ROOT" != "" ]
+		then
+			$MAKE -f ../makefile ENV="VER=$i CH=# SGS=3bs"
+		else
+			$MAKE VER=$i
+		fi
+		if [ $? -eq 0 ]
+		then
+			mv ../unix$i $ROOT/unix.$i
+		else
+			echo ":mkuts: *** $MAKE of unix.$i failed"
+		fi
+	done
+elif u3b2
+then
+#
+	cd $SRCDIR/3b2
+	echo "$MAKE -f unix.mk install SYS=unix"
+	$MAKE -f unix.mk install SYS=unix
+	if [ $? -ne 0 ]
+	then
+		echo ":mkuts: *** $MAKE of unix failed"
+	fi
+elif u3b5
+then
+#
+	cd $SRCDIR/3b5
+	echo "$MAKE -f unix.mk install SYS=unix VER=2"
+	$MAKE -f unix.mk install SYS=unix VER=2
+        if [ $? -ne 0 ]
+        then
+                echo ":mkuts: *** $MAKE of unix failed"
+        fi
+elif i286
+then
+	#
+	#	Make the Safari 5 core and driver modules for
+	#	Installable Drivers and Tunable Parameters (ID/TP)
+	#
+	echo "ROOT is set to" $ROOT
+	unset C N
+	C=install
+	
+	if [ $# != 0 ]
+	then
+	
+	if [ $1 = "?" ]
+	then
+	echo
+	echo ":mkuts [SYS=s] [VER=v] [REL=r] [NODE=n] [MACH=m] [IM=W|F [DEN=HI|LO]]"
+	echo ":mkuts clean"
+	echo ":mkuts clobber"
+	echo
+	exit 0
+	fi
+	
+	if [ $1 = clean ]
+	then echo "make clean"
+	C=clean
+	elif [ $1 = clobber ]
+	then echo "make clobber"
+	C=clobber
+	elif [ $1 = test ]
+	then echo "make test"
+	exit 0
+	else
+	N=$@
+	fi
+	fi
+	
+	if [ "$MACHINE" = "" ]
+	then
+		MACHINE=safari
+	fi
+	if [ "$MACHINE" != "safari" -a "$MACHINE" != "pcat" ]
+	then
+		Unknown Machine
+		exit 0
+	fi
+	if [ "$C" = "install" ]
+	then
+		echo Building a $MACHINE kernel
+
+		#
+		# make directories
+		#
+		
+		if [ ! -d $ROOT/etc ]
+		then mkdir $ROOT/etc
+		fi
+		if [ ! -d $ROOT/etc/conf ]
+		then mkdir $ROOT/etc/conf
+		fi
+	fi
+
+	set -e
+	cd $ROOT/usr/src/uts/i286
+	make -f unix.mk $C $N MACHINE=$MACHINE
+	
+elif i386
+then
+#       Configure an OS for the 80386, either Multibus or ATbus(default).
+#
+	ROOT=${ROOT:-`cd ../..;pwd`}
+	SRCDIR=${SRC:-$ROOT/usr/src}/uts
+	export ROOT
+
+#	Put directories in object build tree.
+#
+	if [ ! -d $ROOT/etc ]
+	then mkdir $ROOT/etc
+	fi
+	if [ ! -d $ROOT/etc/conf ]
+	then mkdir $ROOT/etc/conf
+	fi
+	if [ ! -d $ROOT/etc/conf/bin ]
+	then mkdir $ROOT/etc/conf/bin
+	fi
+	if [ ! -d $ROOT/etc/conf/cf.d ]
+	then mkdir $ROOT/etc/conf/cf.d
+	fi
+	if [ ! -d $ROOT/etc/conf/sdevice.d ]
+	then mkdir $ROOT/etc/conf/sdevice.d
+	fi
+	if [ ! -d $ROOT/etc/conf/pack.d ]
+	then mkdir $ROOT/etc/conf/pack.d
+	fi
+	if [ ! -d $ROOT/etc/conf/node.d ]
+	then mkdir $ROOT/etc/conf/node.d
+	fi
+	if [ ! -d $ROOT/etc/conf/rc.d ]
+	then mkdir $ROOT/etc/conf/rc.d
+	fi
+	if [ ! -d $ROOT/etc/conf/sd.d ]
+	then mkdir $ROOT/etc/conf/sd.d
+	fi
+	if [ ! -d $ROOT/etc/conf/init.d ]
+	then mkdir $ROOT/etc/conf/init.d
+	fi
+	if [ ! -d $ROOT/etc/conf/mfsys.d ]
+	then mkdir $ROOT/etc/conf/mfsys.d
+	fi
+	if [ ! -d $ROOT/etc/conf/sfsys.d ]
+	then mkdir $ROOT/etc/conf/sfsys.d
+	fi
+
+	C=
+	NET=
+	NET2=
+	NET3=
+	VPIX=
+	MERGE386=
+	WEITEK='-DWEITEK'
+	BUS=
+	ARCH=
+	MORECPP=
+	NONETWORK=
+	while [ -n "$1" ]
+	do
+	case "$1" in
+		at386|AT386|at|AT)
+			BUS=AT386
+			ARCH=AT386
+			CONF=${CONF:-$ROOT/etc/conf}
+			;;
+	#	380 chip support 
+		at380|AT380)
+			BUS=AT386
+			ARCH=AT386
+			MORECPP="$MORECPP -DAT380"
+			;;
+	   # entries for multibus.
+		mb1|MB1)
+			BUS=MB1
+			ARCH=MBUS
+			CONF=${CONF:-$ROOT/etc/conf}
+			;;
+		mb2|MB2)
+			BUS=MB2
+			ARCH=MBUS
+			CONF=${CONF:-$ROOT/etc/conf}
+			;;
+		mb2at|MB2AT)
+			BUS=AT386
+			ARCH=MB2AT
+			MORECPP="$MORECPP -DMB2AT"
+			;;
+		MB2SA|mb2sa)
+			MORECPP="$MORECPP -DMB2SA"
+			;;
+		eisa|EISA)
+			BUS=EISA
+			ARCH=AT386
+			MORECPP="$MORECPP -DEISA"
+			;;
+		mbus|MBUS)
+			MORECPP="$MORECPP -DMBUS"
+			;;
+		i860)
+			MORECPP="$MORECPP -Di860"
+			;;
+		BLTCONS)
+			BLTCONS="-DBLTCONS"
+			;;
+		evc|EVC)
+			EVC="-DEVC"
+			;;
+		ups|UPS)
+			UPS="-DUPS"
+			;;
+		evga|EVGA)
+			EVGA="-DEVGA"
+			;;
+		noevga|NOEVGA)
+			EVGA=" "
+			;;
+		ev\-at|EV\-AT)
+			BUS=AT386
+			ARCH=EV-AT
+			MORECPP="$MORECPP -DAT386"
+			;;
+		# end multibus support
+		NOWEITEK|noweitek)
+			WEITEK=''
+			;;
+		NOVPIX|novpix)
+			VPIX=" "
+			;;
+		VPIX|vpix)
+			VPIX="-DVPIX"
+			;;
+		NOMERGE386|nomerge386)
+			MERGE386=" "
+			;;
+		MERGE386|merge386)
+			MERGE386="-DMERGE386"
+			;;
+		enet|ENET|ethernet|ETHERNET|ether|ETHER|E-NET|e-net)
+			NET2=ENET
+			MORECPP="$MORECPP -DENET"
+			;;
+		slan|SLAN|sln|SLN|starlan|STARLAN)
+			MORECPP="$MORECPP -DSTARLAN"
+			NET=STARLAN
+			;;
+# debug turns on ASSERTs (see sys/debug.h)  for kernel logic checking
+		debug|DEBUG)
+			MORECPP="$MORECPP -DDEBUG=1"
+			;;
+		msdebug|MSDEBUG)
+			MORECPP="$MORECPP -DMSDEBUGGER"
+			;;
+		-c)     shift
+			CONF=${1:?"-c flag requires an argument."}
+			;;
+		nonet|NONET)
+			NONETWORK="nonet"
+			export NONETWORK
+			;;
+		clean|clobber)
+			C=$1
+			;;
+		*)      echo unknown argument $1: ignored
+			;;
+
+	esac
+	shift
+	done
+# fill in default values, default is PC/AT, no debugger
+	BUS=${BUS:-AT386}
+	ARCH=${ARCH:-AT386}
+	CONF=${CONF:-$ROOT/etc/conf}
+	VPIX=${VPIX:--DVPIX}
+	MERGE386=${MERGE386:--DMERGE386}
+	#EVGA=${EVGA:--DEVGA}
+	BLTCONS=${BLTCONS:--DBLTCONS}
+	#EVC=${EVC:--DEVC}
+	UPS=${UPS:--DUPS}
+	MORECPP="$MORECPP -D$BUS -D$ARCH $VPIX $WEITEK $MERGE386 $BLTCONS $EVGA $EVC $UPS"
+	export BUS CONF MORECPP ROOT SRCDIR C NET ARCH NONETWORK
+#
+case "$C" in
+clobber|clean);;
+*)
+# Build the Installable Driver Commands with the current mkuts values
+if [ -f $ROOT/usr/src/cmd/idcmd/idcmd.mk ]
+then
+	( cd $ROOT/usr/src/cmd/idcmd
+	echo "Building idcmd so that idmkunix and /unix are in sync"
+	make -f idcmd.mk "ROOT=$ROOT" "BUS=$BUS" "ARCH=$ARCH" "CONF=$CONF" "MORECPP=$MORECPP" "NET=$NET" "NET2=$NET2" "NET3=$NET3" install clobber
+	)
+fi ;;
+esac
+# removed WEITEK stuff for MBx (set appropriatly above)
+# Go do it
+	cd $SRCDIR/i386
+	make -f unix.mk $NONETWORK "ROOT=$ROOT" "BUS=$BUS" "ARCH=$ARCH" "CONF=$CONF" "MORECPP=$MORECPP" "NET=$NET" "NET2=$NET2" "NET3=$NET3" $C
+
+fi
+echo $0: done at `date`
+exit 0

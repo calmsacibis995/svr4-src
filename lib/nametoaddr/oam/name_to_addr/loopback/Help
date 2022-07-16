@@ -1,0 +1,16 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/loopback/Help	1.1"
+ABSTRACT:
+	This item adds service information to the
+	services files of the loopback protocols.
+	All services available on you machine should exist
+	in the services files.
+
+menu:services:Service Information
+	This item adds service names into the services file
+	for the loopback protocols.
+
+loopback:service:Service Information
+	Please enter the name of a service available on
+	this machine.  The service information will be entered
+	into the services files for the loopback protocols.
+

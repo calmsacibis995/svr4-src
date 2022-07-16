@@ -1,0 +1,2 @@
+*ident	"@(#)//usr/src/uts/i386/master.d/app/mdev.sl 1.1 4.0 12/08/90 54696 AT&T-USL"
+app	-	Sio	app	0	0	1	1	-1

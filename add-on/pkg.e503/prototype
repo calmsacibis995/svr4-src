@@ -1,0 +1,28 @@
+#ident	"%W%	%E%	%Q%"
+
+!PACKDIR=/usr/src/pkg/e503
+
+i depend
+i pkginfo
+i postinstall
+i preremove
+
+!PKGINST=e503
+!PKGSAV=/var/sadm/pkg/$PKGINST/save
+!default 0544 bin bin
+d none /tmp	?	?	?
+d none /tmp/e503		775	bin	bin
+v none /tmp/e503/Driver.o=$PACKDIR/Driver.o ? ? ?
+v none /tmp/e503/Space.c=$PACKDIR/Space.c ? ? ?
+v none /tmp/e503/Master=$PACKDIR/Master ? ? ?
+v none /tmp/e503/System=$PACKDIR/System ? ? ?
+v none /tmp/e503/Node=$PACKDIR/Node ? ? ?
+
+d none /usr	?	?	?
+d none /usr/include	?	?	?
+d none /usr/include/sys	?	?	?
+
+#	header files: default owner=bin group=bin mode=0444
+
+!default 0444 bin bin
+f none /usr/include/sys/e503.h=$PACKDIR/sys/e503.h

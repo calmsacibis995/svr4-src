@@ -1,0 +1,9 @@
+#ident	"@(#)/usr/src/pkg/terminf/pkginfo.sl 1.1 4.0 12/08/90 40339 AT&T-USL"
+
+PKG="terminf"
+CLASSES="none"
+NAME="Terminal Information Utilities"
+VERSION="4.0"
+VENDOR="AT&T"
+CATEGORY="system,essential"
+PREDEPEND="terminf"

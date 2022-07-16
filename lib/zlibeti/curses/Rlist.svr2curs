@@ -1,0 +1,15 @@
+/etc/termcap
+/usr/lib/llib-lcurses
+/usr/lib/llib-lcurses.ln
+/usr/lib/libcurses.a
+/usr/lib/libtermcap.a
+/usr/lib/libtermlib.a
+/usr/lib/terminfo
+/usr/bin/captoinfo
+/usr/bin/infocmp
+/usr/bin/tic
+/usr/bin/tput
+/usr/include/curses.h
+/usr/include/term.h
+/usr/include/unctrl.h
+/usr/options/svr2curs.name

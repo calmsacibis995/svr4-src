@@ -1,0 +1,6 @@
+*ident	"@(#)master:ws/sdev	1.2"
+#ifdef MBUS
+ws	N	1	0	0	0	0	0	0	0
+#else
+ws	Y	1	0	0	0	0	0	0	0
+#endif

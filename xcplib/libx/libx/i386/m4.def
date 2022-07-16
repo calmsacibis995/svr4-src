@@ -1,0 +1,37 @@
+dnl	#ident	"@(#)xcplibx:libx/i386/m4.def	1.1"
+define(`_m4_define_', defn(`define'))dnl
+define(`_m4_undefine_', defn(`undefine'))dnl
+define(`_m4_dnl_', defn(`dnl'))dnl
+define(`_m4_incr_', defn(`incr'))dnl
+_m4_undefine_(`define')_m4_dnl_
+_m4_undefine_(`undefine')_m4_dnl_
+_m4_undefine_(`defn')_m4_dnl_
+_m4_undefine_(`pushdef')_m4_dnl_
+_m4_undefine_(`popdef')_m4_dnl_
+_m4_undefine_(`ifdef')_m4_dnl_
+_m4_undefine_(`shift')_m4_dnl_
+_m4_undefine_(`changequote')_m4_dnl_
+_m4_undefine_(`changecom')_m4_dnl_
+_m4_undefine_(`divert')_m4_dnl_
+_m4_undefine_(`undivert')_m4_dnl_
+_m4_undefine_(`divnum')_m4_dnl_
+_m4_undefine_(`dnl')_m4_dnl_
+_m4_undefine_(`ifelse')_m4_dnl_
+_m4_undefine_(`incr')_m4_dnl_
+_m4_undefine_(`decr')_m4_dnl_
+_m4_undefine_(`eval')_m4_dnl_
+_m4_undefine_(`len')_m4_dnl_
+_m4_undefine_(`index')_m4_dnl_
+_m4_undefine_(`substr')_m4_dnl_
+_m4_undefine_(`translit')_m4_dnl_
+_m4_undefine_(`include')_m4_dnl_
+_m4_undefine_(`sinclude')_m4_dnl_
+_m4_undefine_(`syscmd')_m4_dnl_
+_m4_undefine_(`sysval')_m4_dnl_
+_m4_undefine_(`maketemp')_m4_dnl_
+_m4_undefine_(`m4exit')_m4_dnl_
+_m4_undefine_(`m4wrap')_m4_dnl_
+_m4_undefine_(`errprint')_m4_dnl_
+_m4_undefine_(`dumpdef')_m4_dnl_
+_m4_undefine_(`traceon')_m4_dnl_
+_m4_undefine_(`traceoff')_m4_dnl_

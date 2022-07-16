@@ -1,0 +1,3 @@
+*ident	"@(#)at:uts/i386/master.d/kd/sdev	1.1"
+kd	Y	1	6	2	1	60	62	a0000	bffff
+kd	Y	1	6	2	1	64	64	c0000	c7fff

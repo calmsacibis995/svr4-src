@@ -1,0 +1,15 @@
+#ident	"@(#)/usr/src/add-on/pkg.rfs/pkginfo.sl 1.1 4.0 12/08/90 30556 AT&T-USL"
+
+# RFS pkginfo
+
+PKG="rfs"
+NAME="RFS Utilities"
+ARCH="i386"
+VERSION="1"
+VENDOR="AT&T-SF"
+RELEASE="4.0"
+CATEGORY="system,utilities"
+CLASSES=""
+BASEDIR=""
+MAXINST="1"
+PREDEPEND="rfs"

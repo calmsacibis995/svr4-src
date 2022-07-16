@@ -1,0 +1,300 @@
+#	Copyright (c) 1987, 1988 Microsoft Corporation
+#	  All Rights Reserved
+
+#	This Module contains Proprietary Information of Microsoft
+#	Corporation and should be treated as Confidential.
+
+#ident	"@(#)kern-ml:Gensymvals	1.2.3.1"
+
+# This shell script generates assembler .set pseudo ops
+# that specify the offsets of symbols in structures.
+#
+# The resulting symvals.s file is cat'ed in ahead of other .s files
+# before assembly.
+
+
+# create C source file that includes needed header files
+
+cat <<END >$$.1.c
+#include        "sys/param.h"
+#include	"sys/types.h"
+#include	"sys/immu.h"
+#include	"sys/tss.h"
+#include	"sys/seg.h"
+#include	"sys/signal.h"
+#include	"sys/fs/s5dir.h"
+#include        "sys/user.h"
+#include        "sys/systm.h"
+#include        "sys/sysinfo.h"
+#include        "sys/var.h"
+#include        "sys/errno.h"
+#include        "sys/cmn_err.h"
+#include        "sys/proc.h"
+#include        "sys/sysmacros.h"
+#include        "sys/v86.h"
+#include	"sys/bootinfo.h"
+#include	"vm/as.h"
+#include	"vm/vm_hat.h"
+#include	"vm/faultcatch.h"
+struct Gen_XTSSADDR {
+#define caddr_t int
+	char    filler[XTSSADDR];
+#undef  XTSSADDR
+	xtss_t  XTSSADDR;
+};
+
+END
+
+# Any arguments are evaluated so as to propagate elements of the
+# cross-environment.
+while [ "$*" ]
+do
+	front=`expr "${1}" : '\([^=]*\)=.*'`
+	back=`expr "${1}" : '[^=]*=\(.*\)'`
+	if [ x$CCSTYPE = xELF ]
+	then
+		back=`echo $back | sed 's/-O//g'`
+	fi
+	eval ${front}=\"${back}\"
+	shift
+done
+
+# compile the header files to produce assembly code that contains
+# symbol value definitions
+${CC} ${CFLAGS} -S -g -I.. $$.1.c
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+# extract lines with the needed symbols
+
+if [ x$CCSTYPE = xELF ]
+then
+	tool/setfilter $$.1.s > symvals.s <<EOF
+i_flag
+memused
+memusedcnt
+p_as
+p_sysid
+p_ubptbl
+p_usize
+p_sdp
+a_hat
+hat_pts
+hatpt_forw
+hatpt_pde
+hatpt_pdtep
+t_eax
+t_ebx
+t_edx
+t_esi
+t_esp
+t_edi
+t_esp0
+t_ldt
+u_tss
+u_procp
+u_callgatep
+u_callgate
+u_weitek
+u_weitek_reg
+u_fpintgate
+u_ldtlimit
+u_debugreg
+u_debugon
+u_sigfault
+u_renv
+u_fault_catch
+fc_flags
+fc_errno
+fc_func
+EOF
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+else
+
+fgrep \
+'i_flag
+memused
+memusedcnt
+p_as
+p_sysid
+p_ubptbl
+p_usize
+p_sdp
+a_hat
+hat_pts
+hatpt_forw
+hatpt_pde
+hatpt_pdtep
+t_eax
+t_ebx
+t_edx
+t_esi
+t_esp
+t_edi
+t_esp0
+t_ldt
+u_tss
+u_procp
+u_callgatep
+u_callgate
+u_weitek
+u_weitek_reg
+u_fpintgate
+u_ldtlimit
+u_debugreg
+u_debugon
+u_sigfault
+u_renv
+u_fault_catch
+fc_flags
+fc_errno
+fc_func
+' $$.1.s >$$.2.s
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+fi
+
+if echo "$CFLAGS" | grep VPIX > /dev/null
+then
+if [ x$CCSTYPE = xELF ]
+then
+	tool/setfilter $$.1.s >> symvals.s <<EOF
+xt_vflptr
+xt_magictrap
+xt_magicstat
+xt_intr_pin
+xt_timer_count
+xt_timer_bound
+xt_imaskbits
+xt_lbolt
+xt_op_emul
+XTSSADDR
+EOF
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+else
+
+fgrep \
+'xt_vflptr
+xt_magictrap
+xt_magicstat
+xt_intr_pin
+xt_timer_count
+xt_timer_bound
+xt_imaskbits
+xt_lbolt
+xt_op_emul
+XTSSADDR
+' $$.1.s >>$$.2.s
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+fi
+fi
+
+# convert symbol value definitions into assembler .set pseudo ops
+
+
+if [ x$CCSTYPE != xELF ]
+then
+# Watch out for the tabs below:
+sed -e 's|[ 	][ 	]*| |g
+        s| *\.def *\([a-zA-Z0-9_.]*\); *\.val *\([0-9]*\).*|	.set	\1,\2|' \
+$$.2.s >symvals.s
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+fi
+
+fgrep \
+'BKI_MAGIC
+BOOTINFO_LOC
+CPPTSHIFT
+FPESEL
+FP_NO
+FP_287
+FP_387
+FP_SW
+GDTSZ
+IDTSZ
+JTSSSEL
+KDSSEL
+KPTBL_LOC
+KSTKSZ
+KTSSSEL
+KVBASE
+KVXBASE
+KVSBASE
+LDTSEL
+MAXUSIZE
+MAXUVADR
+MINUVADR
+MONIDTSZ
+NCPPT
+PF_RDONLY
+PG_ADDR
+PG_P
+PG_M
+PG_REF
+PG_RW
+PG_US
+PINOD
+PNUMSHFT
+PT_STACK
+PTNUMSHFT
+PTOFFMASK
+USER_CS
+USER_DS
+USER_SCALL
+UB_XSDSWTCH
+UVBASE
+UVTEXT
+WEITEK_HW
+WEITEK_SW
+WEITEK_NO
+XMEM_BIT
+XTSSSEL
+#if
+#e
+' ${INCRT:-..}/sys/bootinfo.h ${INCRT:-..}/sys/fp.h ${INCRT:-..}/sys/immu.h ${INCRT:-..}/sys/fs/s5inode.h ${INCRT:-..}/sys/param.h ${INCRT:-..}/sys/seg.h ${INCRT:-..}/sys/user.h ${INCRT:-..}/sys/weitek.h >$$.3.h
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+sed -n	-e 's/^.*://
+	    s/((unsigned)\([0-9A-FLXa-flx]*\))/\1/
+	    s/((paddr_t)\([0-9A-FLXa-flx]*\))/\1/
+	    s/\([ 	]\{1,\}[0-9A-FXa-fx]\{1,\}\)[Ll]/\1/
+	     /^#if/p
+	     /^#e/p
+	     /^#define/p' \
+$$.3.h >symvals.h
+
+case $? in
+  0)    : ;;
+  *)    exit 1 ;;
+esac
+
+rm -fr $$.*

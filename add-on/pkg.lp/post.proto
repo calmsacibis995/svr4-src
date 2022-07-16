@@ -1,0 +1,246 @@
+#ident	"@(#)pkg.lp:pkg.lp/post.proto	1.1"
+
+
+##########
+#
+# Use path=$T/path syntax to allow source to be relocated
+# to a different place. Useful for testing the packaging!
+##########
+
+
+!POSTSCRIPT=$USRLIB/lp/postscript
+!FONTDIR=$USRLIB/font
+!TERMINFO=$USR/share/lib/terminfo
+!T=/
+
+
+##########
+##
+## PostScript support-directories, files, filters, filter-table entries.
+##
+##########
+
+
+#####
+#
+# PostScript filters and PostScript source
+#####
+
+!default 775 lp lp
+
+d post $POSTSCRIPT=$T/$POSTSCRIPT
+
+f post $POSTSCRIPT/download=$T/$POSTSCRIPT/download
+f post $POSTSCRIPT/dpost=$T/$POSTSCRIPT/dpost
+f post $POSTSCRIPT/picpack=$T/$POSTSCRIPT/picpack
+f post $POSTSCRIPT/postdaisy=$T/$POSTSCRIPT/postdaisy
+f post $POSTSCRIPT/postdmd=$T/$POSTSCRIPT/postdmd
+f post $POSTSCRIPT/postio=$T/$POSTSCRIPT/postio
+f post $POSTSCRIPT/postmd=$T/$POSTSCRIPT/postmd
+f post $POSTSCRIPT/postplot=$T/$POSTSCRIPT/postplot
+f post $POSTSCRIPT/postprint=$T/$POSTSCRIPT/postprint
+f post $POSTSCRIPT/postreverse=$T/$POSTSCRIPT/postreverse
+f post $POSTSCRIPT/posttek=$T/$POSTSCRIPT/posttek
+
+!default 664 lp lp
+
+f post $POSTSCRIPT/aps.ps=$T/$POSTSCRIPT/aps.ps
+f post $POSTSCRIPT/banner.ps=$T/$POSTSCRIPT/banner.ps
+f post $POSTSCRIPT/baseline.ps=$T/$POSTSCRIPT/baseline.ps
+f post $POSTSCRIPT/color.ps=$T/$POSTSCRIPT/color.ps
+f post $POSTSCRIPT/dpost.ps=$T/$POSTSCRIPT/dpost.ps
+f post $POSTSCRIPT/draw.ps=$T/$POSTSCRIPT/draw.ps
+f post $POSTSCRIPT/fatcourier.ps=$T/$POSTSCRIPT/fatcourier.ps
+f post $POSTSCRIPT/forms.ps=$T/$POSTSCRIPT/forms.ps
+f post $POSTSCRIPT/postdaisy.ps=$T/$POSTSCRIPT/postdaisy.ps
+f post $POSTSCRIPT/postdmd.ps=$T/$POSTSCRIPT/postdmd.ps
+f post $POSTSCRIPT/postmd.ps=$T/$POSTSCRIPT/postmd.ps
+f post $POSTSCRIPT/postplot.ps=$T/$POSTSCRIPT/postplot.ps
+f post $POSTSCRIPT/postprint.ps=$T/$POSTSCRIPT/postprint.ps
+f post $POSTSCRIPT/posttek.ps=$T/$POSTSCRIPT/posttek.ps
+f post $POSTSCRIPT/ps.requests=$T/$POSTSCRIPT/ps.requests
+f post $POSTSCRIPT/roundpage.ps=$T/$POSTSCRIPT/roundpage.ps
+
+
+#####
+#
+# PostScript filter-table entries
+#
+# Note: These are temporary files, to be ``compiled'' into the
+# single filter.table file by lpfilter.
+#####
+
+!default 664 lp lp
+
+f post $ETC/lp/fd/download.fd=$T/$ETC/lp/fd/download.fd
+f post $ETC/lp/fd/dpost.fd=$T/$ETC/lp/fd/dpost.fd
+f post $ETC/lp/fd/postdaisy.fd=$T/$ETC/lp/fd/postdaisy.fd
+f post $ETC/lp/fd/postdmd.fd=$T/$ETC/lp/fd/postdmd.fd
+f post $ETC/lp/fd/postio.fd=$T/$ETC/lp/fd/postio.fd
+f post $ETC/lp/fd/postior.fd=$T/$ETC/lp/fd/postior.fd
+f post $ETC/lp/fd/postmd.fd=$T/$ETC/lp/fd/postmd.fd
+f post $ETC/lp/fd/postplot.fd=$T/$ETC/lp/fd/postplot.fd
+f post $ETC/lp/fd/postprint.fd=$T/$ETC/lp/fd/postprint.fd
+f post $ETC/lp/fd/postreverse.fd=$T/$ETC/lp/fd/postreverse.fd
+f post $ETC/lp/fd/posttek.fd=$T/$ETC/lp/fd/posttek.fd
+
+
+#####
+#
+# PostScript font width tables for troff
+#####
+
+!default 775 lp lp
+
+d post $FONTDIR=$T/$FONTDIR
+f post $FONTDIR/makedev=$T/$FONTDIR/makedev
+d post $FONTDIR/devpost=$T/$FONTDIR/devpost
+f post $FONTDIR/devpost/LINKFILE=$T/$FONTDIR/devpost/LINKFILE
+
+!default 664 lp lp
+
+f post $FONTDIR/devpost/AB.name=$T/$FONTDIR/devpost/AB.name
+f post $FONTDIR/devpost/AI.name=$T/$FONTDIR/devpost/AI.name
+f post $FONTDIR/devpost/AR.name=$T/$FONTDIR/devpost/AR.name
+f post $FONTDIR/devpost/AX.name=$T/$FONTDIR/devpost/AX.name
+f post $FONTDIR/devpost/B.name=$T/$FONTDIR/devpost/B.name
+f post $FONTDIR/devpost/BI.name=$T/$FONTDIR/devpost/BI.name
+f post $FONTDIR/devpost/CB.name=$T/$FONTDIR/devpost/CB.name
+f post $FONTDIR/devpost/CI.name=$T/$FONTDIR/devpost/CI.name
+f post $FONTDIR/devpost/CO.name=$T/$FONTDIR/devpost/CO.name
+f post $FONTDIR/devpost/CW.name=$T/$FONTDIR/devpost/CW.name
+f post $FONTDIR/devpost/CX.name=$T/$FONTDIR/devpost/CX.name
+f post $FONTDIR/devpost/GR.name=$T/$FONTDIR/devpost/GR.name
+f post $FONTDIR/devpost/H.name=$T/$FONTDIR/devpost/H.name
+f post $FONTDIR/devpost/HB.name=$T/$FONTDIR/devpost/HB.name
+f post $FONTDIR/devpost/HI.name=$T/$FONTDIR/devpost/HI.name
+f post $FONTDIR/devpost/HX.name=$T/$FONTDIR/devpost/HX.name
+f post $FONTDIR/devpost/Hb.name=$T/$FONTDIR/devpost/Hb.name
+f post $FONTDIR/devpost/Hi.name=$T/$FONTDIR/devpost/Hi.name
+f post $FONTDIR/devpost/Hr.name=$T/$FONTDIR/devpost/Hr.name
+f post $FONTDIR/devpost/Hx.name=$T/$FONTDIR/devpost/Hx.name
+f post $FONTDIR/devpost/I.name=$T/$FONTDIR/devpost/I.name
+f post $FONTDIR/devpost/KB.name=$T/$FONTDIR/devpost/KB.name
+f post $FONTDIR/devpost/KI.name=$T/$FONTDIR/devpost/KI.name
+f post $FONTDIR/devpost/KR.name=$T/$FONTDIR/devpost/KR.name
+f post $FONTDIR/devpost/KX.name=$T/$FONTDIR/devpost/KX.name
+f post $FONTDIR/devpost/NB.name=$T/$FONTDIR/devpost/NB.name
+f post $FONTDIR/devpost/NI.name=$T/$FONTDIR/devpost/NI.name
+f post $FONTDIR/devpost/NR.name=$T/$FONTDIR/devpost/NR.name
+f post $FONTDIR/devpost/NX.name=$T/$FONTDIR/devpost/NX.name
+f post $FONTDIR/devpost/PA.name=$T/$FONTDIR/devpost/PA.name
+f post $FONTDIR/devpost/PB.name=$T/$FONTDIR/devpost/PB.name
+f post $FONTDIR/devpost/PI.name=$T/$FONTDIR/devpost/PI.name
+f post $FONTDIR/devpost/PX.name=$T/$FONTDIR/devpost/PX.name
+f post $FONTDIR/devpost/R.name=$T/$FONTDIR/devpost/R.name
+f post $FONTDIR/devpost/S.name=$T/$FONTDIR/devpost/S.name
+f post $FONTDIR/devpost/S1.name=$T/$FONTDIR/devpost/S1.name
+f post $FONTDIR/devpost/VB.name=$T/$FONTDIR/devpost/VB.name
+f post $FONTDIR/devpost/VI.name=$T/$FONTDIR/devpost/VI.name
+f post $FONTDIR/devpost/VR.name=$T/$FONTDIR/devpost/VR.name
+f post $FONTDIR/devpost/VX.name=$T/$FONTDIR/devpost/VX.name
+f post $FONTDIR/devpost/ZD.name=$T/$FONTDIR/devpost/ZD.name
+f post $FONTDIR/devpost/ZI.name=$T/$FONTDIR/devpost/ZI.name
+
+f post $FONTDIR/devpost/DESC=$T/$FONTDIR/devpost/DESC
+
+f post $FONTDIR/devpost/AB=$T/$FONTDIR/devpost/AB
+f post $FONTDIR/devpost/AI=$T/$FONTDIR/devpost/AI
+f post $FONTDIR/devpost/AR=$T/$FONTDIR/devpost/AR
+f post $FONTDIR/devpost/AX=$T/$FONTDIR/devpost/AX
+f post $FONTDIR/devpost/B=$T/$FONTDIR/devpost/B
+f post $FONTDIR/devpost/BI=$T/$FONTDIR/devpost/BI
+f post $FONTDIR/devpost/CB=$T/$FONTDIR/devpost/CB
+f post $FONTDIR/devpost/CI=$T/$FONTDIR/devpost/CI
+f post $FONTDIR/devpost/CO=$T/$FONTDIR/devpost/CO
+f post $FONTDIR/devpost/CW=$T/$FONTDIR/devpost/CW
+f post $FONTDIR/devpost/CX=$T/$FONTDIR/devpost/CX
+f post $FONTDIR/devpost/GR=$T/$FONTDIR/devpost/GR
+f post $FONTDIR/devpost/H=$T/$FONTDIR/devpost/H
+f post $FONTDIR/devpost/HB=$T/$FONTDIR/devpost/HB
+f post $FONTDIR/devpost/HI=$T/$FONTDIR/devpost/HI
+f post $FONTDIR/devpost/HX=$T/$FONTDIR/devpost/HX
+f post $FONTDIR/devpost/Hb=$T/$FONTDIR/devpost/Hb
+f post $FONTDIR/devpost/Hi=$T/$FONTDIR/devpost/Hi
+f post $FONTDIR/devpost/Hr=$T/$FONTDIR/devpost/Hr
+f post $FONTDIR/devpost/Hx=$T/$FONTDIR/devpost/Hx
+f post $FONTDIR/devpost/I=$T/$FONTDIR/devpost/I
+f post $FONTDIR/devpost/KB=$T/$FONTDIR/devpost/KB
+f post $FONTDIR/devpost/KI=$T/$FONTDIR/devpost/KI
+f post $FONTDIR/devpost/KR=$T/$FONTDIR/devpost/KR
+f post $FONTDIR/devpost/KX=$T/$FONTDIR/devpost/KX
+f post $FONTDIR/devpost/NB=$T/$FONTDIR/devpost/NB
+f post $FONTDIR/devpost/NI=$T/$FONTDIR/devpost/NI
+f post $FONTDIR/devpost/NR=$T/$FONTDIR/devpost/NR
+f post $FONTDIR/devpost/NX=$T/$FONTDIR/devpost/NX
+f post $FONTDIR/devpost/PA=$T/$FONTDIR/devpost/PA
+f post $FONTDIR/devpost/PB=$T/$FONTDIR/devpost/PB
+f post $FONTDIR/devpost/PI=$T/$FONTDIR/devpost/PI
+f post $FONTDIR/devpost/PX=$T/$FONTDIR/devpost/PX
+f post $FONTDIR/devpost/R=$T/$FONTDIR/devpost/R
+f post $FONTDIR/devpost/S=$T/$FONTDIR/devpost/S
+f post $FONTDIR/devpost/S1=$T/$FONTDIR/devpost/S1
+f post $FONTDIR/devpost/VB=$T/$FONTDIR/devpost/VB
+f post $FONTDIR/devpost/VI=$T/$FONTDIR/devpost/VI
+f post $FONTDIR/devpost/VR=$T/$FONTDIR/devpost/VR
+f post $FONTDIR/devpost/VX=$T/$FONTDIR/devpost/VX
+f post $FONTDIR/devpost/ZD=$T/$FONTDIR/devpost/ZD
+f post $FONTDIR/devpost/ZI=$T/$FONTDIR/devpost/ZI
+
+
+#####
+#
+# PostScript programs for creating unusual (troff) characters
+#####
+
+!default 775 lp lp
+
+d post $FONTDIR/devpost/charlib=$T/$FONTDIR/devpost/charlib
+
+!default 664 lp lp
+
+f post $FONTDIR/devpost/charlib/12=$T/$FONTDIR/devpost/charlib/12
+f post $FONTDIR/devpost/charlib/14=$T/$FONTDIR/devpost/charlib/14
+f post $FONTDIR/devpost/charlib/34=$T/$FONTDIR/devpost/charlib/34
+f post $FONTDIR/devpost/charlib/BRACKETS_NOTE=$T/$FONTDIR/devpost/charlib/BRACKETS_NOTE
+f post $FONTDIR/devpost/charlib/Fi=$T/$FONTDIR/devpost/charlib/Fi
+f post $FONTDIR/devpost/charlib/Fl=$T/$FONTDIR/devpost/charlib/Fl
+f post $FONTDIR/devpost/charlib/L1=$T/$FONTDIR/devpost/charlib/L1
+f post $FONTDIR/devpost/charlib/L1.map=$T/$FONTDIR/devpost/charlib/L1.map
+f post $FONTDIR/devpost/charlib/LH=$T/$FONTDIR/devpost/charlib/LH
+f post $FONTDIR/devpost/charlib/LH.map=$T/$FONTDIR/devpost/charlib/LH.map
+f post $FONTDIR/devpost/charlib/Lb=$T/$FONTDIR/devpost/charlib/Lb
+f post $FONTDIR/devpost/charlib/Lb.map=$T/$FONTDIR/devpost/charlib/Lb.map
+f post $FONTDIR/devpost/charlib/OLD_LH=$T/$FONTDIR/devpost/charlib/OLD_LH
+f post $FONTDIR/devpost/charlib/OLD_LH.map=$T/$FONTDIR/devpost/charlib/OLD_LH.map
+f post $FONTDIR/devpost/charlib/README=$T/$FONTDIR/devpost/charlib/README
+f post $FONTDIR/devpost/charlib/Sl=$T/$FONTDIR/devpost/charlib/Sl
+f post $FONTDIR/devpost/charlib/bx=$T/$FONTDIR/devpost/charlib/bx
+f post $FONTDIR/devpost/charlib/ci=$T/$FONTDIR/devpost/charlib/ci
+f post $FONTDIR/devpost/charlib/ff=$T/$FONTDIR/devpost/charlib/ff
+f post $FONTDIR/devpost/charlib/lc=$T/$FONTDIR/devpost/charlib/lc
+f post $FONTDIR/devpost/charlib/lf=$T/$FONTDIR/devpost/charlib/lf
+f post $FONTDIR/devpost/charlib/lh=$T/$FONTDIR/devpost/charlib/lh
+f post $FONTDIR/devpost/charlib/ob=$T/$FONTDIR/devpost/charlib/ob
+f post $FONTDIR/devpost/charlib/rc=$T/$FONTDIR/devpost/charlib/rc
+f post $FONTDIR/devpost/charlib/rf=$T/$FONTDIR/devpost/charlib/rf
+f post $FONTDIR/devpost/charlib/rh=$T/$FONTDIR/devpost/charlib/rh
+f post $FONTDIR/devpost/charlib/sq=$T/$FONTDIR/devpost/charlib/sq
+#
+# Stupid prototype-file parser...we have to play games to get
+# this filename correct...check out postinstall.
+f post $FONTDIR/devpost/charlib/~=$T/$FONTDIR/devpost/charlib/~=
+
+
+#####
+#
+# Special Terminfo files for PostScript support
+#####
+
+d post $USR/share ? ? ?
+d post $USR/share/lib ? ? ?
+d post $TERMINFO ? ? ?
+
+d post $TERMINFO/P=$T/$TERMINFO/P 755 root other
+f post $TERMINFO/P/PS=$T/$TERMINFO/P/PS 664 lp lp
+f post $TERMINFO/P/PSR=$T/$TERMINFO/P/PSR 664 lp lp

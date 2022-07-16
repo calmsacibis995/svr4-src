@@ -1,0 +1,89 @@
+#ident	"@(#)mb1:proto/i386/Plists/Plist.MB1.dev	1.2.1.1"
+#
+# the console
+#
+600	root	sys	dev/console	c	1	0
+600	root	sys	dev/sysmsg	c	19	0
+600	root	sys	dev/syscon	c	1	0
+600	root	sys	dev/systty	l	dev/syscon
+#
+# real time clock
+#
+600	root	sys	dev/rtc	c	23	0
+600	root	sys	dev/clock	l	dev/rtc
+#
+# bps device
+#
+666	root	sys	dev/bps	c	30	0
+#
+# swap device
+#
+666	root	sys	dev/swap	c	0	2
+#
+# tape devices
+#
+666	root	sys	dev/rmt/c0s0	c	3	124
+666	root	sys	dev/rmt/c0s0n	c	3	125
+666	root	sys	dev/rmt0	l	dev/rmt/c0s0
+666	root	sys	dev/rmt/c0s0r	l	dev/rmt/c0s0
+666	root	sys	dev/rnmt0	l	dev/rmt/c0s0n
+666	root	sys	dev/rmt/c0s0nr	l	dev/rmt/c0s0n
+#
+# floppy devices block
+#
+666	root	sys	dev/dsk/f05d16t	b	0	64
+666	root	sys	dev/dsk/f05d16	b	0	65
+666	root	sys	dev/dsk/f05d8t	b	0	67
+666	root	sys	dev/dsk/f05d8u	b	0	68
+666	root	sys	dev/dsk/f05d8	b	0	69
+666	root	sys	dev/dsk/f05d4t	b	0	70
+666	root	sys	dev/dsk/f05d4	b	0	71
+666	root	sys	dev/dsk/f05d9t	b	0	72
+666	root	sys	dev/dsk/f05d9	b	0	73
+666	root	sys	dev/dsk/f05qt	b	0	74
+666	root	sys	dev/dsk/f05q	b	0	75
+666	root	sys	dev/dsk/f05ht	b	0	76
+666	root	sys	dev/dsk/f05h	b	0	77
+666	root	sys	dev/dsk/f05hb	b	0	78
+666	root	sys	dev/dsk/f0d8d	l	dev/dsk/f05d8
+666	root	sys	dev/dsk/f0d8dt	l	dev/dsk/f05d8t
+666	root	sys	dev/dsk/f0d9d	l	dev/dsk/f05d9
+666	root	sys	dev/dsk/f0d9dt	l	dev/dsk/f05d9t
+666	root	sys	dev/fd048ds9	l	dev/dsk/f05d9t
+666	root	sys	dev/fd048	l	dev/dsk/f05d9t
+666	root	sys	dev/dsk/f0q15d	l	dev/dsk/f05h
+666	root	sys	dev/dsk/f0q15dt	l	dev/dsk/f05ht
+666	root	sys	dev/dsk/f0	l	dev/dsk/f05h
+666	root	sys	dev/dsk/f0t	l	dev/dsk/f05ht
+666	root	sys	dev/install	l	dev/dsk/f05h
+#
+# floppy devices character
+#
+666	root	sys	dev/rdsk/f05d16t	c	0	64
+666	root	sys	dev/rdsk/f05d16	c	0	65
+666	root	sys	dev/rdsk/f05d8t	c	0	67
+666	root	sys	dev/rdsk/f05d8u	c	0	68
+666	root	sys	dev/rdsk/f05d8	c	0	69
+666	root	sys	dev/rdsk/f05d4t	c	0	70
+666	root	sys	dev/rdsk/f05d4	c	0	71
+666	root	sys	dev/rdsk/f05d9t	c	0	72
+666	root	sys	dev/rdsk/f05d9	c	0	73
+666	root	sys	dev/rdsk/f05qt	c	0	74
+666	root	sys	dev/rdsk/f05q	c	0	75
+666	root	sys	dev/rdsk/f05ht	c	0	76
+666	root	sys	dev/rdsk/f05h	c	0	77
+666	root	sys	dev/rdsk/f05hb	c	0	78
+666	root	sys	dev/rdsk/f0d8d	l	dev/rdsk/f05d8
+666	root	sys	dev/rdsk/f0d8dt	l	dev/rdsk/f05d8t
+666	root	sys	dev/rdsk/f0d9d	l	dev/rdsk/f05d9
+666	root	sys	dev/rdsk/f0d9dt	l	dev/rdsk/f05d9t
+666	root	sys	dev/rfd048ds9	l	dev/rdsk/f05d9t
+666	root	sys	dev/rfd048	l	dev/rdsk/f05d9t
+666	root	sys	dev/rdsk/f0q15d	l	dev/rdsk/f05h
+666	root	sys	dev/rdsk/f0q15dt	l	dev/rdsk/f05ht
+666	root	sys	dev/rdsk/f0	l	dev/rdsk/f05h
+666	root	sys	dev/rdsk/f0t	l	dev/rdsk/f05ht
+666	root	sys	dev/rinstall	l	dev/rdsk/f05h
+#
+# tty's are done via setup and rc init functions
+#

@@ -1,0 +1,14 @@
+:
+
+#	Copyright (c) 1987, 1988 Microsoft Corporation
+#	  All Rights Reserved
+
+#	This Module contains Proprietary Information of Microsoft
+#	Corporation and should be treated as Confidential.
+
+#ident	"@(#)boot:boot/at386/tool/doitfd	1.1.1.1"
+
+echo "Hit return to copy boot:\c"
+read response
+set -x
+dd if=$1 of=/dev/dsk/f0q15dt bs=512

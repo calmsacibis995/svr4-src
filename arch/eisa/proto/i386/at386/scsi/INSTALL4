@@ -1,0 +1,164 @@
+#ident	"@(#)eisa:proto/i386/at386/scsi/INSTALL4	1.1"
+
+# The generic INSTALL4.  Prompt for add-ons and rebuild kernel.
+
+PATH=/sbin:/etc:/usr/sbin:/usr/bin
+export PATH
+
+idoops() {
+if [ $# -ne 1 ]; then
+	return 1
+fi
+if [ -d /etc/conf/sdevice.old ]
+then
+cd /etc/conf/sdevice.old
+for i in *
+do
+if [ -f ../sdevice.d/$i ]
+then rm -f $i
+fi
+done
+mv * ../sdevice.d > /dev/null 2>&1
+cd /
+rm -rf /etc/conf/sdevice.old
+fi
+
+if [ -d /etc/conf/mfsys.old ]
+then
+cd /etc/conf/mfsys.old
+for i in *
+do
+if [ -f ../mfsys.d/$i ]
+then rm -f $i
+fi
+done
+mv * ../mfsys.d > /dev/null 2>&1
+cd /
+rm -rf /etc/conf/mfsys.old
+fi
+
+if [ -d /etc/conf/sfsys.old ]
+then
+cd /etc/conf/sfsys.old
+for i in *
+do
+if [ -f ../sfsys.d/$i ]
+then rm -f $i
+fi
+done
+mv * ../sfsys.d > /dev/null 2>&1
+cd /
+rm -rf /etc/conf/sfsys.old
+fi
+
+if [ $1 -ne 0 ]
+then
+/usr/bin/message "The rebuilding of the UNIX Operating System kernel failed.  \
+Please remove some driver packages."
+fi
+return 0
+}
+
+if [ -x /etc/initial ]
+then
+/etc/initial
+fi
+
+mkdir -p /usr/lib/tape > /dev/null 2>&1
+
+if [ ! -f /etc/conf/bin/S.idreboot ]
+then
+mv /etc/conf/bin/idreboot /etc/conf/bin/S.idreboot
+fi
+if [ ! -f /etc/conf/bin/S.idbuild ]
+then
+mv /etc/conf/bin/idbuild /etc/conf/bin/S.idbuild
+fi
+cp /bin/true /etc/conf/bin/idreboot
+ln /etc/conf/bin/idreboot /etc/conf/bin/idbuild > /dev/null 2>&1
+chmod 755 /etc/conf/bin/idreboot
+if [ -f /tmp/tape.count ]
+then
+mkdir -p /usr/lib/scsi /usr/lib/tape > /dev/null 2>&1
+mv /sbin/tapecntl /usr/lib/tape/tapecntl
+rm -rf /usr/sbin/tapecntl /sbin/tapecntl
+VMSYS=/usr/vmsys; export VMSYS
+echo "ctape1:/dev/rmt/c0s0:::desc=\"Cartridge Tape Drive\" norewind=\"/dev/rmt/c0s0n\" \
+type=\"ctape\" display=\"true\" volume=\"cartridge tape\" bufsize=\"10240\" capacity=\"120000\"" >> /etc/device.tab
+sync
+/usr/sbin/pkgadd -d ctape1
+( < /dev/rmt/c0s0 ) > /dev/null 2>&1
+grep -v "^ctape1" /etc/device.tab > /etc/DEV
+cat /etc/DEV > /etc/device.tab
+rm -f /etc/DEV
+fi
+
+#remove all references to the non-scsi hard disk.
+sed -e '/^hd	/d' /etc/conf/cf.d/mdevice > /tmpdev
+cat /tmpdev > /etc/conf/cf.d/mdevice
+rm -rf  /etc/conf/pack.d/hd /etc/conf/sdevice.d/hd /etc/conf/sdevice.old/hd
+sed -e 's/	hd	/	sd01	/g' /etc/conf/cf.d/sassign > /tmpdev
+cat /tmpdev > /etc/conf/cf.d/sassign
+rm -f /tmpdev
+
+cd /usr/src/pkg
+ln -s scsi.in.src/scsi scsi
+cd scsi
+sed -e 's/INT	IOA	IOE/11	0	0/g' System > S
+sed -e 's/0	0	1	2	DMA/0	4	1	2	-1/g' Master > M 
+cat S > System
+cat M > Master
+rm -f M S
+cd ../..
+
+ln -s scsi.in.src/st01 st01
+cd st01
+sed -e 's/0	0	0/0	10	0/g' Master > M
+cat M > Master
+rm -f M 
+cd ../..
+
+ln -s scsi.src/sd01 sd01
+cd sd01
+sed -e 's/0-6	0-6	0/35-41	35-41	0/g' Master > M
+cat M > Master
+rm -f M 
+cd ../..
+
+ln -s scsi.in.src/sc01 sc01 > /dev/null 2>&1
+ln -s scsi.in.src/sw01 sw01 > /dev/null 2>&1
+cp scsi.in.src/sys/* /usr/include/sys > /dev/null 2>&1
+cp scsi.src/sys/* /usr/include/sys > /dev/null 2>&1
+mv scsi.src/sd01/space.c scsi.src/sd01/Space.c > /dev/null 2>&1
+mv scsi.src/scsi/space.c scsi.src/scsi/Space.c > /dev/null 2>&1
+
+for i in sd01 scsi st01 sc01 sw01
+do
+cd $i
+/etc/conf/bin/idinstall -a $i
+cd ../..
+done
+
+rm /etc/conf/bin/idbuild
+mv /etc/conf/bin/S.idbuild /etc/conf/bin/idbuild
+
+message -d "Installation of the Foundation Set is now complete.\n\n\
+Your UNIX Operating System kernel will now be rebuilt.\n"
+
+/etc/conf/bin/idbuild -DEVC
+idoops $?
+
+cd /usr/src/pkg/scsi.in
+rm -f /etc/scsi/scsiformat
+cp scsiformat sc01qa sw01qa /etc/scsi > /dev/null 2>&1
+sync
+
+if  [ -f /tmp/tape.count ]
+then echo "It is safe to remove the cartridge tape."
+fi
+
+cd /
+rm -rf /usr/src/pkg
+mv /etc/conf/bin/S.idreboot /etc/conf/bin/idreboot
+sync
+rm -rf /etc/initial

@@ -1,0 +1,79 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/loopback/bin/loopback.serv	1.1"
+#
+#	Echo "1" if the name already exists (make sure the comments
+#	are stripped out of services files first)....
+#
+
+ticots=`cat /etc/net/ticots/services 2>/dev/null | sed 's/#.*$//' |
+       egrep "^$1[ 	]"`
+
+ticlts=`cat /etc/net/ticlts/services 2>/dev/null | sed 's/#.*$//' |
+       egrep "^$1[ 	]"`
+
+ticotsord=`cat /etc/net/ticotsord/services 2>/dev/null | sed 's/#.*$//' |
+       egrep "^$1[ 	]"`
+
+if [ "$ticots" != "" -a "$ticotsord" != "" -a "$ticlts" != "" ]
+then
+	echo 1
+	exit
+fi
+
+#
+#	Check to make sure no spaces or dots are in the port string
+#
+
+ret=`echo $1 | awk 'BEGIN       { error = 0 }
+		    NF != 1	{ error = 1 }
+		    /\./	{ error = 1 }
+		    END         { print error }'`
+
+if [ $ret -eq 1 ]
+then
+	echo 2
+	exit
+fi
+
+#
+#	Put entry in /etc/net/ticots/services, etc/net/ticlts/services,
+#	and /etc/net/ticotsord/services
+#
+
+mkdir /etc/net /etc/net/ticots /etc/net/ticotsord /etc/net/ticlts >/dev/null 2>&1
+
+if [ "$ticots" = "" ]
+then
+	echo "$1	$1" >>/etc/net/ticots/services
+fi
+
+if [ "$ticlts" = "" ]
+then
+	echo "$1	$1" >>/etc/net/ticlts/services
+fi
+
+if [ "$ticotsord" = "" ]
+then
+	echo "$1	$1" >>/etc/net/ticotsord/services
+fi
+
+if [ "$ticots" = "" -a "$ticotsord" = "" -a "$ticlts" = "" ]
+then
+	echo 0
+elif [ "$ticots" = "" -a "$ticotsord" = "" ]
+then
+	echo 3
+elif [ "$ticots" = "" -a "$ticlts" = "" ]
+then
+	echo 4
+elif [ "$ticlts" = "" -a "$ticotsord" = "" ]
+then
+	echo 5
+elif [ "$ticlts" = "" ]
+then
+	echo 6
+elif [ "$ticots" = "" ]
+then
+	echo 7
+else
+	echo 8
+fi

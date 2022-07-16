@@ -1,0 +1,117 @@
+/dev/null
+2370 128
+d--775 0 3
+unix ---744 0 1 unix
+INSTALL ---555 2 2 INSTALL
+INSTALL2 ---555 2 2 INSTALL2
+.profile ---555 2 2 profile
+LABEL ---644 2 2 LABEL
+readfloppy ---755 2 2 readfloppy
+bin	d--755 2 2
+	chmod   ---555 2 2 chmod
+	chgrp	---555 2 2 chgrp
+	chown	---555 2 2 chown
+	find    ---555 2 2 find
+	stty    ---555 2 2 stty
+	cpio    ---555 2 2 cpio
+	mkdir   ---555 2 2 mkdir
+	sync    ---555 2 2 sync
+	mv	---555 2 2 mv
+	sh      ---555 2 2 sh
+	expr    ---555 2 2 expr
+	rm      ---555 2 2 rm
+	ed	---555 2 2 ed
+	dd	---555 2 2 dd
+	sleep	---555 2 2 sleep
+	$
+dev	d--775 0 3
+	console	c--622 0 3 5 0
+	dsk	d--775 0 0
+		0s0	b--600 0 3 0 0
+		0s1	b--600 0 3 0 1
+		0s2	b--600 0 3 0 2
+		0s3	b--600 0 3 0 3
+		0s4     b--600 0 3 0 4
+		1s0	b--600 0 3 0 16
+		1s1	b--600 0 3 0 17
+		1s2	b--600 0 3 0 18
+		1s3	b--600 0 3 0 19
+		1s4     b--600 0 3 0 20
+		f0q15d  b--666 0 3 1 4
+		f0q15dt b--666 0 3 1 0
+		f0	b--666 0 3 1 132
+		f0t	b--666 0 3 1 128
+		$
+	mem	c--440 3 3 2 0
+	pmem	c--640 0 3 2 3
+	null	c--666 0 3 2 2
+	rdsk	d--775 0 0
+		0s0	c--600 0 3 0 0
+		0s1	c--600 0 3 0 1
+		0s2	c--600 0 3 0 2
+		0s3	c--600 0 3 0 3
+		0s4     c--600 0 3 0 4
+		1s0	c--600 0 3 0 16
+		1s1	c--600 0 3 0 17
+		1s2	c--600 0 3 0 18
+		1s3	c--600 0 3 0 19
+		1s4     c--600 0 3 0 20
+		f0q15d  c--666 0 3 1 4
+		f0q15dt c--666 0 3 1 0
+		f0	c--666 0 3 1 132
+		f0t	c--666 0 3 1 128
+		$
+	syscon	c--622 2 2 5 0
+	systty	c--622 2 2 5 0
+	swap	b--640 0 3 0 2
+	tty	c--666 2 2 16 0
+	vt00	c--666 0 3 5 0
+	vt01	c--666 0 3 5 1
+	vt02	c--666 0 3 5 2
+	vt03	c--666 0 3 5 3
+	vt04	c--666 0 3 5 4
+	vt05	c--666 0 3 5 5
+	vt06	c--666 0 3 5 6
+	vt07	c--666 0 3 5 7
+	vtmon	c--666 0 3 30 15
+	$
+etc	d--755 2 2
+	boot    ---444 2 2 boot
+	default	d--755 2 2
+		default.att	---444 0 3 default.att
+		default.att512	---444 0 3 default.att512
+		default.cpq	---444 0 3 default.cpq
+		default.at386	---444 0 3 default.at386
+	$
+	initprog d--755 2 2
+		att	---444 0 3 att
+		compaq	---444 0 3 compaq
+		at386	---444 0 3 at386
+	$
+	group   ---644 0 3 group
+	init    ---555 0 2 init
+	fdisk    ---755 2 2 fdisk
+	inittab ---644 0 3 inittab
+	inittab2 ---644 0 3 inittab2
+	ioctl.syscon ---444 2 2 ioctl.syscon
+	mkfs    ---555 2 2 mkfs
+	memsize	---544 0 2 memsize
+	machine_type ---544 0 2 machine_type
+	mount ---755 2 2 mount
+	umount ---555 2 2 umount
+	uadmin ---755 2 2 uadmin
+	mkpart ---755 2 2 mkpart
+	disksetup ---555 2 2 disksetup
+	passwd  ---444 0 3 passwd
+	labelit ---555 2 2 labelit
+	fsck    ---555 2 2 fsck
+	TIMEZONE ---444 0 3 TIMEZONE
+	fixswap ---555 2 2 fixswap
+	mknod	---555 2 2 mknod
+	emulator ---744 2 2 emulator
+	$
+mnt	d--777 2 2
+	$
+tmp	d--777 2 2
+	$
+$

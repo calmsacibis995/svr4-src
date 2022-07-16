@@ -1,0 +1,33 @@
+#ident	"@(#)/usr/src/add-on/pkg.kdbu/preremove.sl 1.1 4.0 12/08/90 38903 AT&T-USL"
+
+FAILURE=1	# fatal error
+
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+
+exitstat=0
+
+for MODULE in kdb-util
+do
+	${CONFBIN}/idcheck -p ${MODULE}
+	RES="$?"
+	if
+		[ "${RES}" -ne "100" -a "${RES}" -ne "0" ]
+	then
+		echo "Removing ${NAME} ${MODULE} module ..."
+		${CONFBIN}/idinstall -d ${MODULE}
+
+		# Rebuild kernel for changes to take effect
+
+		${CONFBIN}/idbuild
+		if
+			[ "$?" -ne "0" ]
+		then
+			exit ${FAILURE}
+		else
+			exitstat=10
+		fi
+	fi
+done
+
+exit ${exitstat}

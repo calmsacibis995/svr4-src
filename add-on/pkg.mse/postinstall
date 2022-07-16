@@ -1,0 +1,380 @@
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+#ident	"@(#)/usr/src/add-on/pkg.mse/postinstall.sl 1.1 4.0 12/08/90 46606 AT&T-USL"
+
+FAILURE=1	# fatal error
+
+BINDIR=/usr/bin
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be installed."
+
+TMP=/tmp/mouse.err
+PACK=${CONFDIF}/pack.d
+ERROR1=" Errors have been written to the file $TMP."
+ESC=
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed.\
+The ${NAME} cannot be installed."
+
+BASE1="ERROR: The ${NAME} is not compatible with this release \
+of the UNIX System V operating system \
+and can not be used with this system."
+
+rm -f $TMP > /dev/null 2>&1
+
+# determine that ID/TP tools are available
+
+if
+	[ -x ${CONFBIN}/idcheck -a -x ${CONFBIN}/idbuild -a -x ${CONFBIN}/idinstall ]
+then 
+	:
+else
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+
+cd /tmp/mse
+
+OSVER=`uname -a | cut -d " " -f3`
+
+case ${OSVER} in
+
+	4.0*) ;;
+	4.1*) ;;
+	*) message ${BASE1};
+	   exit $FAILURE;;
+esac
+
+drvcnt=0
+for DRV in mse bmse smse m320
+do
+	if [ -f ${PACK}/${DRV}/Driver.o ]
+	then
+		mcs -p ${PACK}/${DRV}/Driver.o | grep "AT&T" 2>&1 > /dev/null
+		if [ $? = 1 ]
+		then
+			WARN="ERROR: A \"Non-AT&T\" Device Driver 
+called, ${DRV}, is already installed. The name of this driver conflicts  \
+with the name of the driver necessary to support the ${NAME}. \
+This driver must be removed before installing ${NAME}."
+			message ${WARN}
+			exit ${FAILURE}
+		else
+			drvcnt=`expr ${drvcnt} + 1`
+		fi
+	fi
+done
+
+# find out if interrupt 12 
+# is available  for PS2 mouse 
+if [ "${PS2_MSE}" = "y" ]
+then
+	${CONFBIN}/idcheck -v 12 >/dev/null 2>&1
+	RETVCHK=$?
+	if [ "$RETVCHK" != 0  ]
+	then
+		PSMESG=" The PS2 mouse requires use of\
+ interrupt vector 12. Please remove existing software driver which\
+ makes use of interrupt 12, before attempting to install\
+ the PS2 mouse on your system."
+		message $PSMESG
+		exit ${FAILURE}
+	fi
+fi
+
+###################################################
+## If a bus mouse is being installed, check     ###
+## if the I/O ADDRESS range is available        ###
+###################################################
+
+if [ "$BSE_MSE" = "y" ]
+then
+	#################################################
+	## The user wants a BUS mouse, so let's see if ##
+	## the I/O address is available                ##
+	#################################################
+	CURPKG=`${CONFBIN}/idcheck -a -l 23c -u 23f -r`
+	RETCUR=$?
+
+	if [ $RETCUR != 0 ]
+	then
+		if [ "$CURPKG" != "bmse" ]
+		then
+			if [ "$CURPKG" = "" ]
+			then
+				CURPKG="Unknown"
+			fi
+			ERROR="ERROR: The ${NAME} can not be installed \
+because the \"${CURPKG}\" driver uses an I/O \
+Address Range that conflicts with the \
+I/O Address Range needed for this package. \
+You must remove this driver before installing \
+${NAME}."
+
+			message ${ERROR}
+			exit ${FAILURE}
+		fi
+	fi
+fi
+
+# find out if interrupts 3, 4, 5, 9 are available and then
+# prompt the user to select one
+if [ "$BSE_MSE" = "y" ]
+then
+	if [ "${MSEINT}" = "" ]
+	then
+		if [ "${REQINTV}" = 2 ]
+		then
+			INT=9
+		else
+			INT=${REQINTV}
+		fi
+		${CONFBIN}/idcheck -v ${INT}
+		if [ "$?" != 0 ]
+		then
+			VECTMSG=""
+			for VECT in 3 4 5 9 
+			do
+				${CONFBIN}/idcheck -v $VECT
+				RETVCHK=$?
+				if [ "$VECT" = 9 ]
+				then
+					VECT=2
+				fi
+				if [ "$RETVCHK" = 0 ]
+				then
+					VECTMSG="${VECTMSG}\n\tIRQ ${VECT}"
+					VECTLIST="${VECTLIST} ${VECT}"
+				fi
+			done
+			
+			if [ "$VECTLIST" = "" ]
+			then
+				message "The ${PKG} cannot be installed because interrupts 2, 3, 4 and 5 are in use"
+				exit 1
+			else
+				while true
+				do
+					VANSWER=""
+					message -d "Available interrupt(s) \
+for the ${NAME}: ${VECTMSG}\n\nPlease type one of the above and strike the \
+ENTER key or\n\ type Q to cancel installation."
+					read VANSWER
+					if [ "x$VANSWER" != xQ -a "x$VANSWER" != xq ]
+					then
+						for i in $VECTLIST
+						do
+							if [ "x$VANSWER" = "x$i" ]
+							then
+								INT="$VANSWER"
+								break 2
+							fi
+						done
+					else
+						exit 1
+					fi
+					message -d "Invalid Answer"
+				done
+			fi
+		fi
+	else
+		INT=${MSEINT}
+	fi
+
+	if [ "$INT" = 2 ]
+	then
+		INT=9
+	fi
+
+	sed -e "s/INT/${INT}/" < System.bmse > Sys.$$
+	mv Sys.$$ System.bmse
+	for DRV in bmse mse smse 
+	do
+		rm -f `cat IDlist` 1>/dev/null 2>&1
+		for DRVFIL in `cat IDlist`
+		do
+			mv ${DRVFIL}.${DRV} ${DRVFIL} 1>/dev/null 2>&1
+		done
+		[ ${DRV} = smse ] && mv Sd.smse Shutdown 1>/dev/null 2>&1 
+
+		${CONFBIN}/idinstall -a ${DRV} 2>> $TMP
+		if [ $? != 0 ]
+		then
+			${CONFBIN}/idinstall -u ${DRV} 2>> $TMP
+			if [ $? != 0 ]
+			then
+				message "The installation cannot be completed \
+due to an error in the driver installation. $ERROR1  Please try the \
+installation again.  If the error occurs again, contact your Service \
+Representative."
+       				exit ${FAILURE}
+			fi
+		fi
+	done
+fi
+
+if [ "$PS2_MSE" = "y" ]
+then
+	for DRV in m320 mse smse 
+	do
+		rm -f `cat IDlist` 1>/dev/null 2>&1
+		for DRVFIL in `cat IDlist`
+		do
+			mv ${DRVFIL}.${DRV} ${DRVFIL} 1>/dev/null 2>&1
+		done
+		[ ${DRV} = smse ] && mv Sd.smse Shutdown 1>/dev/null 2>&1 
+
+		${CONFBIN}/idinstall -a ${DRV} 2>> $TMP
+		if [ $? != 0 ]
+		then
+			${CONFBIN}/idinstall -u ${DRV} 2>> $TMP
+			if [ $? != 0 ]
+			then
+				message "The installation cannot be completed \
+due to an error in the driver installation. $ERROR1  Please try the \
+installation again.  If the error occurs again, contact your Service \
+Representative."
+       				exit ${FAILURE}
+			fi
+		fi
+	done
+fi
+	
+if [ "$SMS_MSE" = "y" ]
+then
+	for DRV in mse smse 
+	do
+		rm -f `cat IDlist` 1>/dev/null 2>&1
+		for DRVFIL in `cat IDlist`
+		do
+			mv ${DRVFIL}.${DRV} ${DRVFIL} 1>/dev/null 2>&1
+		done
+		[ ${DRV} = smse ] && mv Sd.smse Shutdown 1>/dev/null 2>&1 
+
+		${CONFBIN}/idinstall -a ${DRV} 2>> $TMP
+		if [ $? != 0 ]
+		then
+			${CONFBIN}/idinstall -u ${DRV} 2>> $TMP
+			if [ $? != 0 ]
+			then
+        			message "The installation cannot be completed \
+due to an error in the driver installation. $ERROR1  Please try the \
+installation again.  If the error occurs again, contact your Service \
+Representative."
+        			exit ${FAILURE}
+			fi
+		fi
+	done
+fi
+
+rm -f IDlist 1>/dev/null 2>/dev/null
+
+TTY=`tty | sed 's/\/dev\///'`
+TTY1=`echo $TTY | grep vt`
+if [ "$TTY1" != "" ]
+then
+    	TTY=console
+fi
+if [ "$TTY" = "console" ]
+then
+	TERM=AT386-M
+	export TERM
+fi
+if [ "${REMTABLE}" = "y" ]
+then 
+	rm -rf /usr/lib/mousetab
+fi
+
+if [ -f ${BINDIR}/mouseadmin -a "${INTERACT}" = "n" -a "${ADMIN}" = "y" ]
+then
+	if [ "$BSE_MSE" = "y" ]
+	then
+		/usr/bin/mouseadmin -n -b > /dev/null 2>&1 << HERE
+b
+${BDISP}
+u
+HERE
+	fi
+	if [ "$PS2_MSE" = "y" ]
+	then
+		/usr/bin/mouseadmin -n -b > /dev/null 2>&1 << HERE
+P
+${DISP}
+u
+HERE
+	fi	
+	if [ "$SMS_MSE" = "y" ]
+	then
+		/usr/bin/mouseadmin -n > /dev/null 2>&1 << HERE
+s
+${SDISP}
+${SDTERM}
+u
+HERE
+	fi
+fi
+
+if [ -f ${BINDIR}/mouseadmin -a "${ADMIN}" = "y" ]
+then
+	if [ "${INTERACT}" = "y" ]
+	then
+		if [ "$BSE_MSE" = "y" -o "$PS2_MSE" = "y" ]
+		then
+			/usr/bin/mouseadmin -n -b
+		else
+			/usr/bin/mouseadmin -n
+		fi
+	fi
+fi
+
+${CONFBIN}/idbuild 2>> $TMP
+if [ "$?" -ne "0" ]
+then
+        message "The installation cannot be completed due to an error in the \
+kernel reconfiguration. $ERROR1  Please try the installation again.  If the \
+error occurs again, contact your Service Representative."
+	exit ${FAILURE}
+fi
+errflag=`expr ${errflag:=0} + 10`
+rm -f $TMP 2>/dev/null
+
+#
+# Now clean up
+#
+removef $PKGINST /tmp/mse/* >/dev/null 2>&1
+for i in Driver.o.mse Driver.o.smse Driver.o.bmse Driver.o.m320
+do
+	removef $PKGINST /tmp/mse/$i >/dev/null 2>&1
+done
+for i in Master.mse Master.smse Master.bmse Master.m320
+do
+	removef $PKGINST /tmp/mse/$i >/dev/null 2>&1
+done
+for i in System.mse System.smse System.bmse System.m320
+do
+	removef $PKGINST /tmp/mse/$i >/dev/null 2>&1
+done
+for i in Node.mse Node.bmse Node.m320
+do
+	removef $PKGINST /tmp/mse/$i >/dev/null 2>&1
+done
+for i in Rc.smse Sd.smse Space.c.bmse IDlist
+do
+	removef $PKGINST /tmp/mse/$i >/dev/null 2>&1
+done
+removef $PKGINST /tmp/mse >/dev/null 2>&1
+removef -f $PKGINST >/dev/null 2>&1
+rm -f $TMP 1>/dev/null 2>&1
+exit ${errflag}
+

@@ -1,0 +1,366 @@
+CD(7)								CD(7)
+
+NAME
+	cd - CD-ROM
+
+DESCRIPTION
+	The CD-ROM target driver provides access to CD-ROM as both block and
+	character devices.
+
+	Software interface of CD-ROM uses logical block addressing. Logical
+	block address is derived as follows:
+
+	(1) Header address (MIN, SEC, BLOCK) is converted to total block number
+
+	(2) Subtracting 150 from total block number
+
+	Header address is an administrative unit of CD-ROM. Therefore,
+
+	  Logical block address = (MIN x 60 x 75) + (SEC x 75) + BLOCK - 150
+
+	Namely, header address 0 minute 2 seconds 0 block is equal to 0 of
+	logical block address.
+
+	File access pointer used in read(2) or lseek(2) corresponds to values
+	which multiply logical block address by block size. When turning power
+	on, the default of block size is 2048 bytes.
+
+	  File access pointer = (Logical block address) x (block size)
+
+    Major Number
+	The Major number is automatically decided by package installation tool.
+
+    Minor Number
+	Specifies the value that is number of the CD-ROM drive unit.
+	Minor number is as follows.
+
+		7       6       5       4       3       2       1       0
+		0       0       0       0       0       x       x       x
+			reserved                         unit number
+
+    Device Name
+	The CD-ROM device file names (which correspond to a specific major and
+	minor device) use the following format:
+
+		/dev/{r}cdrom/cd{0,1,2,3,4,5,6}
+
+	where r indicates a raw (character) interface to the CD-ROM, rcdrom
+	selects the raw device interface and cdrom selects the block device
+	interface.
+	0,1,2,3,4,5 or 6 selects the number of the CD-ROM drive unit:
+	cd0 selects lowest SCSI ID's CD-ROM drive unit.
+	cd1 selects 2nd lower SCSI ID's CD-ROM drive unit.
+
+	This driver supported TOSHIBA CD-ROM XM series.
+
+    Ioctl Calls:
+	B_GETTYPE:
+		This call is used to get the bus name (SCSI) and the device
+		driver name in arg, taken as a pointer to type struct bus_type.
+
+	B_GETDEV:
+		This call is used to get the pass-through major/minor number
+		in arg,	taken as a pointer to type long.
+
+	SDI_RESERVE:
+		This call is used to reserve a SCSI device.
+
+	SDI_RELEASE:
+		This call is used to release a SCSI device.
+
+	C_ERRMSGON:
+		This call is used to cause a error message from the CD-ROM
+		target driver to be printed.
+		Normally, the driver prints it.
+
+	C_ERRMSGOFF:
+		This call is used to cause a error message from the CD-ROM
+		target driver to be not printed.
+
+	C_TESTUNIT (Test Unit Ready):
+		This call is used to check whether a specified CD-ROM drive is
+		in the READY status or not.  When a specified CD-ROM drive is
+		in the READY status, this function returns 0.
+		When a specified CD-ROM drive is in the IDLE status (a status
+		other than the READY), it returns -1.
+
+	C_REZERO (Rezero unit):
+		This call is used to switch off the laser and stop the disc
+		motor, then, move the pickup to its start position.
+		If it has been properly moved, zero will be returned.  If not,
+		-1 will be returned.
+
+	C_SEEK (Seek):
+		This call is used to move the head to a specified block.  The
+		target address must be specified by the logical block number.
+		This request can be performed only when the CD-ROM system in
+		the READY state.
+		The argument to the ioctl is the logical block number.
+		If it has been properly moved, zero will be returned.  If not,
+		-1 will be returned.
+
+		Note that the access pointer to be moved by the lseek(2) will
+		not change.
+
+	C_INQUIR (Inquiry):
+		This call is used to read the inquiry data describing the
+		attributes of the CD-ROM drive.
+		The inquiry data of the CD-ROM drive consists of 98 bytes.
+		However, it can read whatever the length required by use
+		defined specification.
+		The argument to the ioctl is the address of one of the
+		following structures, defined in <sys/cdrom.h>, with the first
+		filed filled in; the second field is filled in by the ioctl and
+		returned to the user:
+
+		struct cdrom_inq {
+			unsigned short length;	/* The length of the required sense data*/
+			char		*addr;	/* First address of the space where the	*/
+						/* inquiry data is stored */
+		};
+
+	C_STARTUNIT (Start Unit):
+		This call is used to set the CD-ROM drive ready.
+
+	C_STOPUNIT (Stop Unit):
+		This call is used to set the CD-ROM drive idle.
+
+	C_PREVMV (Prevent Medium Removal):
+		This call is used to disable the tray open/close button of the
+		CD-ROM drive.
+
+	C_ALLOMV (Allow Medium Removal):
+		This call is used to enable the tray open/close button of the
+		CD-ROM drive.
+
+	C_READCAPA (Read Capacity);
+		This call is used to transfer the last block address of a
+		CD-disk being loaded and block size (data length) of each
+		logical block.
+		The argument to the ioctl is the address of one of the
+		following structures, defined in <sys/cdrom.h>.
+
+		struct cdrom_capacity {
+			unsigned long    addr;	/* Logical block address */
+			unsigned long    len;	/* Block length */
+		};
+
+	C_AUDIOSEARCH (Audio Track Search):
+		This call is used to search the CD subcode Q address specified
+		by a SEARCH object address.
+		The argument to the ioctl is the address of one of the
+		following structures, defined in <sys/cdrom.h>.
+
+		struct cdrom_audio {
+			union		_addr {		/* address	*/
+				unsigned	type_00;
+				struct {
+					unsigned	min	: 8;
+					unsigned	sec	: 8;
+					unsigned	frame	: 8;
+					unsigned	res	: 8;
+				} type_01;
+				struct {
+					unsigned	track	: 8;
+					unsigned	res	: 24;
+				} type_10;
+			} _addr;
+			char		play;		/* play mode	*/
+			char		type;		/* type		*/
+		};
+		
+		Specify _addr, play, and type in the 'C_AUDIOSEARCH'.
+
+		_addr and type:
+			Definition of search object address varies with TYPE.
+
+			1)  Logical block address (type_00)
+			    Specified with logical block address and type.
+
+				_addr.type_00
+				   = (MIN x 60 x 75) + (SEC x 75) + BLOCK - 150
+				type = 00
+
+			2)  CD absolute time (type_01)
+			    Specified with absolute time which is given in CD
+			    standard and type.
+
+				_addr.type01.min = MIN (00 to 99)
+				_addr.type01.sec = SEC (00 to 59)
+				_addr.type01.frame = FRAME (00 to 74)
+				type = 01
+
+			3)  Tune number provided for in CD standard (type_10)
+			    Specified with TNO (music number) provided for in
+			    CD standard and type.
+
+				_addr.type10.track = track number
+				type = 10
+
+		play:
+			Specify the operation after the search is complete as
+			follows:
+
+			0: play = 0
+			   PAUSE operation starts at the position where search
+			   completed. Then music will be playbacked, when
+			   C_PLAYAUDIO request is issued, at the search object
+			   address which has been specified.
+
+			1: play = 1
+			   After the search is completed, music is automatically
+			   started at the search object address which has been
+			   specified. However, a music mode turns to an initial
+			   set value which is made when C_PLAYAUDIO request is
+			   not issued, and all musics at a search object address
+			   and later are played in the L/R STEREO mode.
+
+	C_PLAYAUDIO (Play Audio):
+		This call is used to release a PAUSE status (in case of PLAY
+		mode = 0) after execution of C_AUDIOSEARCH request or STILL
+		operation after execution of C_STILL request and also to
+		execute a C_AUDIOSEARCH playback in a specified play mode up to
+		the specified playback completion address.
+
+		The argument to the ioctl is the address of one of the
+		following structures, defined in <sys/cdrom.h>.
+
+		struct cdrom_audio {
+			union		_addr {		/* address	*/
+				unsigned	type_00;
+				struct {
+					unsigned	min	: 8;
+					unsigned	sec	: 8;
+					unsigned	frame	: 8;
+					unsigned	res	: 8;
+				} type_01;
+				struct {
+					unsigned	track	: 8;
+					unsigned	res	: 24;
+				} type_10;
+			} _addr;
+			char		play;		/* play mode	*/
+			char		type;		/* type		*/
+		};
+		
+		Specify _addr, play, and type in the 'C_PLAYAUDIO'.
+
+		_addr and type:
+			Definition of playback completion address
+
+			1)  Logical block address (type_00)
+			    Specified with logical block address and type.
+
+				_addr.type_00
+				   = (MIN x 60 x 75) + (SEC x 75) + BLOCK - 150
+				type = 00
+
+			2)  CD absolute time (type_01)
+			    Specified with absolute time which is given in CD
+			    standard and type.
+
+				_addr.type01.min = MIN (00 to 99)
+				_addr.type01.sec = SEC (00 to 59)
+				_addr.type01.frame = FRAME (00 to 74)
+				type = 01
+
+			3)  Tune number provided for in CD standard (type_10)
+			    Specified with TNO (music number) provided for in
+			    CD standard and type.
+
+				_addr.type10.track = track number (01 to 99)
+				type = 10
+
+		play:
+			0: PLAY mode = 0 : Play with MUTING on.
+
+			1: PLAY mode = 1 : Play L-ch alone.
+
+			2: PLAY mode = 2 : Play R-ch alone.
+
+			3: PLAY mode = 3 : Play L/R channels stereo.
+
+			4: PLAY mode = 4 : Does not affect the previously set
+					   play mode.
+	    Note:
+		1. When a playing area is in a CD-ROM data area, the CD-ROM
+		   drive places MUTING on regardless of a set play mode and at
+		   the same time turns off the AUDIO-LED on the front of CD-ROM
+		   drive and continues playing.
+
+		2. When having issued this request during AUDIO TRACK play, it
+		   alters only a playback completion address and play-mode and
+		   continues playing.
+
+	C_STILL (Still):
+		This temporarily interrupts AUDIO TRACK playback. This call is
+		valid only when the AUDIO TRACK playback is in progress after
+		execution of C_AUDIOSEARCH or C_PLAYAUDIO call.
+
+		By this call, the CD-ROM starts STILL operation.
+		Release of a STILL status is executed by C_PLAYAUDIO request.
+
+	C_TRAYOPEN (Tray Open):
+		This call is used to open the disk tray on the front panel of
+		the CD-ROM drive.
+		When this call is issued at the status where a disc tray
+		provided on the front panel of CD-ROM drive is closed, the
+		CD-ROM drive executes the following operations.
+
+			(i)   Stops the disc motor
+			(ii)  Turns laser beam OFF
+			(iii) Brings the pickup to the innermost
+			(iv)  Switch-off of all LEDs except power LED
+			(v)   Opens the disk tray on front panel of CD-ROM
+			      drive
+
+		This call is always executed regardless of status of C_PREVMV or
+		C_ALLOMV call.
+
+	C_TRAYCLOSE (Tray Close):
+		This call is used to execute a series of operations ranging
+		from closing of the disc tray on the front of the CD-ROM drive
+		of the CD-ROM drive to READY.
+
+		When this call is issued with the disc tray provided on the
+		front of CD-ROM drive is opened, the CD-ROM drive executes the
+		following operations before entering READY status.
+
+			(i)   Blinks DISC LED
+			(ii)  Closing disc tray on the front of CD-ROM drive
+			(iii) Decision whether disc loaded or unloaded
+			(iv)  starts disc motor
+			(v)   Switches laser beam, focus servo and tracking
+			      servo on
+			(vi)  Read (Table of Contents) (TOC) data
+			(vii) Estimates line speed loaded disc
+			(viii)DISC LED lighting
+
+		When this call is issued during READY status, GOOD status is
+		returned without performing any operation.
+
+FILES
+	/usr/include/sys/cdrom.h
+	/dev/{r}cdrom/cd[0-6]
+
+SEE ALSO
+	scsi(7).
+	ioctl(2) in the Programmer's Reference Manual.
+	UNIX System V, SCSI Driver Interface (SDI), Driver Reference Manual.
+	UNIX System V/386, Block and Character Interface (BCI), Device Driver
+	Reference Manual
+	Small Computer System Interface (SCSI) Specification (ANSI X3.131-1986)
+	Common Command Set (CCS) Specification (ANSI X3T9.2,/85-52 Rev 4B)
+	TOSHIBA CD-ROM SCSI Interface Specifications
+
+DIAGNOSTICS
+	The driver will retry failed transfers up to 2 times depending on
+	the error type. Certain errors are not retried. The driver will display
+	an appropriate message upon encountering an error during the transfer.
+	Error types that are retried are indicated in the table below. Errors
+	from the CD-ROM controller are displayed as follows:
+
+		SC01: LU x - error_message
+
+	This message occurs on an error after a tarnsfer has begun, where x is
+	the CD-ROM drive unit number.

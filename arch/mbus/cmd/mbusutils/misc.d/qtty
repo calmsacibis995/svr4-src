@@ -1,0 +1,152 @@
+# /bin/sh
+# qtty
+
+#ident	"@(#)mbus:cmd/mbusutils/misc.d/qtty	1.2"
+
+#
+# This script lets you define, remove, enable and disable
+# services under a ttymon port monitor.  It also provides for
+# the creation of extra console windows on 520 systems with
+# the 279 console interface.
+#
+# This is (presumably) easier than using sacadm/pmadm.  If there
+# are problems, use sacadm & pmadm for doing port monitor and
+# service operations, respectively.  More elegant and friendly
+# is the OA&M port management interface - invoke sysadm.
+#
+# usage: qtty [-a|r|e|d] [-p <monname>] [device-list]
+#	a (default) - add services
+#	r - remove services
+#	e - enable services
+#	d - disable services
+#	p - specify port monitor name
+#	device-list - devices to operate on
+#	no devices - operate on ALL tty* devices (BEWARE ON MULTI-CPU 520s)
+#
+# To avoid confusion, device name is used as service tag.
+
+VERSION=`uname -r`
+case $VERSION in
+	"3.2")	echo "qtty: don't know how to deal with V.3.2 ttys - use online/offline"
+		exit 1
+		;;
+	"4.*") continue
+		;;
+esac
+
+USAGE="usage: qtty [-a|r|e|d] [-p <monname>] [device-list]\n	a (default) - add services\n	r - remove services\n	e - enable services\n	d - disable services\n	p - specify port monitor name\n	device-list - devices to operate on\n	no args - operate on ALL tty<xxx> devices (BEWARE ON MULTI-CPU 520S)\n"
+
+MONNAME="portmon"	# Default port monitor name
+ADD=1			# Adding services?
+FLAG=""			# Indicate what to do with services
+NUMOPER=0		# Ensure that we're only doing one kind of operation
+
+while getopts aredp:w: c ; do
+	FLAG="-${c}"
+	case $c in
+		r|e|d) ADD=0 	# Remove, enable, disable services
+			NUMOPER=`expr $NUMOPER + 1`
+			;;
+		a) NUMOPER=`expr $NUMOPER + 1`		# Add services
+			;;
+		p) MONNAME="$OPTARG"	# User sets port monitor name
+			;;
+		\?) echo $USAGE
+			exit 1
+			;;
+	esac
+done
+
+# Only try to do one thing
+if [ $NUMOPER -gt 1 ] ; then
+	echo "qtty: can only specify one of [a|r|e|d]"
+	exit 1
+fi
+
+shift `expr $OPTIND - 1`
+DEVICES=$*
+
+NAMELIST=""
+
+if [ -z "$DEVICES" ] ; then		 # Operating on all tty<xxx>
+
+	# BEWARE:  Not all ttys are necessarily what they seem - some
+	# may be extra windows on the 279, some may be devices on the
+	# nonexistent "other 279".  Look at the /etc/conf/pack.d/atcs/space.c
+	# file for the definitive mapping of device minor numbers.
+	# One interesting feature is that one cannot turn on the
+	# tty??? device on a 520 that is in use by another processor
+	# as /dev/console.  Turning it on does not behave as it should,
+	# and trying to then turn it off hangs the invoking processor.
+
+	for i in /dev/tty??? ; do
+		[ -c ${i} ] && { NAMELIST="$NAMELIST ${i}"; }
+	done
+
+else		# Devices specified on the command line
+
+	for DEV in $DEVICES ; do
+		if [ "`dirname $DEV`" = "." -a ! -c $DEV ] ; then
+			# expand wildcards
+			for LDEV in /dev/${DEV} ; do
+				if [ -c $LDEV ] ; then
+					NAMELIST="$NAMELIST $LDEV"
+				else
+					echo "qtty: can't find device $DEV"
+				fi
+			done
+		elif [ -c $DEV ] ; then
+			NAMELIST="$NAMELIST $DEV"
+		else
+			echo "qtty: can't find device $DEV"
+		fi
+	done
+fi
+
+if [ -z $NAMELIST ] ; then
+	exit 1
+fi
+
+sacadm -l -p $MONNAME > /dev/null 2>&1
+# Does port monitor exist?  If not, create it if adding services.
+if [ $? -ne 0 ] ; then
+	if [ $ADD -eq 1 ] ; then
+		sacadm -a -p $MONNAME -t ttymon -c "/usr/lib/saf/ttymon" -v 1
+	else
+		echo "qtty: port monitor $MONNAME does not exist"
+		exit 1
+	fi
+else
+	# Is monitor in some other state (present but not ENABLED)?
+	STATE=`sacadm -L -p $MONNAME | awk -F: '{ print $5 }'`
+	if [ "$STATE" != "ENABLED" -a "$STATE" != "STARTING" ] ; then
+		# Use sacadm to restart manually if this happens - 
+		#   -e will enable, -s will start, if so.
+		echo "qtty: port monitor $MONNAME is in $STATE state"
+		exit 1
+	fi
+fi
+
+# Perform requested operation
+if [ $ADD -eq 1 ] ; then		# Adding services
+	# Add the requested services
+	for DEV in $NAMELIST ; do
+		SERVICE=`basename $DEV`
+		pmadm -l -p $MONNAME -s $SERVICE > /dev/null 2>&1
+		if [ $? -ne 0 ] ; then
+			pmadm -a -p $MONNAME -s $SERVICE -i root -f u -v 1\
+				-m "`ttyadm -d $DEV -l 9600 \
+				-s /usr/bin/login -p \"$SERVICE login: \"`"
+		else
+			echo "qtty: service $SERVICE exists"
+		fi
+	done
+else		# Not adding services
+	for DEV in $NAMELIST ; do
+		SERVICE=`basename $DEV`
+		pmadm $FLAG -p $MONNAME -s $SERVICE
+		# Too many requests back-to-back will blow the port
+		# monitor away.
+		sleep 1
+	done
+fi

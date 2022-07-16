@@ -1,0 +1,8 @@
+#ident	"@(#)pkg4.i386:scde/pkginfo	1.1"
+PKG="scde"
+NAME="Standard C Development Environment"
+ARCH="i386"
+VERSION="5.0"
+CATEGORY="system"
+VENDOR="AT&T"
+CLASSES="build Z"

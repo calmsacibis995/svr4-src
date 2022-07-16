@@ -1,0 +1,34 @@
+#ident	"@(#)source:prep	1.1.2.1"
+#       run mcs on distribution binaries.
+#       usage prep [AT386|MB1] <DISTLIST
+# should be executed in $ROOT
+#SLBASE=${ROOT:?NOT_IN_X-ENVIRONMENT}
+#export SLBASE
+
+#if [ -z "RELEASE" -o -z "$LOAD" ]
+#then
+#	echo "\nRELEASE OR LOAD not set/exported.\n"
+#	exit 377
+#fi
+
+cd ${ROOT:?}
+while read name
+do
+		echo mcs -d -a "@(#)UNIX System V/386 Release 4.0 $LOAD $name" $name
+		mcs -d -a "@(#)UNIX System V/386 Release 4.0 $LOAD $name" $name > /dev/null 2>&1
+		if ` file $name | grep "archive" >/dev/null 2>&1 `
+		then
+			ar ts ${name} > /dev/null 2>&1
+		fi
+#		pstamp -p386unix -ti386 -r${RELEASE} -l${LOAD} $name
+done
+
+if [ "$1" = "NO_UNIX" ]
+then exit 0
+fi
+
+cd usr/src/proto/i386/at386
+mcs -d -a "@(#) UNIX System V/386 Release 4.0 $LOAD "     unix
+mcs    -a "@(#) Copyright (c) 1984, 1986, 1987, 1988 AT&T" unix
+mcs    -a "@(#) Copyright (c) 1987, 1988 Microsoft Corp." unix
+exit 0

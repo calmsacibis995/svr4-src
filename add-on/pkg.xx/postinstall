@@ -1,0 +1,167 @@
+#ident	"@(#)/usr/src/add-on/pkg.xx/postinstall.sl 1.1 4.0 12/08/90 179 AT&T-USL"
+
+trap '' 1 2 3 5 15
+#
+#	386 XENIX File System Install Package
+#
+TMP=/tmp/xx.ierr
+ERROR1=" Errors have been written to the file $TMP."
+rm -f $TMP > /dev/null 2>&1
+VER=`uname -r`
+if [ "$VER" -lt "4.0" ]
+then
+	if [ ! -f /usr/bin/x286emul ]
+	then cp /usr/bin/x286 /usr/bin/x286emul
+	fi
+	message "This package can only be installed on a UNIX System V/386 Release 4.0 System. Your system has a different UNIX release installed. You can determine the release by typing 'uname -r'. The installation is now being terminated."
+	exit 1
+fi
+
+HERE=`pwd`
+cd /tmp/xx
+/etc/conf/bin/idcheck -p XENIX > /dev/null 2>&1
+if [ $? != 0 ]
+then
+	if [ ! -f /usr/bin/x286emul ]
+	then cp /usr/bin/x286 /usr/bin/x286emul
+	fi
+	ERROR="has already been installed."
+	echo "The XENIX File System ${ERROR}"
+	exit 1
+fi
+
+/etc/conf/bin/idcheck -p xnamfs > /dev/null 2>&1
+if [ $? -gt 1 ]
+then
+	if [ ! -f /usr/bin/x286emul ]
+	then cp /usr/bin/x286 /usr/bin/x286emul
+	fi
+	ERROR="has already been installed."
+	echo "The XENIX Name File System ${ERROR}"
+	exit 1
+fi
+echo "\n\tInstalling the drivers."
+/etc/conf/bin/idinstall -a -clop XENIX 2>> $TMP
+if [ $? != 0 ]
+then
+	if [ ! -f /usr/bin/x286emul ]
+	then cp /usr/bin/x286 /usr/bin/x286emul
+	fi
+	echo "\n\tThe installation cannot be completed due to an error \
+in the XENIX File System driver installation. $ERROR1 "
+	cd $HERE
+	cd /var/sadm/pkg/${PKG}/install
+	chmod +x ./preremove
+	./preremove NOBUILD
+	exit 1
+fi
+
+cd /tmp/xnamfs
+/etc/conf/bin/idinstall -g -e -l xnamfs > SFSYS 2>> $TMP
+if [ $? != 0 ]
+then
+	if [ ! -f /usr/bin/x286emul ]
+	then cp /usr/bin/x286 /usr/bin/x286emul
+	fi
+	echo "\n\tThe installation cannot be completed due to an error \
+in the XENIX Name driver installation. $ERROR1 "
+	cd $HERE
+	cd /var/sadm/pkg/${PKG}/install
+	chmod +x ./preremove
+	./preremove NOBUILD
+	exit 1
+fi
+sed -e 's/	N/	Y/' < SFSYS > Sfsys
+rm -f SFSYS
+/etc/conf/bin/idinstall -u -e -opl xnamfs 2>> $TMP
+if [ $? != 0 ]
+then
+	if [ ! -f /usr/bin/x286emul ]
+	then cp /usr/bin/x286 /usr/bin/x286emul
+	fi
+	echo "\n\tThe installation cannot be completed due to an error \
+in the XENIX Name driver installation. $ERROR1 "
+	cd $HERE
+	cd /var/sadm/pkg/${PKG}/install
+	chmod +x ./preremove
+	./preremove NOBUILD
+	exit 1
+fi
+
+/etc/conf/bin/idbuild 2>> $TMP
+if [ $? != 0 ]
+then
+	if [ ! -f /usr/bin/x286emul ]
+	then cp /usr/bin/x286 /usr/bin/x286emul
+	fi
+	echo "The installation cannot be completed due to an error \
+in the driver installation. $ERROR1 "
+	cd $HERE
+	cd /var/sadm/pkg/${PKG}/install
+	chmod +x ./preremove
+	./preremove NOBUILD
+	exit 1
+fi
+
+# Needed so the removef works.
+removef $PKGINST /tmp/xx/Driver.o /tmp/xx/Space.c /tmp/xx/Mfsys /tmp/xx/Sfsys /tmp/xx > /dev/null 2>&1
+removef $PKGINST /tmp/xnamfs/Driver.o /tmp/xnamfs/Space.c /tmp/xnamfs > /dev/null 2>&1
+removef -f $PKGINST
+
+if [ -b /dev/dsk/1s0 ]
+then
+	for j in 0 1 2 3 4 5 6
+	do
+		ln /dev/dsk/1s${j} /dev/hd1${j} > /dev/null 2>&1
+	done
+	for j in 0 1 2 3 4 5 6
+	do
+		ln /dev/rdsk/1s${j} /dev/rhd1${j} > /dev/null 2>&1
+	done
+fi
+if [ -b /dev/dsk/f1t ]
+then
+	ln /dev/dsk/f1t /dev/install1 > /dev/null 2>&1
+	ln /dev/rdsk/f1t /dev/rinstall1 > /dev/null 2>&1
+
+	ln /dev/dsk/f1d8dt /dev/fd148ds8 > /dev/null 2>&1
+	ln /dev/dsk/f1d9dt /dev/fd148ds9 > /dev/null 2>&1
+	ln /dev/dsk/f1d9dt /dev/fd148 > /dev/null 2>&1
+	ln /dev/rdsk/f1d8dt /dev/rfd148ds8 > /dev/null 2>&1
+	ln /dev/rdsk/f1d9dt /dev/rfd148ds9 > /dev/null 2>&1
+	ln /dev/rdsk/f1d9dt /dev/rfd148 > /dev/null 2>&1
+	ln /dev/dsk/f13ht /dev/fd1135ds18 > /dev/null 2>&1
+	ln /dev/dsk/f13ht /dev/fd196ds18 > /dev/null 2>&1
+	ln /dev/dsk/f13ht /dev/dsk/f1q18dt > /dev/null 2>&1
+	ln /dev/dsk/f13dt /dev/fd1135ds9 > /dev/null 2>&1
+	ln /dev/dsk/f13dt /dev/fd196ds9 > /dev/null 2>&1
+	ln /dev/dsk/f13dt /dev/dsk/f1q9dt > /dev/null 2>&1
+	ln /dev/dsk/f1d8dt /dev/fd148ss8 > /dev/null 2>&1
+	ln /dev/dsk/f1d8dt /dev/dsk/f1d8t > /dev/null 2>&1
+	ln /dev/dsk/f1d9dt /dev/fd148ss9 > /dev/null 2>&1
+	ln /dev/dsk/f1d9dt /dev/dsk/f1d9t > /dev/null 2>&1
+
+	ln /dev/dsk/f1q15dt /dev/fd196ds15 > /dev/null 2>&1
+	ln /dev/dsk/f1q15dt /dev/fd196 > /dev/null 2>&1
+	ln /dev/rdsk/f1q15dt /dev/rfd196ds15 > /dev/null 2>&1
+	ln /dev/rdsk/f1q15dt /dev/rfd196 > /dev/null 2>&1
+	ln /dev/rdsk/f1d9dt /dev/rfd148 > /dev/null 2>&1
+	ln /dev/rdsk/f13ht /dev/rfd1135ds18 > /dev/null 2>&1
+	ln /dev/rdsk/f13ht /dev/rfd196ds18 > /dev/null 2>&1
+	ln /dev/rdsk/f13ht /dev/rdsk/f1q18dt > /dev/null 2>&1
+	ln /dev/rdsk/f13dt /dev/rfd1135ds9 > /dev/null 2>&1
+	ln /dev/rdsk/f13dt /dev/rfd196ds9 > /dev/null 2>&1
+	ln /dev/rdsk/f13dt /dev/rdsk/f1q9dt > /dev/null 2>&1
+	ln /dev/rdsk/f1d8dt /dev/rfd148ss8 > /dev/null 2>&1
+	ln /dev/rdsk/f1d8dt /dev/rdsk/f1d8t > /dev/null 2>&1
+	ln /dev/rdsk/f1d9dt /dev/rfd148ss9 > /dev/null 2>&1
+	ln /dev/rdsk/f1d9dt /dev/rdsk/f1d9t > /dev/null 2>&1
+fi
+if [ ! -f /etc/termcap ]
+then
+	message "XENIX applications require terminal descriptions to execute \
+properly.  For proper display of XENIX applications on your system, install the \
+termcap package which is part of the Remote Terminal Package."
+fi
+rm -f $TMP
+exit 10

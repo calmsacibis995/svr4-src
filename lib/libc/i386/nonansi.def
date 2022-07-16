@@ -1,0 +1,18 @@
+_m4_dnl_	#ident	"@(#)libc-i386:nonansi.def	1.3"
+
+_m4_define_(`_fwdef_',
+`	.globl `$1'
+`$1'')
+
+_m4_define_(`_dwdef_',
+`	.globl `$1'
+`$1'')
+
+_m4_define_(`_fgdef_', ``$1'')
+_m4_define_(`_dgdef_', ``$1'')
+_m4_define_(`_dgdef2_', ``$1'')
+_m4_define_(`_wdecl_',`.globl    $1')
+
+_m4_define_(`_section2_',`.section	$1')
+_m4_define_(`_section3_',`.section	$1,"$2"')
+_m4_define_(`RODATA',`.text')

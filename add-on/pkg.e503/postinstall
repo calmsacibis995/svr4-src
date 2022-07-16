@@ -1,0 +1,97 @@
+#ident	"%W%	%E%	%Q%"
+
+FAILURE=1	# fatal error
+
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+TMP=/tmp/e503.err
+ERROR1=" Errors have been written to the file ${TMP}."
+
+BASE1="ERROR: The ${NAME} is not compatible with this release \
+of the AT&T UNIX System V operating system \
+and can not be used with this system."
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed.\
+The ${NAME} cannot be installed."
+
+#this function edits the /etc/strcf to configure the network device
+#for this driver
+
+do_strcf() {
+if [ -f /etc/inet/strcf ]
+then 
+	cp /etc/inet/strcf /etc/inet/.strcf.old
+	sed "/\# i386\/${1}/s/^#//" < /etc/inet/.strcf.old > /etc/inet/strcf
+fi
+}
+
+# determine that ID/TP tools are available
+
+if
+	[ -x ${CONFBIN}/idbuild -a -x ${CONFBIN}/idinstall ]
+then
+	:
+else
+	message ${NOTOOLS}
+	exit ${FAILURE}
+fi
+
+cd /tmp/e503
+
+OSVER=`uname -a | cut -d " " -f3`
+
+case ${OSVER} in
+
+	4.0*) ;;
+	4.1*) ;;
+	*) message ${BASE1};
+	   exit ${FAILURE};;
+esac
+
+#
+# Now install if that is to be done
+#
+
+${CONFBIN}/idinstall -a e503 2> ${TMP}
+if [ "$?" != "0" ]
+then
+	${CONFBIN}/idinstall -u e503 2> ${TMP}
+	if [ "$?" != "0" ]
+	then
+		message "The installation cannot be completed due to an error \
+in the driver installation.  $ERROR1"
+		exit ${FAILURE}
+	fi
+fi
+
+do_strcf  e503
+
+#
+# now build
+#
+${CONFBIN}/idbuild 2>> $TMP
+if [ $? != 0 ]
+then
+        message "The installation cannot be completed due to an error in the \
+kernel reconfiguration. $ERROR1  Please try the installation again.  If the \
+error occurs again, contact your Service Representative." 
+	exit $FAILURE
+fi
+
+errflag=`expr ${errflag:=0} + 10`
+
+installf -f $PKGINST
+
+#
+# Now clean up
+#
+removef $PKGINST /tmp/e503/* >/dev/null 2>&1
+for i in Driver.o Master Space.c System Node
+do
+	removef $PKGINST /tmp/e503/$i >/dev/null 2>&1
+done
+removef $PKGINST /tmp/e503 >/dev/null 2>&1
+removef -f $PKGINST >/dev/null 2>&1
+rm -f $TMP 1>/dev/null 2>&1
+exit ${errflag} 
+

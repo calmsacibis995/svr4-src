@@ -1,0 +1,32 @@
+#ident	"@(#)/usr/src/add-on/pkg.nfs/request.sl 1.1 4.0 12/08/90 38174 AT&T-USL"
+trap 'exit 3' 15
+
+#
+# Prompt script to allow the user to select installation
+# of the oam NFS forms and menus only if OAM is installed
+#
+
+# check to see if fmli and oam are installed
+OAM=`/usr/bin/pkginfo oam >/dev/null 2>&1; echo $?`
+FMLI=`/usr/bin/pkginfo fmli >/dev/null 2>&1; echo $?`
+
+if [ ${OAM} -eq 0 -a ${FMLI} -eq 0 ]
+then
+	ANS=`getyorn -d y \
+	-p  "You have the Operations, Administration, and Maintenance \
+	package installed.  Would you like to add the NFS interface Forms \
+	and Menus?\n"
+	` || exit $?
+else
+	ANS=n
+fi
+
+if [ "$ANS" = n ]
+then
+	CLASSES="none build"
+else
+	CLASSES="none build sysadm"
+fi
+echo "CLASSES=$CLASSES" >> $1
+exit 0
+

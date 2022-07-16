@@ -1,0 +1,272 @@
+#ident	"@(#)qt:ID/Install	1.1.1.1"
+#	Streaming Tape Install Package
+#
+TMP=/tmp/tapedrv.err
+ERROR1=" Errors have been written to the file $TMP."
+rm -f $TMP > /dev/null 2>&1
+NAME="`cat Name`"
+PKG="Cartridge Tape Utilities"
+echo "\n\n\n\nInstalling ${NAME} ...\c"
+if [ -x /etc/conf/bin/idcheck -a -x /etc/conf/bin/idbuild -a -x /etc/conf/bin/idinstall ]
+then 
+	:
+else
+	message "The Installable Driver feature has been removed.  The ${NAME} cannot be installed."
+	exit 1
+fi
+
+RELEASE=`uname -v`
+
+RETVCHK=0
+RETADD=1
+RETDMA=0
+
+/etc/conf/bin/idcheck -p qt > /dev/null 2>&1
+RETTP=$?
+
+echo ".\c"
+if [ $RETTP = 0 ]
+then
+	/etc/conf/bin/idcheck -d 1 > /dev/null 2>&1
+	RETDMA=$?
+	echo ".\c"
+	################
+	# find out if interrupts 2, 3, 5 and 7 are available and then
+	# prompt the user to select one
+	VECTMSG=""
+	for VECT in 9 3 5 7
+	do
+		/etc/conf/bin/idcheck -v $VECT >/dev/null 2>&1
+		RETVCHK=$?
+		if [ "$VECT" = 9 ]
+		then
+			VECT=2
+		fi
+		if [ "$RETVCHK" = 0 ]
+		then
+			VECTMSG="${VECTMSG}\n\tIRQ ${VECT}"
+			VECTLIST="${VECTLIST} ${VECT}"
+		fi
+	done
+	
+	if [ "$VECTLIST" != "" ]
+	then
+		while true
+		do
+			VANSWER=""
+			message -d "Available interrupt(s) for the ${NAME}: \
+${VECTMSG}\n\nType the interrupt number and strike the ENTER key or\n\
+type Q to cancel installation."
+			read VANSWER
+			if [ "x$VANSWER" != xQ -a "x$VANSWER" != xq ]
+			then
+				for i in $VECTLIST
+				do
+					if [ "x$VANSWER" = "x$i" ]
+					then
+						INT="$VANSWER"
+						break 2
+					fi
+				done
+			else
+				exit 1
+			fi
+			message -d "Invalid Answer"
+		done
+	fi
+        #####################
+
+	echo ".\c"
+	set `echo \`cat address\``
+	while [ $# != 0 ]
+	do
+		LADD=$1
+		HADD=$2
+		message -d "Default addresses are $LADD to $HADD. Type the \
+low address number or strike ENTER to accept the default."
+		read VANSWER
+		if [ "x$VANSWER" != "x" ]
+		then
+			LADD=$VANSWER
+			HADD=`expr $LADD + 1`
+		fi
+		/etc/conf/bin/idcheck -a -l $LADD -u $HADD > /dev/null 2>&1
+		if [ $? = 0 ]
+		then
+			RETADD=0
+			break
+		fi
+		echo ".\c"
+		shift 2
+	done
+fi
+
+ERROR=""
+if [ $RETTP != 0 ]
+then 
+	ERROR="has already been installed.  You cannot install this package on top \
+of the old package.  You must remove the old ${PKG} before you can install the \
+new one"
+else
+
+	if [ "$VECTLIST" = "" ]
+	then
+		ERROR="cannot be installed because interrups 2, 3, 5 and 7 \
+are in use"
+		if [ $RETADD != 0 -o $RETDMA != 0 ]
+		then
+			ERROR="${ERROR} and"
+		fi
+	fi
+	if [ $RETADD != 0 ]
+	then 
+		ERROR="${ERROR} cannot be installed because all usable addresses are in use"
+			ERROR="${ERROR} and"
+	fi
+	if [ $RETDMA != 0 ]
+	then 
+		ERROR="${ERROR} cannot be installed because another device uses the DMA Channel 1"
+	fi
+fi
+
+echo ".\c"
+if [ \( "$VECTLIST" = "" \) -o $RETADD != 0 -o $RETDMA != 0 -o $RETTP != 0 ]
+then
+	message "The ${PKG} ${ERROR}.  \
+Use Remove Installed Software to remove the existing driver before attempting \
+to install the ${NAME} again."
+	exit 1
+fi
+
+message -c "You are installing the ${NAME} \
+using hardware interrupt number ${INT} and addresses ${LADD} through ${HADD}.  \
+Be sure that these values are not in use by another add-on board."
+
+if [ $? != 0 ]
+then
+	exit 1
+fi
+
+# Make sure to switch interrupt 2 to 9 so that idbuild will not fail.
+if [ "$INT" = 2 ]
+then
+	INT=9
+fi
+
+echo ".\c"
+sed -e "s/LADD/${LADD}/" -e "s/HADD/${HADD}/" -e "s/INT/${INT}/" < System > Sys.$$
+cat Sys.$$ > System
+rm -f Sys.$$
+
+echo ".\c"
+if [ $RETTP != 0 ]
+then
+	echo ".\c"
+	chmod +x Remove
+	./Remove NOBUILD
+	echo ".\c"
+fi
+
+echo ".\c"
+if [ ! -d /usr/lib/tape ]
+then
+	mkdir /usr/lib/tape >/dev/null 2>&1
+	chown bin /usr/lib/tape
+	chgrp bin /usr/lib/tape
+	chmod 755 /usr/lib/tape
+	if [ $? != 0 ]
+	then
+        	message "The installation is unable to create the /usr/lib/tape \
+directory for the program files.  Please try the installation again.  If the \
+problem occurs again, contact your AT&T Service Representative or AT&T \
+Personal Computer Dealer."
+		chmod +x Remove
+		./Remove NOBUILD
+        	exit 1
+	fi
+	sync; sync
+fi
+
+echo ".\c"
+
+mv /usr/lib/tape/tapecntl /usr/tmp/tape$$ > /dev/null 2>&1
+rm -f /usr/tmp/tape$$ > /dev/null 2>&1
+mv tapecntl /usr/lib/tape > /dev/null 2>&1
+chown bin /usr/lib/tape/tapecntl > /dev/null 2>&1
+chgrp bin /usr/lib/tape/tapecntl > /dev/null 2>&1
+chmod 755 /usr/lib/tape/tapecntl > /dev/null 2>&1
+echo ".\c"
+
+
+# backup is not needed in v.4.0
+
+#if [ "$RELEASE" = 1 ]
+#then
+	#mv backup /usr/bin/backup
+	#chmod 755 /usr/bin/backup
+	#chown bin /usr/bin/backup
+	#chgrp bin /usr/bin/backup
+	#echo ".\c"
+#fi
+
+#####
+# Install the tape control funcions to the user interface if
+# FACE is already installed.
+
+FACEDIR="/usr/vmsys/OBJECTS"
+if [ -d "$FACEDIR" ]
+then
+	TAPE="${FACEDIR}"/tape
+	if [ ! -d  "$TAPE" ]
+	then
+		mkdir ${TAPE} >/dev/null 2>&1
+		chmod 755 "${TAPE}"
+		chown bin "${TAPE}"
+		chgrp bin "${TAPE}"
+	fi
+
+	for i in Menu.tape Text.tape Text.fop Text.sop
+	do
+		mv "$i" "${TAPE}"
+		chmod 755 "${TAPE}/${i}"
+		chown bin "${TAPE}/${i}"
+		chgrp bin "${TAPE}/${i}"
+	done
+	
+	if [ -f "${FACEDIR}/Menu.admin" ]
+	then
+		ed - "${FACEDIR}"/Menu.admin <<- !
+			/^name=User Logins/-r admin
+			w
+			q
+		!
+	fi
+fi
+############
+
+/etc/conf/bin/idinstall -a qt 2>> $TMP
+if [ $? != 0 ]
+then
+        message "The installation cannot be completed due to an error in the \
+driver installation. $ERROR1  Please try the installation again.  If the \
+error occurs again, contact your AT&T Service Representative or AT&T Personal \
+Computer Dealer."
+	chmod +x Remove
+	./Remove NOBUILD
+        exit 1
+fi
+echo "Complete.\n\n\n"
+/etc/conf/bin/idbuild 2>> $TMP
+if [ $? != 0 ]
+then
+        message "The installation cannot be completed due to an error in the \
+kernel reconfiguration. $ERROR1  Please try the installation again.  If the \
+error occurs again, contact your AT&T Service Representative or AT&T Personal \
+Computer Dealer."
+	chmod +x Remove
+	./Remove NOBUILD
+        exit 1
+fi
+
+rm -f $TMP
+exit 0

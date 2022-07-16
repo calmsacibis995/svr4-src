@@ -1,0 +1,33 @@
+#ident	"@(#)pkg.kdbu:prototype	1.3"
+
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license
+#	agreement with Intel Corporation and may not be copied nor
+#	disclosed except in accordance with the terms of that agreement.
+
+!MOD=kdb-util
+!CONFDIR=/etc/conf
+!PACKDIR=$CONFDIR/pack.d/$MOD
+
+i pkginfo
+i request
+i postinstall
+i preremove
+i copyright
+
+!default 0644 bin bin
+
+d none /tmp/kdb-util	0775 bin bin
+v none /tmp/kdb-util/Driver.o=$PACKDIR/Driver.o
+v none /tmp/kdb-util/Space.c=$PACKDIR/space.c
+v none /tmp/kdb-util/Master=$CONFDIR/mdevice.d/$MOD
+v none /tmp/kdb-util/System=$CONFDIR/sdevice.d/$MOD
+
+f none /usr/include/sys/kdebugger.h	0444 bin bin 
+
+f none /bin/unixsyms	0755 bin bin 
+f none /sbin/kdb	0755 bin bin 

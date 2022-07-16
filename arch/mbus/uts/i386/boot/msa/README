@@ -1,0 +1,21 @@
+#ident	"@(#)mbus:uts/i386/boot/msa/README	1.1"
+
+Rules for the boot loader:
+
+1)	The stack is in a different segment.  This means that if you take the
+	address of a variable of storage class auto (parameter or local variable),
+	the result is garbage.  Treat variables allocated on the stack as if they
+	were register variables, and pass them only by value.  If you need to pass
+	a variable by reference, it will have to have static storage class.  You
+	can get the compiler to check this by declaring all local variables to be
+	register variables (taking the address of a register variable is illegal
+	even if the compiler didn't give the variable a register).
+
+2)	Uninitialized static data does not get set up.  If you have any
+	uninitialized static data, you won't get told about it in the memory map.
+	To check this, the makefile runs a shell script called 'checkbss'.  To
+	find the offending uninitialized variable, run 'nm -vep' and sort the
+	result.  Every symbol between _edata and _end is an uninitialized variable.
+
+3)	The data section is zeroed when the second stage is loaded.  This means
+	that any initialization to a value other than zero is ineffective.

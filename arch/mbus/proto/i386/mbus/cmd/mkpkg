@@ -1,0 +1,62 @@
+:
+#	Copyright (c) 1989  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+#ident	"@(#)mbus:proto/i386/mbus/cmd/mkpkg	1.1.3.1"
+
+LOAD=${LOAD:-STC}
+SIZE=${SIZE:-2370}
+export LOAD SIZE
+
+if [ ! -d $ROOT/var/spool/pkg ];then 
+	rm -rf $ROOT/var/spool/pkg
+	mkdir $ROOT/var/spool/pkg > /dev/null 2>&1
+fi
+
+ADDON_LIST="\
+	compat \
+	dfs \
+	edit \
+	enetdrv \
+	fmli \
+	inet \
+	kdbu \
+	kdb \
+	lp \
+	ramd\
+	nfs \
+	nsu \
+	oam \
+	ots \
+	rfs \
+	rpc \
+	termcap \
+	xx \
+"
+
+cd $ROOT/usr/src/add-on
+for i in  $ADDON_LIST
+do
+	if [ -f pkg.$i/prototype ];then
+		cd pkg.$i; echo pkg.$i
+		pkgmk -o -v${LOAD} -l${SIZE} -r$ROOT -d$ROOT/var/spool/pkg
+		cd ..
+	fi
+done
+
+cd $ROOT/usr/src/pkg
+for i in terminf face scde
+do
+	if [ -f $i/prototype ];then
+		cd $i; echo $i
+		pkgmk -o -v${LOAD} -l${SIZE} -r$ROOT -d$ROOT/var/spool/pkg
+		cd ..
+	fi
+done

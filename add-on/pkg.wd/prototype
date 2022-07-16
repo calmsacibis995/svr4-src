@@ -1,0 +1,44 @@
+#ident	"@(#)prototype	1.2	92/11/04	JPB"
+
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+#ident	"@(#)pkg.wd:prototype	1.1.1.1"
+
+!PACKDIR=/usr/src/pkg/wd
+
+i depend
+i pkginfo
+i postinstall
+i preremove
+i copyright
+
+!OAMBASE=/usr/sadm/sysadm
+!PKGINST=wd
+!PKGSAV=/var/sadm/pkg/$PKGINST/save
+!default 0544 bin bin
+d none /tmp	?	?	?
+d none /tmp/wd		775	bin	bin
+v none /tmp/wd/Driver.o=$PACKDIR/Driver.o ? ? ?
+v none /tmp/wd/Space.c=$PACKDIR/Space.c ? ? ?
+v none /tmp/wd/Master=$PACKDIR/Master ? ? ?
+v none /tmp/wd/System=$PACKDIR/System ? ? ?
+v none /tmp/wd/Node=$PACKDIR/Node ? ? ?
+
+d none /usr	?	?	?
+d none /usr/include	?	?	?
+d none /usr/include/sys	?	?	?
+
+#	header files: default owner=bin group=bin mode=0444
+
+!default 0444 bin bin
+f none /usr/include/sys/wd.h=$PACKDIR/sys/wd.h
+f none /usr/include/sys/wdhdw.h=$PACKDIR/sys/wdhdw.h
+

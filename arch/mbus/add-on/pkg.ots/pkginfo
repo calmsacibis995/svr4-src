@@ -1,0 +1,14 @@
+#ident	"@(#)mbus:add-on/pkg.ots/pkginfo	1.1.1.1"
+
+# enetdrv pkginfo
+
+PKG="ots"
+NAME="OSI Transport Service (OTS) Driver"
+ARCH="i386"
+VERSION="1.0"
+VENDOR="Intel Corporation"
+CATEGORY="system,utilities"
+CLASSES="none build"
+BASEDIR=""
+PREDEPEND="ots"
+MAXINST="1"

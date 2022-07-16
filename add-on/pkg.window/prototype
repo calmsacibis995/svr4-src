@@ -1,0 +1,55 @@
+#ident	"@(#)pkg.window:prototype	1.2.1.1"
+#
+#	All files/directories are defined a relocatable. Although
+#	BASENAME is explicitly set to / (root) in pkginfo,
+#	doing this facilitated future development.
+#
+#	installation files:
+#		'request' gets number of windowing terminals
+#		'postinstall' puts it all together
+#
+i pkginfo
+i copyright
+#
+#	directories: default owner=root group=sys mode=0775
+#
+!default 775 root sys
+d none	/etc	?	?	?
+d none	/dev	?	?	?
+d none	/dev/xt	0775 root root
+d none	/usr	?	?	?
+d none	/usr/bin	?	?	?
+d none	/usr/include	?	?	?
+d none	/usr/lib	?	?	?
+d none	/usr/lib/layersys	0755	bin	bin
+#
+#	commands: default owner=bin, group=bin, mode=0775
+#
+!default 0775 bin bin
+f none	/usr/bin/ismpx
+f none	/usr/bin/jterm
+f none	/usr/bin/jwin
+f none	/usr/bin/xts
+f none	/usr/bin/xtt
+f none	/usr/sbin/lnxts	0744	root	root
+#	setuid-root program
+f none	/usr/bin/layers 4755 root sys
+#
+#	header files: default owner=bin group=bin mode=0444
+#
+!default 0444 bin bin
+f none	/usr/include/windows.h
+#
+#	library routines: default owner=bin group=bin mode=444
+#
+!default 0644 bin bin
+f none	/usr/lib/libwindows.a
+#
+#	layersys files: default owner-bin group=bin mode=755
+#
+!default 0755 bin bin	
+f none	/usr/lib/layersys/lsys.8;7;3
+f none	/usr/lib/layersys/set_enc.j
+f none	/usr/lib/layersys/wtinit
+#	setuid-root program
+f none	/usr/lib/layersys/relogin	4755	root	bin

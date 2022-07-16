@@ -1,0 +1,6 @@
+#ident	"@(#)nametoaddr:resolv/README	1.1"
+
+resolv.so	nametoaddr mapping using Domain Name Service.
+
+since DNS is a socket implementation, have to include libsocket and
+libresolv here (sigh).

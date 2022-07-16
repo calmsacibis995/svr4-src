@@ -1,0 +1,11 @@
+#ident	"@(#)/usr/src/add-on/pkg.dfs/preremove.sl 1.1 4.0 12/08/90 59414 AT&T-USL"
+#
+# Issue a warning message if RFS is running.
+#
+rfadmin >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+	echo "WARNING: RFS is still running."
+fi
+
+exit 0

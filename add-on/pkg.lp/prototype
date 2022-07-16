@@ -1,0 +1,37 @@
+#ident	"@(#)pkg.lp:pkg.lp/prototype	1.1.2.2"
+
+i pkginfo
+i copyright
+i request
+i depend
+i preinstall
+i preremove
+i postinstall
+i i.cron
+i r.cron
+
+!USR=/usr
+!USRSBIN=/usr/sbin
+!USRBIN=/usr/bin
+!USRLIB=/usr/lib
+!USRUCB=/usr/ucb
+!VAR=/var
+!VARSPOOL=/var/spool
+!ETC=/etc
+!T=/
+
+d none $USR 775 root sys
+d none $USRSBIN ? ? ?
+d none $USRLIB ? ? ?
+d none $USRBIN ? ? ?
+d none $VAR ? ? ?
+d none $VARSPOOL ? ? ?
+d none $VARSPOOL/cron ? ? ?
+d none $VARSPOOL/cron/crontabs ? ? ?
+d none $ETC ? ? ?
+d none	/usr/ucb	775	root	bin
+
+
+! include lp.proto
+! include post.proto
+! include oam.proto

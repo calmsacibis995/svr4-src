@@ -1,0 +1,60 @@
+#ident	"@(#)ucbsendmail:lib/aliases	1.1"
+
+
+#		PROPRIETARY NOTICE (Combined)
+#
+#This source code is unpublished proprietary information
+#constituting, or derived under license from AT&T's UNIX(r) System V.
+#In addition, portions of such source code were derived from Berkeley
+#4.3 BSD under license from the Regents of the University of
+#California.
+#
+#
+#
+#		Copyright Notice 
+#
+#Notice of copyright on this source code product does not indicate 
+#publication.
+#
+#	(c) 1986,1987,1988,1989  Sun Microsystems, Inc
+#	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+#	          All rights reserved.
+
+##
+#  Aliases can have any mix of upper and lower case on the left-hand side,
+#	but the right-hand side should be proper case (usually lower)
+#
+#	>>>>>>>>>>	The program "newaliases" will need to be run after
+#	>> NOTE >>	this file is updated for any changes to
+#	>>>>>>>>>>	show through to sendmail.
+#
+#	@(#)aliases 1.8 86/07/16 SMI
+##
+
+# Following alias is required by the mail protocol, RFC 822
+# Set it to the address of a HUMAN who deals with this system's mail problems.
+Postmaster: root
+
+# Alias for mailer daemon; returned messages from our MAILER-DAEMON
+# should be routed to our local Postmaster.
+MAILER-DAEMON: postmaster
+
+# Aliases to handle mail to programs or files, eg news or vacation
+decode: "|/usr/bin/uudecode"
+nobody: /dev/null
+
+# Sample aliases:
+
+# Alias for distribution list, members specified here:
+#staff:wnj,mosher,sam,ecc,mckusick,sklower,olson,rwh@ernie
+
+# Alias for distribution list, members specified elsewhere:
+#keyboards: :include:/usr/jfarrell/keyboards.list
+
+# Alias for a person, so they can receive mail by several names:
+#epa:eric
+
+#######################
+# Local aliases below #
+#######################
+

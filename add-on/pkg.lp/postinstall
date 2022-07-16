@@ -1,0 +1,568 @@
+#ident	"@(#)/usr/src/add-on/pkg.lp/postinstall.sl 1.1 4.0 12/08/90 63407 AT&T-USL"
+
+LPADMIN=${USRSBIN}/lpadmin
+LPFILTER=${USRSBIN}/lpfilter
+LPSCHED=${USRLIB}/lp/lpsched
+LPSHUT=${USRSBIN}/lpshut
+ACCEPT=${USRSBIN}/accept
+REJECT=${USRSBIN}/reject
+ENABLE=${USRBIN}/enable
+LPSTAT=${USRBIN}/lpstat
+DISABLE=${USRBIN}/disable
+DUMPOLP=${USRSBIN}/dumpolp
+
+dot () {
+	echo ".\c"
+}
+
+
+##########
+#
+# Create the REAL spooling directories.
+##########
+
+nodename=`uname -n`
+dot
+VARSPOOLLP_TMP=${VARSPOOLLP}/tmp/${nodename}
+VARSPOOLLP_REQUESTS=${VARSPOOLLP}/requests/${nodename}
+
+installf ${PKGINST} ${VARSPOOLLP_TMP} d 0775 lp lp || exit 1
+dot
+echo $NAME > /usr/options/$PKG.name
+dot
+installf ${PKGINST} ${VARSPOOLLP_REQUESTS} d 0775 lp lp || exit 1
+dot
+
+
+##########
+#
+# Patch the main menu file to use the correct FML object
+##########
+
+OAMBASE=${OAMBASE:-/var/sadm/sysadm}
+INTFBASE=${INTFBASE:-${OAMBASE}/menu}
+
+cp ${INTFBASE}/main.menu ${INTFBASE}/main.backup
+dot
+sed 's/printers\/printers/printers/' ${INTFBASE}/main.menu >${INTFBASE}/tmp.menu
+dot
+mv ${INTFBASE}/tmp.menu ${INTFBASE}/main.menu
+dot
+
+
+##########
+##
+## Set up the LP print service configuration.
+##
+##########
+
+if [ -n "${SPOOLDIR_BAK}" ]
+then
+	SPOOLDIR=${SPOOLDIR_BAK}
+fi
+
+echo
+
+case "${OLD_VERSION}" in
+
+##########
+##
+## Convert pre-SVR3.1 configuration to SVR4.0 configuration
+##
+##########
+
+SVR3.1 )
+
+	echo "
+Setting up the new LP Print Service configuration to look like the old
+configuration.
+
+This may take a few minutes."
+
+
+	##########
+	#
+	# Restore the print job sequence number.
+	##########
+	if [ -r "${SPOOLDIR}/seqfile" ]
+	then
+		curseq=`line <${SPOOLDIR}/seqfile`
+	else
+		curseq=1
+	fi
+	echo "1:9999:1:${curseq}" >${VARSPOOLLP_TMP}/.SEQF
+	dot
+
+	dump=`${DUMPOLP}`
+	dot
+
+	##########
+	#
+	# Printers (Pass 1):
+	##########
+	plist=
+	for p in `ls ${SPOOLDIR}/interface 2>/dev/null`
+	do
+
+		v=`line 2>/dev/null <${SPOOLDIR}/member/${p}` || continue
+		i=${ETCLP}/interfaces/${p}
+		mv ${SPOOLDIR}/interface/${p} ${i}
+		chown lp ${i}
+		chgrp lp ${i}
+		chmod 0755 ${i}
+
+		${LPADMIN} -p ${p} -v ${v} -i ${i} || {
+			echo \
+"Could not restore the configuration for the printer \"${p}\"."
+			rm -f ${i}
+			continue
+
+		}
+
+		plist="${plist} ${p}"
+
+		dot
+	done
+
+	##########
+	#
+	# Classes (Pass 1):
+	##########
+	clist=
+	safe_class=${SPOOLDIR}/.${PKGINST}.class
+	if [ -d "${safe_class}" ]
+	then
+	    for c in `ls ${safe_class}`
+	    do
+
+		for p in `cat ${safe_class}/${c}`
+		do
+			${LPADMIN} -p ${p} -c ${c} || {
+				echo \
+"Could not restore the printer \"${p}\" to the class \"${c}\"."
+
+			}
+			dot
+		done
+
+		clist="${clist} ${c}"
+
+	    done
+	fi
+
+	##########
+	#
+	# Start the Spooler/Scheduler so the rest of
+	# the configuration can be set.
+	##########
+	cd /
+	${LPSCHED} >/dev/null 2>&1
+	dot
+
+	##########
+	#
+	# Printers (Pass 2):
+	##########
+	if [ -n "${plist}" ]
+	then
+	    for p in ${plist}
+	    do
+
+		estate=`echo "${dump}" | grep "PRTR  *${p}"` || continue
+		astate=`echo "${dump}" | grep "DEST  *${p}"` || continue
+
+		##########
+		#
+		# Enable and accept the printer, even if we'll just
+		# turn around and disable or reject it. Otherwise
+		# the attempt to disable or reject with the original
+		# reasons will fail.
+		##########
+		${ACCEPT} ${p} >/dev/null 2>&1
+		${ENABLE} ${p} >/dev/null 2>&1
+
+		echo ${estate} | grep "${p} E " >/dev/null 2>&1 || {
+			reason="`echo \"${estate}\" | cut -c23-`"
+			${DISABLE} -r "${reason}" ${p} >/dev/null 2>&1
+		}
+
+		echo ${astate} | grep "${p} A " >/dev/null 2>&1 || {
+			reason="`echo \"${astate}\" | cut -c23-`"
+			${REJECT} -r "${reason}" ${p} >/dev/null 2>&1
+		}
+
+		dot
+	    done
+	fi
+
+	##########
+	#
+	# Odd interface support programs:
+	##########
+	cd ${SPOOLDIR}/interface && {
+		find . -print \
+		| cpio -Vdumpl ${ETCLP}/interfaces 2>/dev/null
+	}
+
+	##########
+	#
+	# Classes (Pass 2):
+	##########
+	if [ -n "${clist}" ]
+	then
+	    for c in ${clist}
+	    do
+
+		astate=`echo "${dump}" | grep "DEST  *${c}"` || continue
+
+		##########
+		#
+		# Accept the class, even if we'll just turn around and
+		# reject it. Otherwise the attempt to reject with the
+		# original reason will fail.
+		##########
+		${ACCEPT} ${c} >/dev/null 2>&1
+
+		echo ${astate} | grep "${c} A " >/dev/null 2>&1 || {
+			reason="`echo \"${astate}\" | cut -c23-`"
+			${REJECT} -r "${reason}" ${c} >/dev/null 2>&1
+		}
+
+		dot
+	    done
+	fi
+
+
+	##########
+	#
+	# Default destination stays the same.
+	##########
+	cp ${SPOOLDIR}/default ${ETCLP}/default
+	dot
+
+	##########
+	#
+	# Restore the original models (minus any "standard").
+	##########
+	safe_model=${SPOOLDIR}/.${PKGINST}.model
+	if [ -d "${safe_model}" ] && ls ${safe_model}/* >/dev/null 2>&1
+	then
+		cd ${safe_model}
+		rm -f standard
+		find . -print \
+		| cpio -Vdump ${USRLIBLP}/model 2>/dev/null
+		cd /
+	fi
+
+	rm -rf ${SPOOLDIR}
+
+
+	echo "
+
+The LP Print Service configuration looks like this:
+"
+	${LPSTAT} -s
+
+
+	echo "
+Continuing with the balance of the installation."
+
+	;;
+
+##########
+##
+## Convert SVR3.2 configuration to SVR4.0 configuration
+##
+##########
+
+SVR3.2 )
+
+	echo "
+Setting up the new LP Print Service configuration to look like the old
+configuration.
+
+This may take a few minutes."
+
+	cd ${SPOOLDIR}
+	if [ -d model ]
+	then
+		rm -f model/standard
+		find model -print \
+		| cpio -Vdump ${USRLIBLP} 2>/dev/null
+	fi
+
+	cd ${SPOOLDIR}
+	if [ -d temp ]
+	then
+		cd temp
+		find . -print \
+		| cpio -Vdump ${VARSPOOLLP_TMP} 2>/dev/null
+	fi
+
+	cd ${SPOOLDIR}
+	if [ -d requests ]
+	then
+		cd requests
+		find . -print \
+		| cpio -Vdump ${VARSPOOLLP_REQUESTS} 2>/dev/null
+	fi
+
+	cd ${SPOOLDIR}
+	if [ -d bin ]
+	then
+		rm -f \
+			bin/alert.proto \
+			bin/drain.output \
+			bin/lp.cat \
+			bin/lp.page \
+			bin/lp.set \
+			bin/lp.tell \
+			bin/lpsched.jr \
+			bin/slow.filter
+		find bin -print \
+		| cpio -Vdump ${USRLIBLP} 2>/dev/null
+	fi
+
+	cd ${SPOOLDIR}
+	if [ -d admins ]
+	then
+		cd admins
+		cat lp/filter.table >>${ETCLP}/filter.table 2>/dev/null
+		rm -f lp/filter.table lp/filter.table.i
+		dot
+
+		if [ -d lp ]
+		then
+			cd lp
+			rm -rf logs
+			find . -print \
+			| cpio -Vdump ${ETCLP} 2>/dev/null
+		fi
+	fi
+
+	cd ${SPOOLDIR}
+	mv users default ${ETCLP}
+	rm -rf \
+		model \
+		temp \
+		requests \
+		bin \
+		admins \
+		fifos \
+		logs
+	find . -print | cpio -Vdump ${VARSPOOLLP} 2>/dev/null
+
+	cd /
+	rm -rf ${SPOOLDIR}
+	${LPSCHED} >/dev/null 2>&1
+
+	echo "
+
+The LP Print Service configuration looks like this:
+"
+	${LPSTAT} -s
+
+
+	echo "
+Continuing with the balance of the installation."
+
+	;;
+
+##########
+##
+## Either SVR4.0 confirutation already, or nothing.
+##
+##########
+
+SVR4.0 | NONE )
+
+	cd /
+	${LPSCHED} >/dev/null 2>&1
+	;;
+
+esac
+
+
+##########
+#
+# Perhaps open the enable and disable commands to regular users.
+##########
+if [ "${OPEN_ENABLE_DISABLE}" = y ]
+then
+	installf ${PKGINST} ${ENABLE} f 4555 lp lp || exit 1
+	dot
+	installf ${PKGINST} ${DISABLE}=${ENABLE} l || exit 1
+	dot
+fi
+
+
+##########
+#
+# Get rid of any old startup/shutdown scripts.
+##########
+rm -f /etc/rc.d/lp /etc/shutdown.d/lp 2>/dev/null
+dot
+
+
+##########
+#
+# ``Compile'' the filter table entries. This is a tad
+# complicated, because we want to preserve the original
+# filter.table and filter.table.i entries.
+#
+# Note: We do this whether or not we are installing any particular
+# sub-package (e.g. PostScript), so that it gets done in one place.
+# The OAM installation process won't install a class not listed
+# in the $CLASSES variable, so we won't be compiling anything
+# we shouldn't.
+##########
+
+FILTERTABLE=${ETCLP}/filter.table
+FILTERTABLE_I=${ETCLP}/filter.table.i
+FDTMP=${ETCLP}/fd
+FILTERTABLE_TMP=${FDTMP}/filter.table
+
+if ls ${FDTMP}/*.fd >/dev/null 2>&1
+then
+	#####
+	#
+	# The regular filter table:
+	#####
+	for fd in ${FDTMP}/*.fd
+	do
+		filter=`expr "${fd}" : '.*/\([^/]*\)\.fd$'`
+		${LPFILTER} -f ${filter} -F ${fd}
+		dot
+	done
+
+	#####
+	#
+	# The ``factory installed'' filter table:
+	#####
+	mv ${FILTERTABLE} ${FILTERTABLE_TMP}
+	mv ${FILTERTABLE_I} ${FILTERTABLE} 2>/dev/null
+	for fd in ${FDTMP}/*.fd
+	do
+		filter=`expr "${fd}" : '.*/\([^/]*\)\.fd$'`
+		${LPFILTER} -f ${filter} -F ${fd}
+		dot
+	done
+	mv ${FILTERTABLE} ${FILTERTABLE_I}
+	mv ${FILTERTABLE_TMP} ${FILTERTABLE}
+
+	removef ${PKGINST} ${FDTMP}/*.fd >/dev/null
+	rm -f ${FDTMP}/*.fd
+	dot
+fi
+removef ${PKGINST} ${FDTMP} >/dev/null
+rm -fr ${FDTMP}
+dot
+
+
+##########
+#
+# We no longer need the program that dumps old LP Spooler
+# status files. It was added in this installation procedure
+# only so we could use it to convert from old to new.
+##########
+removef ${PKGINST} ${DUMPOLP} >/dev/null
+rm -f ${DUMPOLP}
+dot
+
+
+##########
+#
+# If we are installing the PostScript filters, et al, then we need
+# to compile the troff font-width tables.
+##########
+
+DEVPOST=${FONTDIR}/devpost
+CHARLIB=${DEVPOST}/charlib
+MAKEDEV=${FONTDIR}/makedev
+LINKFILE=${DEVPOST}/LINKFILE
+ASCII="DESC ? ??"
+FULLASCII="${DEVPOST}/DESC ${DEVPOST}/? ${DEVPOST}/??"
+
+if [ "${COMPILE_FONT_TABLES}" = y ]
+then
+	echo "
+
+Setting up the PostScript font-width tables."
+
+	#####
+	#
+	# We have to play this game because the stupid prototype-file
+	# parser can't handle an = in a filename.
+	#
+	# NOTE: The "installf" program also can't handle the = in
+	# a filename, so we can't correct the name in the "contents"
+	# database.
+	#####
+	mv ${DEVPOST}/charlib/~ ${DEVPOST}/charlib/~=
+	dot
+
+	cd ${DEVPOST}
+
+	${MAKEDEV} ${ASCII} >/dev/null 2>&1
+	dot
+	(
+		for file in *.out
+		do
+			echo "${DEVPOST}/${file} f 444 lp lp"
+		done
+		sed -n -e "s;^ln \(.*\) \(.*\);${DEVPOST}/\2=${DEVPOST}/\1 l;p" <${LINKFILE}
+	) | installf ${PKGINST} -
+	dot
+
+	#####
+	#
+	# Remove the font-width-table source, add in the compiled.
+	#####
+	removef ${PKGINST} ${FULLASCII} >/dev/null
+	rm -f ${FULLASCII}
+	dot
+
+	#####
+	#
+	# Remove tools no longer needed.
+	#####
+	removef ${PKGINST} ${MAKEDEV} ${LINKFILE} >/dev/null
+	rm -f ${MAKEDEV} ${LINKFILE}
+
+	echo
+fi
+
+
+##########
+#
+# Complete the installation database
+##########
+removef -f ${PKGINST} || exit 1
+installf -f ${PKGINST} || exit 1
+
+
+echo "
+Finished setting up the new LP Print Service configuration.
+
+
+To start the LP Print Service, reboot the system or
+enter the following command:
+
+		/usr/lib/lpsched
+
+
+To change the LP Print Service configuration, or to examine it  again,
+enter the following command:
+
+
+		sysadm
+
+Then select the menu item:
+
+		printers         - Printer Configuration and Services
+
+
+"
+	
+	${LPSHUT} >/dev/null 2>&1
+exit 0

@@ -1,0 +1,118 @@
+#ident	"@(#)scsi.in:install/Remove	1.1"
+#
+#	SCSI Utility Remove Package
+#
+BLD=$1
+TMP=/tmp/scsidrv.err1
+ERROR1="An an error was encountered removing the SCSI Utility package.\
+  The file $TMP contains errors reported by the system."
+ERROR2="The kernel rebuild failed.  However all software dealing with the \
+SCSI Utility has been removed.  The SCSI Utility Package - Version \
+1.0 will still appear in the Show Installed Software / Remove Installed \
+Software menus because the kernel still has the driver in it.  \
+Please correct the problem and remove the software again.  The file \
+$TMP contains error reported by the system."
+
+rm -f $TMP > /dev/null 2>&1
+if [ $# != 1 ]
+then echo "\n\n\n\n\n\nRemoving SCSI Utility Package - Version 1.0 ...\c"
+fi
+
+if [ -x /etc/conf/bin/idcheck -a -x /etc/conf/bin/idbuild -a -x /etc/conf/bin/idinstall ]
+then 
+	:
+else 
+	message "The Installable Driver feature has been removed.  The SCSI Utility package cannot be removed."
+	exit 1
+fi
+
+for DRIVER in scsi sd01 st01 sc01 sw01
+do
+	/etc/conf/bin/idcheck -p $DRIVER 2>/dev/null
+	if [ $? = 0 ]
+	then
+		message "Warning: Driver \"$DRIVER\" was not installed. Strike ENTER to continue or DEL to abort."
+	fi
+done
+
+echo ".\c"
+
+for DRIVER in scsi sd01 st01 sc01 sw01
+do
+	/etc/conf/bin/idinstall -d ${DRIVER} 2>> $TMP
+	if [ $? != 0 ]
+	then
+		message $ERROR1
+		exit 1
+	fi
+done
+
+echo ".\c"
+
+rm -f /usr/include/sys/ad1542.h
+rm -f /usr/include/sys/cdrom.h
+rm -f /usr/include/sys/sc01.h
+rm -f /usr/include/sys/scsi.h
+rm -f /usr/include/sys/sd01.h
+rm -f /usr/include/sys/sd01_ioctl.h
+rm -f /usr/include/sys/sdi.h
+rm -f /usr/include/sys/sdi_edt.h
+rm -f /usr/include/sys/st01.h
+rm -f /usr/include/sys/sw01.h
+rm -f /usr/include/sys/worm.h
+
+if [ -d /dev/rmt ]
+then
+	rm -f /dev/rmt/qtape
+	rm -f /dev/rmt/qtapen
+	if [ 3 -eq `expr \`ls -al /dev/rmt | wc -l\`` ]
+	then
+		rm -rf /dev/rmt
+	fi
+fi
+
+rm -f /dev/dsk/c*t*l*s*
+rm -f /dev/rdsk/c*t*l*s*
+rm -rf /etc/scsi
+
+if [ -d /dev/cdrom ]
+then
+	rm -rf /dev/cdrom
+fi
+
+if [ -d /dev/rcdrom ]
+then
+	rm -rf /dev/rcdrom
+fi
+
+if [ -d /dev/worm ]
+then
+	rm -rf /dev/worm
+fi
+
+if [ -d /dev/rworm ]
+then
+	rm -rf /dev/rworm
+fi
+
+if [ -d /dev/scsi ]
+then
+	rm -rf /dev/scsi
+fi
+
+echo ".\c"
+
+############
+
+echo "...Complete.\n\n"
+if [ "$BLD" != NOBUILD ]
+then
+	/etc/conf/bin/idbuild 2>> $TMP
+	if [ $? != 0 ]
+	then
+		message $ERROR2
+		exit 1
+	fi
+fi
+rm -f $TMP
+exit 0

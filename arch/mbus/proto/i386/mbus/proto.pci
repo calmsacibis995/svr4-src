@@ -1,0 +1,13 @@
+/dev/null
+2300 192
+d--755 2 2
+    etc	d--755 2 2
+	default		d--777 2 2
+	    bootserver		d--777 2 2
+		config		---666 2 2 etc/default/bootserver/config
+		pci258		---666 2 2 etc/default/bootserver/pci258
+		pci258.1m	---666 2 2 etc/default/bootserver/pci258.1m
+	    $
+	$
+    $
+$

@@ -1,0 +1,120 @@
+#ident	"@(#)libc-port:gen/errlist	1.10"
+
+1	Not owner
+2	No such file or directory
+3	No such process
+4	Interrupted system call
+5	I/O error
+6	No such device or address
+7	Arg list too long
+8	Exec format error
+9	Bad file number
+10	No child processes
+11	No more processes
+12	Not enough space
+13	Permission denied
+14	Bad address
+15	Block device required
+16	Device busy
+17	File exists
+18	Cross-device link
+19	No such device
+20	Not a directory
+21	Is a directory
+22	Invalid argument
+23	File table overflow
+24	Too many open files
+25	Not a typewriter
+26	Text file busy
+27	File too large
+28	No space left on device
+29	Illegal seek
+30	Read-only file system
+31	Too many links
+32	Broken pipe
+33	Argument out of domain
+34	Result too large
+35	No message of desired type
+36	Identifier removed
+37	Channel number out of range
+38	Level 2 not synchronized
+39	Level 3 halted
+40	Level 3 reset
+41	Link number out of range
+42	Protocol driver not attached
+43	No CSI structure available
+44	Level 2 halted
+45	Deadlock situation detected/avoided
+46	No record locks available
+50	Bad exchange descriptor
+51	Bad request descriptor
+52	Message tables full
+53	Anode table overflow
+54	Bad request code
+55	Invalid slot
+56	File locking deadlock
+57	Bad font file format
+60	Not a stream device
+61	No data available
+62	Timer expired
+63	Out of stream resources
+64	Machine is not on the network
+65	Package not installed
+66	Object is remote
+67	Link has been severed
+68	Advertise error
+69	Srmount error
+70	Communication error on send
+71	Protocol error
+74	Multihop attempted
+77	Not a data message
+78	File name too long
+79	Value too large for defined data type
+80	Name not unique on network
+81	File descriptor in bad state
+82	Remote address changed
+83	Can not access a needed shared library
+84	Accessing a corrupted shared library
+85	.lib section in a.out corrupted
+86	Attempting to link in more shared libraries than system limit
+87	Can not exec a shared library directly
+89	Operation not applicable
+90	Number of symbolic links encountered during path name traversal exceeds MAXSYMLINKS
+93	Directory not empty
+94	Too many users
+95	Socket operation on non-socket
+96	Destination address required
+97	Message too long
+98	Protocol wrong type for socket
+99	Option not supported by protocol
+120	Protocol not supported
+121	Socket type not supported
+122	Operation not supported on transport endpoint
+123	Protocol family not supported
+124	Address family not supported by protocol family
+125	Address already in use
+126	Cannot assign requested address
+127	Network is down
+128	Network is unreachable
+129	Network dropped connection because of reset
+130	Software caused connection abort
+131	Connection reset by peer
+132	No buffer space available
+133	Transport endpoint is already connected
+134	Transport endpoint is not connected
+135	Structure needs cleaning
+137	Not a name file
+138	Not available
+139	Is a name file
+140	Remote I/O error
+141	Reserved for future use
+142
+143	Cannot send after socket shutdown
+144	Too many references: cannot splice
+145	Connection timed out
+146	Connection refused
+147	Host is down
+148	No route to host
+149	Operation already in progress
+150	Operation now in progress
+151	Stale NFS file handle

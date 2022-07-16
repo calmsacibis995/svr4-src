@@ -1,0 +1,141 @@
+'\"#ident	"@(#)ucbtroff:troff.d/tmac.d/exp.toc	1.1"
+'\"		PROPRIETARY NOTICE (Combined)
+'\"
+'\"This source code is unpublished proprietary information
+'\"constituting, or derived under license from AT&T's UNIX(r) System V.
+'\"In addition, portions of such source code were derived from Berkeley
+'\"4.3 BSD under license from the Regents of the University of
+'\"California.
+'\"
+'\"
+'\"
+'\"		Copyright Notice 
+'\"
+'\"Notice of copyright on this source code product does not indicate 
+'\"publication.
+'\"
+'\"	(c) 1986,1987,1988,1989  Sun Microsystems, Inc
+'\"	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+'\"	          All rights reserved.
+.	\" CE - table of contents entry
+.	\" $1: header type: C=Chapter A=Appendix N=NumHdr T=Table F=Figure
+.	\" $2: level number (not much use for tables and figures)
+.	\" $3: text 
+.	\" $4: page number
+.	\" $5: chapter number
+.	\" $6...: other numbers (table and figure number for example)
+.de CE
+.fi
+.na
+.nh
+.					\" set up page number
+.ds rS \\$4
+.					\" first level headers: bold numbers
+.if '\\$1'C' .ds rS \fB\\$4\fP
+.if '\\$1'A' .ds rS \fB\\$4\fP
+.if '\\$1'N' .if '\\$2'1' .ds rS \fB\\$4\fP
+.					\" set up left string indents
+.rm lS
+.if '\\$1'N' \{\
+.	if '\\$2'2' .ds lS "    \\$5.\\$6.  
+.	if '\\$2'3' .ds lS "              
+.	if '\\$2'4' .ds lS "                  
+.	if '\\$2'5' .ds lS "                   
+.	nr tf 0
+.\}
+.if '\\$1'T' \{\
+.	ds lS Table
+.	nr tf 1
+.\}
+.if '\\$1'F' \{\
+.	ds lS Figure
+.	nr tf 1
+.\}
+.if \\n(tf=1 \{\
+.	if !\\$5\\*(oS .sp
+.	ds oS \\$5
+.	if !\\$50 .as lS " \\$5-\\$6\ \ 
+.	if \\$50 .as lS " \\$6\ \ 
+.	if '\\$1'F' .ds lS Figure \\$5-\\$6\ \ 
+.\}
+.nr NS 0
+.if '\\$1'C' .nr NS 1
+.if '\\$1'A' .nr NS 1
+.if !\\nH=1 .if \\n(NS=1 \{\
+.	if '\\$1'C' .ds lS \fBChapter \\$5\fP\ \ 
+.	if '\\$1'A' .ds lS \fBAppendix \\$5\fP\ \ 
+.	sp
+.\}
+.if \\nH=1 .if \\n(NS=1 \{\
+.	nr cF 1
+.	bp
+.	po \\n(POu
+.	PL LEFT
+.	\" lay down gray bar
+\!x P gsave
+\!x P 6.0 576 mul  0.0 moveto
+\!x P 8.5 576 mul  0.0 lineto
+\!x P 8.5 576 mul 11.0 576 mul lineto
+\!x P 6.0 576 mul 11.0 576 mul lineto
+\!x P 6.0 576 mul  0.0 lineto
+\!x P 0.99 setgray fill grestore
+.	\" lay down logo
+.	rs
+.	sp |9i-\\n(.vu
+.	ps 128
+\!x P gsave 0.70 setgray
+\h'5.5i'\(su
+\!x P grestore
+.	ps
+.	GB 0.75i 5.75i
+.	sp |2.0i-\\n(.vu
+\s36\l'5i'\s0
+.	sp |2.0i-0.125i-\\n(.vu
+.	ps 48
+.	ta \\n(LLuR
+	\&\\$5
+.	br
+.	ps 22
+.	vs 26
+.	sp |2.5i-4p-5.5p
+\&\\$3
+.	br
+.	rm lS
+.	ps 11
+.	vs
+.\}
+.				\" reduce line length (8n for now)
+.ll -8n
+.sp 3p
+.ne 3v
+.nr wN \\w\\*(lSu		\" wN = width of left indent string
+.in +\\n(wNu
+.ti -\\n(wNu			\" don't indent first line
+.if \\nH=1 .if \\n(NS=1 .sp |3.5i-3p-4p
+.				\" first level headers in larger point size
+.ds mS \\$3
+.if \\n(NS=1 .ds mS \s+1\\$3\s-1
+.if \\n(NS=1 .ds lS \s+1\\*(lS\s-1
+.if \\n(NS=1 .ds rS \s+1\\*(rS\s-1
+.				\" output left string (lS) and text (mS)
+\&\\*(lS\\*(mS
+.if \\nH=1 .if \\n(NS=1 .br
+.vs \\n(.sp+3p			\" normalize spacing
+.				\" need two lines for moving-backward hack
+.ne 2v
+.ll
+.in
+.				\" output leader & page number
+.nf				\" leaders only work right in no-fill mode!
+.				\" if last line broke, correct for indent:
+.if (\\w\\*(lS\\*(mSu)<=(\\n(.lu-\\n(.iu-8n) .nr wN 0
+.ll -\\n(wNu
+.ti +\\n(wNu
+.ie \w\\*(rSu>5n .ta \\n(.lu-\\n(.iu-\w\\*(rSu-1nR \\n(.lu-\\n(.iuR
+.el .ta \\n(.lu-\\n(.iu-5nR \\n(.lu-\\n(.iuR
+.sp -1v
+.vs
+\\h'|\\n(.nu+.5n'\s-3\a\s+3\t\\*(rS
+.if \\nH=1 .if \\n(NS=1 .sp 0.25i
+.ll
+..

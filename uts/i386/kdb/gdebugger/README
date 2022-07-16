@@ -1,0 +1,6 @@
+#ident	"@(#)kdb:gdebugger/README	1.1"
+
+			GDEBUGGER
+
+This module implements the GDEBUGGER kernel debugger, a simple traditional-
+style kernel debugger (originally known as the ICO debugger from Intel Corp.).

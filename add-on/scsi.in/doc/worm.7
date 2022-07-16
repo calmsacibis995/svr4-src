@@ -1,0 +1,279 @@
+WORM(7)									WORM(7)
+
+NAME
+	worm - Write Once Read Multi device (Optical Disk)
+
+DESCRIPTION
+	The optical disk system consists of the optical disk drives and the
+	optical disk controller to which up to 8 optical disk drives can be
+	connected.  A total of 8 host computers, optical disk controllers and
+	other controllers can be connected through the SCSI bus in the daisy
+	chain structure, allowing users to construct either a single-host system
+	or multiple-host system.
+
+	The information concerning the optical disk media is stored in the
+	control block, which can be read through the software interface of the
+	ioctl(2) system calls.
+	A sequential number is given to each block of the user storage area as
+	logical block address, through which the host computers (initiators)
+	can specify the block.
+
+	Since the alternate management areas except the alternate block area
+	and the control block will not be released to users, these areas are
+	not described in this manual.
+
+    Major Number
+	The Major number is automatically decided by package installation tool.
+
+    Minor Number
+	Specifies the value that is number of the optical disk drive unit.
+	Minor number is as follows.
+
+		7       6       5       4       3       2       1       0
+		0       0       0       0       0       x       x       x
+			reserved                         unit number
+
+    Device Name
+	The optical disk device file names (which correspond to a specific
+	major and minor device) use the following format:
+
+		/dev/{r}worm/wm{0,1,2,3,4,5,6}
+
+	where r indicates a raw (character) interface to the optical disk,
+	rworm selects the raw device interface and worm selects the block device
+	interface.
+	0,1,2,3,4,5 or 6 selects the number of the optical disk drive unit:
+	wm0 selects lowest SCSI ID's optical disk drive unit.
+	wm1 selects 2nd lower SCSI ID's optical disk drive unit.
+
+	This driver supported TOSHIBA OPTICAL DISK WM series.
+
+Ioctl Calls
+	B_GETTYPE:
+		This call is used to get the bus name (SCSI) and the device
+		driver name in arg, taken as a pointer to type struct bus_type.
+
+	B_GETDEV:
+		This call is used to get the pass-through major/minor number
+		in arg,	taken as a pointer to type long.
+
+	SDI_RESERVE:
+		This call is used to reserve a SCSI device.
+
+	SDI_RELEASE:
+		This call is used to release a SCSI device.
+
+	W_ERRMSGON:
+		This call is used to cause a error message from the WORM
+		target driver to be printed.
+		Normally, the driver prints it.
+
+	W_ERRMSGOFF:
+		This call is used to cause a error message from the WORM
+		target driver to be not printed.
+
+	W_TESTUNIT (Test Unit Ready):
+		This call is used to  check whether a specified optical disk is
+		in the ready status or not.  If it is not ready, this function
+		returns -1.  If it is ready, it returns 0.
+
+	W_REZERO (Rezero Unit):
+		This call is used to move the head of the optical disk drive to
+		inside the storage area of the optical disk.
+		If it has been properly moved, zero will be returned.  If not,
+		-1 will be returned.
+
+	W_SEEK (Seek):
+		This call is used to move the head to a specified block.  The
+		target address must be specified by the block number.
+		This request can be performed only when the optical disk system
+		in the ready state.
+		The argument to the ioctl is the logical block number.
+		If it has been properly moved, zero will be returned.  If not,
+		-1 will be returned.
+
+		Note that the access pointer to be moved by the lseek(2) will
+		not change.
+
+	W_INQUIR (Inquiry):
+		This call is used to read the inquiry data describing the
+		attributes of the optical disk drive.
+		The inquiry data of the optical disk drive consists of 126
+		bytes.  However, it can read whatever the length required by use
+		defined specification.
+		The argument to the ioctl is the address of one of the following
+		structures, defined in <sys/worm.h>,with the first  filed filled
+		in; the second field is filled in by the ioctl and returned to
+		the user:
+
+		struct worm_inq {
+			unsigned short length;	/* The length of the required sense data*/
+			char		*addr;	/* First address of the space where the */
+						/* inquiry data is stored */
+		};
+
+	W_STRTUNIT (Start Unit):
+		This call is used to set the optical disk drive ready.
+
+	W_STOPUNIT (Stop Unit):
+		This call is used to set the optical disk drive idle.
+
+	W_PREVMV (Prevent Medium Removal):
+		This call is used to disable the eject switch of the optical
+		disk cartridge.
+
+	W_ALLOMV (Allow Medium Removal):
+		This call is used to enable the eject switch of the optical disk
+		cartridge.
+
+	W_READCAPA (Read Capacity);
+		This call is used to transfer the last block address of a
+		optical disk being loaded and block size (data length) of each
+		logical block.
+		The argument to the ioctl is the address of one of the
+		following structures, defined in <sys/worm.h>.
+
+		struct worm_capacity {
+			unsigned long    addr;	/* Logical block address */
+			unsigned long    len;	/* Block length */
+		};
+
+	W_VERIFY (Verify):
+		This call is used to perform verification of a specified
+		sequence of blocks from a specified block address.
+		Up to 65535 blocks can be specified.  If the number of blocks is
+		0, verification is not performed, and the request will be
+		terminated normally.
+		If an error has been caused upon verification, -1 will be
+		returned.
+
+		The argument to the ioctl is the address of one of the following
+		structures, defined in <sys/worm.h>, with the two filed filled
+		in.
+
+		struct worm_verify {
+			long	start;		/* Block number at which verification starts */
+			long	num;		/* Number of blocks on which verification is */
+					   	/* to be performed */
+		};
+
+	W_STNCHECK (Standby Check):
+		This call is used to read the standby data about the mounting
+		status of the optical disk cartridge of the optical disk drive.
+
+		00H : Non cartridge
+		01H : Cartridge at the tray
+		02H : Cartridge already mounted
+		03H : Error of mounting
+
+		The argument to the ioctl is the first address of the space
+		where the standby data is stored.
+	
+	W_LOADCART (Load Cartridge):
+		This call is used to load the optical disk cartridge.
+		This request is effective irrespective to the specifications by
+		the W_PREVMV and W_ALLOMV requests.
+		If the cartridge has been loaded normally, the DISK lamp on the
+		front panel of the optical disk drive will be turned on. 
+
+	W_UNLOADCA (Unload Cartridge):
+		This call is used to unload the optical disk cartridge.  If it
+		has been normally unloaded, the DISC lamp will be turned off.
+
+	W_READCB (Read Control Block):
+		This call is used to read the contents of the control block from
+		the optical disk of the optical disk system.  The control block
+		has 1024 bytes.
+		This request can be performed only when the optical disk is in
+		the ready state.
+
+		The argument to the ioctl is the first address of the space
+		where the content of the control block is stored.
+
+	W_CHECK (Check):
+		This call is used to check a specified number of sequential
+		blocks from a specified block address, and transmits the check
+		data.
+		This request checks for stored blocks and abnormal address
+		blocks.  If any stored block or abnormal address block is
+		detected, it stops checking and transmits the check data.
+		If all the blocks have been found normal, it transmits the check
+		data after checking all the blocks within the check range.
+		If the number of blocks specified is 0, checking or transmitting
+		the check data will not be performed.
+
+		The argument to the ioctl is the address of one of the following
+		structures, defined in <sys/worm.h>,with the first two filed
+		filled in; the third field and the fourth field are filled in by
+		the ioctl and returned to the user:
+
+		struct worm_check {
+			long	start;		/* Block number where checking starts */
+			long	num;		/* Number of blocks to be checked */
+			long	block;		/* The number of the block checked lastly */
+			long	result;		/* The result of the check */
+		};
+
+
+		The worm_check.block indicates the number of the block that is
+		checked lastly.  If all the blocks are correct, it indicates the
+		number of the specified last block.  If there is any factor to
+		be checked, it indicates the number of the block where the
+		factor is.
+
+		The worm_check.block is the result of the check executed by this
+		value is as follows:
+
+			00H	Data-unrecorded block and address information
+				are correct.
+			01H	Data-recorded block and address information are
+				correct.
+			02H	Address information is incorrect.			
+
+	W_CCHECK (Contrary Check)
+		This call is used to check a specified number of sequential
+		blocks from a specified block address, and transmits the check
+		data.
+		If any unstored block or abnormal address block is detected, it 		stops checking and transmits the check data.
+		If all the blocks have been found normal, it transmits the check
+		data after checking all the blocks within the checking range.
+		If the number of blocks specified is 0, checking or transmitting
+		the check data will not be performed.
+		The argument to the ioctl is the address of one of the following
+		structures, defined in <sys/worm.h>,with the first two filed
+		filled in; the third field and the fourth field are filled in by
+		the ioctl and returned to the user:
+
+		struct worm_check {
+			long	start;		/* Block number where checking starts */
+			long	num;		/* Number of blocks to be checked */
+			long	block;		/* The number of the block checked lastly */
+			long	result;		/* The result of the check */
+		};
+
+FILES
+	/usr/include/sys/worm.h
+	/dev/{r}wrom/wm[0-7]
+
+SEE ALSO
+	scsi(7).
+	ioctl(2) in the Programmer's Reference Manual.
+	UNIX System V, SCSI Driver Interface (SDI), Driver Reference Manual.
+	UNIX System V/386, Block and Character Interface (BCI), Device Driver
+	Reference Manual
+	Small Computer System Interface (SCSI) Specification (ANSI X3.131-1986)
+	Common Command Set (CCS) Specification (ANSI X3T9.2,/85-52 Rev 4B)
+	TOSHIBA Optical Disk Controller WM-D070/D071 Interface Specifications
+	TOSHIBA Optical Disk Subsystem WM-S070/S071 Product Specifications
+
+DIAGNOSTICS
+	The driver will retry failed transfers up to five times depending on the
+	error type. Certain errors are not retried. The driver will display an
+	appropriate message upon encountering an error during the transfer.
+	Error types that are retried are indicated in the table below. Errors
+	from the optical disk controller are displayed as follows:
+
+		SW01: LU x - error_message
+
+	This message occurs on an error after a tarnsfer has begun, where x is
+	the optical disk drive unit number.

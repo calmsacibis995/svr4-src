@@ -1,0 +1,8 @@
+#ident	"@(#)kdb:kdb-util/README	1.2"
+
+			Common Files
+
+kdb.c		interface to the kernel plus common routines.
+
+db_as.c		generalized "address-space" access routines
+../db_as.h	and associated header file.

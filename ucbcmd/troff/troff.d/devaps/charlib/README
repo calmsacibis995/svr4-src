@@ -1,0 +1,43 @@
+#ident	"@(#)ucbtroff:troff.d/devaps/charlib/README	1.1"
+
+
+#		PROPRIETARY NOTICE (Combined)
+#
+#This source code is unpublished proprietary information
+#constituting, or derived under license from AT&T's UNIX(r) System V.
+#In addition, portions of such source code were derived from Berkeley
+#4.3 BSD under license from the Regents of the University of
+#California.
+#
+#
+#
+#		Copyright Notice 
+#
+#Notice of copyright on this source code product does not indicate 
+#publication.
+#
+#	(c) 1986,1987,1988,1989  Sun Microsystems, Inc
+#	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+#	          All rights reserved.
+
+
+
+The files in this directory are only read by daps when it encounters
+an error in trying to print a character. For example if we're trying
+to print character Lb in size 36 the routines in build.c first look
+for file Lb.36 and then for Lb. If neither exists daps considers it
+an error and quits. This stuff was added to daps and the font directories
+so the new logo could be processed as a single character. We were told
+by Autologic that even if the new logos occupied more than one character
+position all the pieces would be pulled in and printed when the first
+position was printed. Well it just didn't work that way so I added this
+stuff as a temporary way around the problem.
+
+Use of these tables really depends on the fact that daps and troff
+read different tables. Troff considers the characters legal and will
+put out instructions to print them, but daps won't find them in the
+font tables that it's using which causes the special routines in
+build.c to look in this directory.
+
+N.B.  The logo files in this directory are included in
+this release only as examples.

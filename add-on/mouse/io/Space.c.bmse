@@ -1,0 +1,20 @@
+#ident	"@(#)mouse:io/Space.c.bmse	1.2"
+#include "config.h"
+#include "sys/param.h"
+#include "sys/types.h"
+#include "sys/termio.h"
+#include "sys/proc.h"
+#include "sys/stream.h"
+#include "sys/xque.h"
+#include "sys/mouse.h"
+#include "sys/mse.h"
+
+struct mouseconfig mse_config = {
+	BMSE_0_SIOA, BMSE_0_VECT
+};
+
+#if defined(BMSE_0) && BMSE_0_VECT
+int mse_nbus = BMSE_UNITS;
+#else
+int mse_nbus = 0;
+#endif

@@ -1,0 +1,10 @@
+#ident	"@(#)/usr/src/add-on/pkg.mse/preinstall.sl 1.1 4.0 12/08/90 1345 AT&T-USL"
+
+NAME=/tmp/mouse.$$
+ps -ef > $NAME
+PID=`cat ${NAME}|grep mousemgr|sed "s/[ ] [ ]*/ /g"|cut -d " " -f3`
+if test $PID 
+then
+	kill -9 $PID
+fi
+rm -f $NAME

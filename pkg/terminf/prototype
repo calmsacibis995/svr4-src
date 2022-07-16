@@ -1,0 +1,73 @@
+#ident	"@(#)pkg.terminf:terminf/prototype	1.16"
+
+# packaging and installation scripts
+
+i pkginfo
+i postinstall
+i postremove
+i request
+
+d none /usr ? ? ?
+d none /usr/share ? ? ?
+d none /usr/share/lib ? ? ?
+d none /etc ? ? ?
+f none /usr/share/lib/termcap 444 root bin
+s none /etc/termcap=/usr/share/lib/termcap
+
+d none /usr/share/lib/tabset 775 root bin
+d none /usr/lib ? ? ?
+s none /usr/lib/tabset=/usr/share/lib/tabset
+f none /usr/share/lib/tabset/3101 444 root bin
+f none /usr/share/lib/tabset/beehive 444 root bin
+f none /usr/share/lib/tabset/std 444 root bin
+f none /usr/share/lib/tabset/teleray 444 root bin
+f none /usr/share/lib/tabset/vt100 444 root bin
+f none /usr/share/lib/tabset/xerox1720 444 root bin
+f none /usr/share/lib/tabset/hds 444 root bin
+f none /usr/share/lib/tabset/hds3 444 root bin
+
+# the following files should be pulled from the cross-env during packaging
+
+d none /usr/bin ? ? ?
+f none /usr/bin/captoinfo=/usr/ccs/bin/captoinfo 555 root bin
+f none /usr/bin/infocmp=/usr/ccs/bin/infocmp 555 root bin
+f none /usr/bin/tic=/usr/ccs/bin/tic 555 root bin
+f none /usr/bin/tput=/usr/ccs/bin/tput 555 root bin
+f none /usr/bin/clear 555 bin bin
+
+d none /tmp ? ? ?
+d none /tmp/terminf 444 root bin
+v none /tmp/terminf/adds.ti=/usr/share/lib/terminfo/ti/adds.ti 444 root bin
+v none /tmp/terminf/annarbor.ti=/usr/share/lib/terminfo/ti/annarbor.ti 444 root bin
+v none /tmp/terminf/ansi.ti=/usr/share/lib/terminfo/ti/ansi.ti 444 root bin
+v none /tmp/terminf/att.ti=/usr/share/lib/terminfo/ti/att.ti 444 root bin
+v none /tmp/terminf/attprint.ti=/usr/share/lib/terminfo/ti/attprint.ti 444 root bin
+v none /tmp/terminf/beehive.ti=/usr/share/lib/terminfo/ti/beehive.ti 444 root bin
+v none /tmp/terminf/cdc.ti=/usr/share/lib/terminfo/ti/cdc.ti 444 root bin
+v none /tmp/terminf/colorscan.ti=/usr/share/lib/terminfo/ti/colorscan.ti 444 root bin
+v none /tmp/terminf/datamedia.ti=/usr/share/lib/terminfo/ti/datamedia.ti 444 root bin
+v none /tmp/terminf/dec.ti=/usr/share/lib/terminfo/ti/dec.ti 444 root bin
+v none /tmp/terminf/diablo.ti=/usr/share/lib/terminfo/ti/diablo.ti 444 root bin
+v none /tmp/terminf/fortune.ti=/usr/share/lib/terminfo/ti/fortune.ti 444 root bin
+v none /tmp/terminf/general.ti=/usr/share/lib/terminfo/ti/general.ti 444 root bin
+v none /tmp/terminf/hardcopy.ti=/usr/share/lib/terminfo/ti/hardcopy.ti 444 root bin
+v none /tmp/terminf/hazeltine.ti=/usr/share/lib/terminfo/ti/hazeltine.ti 444 root bin
+v none /tmp/terminf/hds.ti=/usr/share/lib/terminfo/ti/hds.ti 444 root bin
+v none /tmp/terminf/heath.ti=/usr/share/lib/terminfo/ti/heath.ti 444 root bin
+v none /tmp/terminf/homebrew.ti=/usr/share/lib/terminfo/ti/homebrew.ti 444 root bin
+v none /tmp/terminf/hp.ti=/usr/share/lib/terminfo/ti/hp.ti 444 root bin
+v none /tmp/terminf/lsi.ti=/usr/share/lib/terminfo/ti/lsi.ti 444 root bin
+v none /tmp/terminf/microterm.ti=/usr/share/lib/terminfo/ti/microterm.ti 444 root bin
+v none /tmp/terminf/misc.ti=/usr/share/lib/terminfo/ti/misc.ti 444 root bin
+v none /tmp/terminf/pc.ti=/usr/share/lib/terminfo/ti/pc.ti 444 root bin
+v none /tmp/terminf/perkinelmer.ti=/usr/share/lib/terminfo/ti/perkinelmer.ti 444 root bin
+v none /tmp/terminf/print.ti=/usr/share/lib/terminfo/ti/print.ti 444 root bin
+v none /tmp/terminf/special.ti=/usr/share/lib/terminfo/ti/special.ti 444 root bin
+v none /tmp/terminf/sperry.ti=/usr/share/lib/terminfo/ti/sperry.ti 444 root bin
+v none /tmp/terminf/tektronix.ti=/usr/share/lib/terminfo/ti/tektronix.ti 444 root bin
+v none /tmp/terminf/teleray.ti=/usr/share/lib/terminfo/ti/teleray.ti 444 root bin
+v none /tmp/terminf/televideo.ti=/usr/share/lib/terminfo/ti/televideo.ti 444 root bin
+v none /tmp/terminf/ti.ti=/usr/share/lib/terminfo/ti/ti.ti 444 root bin
+v none /tmp/terminf/tymshare.ti=/usr/share/lib/terminfo/ti/tymshare.ti 444 root bin
+v none /tmp/terminf/visual.ti=/usr/share/lib/terminfo/ti/visual.ti 444 root bin
+v none /tmp/terminf/wyse.ti=/usr/share/lib/terminfo/ti/wyse.ti 444 root bin

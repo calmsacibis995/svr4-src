@@ -1,0 +1,17 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/npack/Menu.npack	1.1"
+
+###############################################################################
+menu="Npack Name to Address Mapping"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/ssmenu.msg | message -p`
+
+name=hosts
+description=Create Addresses Information for NPACK Protocol
+action=OPEN FORM "$INTFBASE/netservices/name_to_addr/npack/Form.npackhost"
+lininfo=menu:host
+
+name=services
+description=Create Service Information for NPACK Protocol
+action=OPEN FORM "$INTFBASE/netservices/name_to_addr/npack/Form.npackserv"
+lininfo=menu:services

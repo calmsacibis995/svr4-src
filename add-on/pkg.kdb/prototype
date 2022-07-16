@@ -1,0 +1,28 @@
+#ident	"@(#)pkg.kdb:prototype	1.4"
+
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license
+#	agreement with Intel Corporation and may not be copied nor
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+!MOD=kdb
+!CONFDIR=/etc/conf
+!PACKDIR=$CONFDIR/pack.d/$MOD
+
+i pkginfo
+i postinstall
+i preremove
+i copyright
+i depend
+
+!default 0544 bin bin
+
+d none /tmp/kdb		775	bin	bin
+v none /tmp/kdb/Driver.o=$PACKDIR/Driver.o ? ? ?
+v none /tmp/kdb/Master=$CONFDIR/mdevice.d/$MOD ? ? ?
+v none /tmp/kdb/System=$CONFDIR/sdevice.d/$MOD ? ? ?

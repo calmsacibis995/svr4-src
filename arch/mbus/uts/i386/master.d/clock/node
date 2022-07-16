@@ -1,0 +1,2 @@
+*ident	"@(#)mbus:uts/i386/master.d/clock/node	1.1"
+clock	rtc	c	0

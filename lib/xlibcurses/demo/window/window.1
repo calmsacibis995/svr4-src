@@ -1,0 +1,132 @@
+.TH WINDOW 1 8/25/82
+.SH NAME
+window \- crt screen window manager
+.SH SYNOPSIS
+.B window
+[
+.BI \-c char
+]
+[
+.BI \-i interval
+]
+[
+.B \-t
+]
+[
+.BI \-T term
+]
+[
+.BI \-w n
+]
+.I windowspec [command] ...
+.SH DESCRIPTION
+.I Window
+manages one or more virtual terminals in windows on your CRT screen.
+Each window is attached to a pty with a shell running on it.
+.PP
+The
+.B \-c
+flag changes the command character, which is normally control underscore.
+.PP
+The
+.B \-i
+flag changes the interval at which inactive windows are checked for output.
+The interval is specified in seconds, an defaults to 1 second.
+.PP
+The
+.B \-t
+flag causes trace output to be created in the file
+.BR wtrace .
+This is useful for debugging.
+The
+.B \-T
+option allows the specification of a terminal type,
+otherwise TERM from the environment is used.
+The current window is initially window 0 unless
+.B \-w
+is given with a window number to be made the initial current window.
+.PP
+A
+.I windowspec
+is a notation for specifying the size and location of a window.
+It consists of either an integer (the number of lines in the window)
+or a pair of integers, separated by a period
+(the top and bottom lines in the window).
+If only the size is indicated, the window will be placed below the
+previous window, allowing one line in between for a border.
+Borders are not required, but to avoid them, it is necessary to
+specify the top and bottom lines explicitly.
+.PP
+A
+.I windowspec
+can optionally be followed by a
+.I command
+(in a single argument) which will be passed to the shell as given,
+followed by a carriage return.
+This can be used to start up processes in windows automatically.
+.PP
+Overlapping windows are possible.
+However, they do not necessarily work as well as non-overlapping windows.
+The current window is always shown at the expense of other windows.
+.PP
+Once inside the program, commands to the window manager are possible.
+These commands are two characters long, consisting of the command
+character (normally control underscore) followed by one of these
+characters:
+.TP
+^_
+A second control underscore (e.g. two in a row) moves to the next window.
+By repeating the sequence, it is possible to move to any window.
+.TP
+^L
+Clears and redraws the screen.
+This is useful is some other program or line noise beyond the control
+of the window manager messes up the screen.
+.TP
+^Z
+Suspend the window manager,
+allowing access to the parent shell.
+.TP
+q
+Quit from the window manager.  All the ptys are closed (causing
+a hangup signal to be sent to user processes) and control is
+returned to the top level shell.
+.PP
+.I Window
+uses the
+.BR curses (3)
+package and
+.BR terminfo (5)
+database.
+The environment variable TERM must be set by the login shell.
+Programs running on ptys have terminal type
+.BR pty ,
+which is interpreted by the window manager.
+Since the number of lines varies from window to window,
+it is necessary for the user to set the environment variable LINES
+to the size of the corresponding window in each pty shell, e.g.
+"setenv LINES 11".
+Another terminal type,
+.BR 1linepty ,
+is available for one line status display windows.
+.SH FILES
+/dev/ptyp?	psuedo-teletype controllers
+/dev/ttyp?	psuedo-teletype slaves
+wtrace	debugging trace file
+.SH BUGS
+.PP
+A window should come up knowing its size.
+Window supports this but currently the kernel does not.
+.PP
+There should be a way to create and delete windows dynamically,
+and to change the size and/or location of a window.
+.PP
+There should be a syntax for windows that are not 80 columns wide.
+Curses supports this, although most terminals would perform poorly.
+Window does not provide any way to access this kind of window.
+.PP
+If the terminal has more than one screen's worth of memory, this extra
+memory cannot be used.
+There should be a provision for memory within each window.
+.PP
+Any bug affecting curses applies here.

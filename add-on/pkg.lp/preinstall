@@ -1,0 +1,156 @@
+#ident	"@(#)/usr/src/add-on/pkg.lp/preinstall.sl 1.1 4.0 12/08/90 37489 AT&T-USL"
+
+
+##########
+##
+## Make sure the user "lp" and group "lp" exist and are
+## consistent.
+##
+##########
+
+PATH=${PATH}:/usr/sadm/bin
+export PATH
+
+if valgid lp
+then
+	entry=`grep '^lp:' /etc/group`
+	gid=`expr "${entry}" : "^lp:[^:]*:\([^:]*\):"`
+else
+	gid=7
+	until groupadd -g ${gid} lp >/dev/null 2>&1
+	do
+		gid=`expr ${gid} + 1`
+	done
+	echo "
+NOTE: The group \"lp\" has been created with ID ${gid}
+"
+fi
+
+if valuid lp
+then
+	entry=`grep '^lp:' /etc/passwd`
+	cgid=`expr "${entry}" : "lp:[^:]*:[^:]*:\([^:]*\):"`
+	if [ ${cgid} -ne ${gid} ]
+	then
+		echo "
+NOTE: Moving the login \"lp\" from group ID ${cgid} to ${gid}
+"
+		usermod -g ${gid} lp
+	fi
+else
+	uid=7
+	until useradd -g ${gid} -u ${uid} lp >/dev/null 2>&1
+	do
+		uid=`expr ${uid} + 1`
+	done
+	echo "
+NOTE: The login \"lp\" has been created with ID ${uid}.
+"
+fi
+
+
+##########
+##
+## Ensure that "lp" can use cron:
+##
+##########
+
+CRONALLOW=/etc/cron.d/cron.allow
+CRONDENY=/etc/cron.d/cron.deny
+
+if [ -f "${CRONDENY}" ] && grep '^lp$' ${CRONDENY} 1>/dev/null 2>&1
+then
+	ed -s ${CRONDENY} <<-'EOF'
+		/^lp$/d
+		w
+		q
+	EOF
+	echo "
+NOTE: The login \"lp\" has been removed from the list of logins
+      denied access to the cron service.
+"
+fi
+
+if [ -f "${CRONALLOW}" ]
+then
+	if grep '^lp$' ${CRONALLOW} 1>/dev/null 2>&1
+	then
+		:
+	else
+		echo "lp" >>${CRONALLOW}
+		echo "
+NOTE: The login \"lp\" has been added to the list of logins
+      allowed to use the cron service.
+"
+	fi
+fi
+
+
+##########
+##
+## Prepare the existing configuration so that it doesn't get
+## clobbered during installation.
+##
+##########
+
+shutdown () {
+	#####
+	#
+	# SVR4.0:
+	#####
+	if [ -x "/usr/sbin/lpshut" ]
+	then
+		/usr/sbin/lpshut >/dev/null 2>&1
+	#####
+	#
+	# SVR3.2 or before:
+	#####
+	elif [ -x /usr/lib/lpshut ]
+	then
+		/usr/lib/lpshut >/dev/null 2>&1
+	fi
+	return 0
+}
+
+if [ -n "${SPOOLDIR_BAK}" ]
+then
+	mv ${SPOOLDIR} ${SPOOLDIR_BAK}
+	SPOOLDIR=${SPOOLDIR_BAK}
+fi
+
+case "${OLD_VERSION}" in
+
+SVR4.0 )
+	shutdown
+	;;
+
+SVR3.2 )
+	shutdown
+	;;
+
+SVR3.1 )
+	shutdown
+
+	safe_class=${SPOOLDIR}/.${PKGINST}.class
+	safe_model=${SPOOLDIR}/.${PKGINST}.model
+
+	if [ -d "${SPOOLDIR}/class" ]
+	then
+		rm -rf "${safe_class}"
+		mv ${SPOOLDIR}/class ${safe_class}
+	fi
+
+	if [ -d "${SPOOLDIR}/model" ]
+	then
+		rm -rf "${safe_model}"
+		mv ${SPOOLDIR}/model ${safe_model}
+	fi
+
+	;;
+
+NONE )
+	shutdown		# just in case
+	rm -rf ${SPOOLDIR}	# just in case
+	;;
+
+esac

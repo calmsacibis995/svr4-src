@@ -1,0 +1,29 @@
+#ident	"@(#)pkg.gdbg:prototype	1.1"
+
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license
+#	agreement with Intel Corporation and may not be copied nor
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+!MOD=gdebugger
+!CONFDIR=/etc/conf
+!PACKDIR=$CONFDIR/pack.d/$MOD
+
+i pkginfo
+i postinstall
+i preremove
+i copyright
+i depend
+
+!default 0544 bin bin
+
+d none /tmp	? ? ?
+d none /tmp/gdebugger		775	bin	bin
+v none /tmp/gdebugger/Driver.o=$PACKDIR/Driver.o ? ? ?
+v none /tmp/gdebugger/Master=$CONFDIR/mdevice.d/$MOD ? ? ?
+v none /tmp/gdebugger/System=$CONFDIR/sdevice.d/$MOD ? ? ?

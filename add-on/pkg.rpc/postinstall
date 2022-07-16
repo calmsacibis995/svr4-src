@@ -1,0 +1,129 @@
+#ident	"@(#)/usr/src/add-on/pkg.rpc/postinstall.sl 1.1 4.0 12/08/90 26043 AT&T-USL"
+
+# install a module.  $1 is the module name
+
+do_install() {
+	ERR=/tmp/${1}.err
+	IDCOMPS="Driver.o Master System Mfsys Sfsys Node"
+	if
+		[ -f ${1}.Dr ]
+	then
+		mv ${1}.Dr Driver.o
+	fi
+	if
+		[ -f ${1}.Sp ]
+	then
+		mv ${1}.Sp Space.c
+	fi
+	if
+		[ -f ${1}.Ma ]
+	then
+		grep -v "^[\*#]ident" ${1}.Ma > Master
+		rm -rf ${1}.Ma
+	fi
+	if
+		[ -f ${1}.Sy ]
+	then
+		grep -v "^[\*#]ident" ${1}.Sy |
+			sed "${SEDCMD1}" >System
+		rm -rf ${1}.Sy
+	fi
+	if
+		[ -f ${1}.Mf ]
+	then
+		grep -v "^[\*#]ident" ${1}.Mf > Mfsys
+		rm -rf ${1}.Mf
+	fi
+	if
+		[ -f ${1}.Sf ]
+	then
+		grep -v "^[\*#]ident" ${1}.Sf |
+			sed "${SEDCMD2}" >Sfsys
+		rm -rf ${1}.Sf
+	fi
+	if
+		[ -f ${1}.No ]
+	then
+		grep -v "^[\*#]ident" ${1}.No > Node
+		rm -rf ${1}.No
+	fi
+	echo "Installing ${NAME} ${1} module ..."
+	${CONFBIN}/idcheck -p ${1} > ${ERR} 2>&1
+	if [ $? = 0 ]
+	then
+		${CONFBIN}/idinstall -a ${1} > ${ERR} 2>&1
+		RET=$?
+	else
+		${CONFBIN}/idinstall -u ${1} > ${ERR} 2>&1
+		RET=$?
+	fi
+	rm -rf ${IDCOMPS}
+	if [ ${RET} != 0 ]
+	then
+		message "The installation cannot be completed due to \
+an error in the driver installation during the installation of the ${1} \
+module of the ${NAME}.  The file ${ERR} contains the errors."
+		exit ${FAILURE}
+	fi
+	rm -rf ${ERR}
+}
+
+FAILURE=1	# fatal error
+
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+VOLATILES=" /tmp/rpc /tmp/rpc/krpc.Dr /tmp/rpc/krpc.Ma /tmp/rpc/krpc.Sy /tmp/rpc/ktli.Dr /tmp/rpc/ktli.Ma /tmp/rpc/ktli.Sy /tmp/rpc/des.Dr /tmp/rpc/des.Ma /tmp/rpc/des.Sy"
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be installed."
+
+SEDCMD1="s/[	 ]N[	 ]/	Y	/"
+SEDCMD2="s/[	 ]N/	Y/"
+
+cd /var/sadm/pkg/${PKG}/install
+
+# determine that ID/TP tools are available
+
+if
+	[ ! -x ${CONFBIN}/idbuild -o ! -x ${CONFBIN}/idinstall \
+			-o ! -x ${CONFBIN}/idcheck ]
+then
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+
+cd /tmp/rpc
+
+for MODULE in krpc ktli des
+do
+	do_install ${MODULE}
+done
+
+# Rename Driver.o to international version of DES
+mv ${CONFDIR}/pack.d/des/Driver.o ${CONFDIR}/pack.d/des/Driver_i.o
+
+# Check if domestic version of DES installed
+if [ -f ${CONFDIR}/pack.d/des/Driver_d.o ]
+then
+	ln -f ${CONFDIR}/pack.d/des/Driver_d.o ${CONFDIR}/pack.d/des/Driver.o
+else
+	ln -f ${CONFDIR}/pack.d/des/Driver_i.o ${CONFDIR}/pack.d/des/Driver.o
+fi
+
+# Remove volatile files from OAM data base
+rm -f ${TMP} 1>/dev/null 2>&1
+removef ${PKGINST} ${VOLATILES} 1>/dev/null 2>&1
+removef -f ${PKGINST} 1>/dev/null 2>&1
+
+# rebuild for changes to take effect
+TMP=/tmp/rpc.$$
+${CONFBIN}/idbuild 2>>${TMP}
+if
+	[ "$?" -ne "0" ]
+then
+	echo "An error has occurred during the rebuild of the UNIX System."
+	echo "Errors have been written to the file " ${TMP}
+	exit ${FAILURE}
+fi
+
+exit 10

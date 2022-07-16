@@ -1,0 +1,181 @@
+#ident	"@(#)libnsl:nsl/_spec	1.11.1.1"
+##
+## WARNING - anyone changing this file without a knowledge
+##           of shared libraries will probably make a mistake and
+##           will force user level programs depending on this library
+##           to be recompiled.
+##
+##	     Any changes to this file or the library that will force
+##           users level programs using this library will have to get
+##           this action approved by system engineering!!!!!!!!!!!!!
+##
+#address .text 0xa1000000
+#address .data 0x14000000
+#target /shlib/libnsl_s
+##
+## branch table
+##
+#branch
+t_accept	1
+t_alloc 	2		
+t_bind 		3
+t_close		4
+t_connect 	5
+t_error 	6
+t_free 		7
+t_getinfo 	8
+t_getstate 	9
+t_listen 	10
+t_look 		11
+t_open 		12
+t_optmgmt	13
+t_rcv 		14
+t_rcvconnect 	15
+t_rcvdis 	16
+t_rcvrel 	17
+t_rcvudata 	18
+t_rcvuderr 	19
+t_snd 		20
+t_snddis	21
+t_sndrel	22
+t_sndudata 	23
+t_sync 		24
+t_unbind	25
+t_getname	26
+_dummy 		27-256
+#objects
+##
+## user accessible global data must be up front
+##
+_data.o
+##
+## objects user accessable data up front
+##
+_errlst.o
+##
+##
+## routines that users switch to
+##
+t_sync.o
+t_snd.o
+t_rcv.o
+t_sndudata.o
+t_rcvudata.o
+_utility.o
+t_rcvuderr.o
+t_look.o
+t_open.o
+t_bind.o
+t_connect.o
+t_rcvconnect.o
+_conn_util.o
+t_error.o
+t_listen.o
+t_accept.o
+t_alloc.o
+t_getinfo.o
+t_rcvrel.o
+t_rcvdis.o
+t_sndrel.o
+t_snddis.o
+t_free.o
+t_optmgmt.o
+t_unbind.o
+t_close.o
+t_getstate.o
+t_getname.o
+##
+## CI5 patch
+##
+__patch.o
+##
+## imported symbols definition files
+##
+__calloc_def.o
+__errno_def.o
+__fcntl_def.o
+__free_def.o
+__ioctl_def.o
+__memcpy_def.o
+__perror_def.o
+__getmsg_def.o
+__putmsg_def.o
+__sigset_def.o
+__strlen_def.o
+__write_def.o
+__open_def.o
+__close_def.o
+__ulimit_def.o
+__getpmsg_df.o
+__putpmsg_df.o
+##
+##
+## everything else
+##
+_dummy.o
+##
+##
+## Additional internal library  data here
+##
+##
+_data2.o
+##
+##
+## Hidden local symbols.
+##
+##
+#hide linker
+	openfiles
+	tiusr_statetbl
+	_snd_conn_req
+	_rcv_conn_con
+	_t_checkfd
+	_t_aligned_copy
+	_t_max
+	_t_putback
+	_t_is_ok
+	_t_do_ioctl
+	_t_alloc_bufs
+	_t_setsize
+	_null_tiptr
+	_t_restore_state
+	_alloc_buf
+	_t_is_event
+##
+##
+## initialization rules
+##
+#init __calloc_def.o
+__calloc		calloc
+#init __errno_def.o
+__errno			errno
+#init __fcntl_def.o
+__fcntl			fcntl
+#init __free_def.o
+__free			free
+#init __ioctl_def.o
+__ioctl			ioctl
+#init __memcpy_def.o
+__memcpy		memcpy
+#init __perror_def.o
+__perror		perror
+#init __getmsg_def.o
+__getmsg		getmsg
+#init __putmsg_def.o
+__putmsg		putmsg
+#init __sigset_def.o
+__sigset		sigset
+#init __strlen_def.o
+__strlen		strlen
+#init __write_def.o
+__write			write
+#init __open_def.o
+__open			open
+#init __close_def.o
+__close			close
+#init __ulimit_def.o
+__ulimit		ulimit
+#init __getpmsg_df.o
+__getpmsg		getpmsg
+#init __putpmsg_df.o
+__putpmsg		putpmsg

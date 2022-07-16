@@ -1,0 +1,30 @@
+#ident	"@(#)pkg.edit:prototype	1.2"
+
+i pkginfo
+i copyright
+
+f none etc/init.d/PRESERVE=/etc/init.d/PRESERVE 0444 root sys
+f none usr/bin/ctags=/usr/bin/ctags 0555 bin bin
+f none usr/bin/deroff=/usr/bin/deroff 0555 bin bin
+f none usr/bin/spell=/usr/bin/spell 0555 bin bin
+f none usr/bin/vi=/usr/bin/vi 0555 bin bin
+d none usr/lib 0775 root bin
+f none usr/lib/expreserve=/usr/lib/expreserve 0555 bin bin
+f none usr/lib/exrecover=/usr/lib/exrecover 0555 bin bin
+d none usr/lib/spell 555 bin bin
+d none usr/share/lib/spell 555	bin	bin
+f none usr/share/lib/spell/compress=/usr/share/lib/spell/compress 0555 bin bin
+f none usr/lib/spell/hashcheck=/usr/lib/spell/hashcheck 0555 bin bin
+f none usr/lib/spell/hashmake=/usr/lib/spell/hashmake 0555 bin bin
+f none usr/share/lib/spell/hlista=/usr/share/lib/spell/hlista 0644 bin bin
+f none usr/share/lib/spell/hlistb=/usr/share/lib/spell/hlistb 0644 bin bin
+f none usr/share/lib/spell/hstop=/usr/share/lib/spell/hstop 0644 bin bin
+f none var/adm/spellhist=/var/adm/spellhist 0666 bin bin
+f none usr/lib/spell/spellin=/usr/lib/spell/spellin 0555 bin bin
+f none usr/lib/spell/spellprog=/usr/lib/spell/spellprog 0555 bin bin
+
+l none usr/bin/edit=usr/bin/vi 0555 bin bin
+l none usr/bin/ex=usr/bin/vi 0555 bin bin
+l none usr/bin/view=usr/bin/vi 0555 bin bin
+l none usr/bin/vedit=usr/bin/vi 0555 bin bin
+l none etc/rc2.d/S02PRESERVE=/etc/init.d/PRESERVE 0444 root sys

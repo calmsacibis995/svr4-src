@@ -1,0 +1,15 @@
+#ident	"@(#)/usr/src/add-on/pkg.kdb/pkginfo.sl 1.1 4.0 12/08/90 39197 AT&T-USL"
+
+# kdb pkginfo
+
+PKG="kdb"
+NAME="KDB Kernel Debugger (RPN)"
+ARCH="i386"
+RELEASE="4.0"
+VERSION="4.0 2.0"
+VENDOR="AT&T-SF"
+CATEGORY="system,utilities"
+CLASSES="none"
+BASEDIR=""
+MAXINST="1"
+

@@ -1,0 +1,38 @@
+#ident	"@(#)/usr/src/pkg/terminf/postremove.sl 1.1 4.0 12/08/90 45718 AT&T-USL"
+
+# Removing /usr/share/lib/terminfo
+
+echo Removing /usr/share/lib/terminfo
+rm -rf /usr/share/lib/terminfo
+echo
+echo 'Removing symbolic link to /usr/lib/terminfo'
+rm /usr/lib/terminfo
+
+#
+# Re-build /usr/share/lib/terminfo
+#
+
+echo Re-installing core terminfo entries
+echo
+if [ -d /usr/share/lib/terminfo ]
+	then :
+	else mkdir /usr/share/lib/terminfo
+		chown bin /usr/share/lib/terminfo
+		chgrp bin /usr/share/lib/terminfo
+		chmod 775 /usr/share/lib/terminfo
+		echo /usr/share/lib/terminfo has been re-built
+fi
+echo
+echo Creating symbolic link between /usr/share/lib/terminfo
+echo and /usr/lib/terminfo
+ln -s /usr/share/lib/terminfo /usr/lib/terminfo
+
+#
+# Re-install core entries
+#
+
+cd /usr/lib/.COREterm
+find . -print | cpio -pdlv /usr/share/lib/terminfo
+echo
+echo Re-installation of core terminfo entries is complete
+echo

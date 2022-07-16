@@ -1,0 +1,141 @@
+		UNIX System V/386
+
+		    Release 4.0
+
+    CD-ROM and WORM target driver Release Notes
+
+		   Oct. 15, 1989
+
+
+1. Target driver installation:
+	The installation of the CD-ROM and WORM target drivers is same as
+	DISK and TAPE target driver.
+	The CD-ROM and WORM drivers are installed by Install command in
+	the pkg directory.
+	And they are removed by Remove command.
+
+
+2. Driver instruction
+	See cdrom(7) and worm(7).
+
+
+3. Bug
+	worm(7)
+		Currently, WORM driver doesn't support logical unit 1 to 7.
+		Only logical unit 0 is supported.
+
+		Reason:
+		The SCSI controller of the WM-D070 or WM-C050 is able to
+		connect	more 7 logical units.
+		But, when you send 'INQUIRY' command to unconnected logical
+		unit, it will not return 'Check Condition' but 'Good'.
+		We don't apply this spec to sdi_config()
+		Therefore, we only support 1 logical unit per 1 controller.
+		Normally, it is no problem because logical unit is 1.
+		Some future day, this bug is going to be fixed.
+
+
+4. Contents of the Release Package (except SCSI common tools)
+	./sc01
+	./sc01/Driver.o
+	./sc01/Master
+	./sc01/Node
+	./sc01/Space.c
+	./sc01/System
+	./sw01
+	./sw01/Driver.o
+	./sw01/Master
+	./sw01/Node
+	./sw01/Space.c
+	./sw01/System
+	./sys/cdrom.h
+	./sys/sc01.h
+	./sys/sw01.h
+	./sys/worm.h
+
+
+5. How to make the CD-ROM and WORM target driver
+
+	step1:	copy the CD-ROM and WORM target driver source from FD.
+
+		caution:
+			The following files is changed for CD-ROM & WOM.
+			add-on/scsi/ID/Makefile
+			add-on/scsi/install/Install
+			add-on/scsi/install/Remove
+			add-on/scsi/io/Makefile
+			add-on/scsi/sys/Makefile
+
+	step2:	copy the follwing header files to /usr/include/sys directory.
+		./add-on/scsi/sys/cdrom.h
+		./add-on/scsi/sys/worm.h
+		./add-on/scsi/io/sc01/sc01.h
+		./add-on/scsi/io/sc01/sw01.h
+
+	The following steps is same as DISK and TAPE driver's
+	installation.
+
+	step3:	make package files.
+		# cd ./add-on/scsi
+		# make install
+
+	step4:	package installation.
+		# sh ./Install
+
+		caution:
+			If your kernel includes DISK or TAPE target driver,
+			you have to remove it before installation.
+
+
+6. How to use the sc01qa
+	The sc01qa is a menu style test tool of the CD-ROM target driver.
+	Following the menu, you can use CD-ROM ioctl command.
+
+	example of the Music start)
+
+# ./sc01qa /dev/rcdrom/cd0
+
+------------- CD-ROM menu -----------------------------------------------
+cdtestunit	cdrezeunit	cdreqsense	cdinquiry 	cdmodsense
+cdstrtunit	cdstopunit	cdprevmv  	cdallomv  	cdreadcapa
+cdseek    	cdread    	cdsearch	cdaudio   	cdstill
+cdtrayopen	cdtrayclose	
+!		?		q		
+
+Enter command ---> cdsearch
+cdsearch command executing
+enter param: 1(play), 0(pause) ---> 1
+enter type:  0(logical), 1(ATIME), 2(track) ---> 2
+enter track No. ---> 2
+
+Enter command ---> q
+#
+
+	The source file is ./add-on/scsi/test/sc01qa/sc01qa.c and
+	makefile is ./add-on/scsi/test/sc01qa/sc01qa.mk.
+
+
+7. How to use the sw01qa
+	The sw01qa is a menu style test tool of the WORM target driver.
+	Following the menu, you can use WORM ioctl command.
+
+	example of the load cartridge)
+
+# ./sw01qa /dev/rworm/wm0
+
+------------- WORM menu -------------------------------------------------
+wmtestunit	wmrezeunit	wmreqsense	wminquiry 	wmmodsense
+wmstrtunit	wmstopunit	wmprevmv  	wmallomv  	wmreadcapa
+wmseek    	wmread    	wmwrite   	wmstncheck	wmreadcb  
+wmcheck   	wmccheck  	wmread    	wmloadcart	wmunloadca
+wmwritever	wmverify  	
+!		?		q		
+
+Enter command ---> wmloadcart
+
+
+Enter command ---> q
+#
+
+	The source file is ./add-on/scsi/test/sw01qa/sw01qa.c and
+	makefile is ./add-on/scsi/test/sw01qa/sw01qa.mk.

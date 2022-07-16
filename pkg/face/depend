@@ -1,0 +1,7 @@
+#ident	"@(#)/usr/src/pkg/face/depend.sl 1.1 4.0 12/08/90 64524 AT&T-USL"
+
+P	dfm directory and file management utilities
+P	terminf Terminal Information Utilities
+P	ed Editing Utilities
+P	usrenv user environment utilities
+P	oam Operations, Administration, and Maintenance

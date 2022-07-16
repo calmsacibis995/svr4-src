@@ -1,0 +1,76 @@
+#ident	"@(#)ucbtroff:troff.d/devaps/GB	1.1"
+#		PROPRIETARY NOTICE (Combined)
+#
+#This source code is unpublished proprietary information
+#constituting, or derived under license from AT&T's UNIX(r) System V.
+#In addition, portions of such source code were derived from Berkeley
+#4.3 BSD under license from the Regents of the University of
+#California.
+#
+#
+#
+#		Copyright Notice 
+#
+#Notice of copyright on this source code product does not indicate 
+#publication.
+#
+#	(c) 1986,1987,1988,1989  Sun Microsystems, Inc
+#	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+#	          All rights reserved.
+# Greek Bold
+name GB
+internalname 14121
+alternate_font
+special
+max_range 2
+charset
+*A	78	2	1
+*B	78	2	2
+*G	64	2	3
+*D	74	2	4
+*E	77	2	5
+*Z	68	2	6
+*Y	88	2	7
+*H	66	2	8
+*I	46	2	9
+*K	87	2	10
+*L	72	2	11
+*M	102	2	12
+*N	90	2	13
+*C	70	2	14
+*O	76	2	15
+*P	82	2	16
+*R	72	2	17
+*S	66	2	18
+*T	78	2	19
+*F	72	2	21
+*X	90	2	22
+*a	60	0	27
+*b	60	3	28
+*g	61	3	29
+*d	42	2	30
+*e	34	0	31
+*z	46	3	32
+*y	50	1	33
+*h	44	2	34
+*i	30	0	35
+*k	44	0	36
+*l	54	2	37
+*m	56	1	38
+*n	42	0	39
+*c	44	3	40
+*o	42	0	41
+*p	62	0	42
+*r	46	1	43
+*s	54	0	44
+*t	50	0	45
+*u	46	0	46
+*f	60	3	47
+*x	61	3	48
+*q	62	3	49
+*w	64	0	50
+pd	40	2	52
+gr	80	2	53
+xe	38	0	98	font 13961
+xh	61	2	101
+xk	48	0	103	font 13961

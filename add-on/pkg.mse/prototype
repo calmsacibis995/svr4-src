@@ -1,0 +1,70 @@
+#ident	"@(#)pkg.mse:prototype	1.2.1.3"
+
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+!PACKDIR=/usr/src/pkg/mouse
+
+i pkginfo
+i copyright
+i postinstall
+i preinstall
+i preremove
+i request
+
+#	These are the only "variables" we use, since they are guaranteed
+#	to be set by OAM at installation time. If they change, remember
+#	to change directories made below.
+!OAMBASE=/usr/sadm/sysadm
+!PKGINST=mouse
+!PKGSAV=/var/sadm/pkg/$PKGINST/save
+!default 0544 bin bin
+d none /tmp/mse		775	bin	bin
+v none /tmp/mse/Driver.o.mse=$PACKDIR/Driver.o.mse	?	?	?
+v none /tmp/mse/Driver.o.smse=$PACKDIR/Driver.o.smse	?	?	?
+v none /tmp/mse/Driver.o.bmse=$PACKDIR/Driver.o.bmse	?	?	?
+v none /tmp/mse/Driver.o.m320=$PACKDIR/Driver.o.m320	?	?	?
+
+v none /tmp/mse/Master.bmse=$PACKDIR/Master.bmse	?	?	?
+v none /tmp/mse/Master.smse=$PACKDIR/Master.smse	?	?	?
+v none /tmp/mse/Master.mse=$PACKDIR/Master.mse	?	?	?
+v none /tmp/mse/Master.m320=$PACKDIR/Master.m320	?	?	?
+
+v none /tmp/mse/System.bmse=$PACKDIR/System.bmse	?	?	?
+v none /tmp/mse/System.smse=$PACKDIR/System.smse	?	?	?
+v none /tmp/mse/System.mse=$PACKDIR/System.mse	?	?	?
+v none /tmp/mse/System.m320=$PACKDIR/System.m320	?	?	?
+
+v none /tmp/mse/Node.bmse=$PACKDIR/Node.bmse	?	?	?
+v none /tmp/mse/Node.mse=$PACKDIR/Node.mse	?	?	?
+v none /tmp/mse/Node.m320=$PACKDIR/Node.m320	?	?	?
+
+v none /tmp/mse/Rc.smse=$PACKDIR/Rc.smse	?	?	?
+v none /tmp/mse/Sd.smse=$PACKDIR/Sd.smse	?	?	?
+v none /tmp/mse/Space.c.bmse=$PACKDIR/Space.c.bmse	?	?	?
+v none /tmp/mse/IDlist=$PACKDIR/IDlist	?	?	?
+
+#	directories: default owner=root group=sys mode=0775
+
+!default 0544 root sys
+d none	/usr	?	?	?
+d none	/usr/lib	?	?	?
+d none	/usr/bin	?	?	?
+d none	/usr/include	?	?	?
+d none	/usr/include/sys	?	?	?
+f none	/usr/lib/mousemgr=$PACKDIR/mousemgr
+
+!default 0555 bin bin
+f none	/usr/bin/mouseadmin=$PACKDIR/mouseadmin
+
+#	header files: default owner=bin group=bin mode=0444
+
+!default 0444 bin bin
+f none	/usr/include/sys/mse.h=$PACKDIR/mse.h

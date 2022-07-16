@@ -1,0 +1,132 @@
+.\"ident	"@(#)sti:man3/menu.3c	1.1"
+.deTH
+.PD
+.nrIN \\n()Mu
+.ift .ds ]H \\$1\^(\^\\$2\^)
+.ifn .ds ]H \\$1(\\$2)
+.if\\n()s .ds ]D
+.if\\n()t .ds ]D UNIX System V
+.ifn .ds ]D UNIX System V
+.ds]L
+.if!\\$3 .ds ]L (\^\\$3\^)
+.if!\\$4 .ds ]D \\$4
+.wh0 }H
+.wh-\\n(:mu }F
+.em}M
+.if\\n(nl .bp
+.nr)I \\n()Mu
+.nr)R 0
+.}E
+.DT
+.ifn \{.na
+.nh\}
+.ift \{.bd S 3 3
+.hy14 \}
+..
+.TH MENU 3C 
+.SH NAME
+menu - CRT menu routines
+.SH SYNOPSIS
+.B #include <menu.h>
+.PP
+.B cc
+[ flags ] files
+.B \-lmenu
+.B \-lcurses
+[ libraries ]
+.SH DESCRIPTION
+These routines allow the user to create, display, and access menus.
+The menus can be displayed on any display device supported by curses(3X).
+.SH "SEE ALSO"
+form(3), panel(3) and curses(3X).
+.SH FUNCTIONS
+.nf
+.B MENU \(**m;
+.B ITEM \(**i;
+.B int c, r;
+.B int \(**rp, \(**cp;
+.B char \(**n, \(**d;
+.B ITEM \(**\(**ip;
+.B PTF_void f;
+.B OPTIONS o;
+.B WINDOW \(**w;
+.fi
+.PP
+.LP
+.nf
+.ta 2.5i
+int current_item(m)	returns index of current item
+int free_item(i)	free storage allocated for item
+int free_menu(m)	free storage allocated for menu
+char \(**item_description(i)	returns pointer to item's description
+PTF_void item_init(m)	returns pointer to item initialization routine
+char \(**item_name(i)	returns pointer to item's name
+OPTIONS item_opts(i)	returns item's option setting
+PTF_void item_term(m)	returns pointer to item's termination routine
+char \(**item_userptr(i)	returns pointer to item's user pointer
+int item_count(m)	returns number of items in this menu
+int item_value(i)	returns value of item TRUE=selected, FALSE=unselected
+int item_visible(i)	TRUE=item displayed on current page, FALSE=not displayed
+int menu_back(m)	returns attribute that indicates a nonselected items
+int menu_driver(m, c)	performs user menu requests
+int menu_fore(m)	returns attribute that indicates a selected items
+void menu_format(m, rp, cp)	returns number of rows and columns in menu
+int menu_grey(m)	returns attribute that indicates a nonselectable item
+PTF_void menu_init(m)	returns pointer to menu's initialization routine
+ITEM \(**\(**menu_items(m)	returns pointer to the list of menu items
+char \(**menu_mark(m)	returns pointer to the menu's mark
+OPTIONS menu_opts(m)	returns menu's option setting
+int menu_pad(m)	returns menu's pad character
+char \(**menu_pattern(m)	returns pointer to menu's last pattern match
+WINDOW \(**menu_sub(m)	returns pointer to menu's subwindow
+PTF_void menu_term(m)	returns pointer to menu's termination routine
+char \(**menu_userptr(m)	returns pointer to menu's user pointer
+WINDOW \(**menu_win(m)	returns pointer to menu's window
+ITEM \(**new_item(n, d)	returns pointer to new item
+MENU \(**new_menu(ip)	returns pointer to new menu
+int pos_menu_cursor(m)	moves the menu window's cursor to the correct position to continue menu processing
+int post_menu(m)	displays the menu within the menu's subwindow
+int scale_menu(m, rp, cp)	returns minimal window size to contain menu
+int set_current_item(m, c)	sets index of current item
+int set_item_init(m, f)	sets item's initialization routine
+int set_item_opts(i, o)	sets item's options
+int set_item_term(m, f)	sets item's termination routine
+int set_item_userptr(i, n)	sets item's user pointer
+int set_item_value(i, c)	sets item's value
+int set_menu_back(m, c)	sets menu's attribute for unselected items
+int set_menu_fore(m, c)	sets menu's attribute for selected items
+int set_menu_format(m, c, r)	sets menu's format
+int set_menu_grey(m, c)	sets menu's attribute for nonselectable items
+int set_menu_init(m, f)	sets menu's initialization routine
+int set_menu_items(m, i)	associates item list with menu
+int set_menu_mark(m, n)	sets menu's mark string
+int set_menu_opts(m, o)	sets menu's options
+int set_menu_pad(m, c)		sets pad character for menu
+int set_menu_pattern(m, n)	sets index to current item to matched pattern
+int set_menu_sub(m, w)		sets menu's subwindow
+int set_menu_term(m, f)	sets menu's termination routine
+int set_menu_userptr(m, n)	sets menu's user pointer
+int set_menu_win(m, w)	associates window with menu
+int set_top_item(m, c) sets index to menu's top item
+int top_item(m)	returns index to menu's top item
+int unpost_menu(m)	erases previously displayed menu
+.fi
+.SH DIAGNOSTICS
+The following values are returned by most integer routines:
+.LP 
+.nf
+.ta 2.5i
+E_OK	the routine returned normally
+E_SYSTEM_ERROR	the error is the result of a system error
+E_BAD_ARGUMENT	an incorrect argument was passed to the routine
+E_POSTED	the menu given has not been posted
+E_CONNECTED	one or more items are connected to another menu
+E_BAD_STATE	the routine was called from within the menu driver
+E_NO_ROOM	the menu will not fit within menu's subwindow
+E_NOT_POSTED	the menu has not yet been posted
+E_UNKNOWN_COMMAND	an unrecognizable request was given to the driver
+E_NO_MATCH	no match occurred
+E_NOT_SELECTABLE	the item cannot be selected
+E_NOT_CONNECTED	there are no items associated with the menu
+E_REQUEST_DENIED	the menu driver could not process the request
+.fi

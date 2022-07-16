@@ -1,0 +1,82 @@
+#ident	"@(#)source:.setup	1.1.1.1"
+
+#
+#	Shell script for Setting up the Cross stuff
+#
+
+if [ "$ROOT" = "" ]
+then  echo "$0: You must specify a \$ROOT directory, other than '/', \
+as the root of the source and output tree."
+      exit 1
+fi
+if [ "$ROOT" = "/" ]
+then  echo "$0: You must specify a \$ROOT directory, other than '/', \
+as the root of the source and output tree."
+      exit 1
+fi
+if [ ! -d ${ROOT} ]
+then  echo "$0: You must specify a \$ROOT directory, other than '/', \
+as the root of the source and output tree."
+      exit 1
+fi
+
+# Cross-makes may not have all the directories needed
+for dir in /bin /lib /usr /usr/include /usr/include/sys /tmp /xenv /usr/bin /usr/lib
+do	if [ ! -d $ROOT/$dir ]
+	then rm -f $ROOT/$dir
+		mkdir $ROOT/$dir
+	fi
+done
+
+#
+
+echo 'MAKEOPTS="MAKE=make AS=as CC=cc LD=ld ROOT=$ROOT INC=$ROOT/usr/include"
+export MAKEOPTS
+if [ -x $ROOT/usr/ccs/bin/make ]
+then ${ROOT}/usr/ccs/bin/make ${MAKEOPTS} "$@"
+else /usr/ccs/bin/make ${MAKEOPTS} "$@"
+fi ' > $ROOT/xenv/make
+chmod +x ${ROOT}/xenv/make
+
+# This is needed because :mkcmd set's CC to be i386cc if ROOT is unset and
+# the current command to be compiled is only a .c (e.g. no .mk and no directory
+if [ -x ${ROOT}/usr/ccs/bin/cc ]
+then
+echo '${ROOT}/usr/ccs/bin/cc -Y 0,${ROOT}/usr/ccs/lib -Y 2,${ROOT}/usr/ccs/lib -Y a,${ROOT}/usr/ccs/bin -Y l,${ROOT}/usr/ccs/bin  -Y S,${ROOT}/usr/ccs/lib -L ${ROOT}/usr/lib -L ${ROOT}/usr/ccs/lib -Y L,/usr/lib -Y U,/usr/ccs/lib "$@" -Y I,${ROOT}/usr/include ' > $ROOT/xenv/cc
+else
+echo '/usr/ccs/bin/cc        -L $ROOT/usr/lib -L $ROOT/usr/ccs/lib -Y L,/usr/lib -Y U,/usr/ccs/lib "$@" -Y I,$ROOT/usr/include' > $ROOT/xenv/cc
+fi
+if [ ! -x $ROOT/xenv/i386cc ]
+then ln $ROOT/xenv/cc $ROOT/xenv/i386cc
+fi
+chmod +x ${ROOT}/xenv/cc
+for i in as ld ar lex yacc
+do
+if [ -x ${ROOT}/usr/ccs/bin/${i} ]
+then cp ${ROOT}/usr/ccs/bin/${i} ${ROOT}/xenv/${i}
+fi
+done
+
+#	build the OS itself
+if [ -x ${ROOT}/usr/ccs/bin/as ]
+then cp ${ROOT}/usr/ccs/bin/as ${ROOT}/usr/bin/idas
+     cp ${ROOT}/usr/ccs/bin/ld ${ROOT}/usr/bin/idld
+     cp ${ROOT}/usr/ccs/bin/cc ${ROOT}/usr/bin/idcc
+     cp ${ROOT}/usr/ccs/lib/cpp ${ROOT}/usr/lib/idcpp
+     cp ${ROOT}/usr/ccs/lib/acomp ${ROOT}/usr/lib/idacomp
+else cp /usr/ccs/bin/as ${ROOT}/usr/bin/idas
+     cp /usr/ccs/bin/ld ${ROOT}/usr/bin/idld
+     cp /usr/ccs/bin/cc ${ROOT}/usr/bin/idcc
+     cp /usr/ccs/lib/cpp ${ROOT}/usr/lib/idcpp
+     cp /usr/ccs/lib/acomp ${ROOT}/usr/lib/idacomp
+fi
+ln -s $ROOT/usr/bin/idas $ROOT/bin/idas
+ln -s $ROOT/usr/bin/idcc $ROOT/bin/idcc
+ln -s $ROOT/usr/bin/idld $ROOT/bin/idld
+ln -s $ROOT/usr/lib/idcpp $ROOT/lib/idcpp
+ln -s $ROOT/usr/lib/idacomp $ROOT/lib/idacomp
+
+cd $ROOT/usr/src
+sh ./:mkhead > /dev/null 2>&1
+sh ./:mksyshead > /dev/null 2>&1
+sh ./:mkucbhead > /dev/null 2>&1

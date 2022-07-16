@@ -1,0 +1,34 @@
+#ident	"@(#)ucbtroff:troff.d/devaps/LINKFILE	1.1"
+#		PROPRIETARY NOTICE (Combined)
+#
+#This source code is unpublished proprietary information
+#constituting, or derived under license from AT&T's UNIX(r) System V.
+#In addition, portions of such source code were derived from Berkeley
+#4.3 BSD under license from the Regents of the University of
+#California.
+#
+#
+#
+#		Copyright Notice 
+#
+#Notice of copyright on this source code product does not indicate 
+#publication.
+#
+#	(c) 1986,1987,1988,1989  Sun Microsystems, Inc
+#	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+#	          All rights reserved.
+
+#
+# This file is read and executed by maketables, or it can be run on its
+# own to link any missing .out files to appropriate existing .out files.
+#
+
+
+rm -f HM.out
+ln HB.out HM.out
+
+if [ -f HB.add ]; then
+    rm -f HM.add
+    ln HB.add HM.add
+fi
+

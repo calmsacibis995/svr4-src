@@ -1,0 +1,34 @@
+_m4_dnl_	#ident	"@(#)libc-i386:pic.def	1.2"
+
+/ function reference
+_m4_define_(`_fref_',``$1'@PLT')
+
+/ global data reference
+_m4_define_(`_dref_',`*`$1'@GOT')
+
+/ global data address
+_m4_define_(`_daref_',``$1'@GOT(%ebx)')
+
+/ static data reference
+_m4_define_(`_sref_',``$1'@GOTOFF(%ebx)')
+
+/ reference off the stack pointer (add 4 for the saved %ebx)
+_m4_define_(`_esp_',`_m4_eval_($1 + 4)'(%esp))
+
+/ function prologue for Position Independent Code
+_m4_define_(`_prologue_',
+`	_m4_define_(`_number_',_m4_incr_(_number_))
+	_m4_define_(`_tmp_label_',.PIC_PROL`'_number_)
+	pushl	%ebx		/ save %ebx
+	call	_tmp_label_	/ PC-relative call
+				/ push PC at .PIC_PROL on stack
+_tmp_label_:
+	popl	%ebx		/ load %ebx with PC
+	addl	$_GLOBAL_OFFSET_TABLE_+[.-_tmp_label_],%ebx	
+				/ %ebx contains absolute address
+				/ of global offset table
+')
+
+_m4_define_(`_epilogue_',
+`	popl	%ebx		/ restore %ebx
+')

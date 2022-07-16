@@ -1,0 +1,12 @@
+#ident	"@(#)/usr/src/add-on/pkg.window/pkginfo.sl 1.1 4.0 12/08/90 37147 AT&T-USL"
+
+ARCH="i386"
+CATEGORY="system"
+CLASSES="none"
+MAXINST=1
+NAME="AT&T Windowing Utilities"
+PKG="windowing"
+VENDOR="AT&T-SF"
+VERSION="1"
+RELEASE="4.0"
+PREDEPEND="windowing"

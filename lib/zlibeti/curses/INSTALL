@@ -1,0 +1,83 @@
+#ident	"@(#)sti:curses/INSTALL	1.2"
+#
+#	Save the mount point of the floppy & the package name.
+#
+
+INSPATH="/install/new"
+INSINS="/install/install"
+PKGNAME="`cat ${INSPATH}/usr/options/svr2curs.name`"
+ORDER="`cat ${INSINS}/ORDER`"
+
+
+#
+# How much space is needed by this floppy?
+#
+
+USRneeds=`expr "\`du -s ${INSPATH}/usr\`" : "\([0-9]*\).*"`
+ROOTneeds=`expr "\`du -s ${INSPATH}\`" : "\([0-9]*\).*"`
+ROOTneeds=`expr ${ROOTneeds} - ${USRneeds}`
+
+#
+# How much space is available in the necessary filesystems?
+#
+
+USRspace=`expr "\`df /usr 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+ROOTspace=`expr "\`df / 2>/dev/null\`" : '.*: *\([0-9]*\)'`
+
+#
+# Now see if the package fits!
+# Inform the user and exit immediately, if not.
+#
+
+if
+	[ "$USRspace" -lt "$USRneeds" ]
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "Not enough space on the hard disk."
+	echo "There are $USRspace blocks available"
+	echo "on the /usr file system --"
+	echo "$USRneeds blocks are needed."
+	exit
+elif
+	[ "$ROOTspace" -lt "$ROOTneeds" ]  
+then
+	echo "**ERROR**   ${PKGNAME} cannot be installed --"
+	echo "Not enough space on the hard disk."
+	echo "There are $ROOTspace blocks available"
+	echo "on the / (root) file system --"
+	echo "$ROOTneeds blocks are needed."
+	exit
+fi
+
+if [ -s /usr/lib/libcurses.a ]
+then
+	if [ "${ORDER}" = "3" ]
+	then
+		echo "Installing the ${PKGNAME}."
+		echo "Copyright (c) 1984 AT&T"
+		echo "All Rights Reserved"
+	fi
+elif [ ! -s /usr/lib/libcurses.a -a "${ORDER}" = "3" ]
+then
+		echo "Installing the ${PKGNAME}."
+		echo "Copyright (c) 1984 AT&T"
+		echo "All Rights Reserved"
+fi
+
+UNIXVER=`uname -r | cut -f1 -d.`
+if [ $UNIXVER -eq 2 ]
+	then
+		cd ${INSPATH}
+		echo "The following files are being installed:"
+		find . -print | cpio -pduvm /
+		ln /usr/lib/libcurses.a /usr/lib/libtermcap.a
+		echo /usr/lib/libtermcap.a
+		ln /usr/lib/libcurses.a /usr/lib/libtermlib.a
+		echo /usr/lib/libtermlib.a
+		echo
+		echo
+	else
+		echo "This diskette should not be installed on this computer\n"
+		echo "Install diskette 1 of the TERMINFO Utilities to install the curses library\n"
+fi
+echo "The installation of ${PKGNAME} is now complete."

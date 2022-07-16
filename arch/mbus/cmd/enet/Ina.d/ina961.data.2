@@ -1,0 +1,62 @@
+# ident	"@(#)mbus:cmd/enet/Ina.d/ina961.data.2	1.1"
+#
+# file format
+#
+# Column	Description
+# ------	-----------
+#    1		iNA961 filename
+#    2		BUS Type
+#    3		Release 1 to Release 3 Support
+#    4		Number of VCs
+#    5		NMF Support
+#    6		Network Layer
+#    7		EDL (external Data Link interface)
+#    8		Comment
+#
+#
+# Expanded Descriptions:
+#
+# 1:    The "iNA961 filename" field identifies an iNA file and must be in the
+#	/etc/directory. The file has the following format:
+#
+#	"ina961.release<option]>
+#
+#	and can be no longer than 14 characters in length.
+#
+#	'release' is the iNA961 release number.
+#	'option'  is a feature number.
+#
+#	For example, the file ina961.13a specifies iNA961 Release 1.3 for
+#	the iSXM 552A Ethernet controller. The maximum length of this field
+#	is 12 characters.
+#
+# 2:	The "BUS Type" is either 'MB1', 'MB2' or 'AT386' depending on which
+#	type of Ethernet controller (iSXM 552A, iSBC 186/530, or PCLINK/2) is
+#	installed in your system.
+#
+# 3:	This column specifies whether or not the iNA961 version supports
+#	iNA961 1.x to iNA961 3.x interoperability feature. "N/A" is specified
+#	for none iNA961 3.x download files. Otherwise, this field contains
+#	either 'yes' or 'no'.
+#
+# 4:	This column specifies maximum number of Virtual Circuits supported
+#	by this version of iNA.
+#
+# 5:	This column specifies whether or not the iNA download file supports
+#	the Network Management Facility. This field is either 'yes' or 'no'.
+#
+# 6:	This column specifies the service provided by the Network Layer. The
+#	default iNA961 files provided will have either a NULL2 Network layer
+#	or a layer that supports ES-IS routing. The maximum length of this
+#	field is 9 characters.
+#
+# 7:	This column specifies whether or not there is an external interface to
+#	the Data Link layer. This field is either 'yes' or 'no'.
+#
+# 8:	This is a general comment field. This field can be up to 79 characters
+#	although only the first 30 characters will be display on the menu.
+#
+# NOTE: any line beginning with the '#' character is a comment line.
+#
+ina961.36:MB2:yes:100:yes:NULL2:yes:for iSBC 186/530
+ina961.37:MB2:yes:100:yes:ES-IS:yes:for iSBC 186/530

@@ -1,0 +1,40 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/npack/bin/npack.services	1.1"
+#
+#	Echo "1" if the service already exists (make sure the comments
+#	are stripped out of /etc/net/npack/services first)....
+#
+
+check=`cat /etc/net/npack/services 2>/dev/null | sed 's/#.*$//' |
+       egrep "^$1[ 	]"`
+
+if [ "$check" != "" ]
+then
+	echo 1
+	exit
+fi
+
+#
+#	Check the format of the address.  Echo "2" if format is
+#	incorrect....
+#
+
+ret=`echo $2 | awk 'BEGIN                  { error = 0 }
+		    NF != 1		   { error = 1 }
+		    length != 8            { error = 1 }
+		    $1 !~ /^[0-9a-fA-F]*$/ { error = 1 }
+		    END                    { print error }'`
+
+if [ $ret -eq 1 ]
+then
+	echo 2
+	exit
+fi
+
+#
+#	Put the entry into /etc/net/npack/services.
+#
+
+mkdir /etc/net /etc/net/npack >/dev/null 2>&1
+
+echo "$1	$2" >>/etc/net/npack/services
+echo 0

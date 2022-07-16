@@ -1,0 +1,80 @@
+#ident	"@(#)pkg.terminf:terminf/UNINSTALL	1.4"
+
+#
+# UNINSTALL the Terminal Information Utilities
+#
+# Save mount point of floppy (INSPATH) and package name (PKGNAME)
+#
+
+INSPATH=/install/new
+PKGNAME=`cat ${INSPATH}/usr/options/svr2curs.name`
+
+#
+# Remove the files found in the Rlist file from the hard disk.
+#
+
+echo "Removing the ${PKGNAME}."
+if [ ! -s /usr/options/svr2curs.name ]
+	then
+	echo "The `cat ${INSPATH}/usr/options/svr2curs.name` package is not installed\n"
+	exit
+fi
+
+echo "The following files and directories are being removed:"
+for i in `cat /install/install/Rlist`
+do
+	echo $i
+	rm -fr $i
+done
+echo
+echo "The ${PKGNAME} have been removed."
+echo
+
+#
+# Re-build /usr/lib/terminfo
+#
+
+echo Re-installing core terminfo entries
+echo
+if [ -d /usr/lib/terminfo ]
+	then :
+	else mkdir /usr/lib/terminfo
+		chown bin /usr/lib/terminfo
+		chgrp bin /usr/lib/terminfo
+		chmod 775 /usr/lib/terminfo
+		echo /usr/lib/terminfo has been re-built
+fi
+
+#
+# Re-install core entries
+#
+
+cd /usr/lib/.COREterm
+find . -print| while read file
+do
+	DIR=`expr ${file} : '.*/\(.*\)/.*'`
+
+	if [ -f ${file} ]
+	then 
+		if [ -d /usr/lib/terminfo/${DIR} ]
+			then :
+			else mkdir /usr/lib/terminfo/${DIR}
+				chown bin /usr/lib/terminfo/${DIR}
+				chgrp bin /usr/lib/terminfo/${DIR}
+				chmod 775 /usr/lib/terminfo/${DIR}
+				echo
+				echo Built directory /usr/lib/terminfo/${DIR}
+				echo
+		fi
+
+		BASE=`expr ${file} : '.*/\(.*/.*\)'`
+		ln ${BASE} /usr/lib/terminfo/${BASE}
+		echo Linked /usr/lib/.COREterm/${BASE} to /usr/lib/terminfo/${BASE}
+	fi
+done
+echo
+echo Re-installation of core terminfo entries is complete
+echo
+
+
+

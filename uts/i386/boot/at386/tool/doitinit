@@ -1,0 +1,17 @@
+:
+
+#	Copyright (c) 1987, 1988 Microsoft Corporation
+#	  All Rights Reserved
+
+#	This Module contains Proprietary Information of Microsoft
+#	Corporation and should be treated as Confidential.
+
+#ident	"@(#)boot:boot/at386/tool/doitinit	1.1.1.1"
+
+
+echo "Hit return to copy initprog:\c"
+read response
+set -x
+/etc/mount /dev/dsk/f0q15d /mnt
+cp $1 /mnt/etc/initprog/$1
+/etc/umount /dev/dsk/f0q15d

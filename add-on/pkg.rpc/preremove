@@ -1,0 +1,71 @@
+#ident	"@(#)/usr/src/add-on/pkg.rpc/preremove.sl 1.1 4.0 12/08/90 25838 AT&T-USL"
+
+#-----Remove administrative files
+
+rm -f /etc/publickey || exit 1
+rm -f /etc/netid || exit 1
+
+#-----Remove drivers
+FAILURE=1	# fatal error
+
+REBUILD=0
+
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be removed."
+
+# determine that ID/TP tools are available
+
+if
+	[ ! -x ${CONFBIN}/idbuild -o ! -x ${CONFBIN}/idinstall \
+			-o ! -x ${CONFBIN}/idcheck ]
+then
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+
+# Save copy of domestic version of DES module
+if [ -f ${CONFDIR}/pack.d/des/Driver_d.o ]
+then
+	mv ${CONFDIR}/pack.d/des/Driver_d.o ${CONFDIR}/Driver_d.o
+fi
+
+for MODULE in krpc ktli des
+do
+	${CONFBIN}/idcheck -p ${MODULE}
+	RES="$?"
+	if
+		[ "${RES}" -ne "100" -a "${RES}" -ne "0" ]
+	then
+		${CONFBIN}/idinstall -d ${MODULE}
+		echo "Removing ${NAME} ${MODULE} module ..."
+		REBUILD=1
+	fi
+done
+
+if
+	[ "${REBUILD}" = "1" ]
+then
+	# rebuild for changes to take effect
+	
+	${CONFBIN}/idbuild
+	IDERR=$?
+	# Restore domestic des module if it exists
+	if [ -f ${CONFDIR}/Driver_d.o ]
+	then
+		[ -d ${CONFDIR}/pack.d/des ] || mkdir ${CONFDIR}/pack.d/des
+		mv ${CONFDIR}/Driver_d.o ${CONFDIR}/pack.d/des/Driver_d.o
+	fi
+
+	if
+		[ "${IDERR}" -ne "0" ]
+	then
+		exit ${FAILURE}
+	else
+		exit 10
+	fi
+else
+	exit 0
+fi

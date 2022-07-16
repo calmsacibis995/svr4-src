@@ -1,0 +1,3 @@
+#ident	"@(#)/usr/src/add-on/pkg.compat/depend.sl 1.1 4.0 12/08/90 31815 AT&T-USL"
+P  nsu		Networking Support Utilities
+P  sys		System Header Files

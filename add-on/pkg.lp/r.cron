@@ -1,0 +1,14 @@
+#ident	"@(#)/usr/src/add-on/pkg.lp/r.cron.sl 1.1 4.0 12/08/90 26148 AT&T-USL"
+
+while read src dest
+do
+	if [ "${src}" = "/dev/null" ]
+	then
+		continue
+	fi
+
+	user=`basename ${dest}`
+	su "${user}" -c "crontab -r" || exit 2
+done
+
+exit 0

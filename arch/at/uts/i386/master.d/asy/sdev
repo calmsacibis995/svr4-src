@@ -1,0 +1,8 @@
+*ident	"@(#)sdev	1.3	92/09/25	JPB"
+*ident	"@(#)at:uts/i386/master.d/asy/sdev	1.1.1.1"
+asy	Y	1	7	4	4	3f8	3ff	0	0
+asy	Y	1	7	4	3	2f8	2ff	0	0
+asy	Y	1	7	4	4	3e8	3ef	0	0
+asy	Y	1	7	4	3	2e8	2ef	0	0
+asy	Y	1	7	4	3	3220	3227	0	0
+asy	Y	1	7	4	3	3228	322f	0	0

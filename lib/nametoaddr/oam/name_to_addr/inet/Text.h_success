@@ -1,0 +1,11 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/inet/Text.h_success	1.1"
+title="Internet Protocol Success"
+columns=55
+rows=7
+text="
+The machine name entered has succussfully been added to
+
+	/etc/hosts
+
+You may now now return to the previous menu.
+"

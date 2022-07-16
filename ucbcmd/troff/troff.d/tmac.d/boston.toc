@@ -1,0 +1,119 @@
+'\"#ident	"@(#)ucbtroff:troff.d/tmac.d/boston.toc	1.1"
+'\"		PROPRIETARY NOTICE (Combined)
+'\"
+'\"This source code is unpublished proprietary information
+'\"constituting, or derived under license from AT&T's UNIX(r) System V.
+'\"In addition, portions of such source code were derived from Berkeley
+'\"4.3 BSD under license from the Regents of the University of
+'\"California.
+'\"
+'\"
+'\"
+'\"		Copyright Notice 
+'\"
+'\"Notice of copyright on this source code product does not indicate 
+'\"publication.
+'\"
+'\"	(c) 1986,1987,1988,1989  Sun Microsystems, Inc
+'\"	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+'\"	          All rights reserved.
+.\" @(#)boston.toc 1.2 86/04/28 SMI; Sun's macro package for Boston
+.	\"  CE - table of contents entry
+.	\"  $1 : header type: C = Chapter, A = Appendix, N = Numbered Heading,
+.	\"                    T = Table, F = Figure
+.	\"  $2 : level number (not much use for tables and figures)
+.	\"  $3 : text 
+.	\"  $4 : page number
+.	\"  $5 : chapter number
+.	\"  $6 ... : other numbers -- table and figure number for example
+.de CE
+.ll \\n(LLu
+.fi
+.na
+.nh
+.					\"  set up page number
+.ds rS \\$4
+.					\"  first level headers: bold numbers
+.if '\\$1'C' .ds rS \fB\\$4\fP
+.if '\\$1'A' .ds rS \fB\\$4\fP
+.if '\\$1'N' .if '\\$2'1' .ds rS \fB\\$4\fP
+.					\"  set up left string indents
+.rm lS
+.if '\\$1'N' \{\
+.if '\\$2'2'  .ds  lS  "    
+.if '\\$2'3'  .if \\nB .ds  lS  "          
+.if '\\$2'3'  .if \\nU .ds  lS  "              
+.if '\\$2'4'  .ds  lS  "                  
+.if '\\$2'5'  .ds  lS  "                   
+.nr tf 0 \}
+.if '\\$1'T' \{\
+.ds lS Table
+.nr tf 1 \}
+.if '\\$1'F' \{\
+.ds lS Figure
+.nr tf 1 \}
+.if \\n(tf=1 \{\
+.    if !\\$5\\*(oS .sp
+.    ds oS \\$5
+.if !\\$50 .as lS " \\$5-\\$6\ \ 
+.if \\$50 .as lS " \\$6\ \ 
+.if '\\$1'F' .ds lS Figure \\$5-\\$6\ \  \}
+.nr NS 0
+.if '\\$1'C' .nr NS 1
+.if '\\$1'A' .nr NS 1
+.if !\\nH=1 .if '\\$1'U' .if '\\$2'1' .sp
+.if !\\nH=1 .if \\n(NS=1 \{\
+.if '\\$1'C' .ds lS \fBChapter \\$5\fP\ \ 
+.if '\\$1'A' .ds lS \fBAppendix \\$5\fP\ \ 
+.sp \}
+.if \\nH=1 .if \\n(NS=1 \{\
+.nr cF 1
+.  \".pn \\$4-2
+.  \".nr PN \\$4-2
+.bp
+.rs
+.CB "\\$3"  "\\$5"
+.SL 8.0i-\\n(.vu  4.0i  32  0.70
+.rm lS
+. \}
+.				\"  Reduce line length
+.sp 3p
+.ne 3v
+.nr wN \\w\\*(lSu		\"  wN = width of left indent string
+.ll -8n  \"try 8 ens for now
+.in +\\n(wNu
+.ti -\\n(wNu			\"  don't indent first line
+.if \\nH=1 .if \\n(NS=1 .sp |3.5i-3p-4p
+.				\"  First level headers in larger point size
+.ds mS \\$3
+.if \\n(NS=1 .if \\nB .ds mS \\s11\\$3\\s0
+.if \\n(NS=1 .if \\nB .ds lS \\s11\\*(lS\\s0
+.if \\n(NS=1 .if \\nB .ds rS \\s11\\*(rS\\s0
+.if \\n(NS=1 .if \\nU .ds mS \\s12\\$3\\s0
+.if \\n(NS=1 .if \\nU .ds lS \\s12\\*(lS\\s0
+.if \\n(NS=1 .if \\nU .ds rS \\s12\\*(rS\\s0
+.				\"  Output indent string (lS) and
+.				\"  text ($3) with short line length
+\&\\*(lS\\*(mS
+.if \\nH=1 .if \\n(NS=1 .br
+.vs \\n(.sp+3p			\"  normalize spacing
+.				\"  We need at least two lines for this
+.				\"  'moving-backward' hack to work:
+.ne 2v
+.				\"  Restore line length and indent
+.ll
+.in
+.				\"  Go back to previous line, output leader & page number:
+.nf				\"  leaders only work right in no-fill mode!
+.				\"  If last line broke, correct for indent:
+.if (\\w\\*(lS\\*(mSu)<=(\\n(.lu-\\n(.iu-8n) .nr wN 0
+.ll -\\n(wNu
+.ti +\\n(wNu
+.ta \\n(.lu-\\n(.iu-5nR \\n(.lu-\\n(.iuR
+.sp -1v
+.vs				\"(now can restore original vertical spacing)
+\\h'|\\n(.nu+.5n'\s-3\a\s+3\t\\*(rS
+.if \\nH=1 .if \\n(NS=1 .sp 0.25i
+.				\"Restore line length (again):
+.ll
+..

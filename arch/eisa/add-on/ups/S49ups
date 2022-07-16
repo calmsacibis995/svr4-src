@@ -1,0 +1,21 @@
+#ident	"@(#)eisa:add-on/ups/S49ups	1.1"
+# start UPS power sense daemon.
+#	Copyright (C) Ing. C. Olivetti & C. S.p.a., 1989.
+
+set `who -r`
+if [ "$9" != "S" ]
+then
+	exit
+fi
+
+if [ -f /usr/adm/down_on_pwf ]
+then
+	echo "\n**** PREVIOUS SHUTDOWN BY UPS SUPPORT ON A/C POWER FAIL ****\n"
+	rm /usr/adm/down_on_pwf
+fi
+
+if [ -x /etc/ups_daem ]
+then
+	/etc/ups_daem 15 powertest >/dev/sysmsg 2>&1 </dev/console &
+fi
+

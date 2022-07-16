@@ -1,0 +1,37 @@
+#ident	"@(#)/usr/src/add-on/pkg.oam/preinstall.sl 1.1 4.0 12/08/90 17628 AT&T-USL"
+
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+#
+# Create the sysadm login and set a password prior to installing
+# the OA&M files. Trap interrupts.
+#
+
+
+endok() {
+exit 0
+}
+
+endnotok() {
+userdel sysadm >/dev/null 2>&1
+exit 3
+}
+
+trap 'endnotok' 1 2 3 15
+
+# we will relink the files below with the 4.0 versions at postinstall time
+if [ ! -z "`echo ${CLASSES} | grep OAM_extended`" ]
+then
+	rm -f /usr/bin/backup
+	rm -f /usr/bin/restore
+fi
+
+endok

@@ -1,0 +1,9 @@
+#ident	"@(#)/usr/src/add-on/pkg.lp/preremove.sl 1.1 4.0 12/08/90 36768 AT&T-USL"
+
+##########
+#
+# The lp service must be down to be removed!
+##########
+/usr/sbin/lpshut >/dev/null 2>&1
+
+exit 0

@@ -1,0 +1,125 @@
+#ident	"@(#)ucbtroff:troff.d/devaps/TB	1.1"
+#		PROPRIETARY NOTICE (Combined)
+#
+#This source code is unpublished proprietary information
+#constituting, or derived under license from AT&T's UNIX(r) System V.
+#In addition, portions of such source code were derived from Berkeley
+#4.3 BSD under license from the Regents of the University of
+#California.
+#
+#
+#
+#		Copyright Notice 
+#
+#Notice of copyright on this source code product does not indicate 
+#publication.
+#
+#	(c) 1986,1987,1988,1989  Sun Microsystems, Inc
+#	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+#	          All rights reserved.
+# Techno Bold (also Futura Demi-Bold, Utica Demi-Bold)
+name TB
+internalname 27201
+ligatures fi ff fl ffi ffl 0
+charset
+A	66	2	1
+B	55	2	2
+C	61	2	3
+D	61	2	4
+E	48	2	5
+F	45	2	6
+G	72	2	7
+H	67	2	8
+I	26	2	9
+J	44	2	10
+K	60	2	11
+L	38	2	12
+M	83	2	13
+N	71	2	14
+O	72	2	15
+P	52	2	16
+Q	72	2	17
+R	55	2	18
+S	50	2	19
+T	50	2	20
+U	66	2	21
+V	65	2	22
+W	88	2	23
+X	66	2	24
+Y	60	2	25
+Z	57	2	26
+a	55	0	27
+b	55	2	28
+c	39	0	29
+d	57	2	30
+e	50	0	31
+f	33	2	32
+g	56	1	33
+h	56	2	34
+i	24	0	35
+j	24	1	36
+k	49	2	37
+l	24	2	38
+m	83	0	39
+n	56	0	40
+o	49	0	41
+p	55	1	42
+q	55	1	43
+r	32	0	44
+s	38	0	45
+t	33	2	46
+u	57	0	47
+v	48	0	48
+w	83	0	49
+x	50	0	50
+y	48	1	51
+z	44	0	52
+1	55	2	53
+2	55	2	54
+3	55	2	55
+4	55	2	56
+5	55	2	57
+6	55	2	58
+7	55	2	59
+8	55	2	60
+9	55	2	61
+0	55	2	62
+$	55	0	63
+ct	55	3	64
+&	82	0	65
+:	28	0	66
+;	28	0	67
+.	28	0	68
+,	28	0	69
+`	28	0	70
+'	28	0	71
+?	55	0	72
+!	28	0	73
+%	90	0	74
+*	55	0	75
+(	25	0	76
+)	25	0	77
+/	55	2	78
+hy	32	0	79
+-	"
+em	110	0	80
+ff	61	2	82
+fi	56	2	83
+fl	56	2	84
+Fi	84	2	85
+Fl	84	2	86
+14	83	2	91
+12	83	2	92
+34	83	2	93
+co	50	2	111
+rg	50	2	112
+tm	50	2	113
+#	82	0	116
+@	110	0	120
+bu	28	0	121
+de	55	2	123
+dg	55	3	124
+dd	55	2	125
+sc	55	3	126
+[	24	0	127
+]	24	0	128

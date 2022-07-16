@@ -1,0 +1,12 @@
+#ident	"@(#)kern-mk:kernmap	1.1"
+
+#if defined (MB1) || defined (MB2)
+text=V0xD0011000;
+data=A0x1000;
+#else
+text=V0xD0010000;
+data=A0x1000;
+data:.data;
+bki=NOTE;
+bki:BKI;
+#endif

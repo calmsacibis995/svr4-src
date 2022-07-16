@@ -1,0 +1,18 @@
+#ident	"@(#)pkg.pci:prototype	1.2"
+#	Copyright (c) 1989  Locus Computing Corporation
+#	All Rights Reserved
+#
+#	@(#)prototype	1.2	1/8/90 12:33:55
+#
+i copyright
+i depend
+i pkginfo
+f none /usr/bin/dos2unix	755 bin bin
+f none /usr/bin/unix2dos	755 bin bin
+d none /usr/pci			755 bin bin
+f none /usr/pci/errlogger	755 bin bin
+f none /usr/pci/pcidosout.232	755 bin bin
+f none /usr/pci/pcidossvr.232	755 bin bin
+v none /usr/pci/pciptys		644 bin bin
+f none /usr/pci/sharectl	755 bin bin
+d none /usr/spool/pcilog	777 bin bin

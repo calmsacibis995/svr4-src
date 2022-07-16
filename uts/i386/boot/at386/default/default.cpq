@@ -1,0 +1,10 @@
+AUTOBOOT=YES
+TIMEOUT=30
+DEFBOOTSTR=/unix
+BOOTMSG=Booting the UNIX System... 
+BOOTPROMPT=Enter the name of a kernel to boot:
+INITPROG=/etc/initprog/compaq
+MEMRANGE=0-640K:0,1M-15M:0,16M-15M:1
+MEMREQ=3580K
+MREQMSG1=WARNING: Your system does not have the required minimum 4 Megabytes of memory.
+MREQMSG2=You must power down the machine and add more memory.

@@ -1,0 +1,15 @@
+#ident	"@(#)/usr/src/add-on/pkg.pc586/pkginfo.sl 1.1 4.0 12/08/90 44137 AT&T-USL"
+
+# pc586 pkginfo
+
+PKG="pc586"
+NAME="pc586 Ethernet Driver"
+ARCH="AT386"
+RELEASE="4.0"
+VERSION="1"
+VENDOR="AT&T-SF"
+CATEGORY="system,utilities"
+CLASSES="none build"
+BASEDIR=""
+MAXINST="1"
+PREDEPEND="pc586"

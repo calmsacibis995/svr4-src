@@ -1,0 +1,245 @@
+#ident	"@(#)proto:i386/at386/scsi/INSTALL4	1.3.3.6"
+
+# The generic INSTALL4.  Prompt for add-ons and rebuild kernel.
+
+PATH=/sbin:/etc:/usr/sbin:/usr/bin
+export PATH
+set +e
+
+idoops() {
+if [ $# -ne 1 ]; then
+	return 1
+fi
+if [ -d /etc/conf/sdevice.old ]
+then
+cd /etc/conf/sdevice.old
+for i in *
+do
+if [ -f ../sdevice.d/$i ]
+then rm -f $i
+fi
+done
+mv * ../sdevice.d > /dev/null 2>&1
+cd /
+rm -rf /etc/conf/sdevice.old
+fi
+
+if [ -d /etc/conf/mfsys.old ]
+then
+cd /etc/conf/mfsys.old
+for i in *
+do
+if [ -f ../mfsys.d/$i ]
+then rm -f $i
+fi
+done
+mv * ../mfsys.d > /dev/null 2>&1
+cd /
+rm -rf /etc/conf/mfsys.old
+fi
+
+if [ -d /etc/conf/sfsys.old ]
+then
+cd /etc/conf/sfsys.old
+for i in *
+do
+if [ -f ../sfsys.d/$i ]
+then rm -f $i
+fi
+done
+mv * ../sfsys.d > /dev/null 2>&1
+cd /
+rm -rf /etc/conf/sfsys.old
+fi
+
+if [ $1 -ne 0 ]
+then
+/usr/bin/message "The rebuilding of the UNIX Operating System kernel failed.  \
+Please remove some driver packages."
+fi
+return 0
+}
+
+if [ -x /etc/initial ]
+then
+/etc/initial
+fi
+
+if [ ! -f /etc/conf/bin/S.idreboot ]
+then
+mv /etc/conf/bin/idreboot /etc/conf/bin/S.idreboot
+fi
+if [ ! -f /etc/conf/bin/S.idbuild ]
+then
+mv /etc/conf/bin/idbuild /etc/conf/bin/S.idbuild
+fi
+
+mkdir -p /usr/lib/tape > /dev/null 2>&1
+mkdir -p /usr/lib/scsi /usr/lib/tape > /dev/null 2>&1
+
+#remove all references to the non-scsi hard disk.
+sed -e '/^hd	/d' /etc/conf/cf.d/mdevice > /tmpdev
+cat /tmpdev > /etc/conf/cf.d/mdevice
+rm -rf  /etc/conf/pack.d/hd /etc/conf/sdevice.d/hd /etc/conf/sdevice.old/hd
+sed -e 's/	hd	/	sd01	/g' /etc/conf/cf.d/sassign > /tmpdev
+cat /tmpdev > /etc/conf/cf.d/sassign
+rm -f /tmpdev
+
+cd /usr/src/pkg
+if [ -f /ad1542 ]
+then ln -s scsi.in.src/scsi scsi
+else ln -s scsi.src/scsi scsi
+fi
+cd scsi
+if [ -f /ad1542 ]
+then
+     sed -e 's/INT	IOA	IOE/11	330	333/g' System > S
+     sed -e 's/0	0	1	2	DMA/0	4	1	2	5/g' Master > M
+else
+     sed -e 's/INT	IOA	IOE/15	350	353/g' System > S
+     sed -e 's/0	0	1	1	DMA/0	4	1	1	6/g' Master > M
+fi
+cat S > System
+cat M > Master
+rm -f M S
+cd ../..
+
+ln -s scsi.in.src/st01 st01
+cd st01
+sed -e 's/0	0	0/0	10	0/g' Master > M
+cat M > Master
+rm -f M 
+cd ../..
+
+ln -s scsi.src/sd01 sd01
+cd sd01
+sed -e 's/0-6	0-6	0/35-41	35-41	0/g' Master > M
+cat M > Master
+rm -f M 
+cd ../..
+
+ln -s scsi.in.src/sc01 sc01 > /dev/null 2>&1
+ln -s scsi.in.src/sw01 sw01 > /dev/null 2>&1
+cp scsi.in.src/sys/* /usr/include/sys > /dev/null 2>&1
+cp scsi.src/sys/* /usr/include/sys > /dev/null 2>&1
+mv scsi.src/sd01/space.c scsi.src/sd01/Space.c > /dev/null 2>&1
+mv scsi.src/scsi/space.c scsi.src/scsi/Space.c > /dev/null 2>&1
+
+for i in sd01 scsi st01 sc01 sw01
+do
+cd $i
+/etc/conf/bin/idinstall -a $i
+cd ../..
+done
+
+ONEMB=1048576
+MEM=`memsize`
+if [ `expr $MEM % $ONEMB` -ne 0 ]
+then
+	MEM=`expr $MEM / $ONEMB + 1`
+else
+	MEM=`expr $MEM / $ONEMB`
+fi
+
+MEMSZFLG=0
+
+if [ $MEM -ge 8 ] 
+then
+	MEMSZFLG=1
+fi
+if [ $MEM -ge 16 ]
+then
+	MEMSZFLG=2
+fi
+
+if [ $MEMSZFLG -eq 1 ] # machines has between 8 and 16 meg of memory
+then
+	echo "BUFHWM	400" >> /etc/conf/cf.d/stune
+	echo "NINODE	500" >> /etc/conf/cf.d/stune
+	echo "UFSNINODE	500" >> /etc/conf/cf.d/stune
+fi
+
+if [ $MEMSZFLG -eq 2 ] 
+then
+	echo "BUFHWM	1024" >> /etc/conf/cf.d/stune
+	echo "NINODE	600" >> /etc/conf/cf.d/stune
+	echo "UFSNINODE	600" >> /etc/conf/cf.d/stune
+fi
+	
+rm -f /etc/conf/bin/idbuild
+mv /etc/conf/bin/S.idbuild /etc/conf/bin/idbuild
+
+/etc/conf/bin/idbuild
+sync
+
+if [ ! -f /etc/conf/bin/S.idreboot ]
+then
+mv /etc/conf/bin/idreboot /etc/conf/bin/S.idreboot
+fi
+if [ ! -f /etc/conf/bin/S.idbuild ]
+then
+mv /etc/conf/bin/idbuild /etc/conf/bin/S.idbuild
+fi
+cp /bin/true /etc/conf/bin/idreboot
+ln /etc/conf/bin/idreboot /etc/conf/bin/idbuild > /dev/null 2>&1
+chmod 755 /etc/conf/bin/idreboot
+if [ -f /tmp/tape.count ]
+then
+VMSYS=/usr/vmsys; export VMSYS
+echo "ctape1:/dev/rmt/c0s0:::desc=\"Cartridge Tape Drive\" norewind=\"/dev/rmt/c0s0n\" \
+type=\"ctape\" display=\"true\" volume=\"cartridge tape\" bufsize=\"10240\" capacity=\"120000\"" >> /etc/device.tab
+sync
+/usr/sbin/pkgadd -d ctape1
+( < /dev/rmt/c0s0 ) > /dev/null 2>&1
+
+grep -v "^ctape1" /etc/device.tab > /etc/DEV
+cat /etc/DEV > /etc/device.tab
+rm -f /etc/DEV
+#
+# make sure to get the real type of f0t
+/usr/sadm/sysadm/bin/mkdtab >/dev/null 2>&1 
+sync
+sync
+message -c "Do you wish to install any floppy based packages at \
+this time ?" 
+if [ $? -eq 0 ]
+then
+	/usr/sbin/pkgadd -d diskette1
+fi
+
+fi
+# put tapecntl in /usr/lib/tape to match non-scsi installs and then link it
+mv /sbin/tapecntl /usr/lib/tape
+ln -s /usr/lib/tapecntl /sbin/tapecntl
+
+rm /etc/conf/bin/idbuild
+mv /etc/conf/bin/S.idbuild /etc/conf/bin/idbuild
+message -d "Saving installation kernel as /stand/munix"
+cp /stand/unix /stand/munix
+
+message -d "Installation of the Foundation Set is now complete.\n\n\
+Your UNIX Operating System kernel will now be rebuilt.\n"
+
+/etc/conf/bin/idbuild
+idoops $?
+
+if [ -d /usr/src/pkg/scsi.in.src ]
+then
+	cd /usr/src/pkg/scsi.in.src/cmd
+	rm -f /etc/scsi/scsiformat
+	find * -print |cpio -pdmu /etc/scsi > /dev/null 2>&1
+	cd /
+	rm -rf /usr/src/pkg
+	sync
+fi
+cd /
+if  [ -f /tmp/tape.count ]
+then 
+	echo "It is safe to remove the cartridge tape."
+fi
+mv /etc/conf/bin/S.idreboot /etc/conf/bin/idreboot
+#
+# move archive lib version of dd (dd.arch) on top of shlib version of dd
+mv /usr/bin/dd.arch /usr/bin/dd
+sync
+rm -rf /etc/initial /ad1542 /wd7000

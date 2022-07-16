@@ -1,0 +1,4 @@
+#ifdef MERGE386
+*ident	"@(#)master:merge/sdev	1.1"
+merge	N	1	0	0	0	0	0	0	0
+#endif /* MERGE386 */

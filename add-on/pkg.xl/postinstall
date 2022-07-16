@@ -1,0 +1,137 @@
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+#ident	"@(#)/usr/src/add-on/pkg.xl/postinstall.sl 1.1 4.0 12/08/90 60506 AT&T-USL"
+
+FAILURE=1	# fatal error
+
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+PACKD=${CONFDIR}/pack.d
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be installed."
+
+TMP=/tmp/ftapedrv.err
+ERROR1=" Errors have been written to the file $TMP."
+ESC=
+
+BASE1="ERROR: The ${NAME} is not compatible with this release \
+of the UNIX System V operating system \
+and can not be used with this system."
+
+rm -f $TMP > /dev/null 2>&1
+
+# determine that ID/TP tools are available
+
+if [ -x ${CONFBIN}/idcheck -a -x ${CONFBIN}/idbuild -a -x ${CONFBIN}/idinstall ]
+then 
+	:
+else
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+
+cd /tmp/xl
+
+OSVER=`uname -a | cut -d " " -f3`
+
+case ${OSVER} in
+
+	4.0*) ;;
+	4.1*) ;;
+	*) message ${BASE1};
+	   exit $FAILURE;;
+esac
+
+errflag=0
+
+RETVCHK=0
+RETADD=1
+
+${CONFBIN}/idcheck -p xl > /dev/null 2>&1
+if [ $? != 0 ]
+then
+	message "The ${PKG} has already been installed. You must \
+remove the old ${PKG} before you install the new one"
+	exit 1
+fi
+
+# edit mdevice to use the current fd entry for both floppy and floppy tape
+
+if [ -f "${CONFDIR}/cf.d/mdevice" ]
+then
+	cp ${CONFDIR}/cf.d/mdevice ${CONFDIR}/cf.d/mdevice.orig
+	ed - "${CONFDIR}"/cf.d/mdevice <<- !
+		/fd/s/iHrbcf/DiHrbcf/g
+		w
+		q
+	!
+fi
+
+# copy floppy tape driver over the current fd entry 
+# this provides both floppy and floppy tape access
+	
+cp ${PACKD}/fd/Driver.o ${PACKD}/fd/Driver.o.orig 
+cp Driver.o.fd ${PACKD}/fd/Driver.o
+
+#####
+# Install the tape control funcions to the user interface if
+# FACE is already installed.
+
+FACEDIR="/usr/vmsys/OBJECTS"
+	
+if [ -f "${FACEDIR}/ftape/admin" ]
+then
+	ed - "${FACEDIR}"/Menu.admin <<- !
+		/^name=User Logins/-r ${FACEDIR}/ftape/admin
+		w
+		q
+	!
+fi
+
+/etc/conf/bin/idinstall -a xl 2>> $TMP
+if [ $? != 0 ]
+then
+	message "The installation cannot be completed due to an error in the \
+driver installation. $ERROR1  Please try the installation again.  If the \
+error occurs again, contact your Service Representative."
+	exit $FAILURE
+fi
+
+/etc/conf/bin/idbuild 2>> $TMP
+if [ $? != 0 ]
+then
+	message "The installation cannot be completed due to an error in the \
+kernel reconfiguration. $ERROR1  Please try the installation again.  If the \
+error occurs again, contact your Service Representative." 
+	exit $FAILURE
+fi
+errflag=`expr ${errflag:=0} + 10`
+#installf $PKGINST /usr/options/$PKG.name
+
+#this is no longer needed - now being done in pkginfo 
+#echo $NAME > /usr/options/$PKG.name
+
+installf -f $PKGINST
+
+#
+# Now clean up
+#
+removef $PKGINST /tmp/xl/* >/dev/null 2>&1
+for i in Driver.o Driver.o.fd Master Space.c System Node
+do
+	removef $PKGINST /tmp/xl/$i >/dev/null 2>&1
+done
+removef $PKGINST /tmp/xl >/dev/null 2>&1
+removef -f $PKGINST >/dev/null 2>&1
+rm -f $TMP 1>/dev/null 2>&1
+exit ${errflag} 
+

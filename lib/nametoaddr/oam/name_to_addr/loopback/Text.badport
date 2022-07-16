@@ -1,0 +1,16 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/loopback/Text.badport	1.1"
+title="Loopback Protocol Port Error"
+rows=13
+columns=55
+text="
+The service string entered is not of the correct
+format.  Loopback service strings are simple strings
+(for this menu, they cannot contain white space nor
+a dot (".")).  For example, the valid services are
+
+		rpc
+
+and
+
+		keyserve
+"

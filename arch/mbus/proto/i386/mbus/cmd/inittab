@@ -1,0 +1,25 @@
+#	Copyright (c) 1988  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+#ident	"@(#)mbus:proto/i386/mbus/cmd/inittab	1.1"
+is:1:initdefault:
+ap::sysinit:/sbin/autopush -f /etc/ap/chan.ap 
+sa::sysinit:/usr/bin/sleep 120 </dev/console >/dev/console 2>&1 &
+s0::sysinit:/usr/bin/ln /dev/console /dev/tty >/dev/console 2>&1
+s1::sysinit:/usr/bin/ln /dev/console /dev/systty >/dev/console 2>&1
+s2::sysinit:/usr/bin/ln /dev/console /dev/syscon >/dev/console 2>&1
+s3::sysinit:/usr/bin/ln /sbin/sh /bin/-sh >/dev/console 2>&1
+s4::sysinit:/usr/bin/ln /sbin/sh /bin/sh >/dev/console 2>&1
+s5::sysinit:/usr/bin/ln /usr/bin/mkdir /bin/mkdir >/dev/console 2>&1
+s7::sysinit:/usr/bin/ln /usr/bin/ln /usr/bin/mv >/dev/console 2>&1
+s8::sysinit:/usr/bin/ln /usr/bin/ln /usr/bin/cp >/dev/console 2>&1
+s9::sysinit:/usr/bin/ln /sbin/sh /sbin/su >/dev/console 2>&1
+sa::sysinit:/usr/bin/ln /usr/bin/kill /bin/kill >/dev/console 2>&1
+sa::sysinit:/usr/bin/ln /dev/dsk/ram1 /dev/swap >/dev/console 2>&1
+r1:1:respawn:/bin/-sh </dev/console >/dev/console 2>&1

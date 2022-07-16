@@ -1,0 +1,250 @@
+#ident	"@(#)/usr/src/add-on/pkg.pc586/postinstall.sl 1.1 4.0 12/08/90 14775 AT&T-USL"
+
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+FAILURE=1	# fatal error
+
+BINDIR=/usr/bin
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+
+NOTOOLS="ERROR: The Installable Driver feature has been removed. \
+The ${NAME} cannot be installed."
+
+TMP=/tmp/pc586.err
+PACK=${CONFDIF}/pack.d
+ERROR1=" Errors have been written to the file $TMP."
+ESC=
+
+BASE1="ERROR: The ${NAME} is not compatible with this release \
+of the UNIX System V operating system \
+and can not be used with this system."
+
+rm -f $TMP > /dev/null 2>&1
+
+do_strcf() {
+if [ -f /etc/inet/strcf ]
+then 
+	cp /etc/inet/strcf /etc/inet/.strcf.old
+	sed "/\# i386\/$1/s/^#//" < /etc/inet/.strcf.old > /etc/inet/strcf 
+fi
+}
+
+# determine that ID/TP tools are available
+
+if
+	[ -x ${CONFBIN}/idcheck -a -x ${CONFBIN}/idbuild -a -x ${CONFBIN}/idinstall ]
+then 
+	:
+else
+	message ${NOTOOLS}
+	exit $FAILURE
+fi
+
+cd /tmp/pc586
+
+OSVER=`uname -a | cut -d " " -f3`
+
+case ${OSVER} in
+
+	4.0*) ;;
+	4.1*) ;;
+	*) message ${BASE1};
+	   exit $FAILURE;;
+esac
+
+errflag=0
+
+RETVCHK=0
+RETADD=1
+
+# find out if interrupts 3, 4, 5, 7, 9, 10, 12, 15 are available and then
+# prompt the user to select one
+
+if [ "${REQINTV}" = 2 ]
+then
+	INT=9
+else
+	INT=${REQINTV}
+fi
+
+${CONFBIN}/idcheck -v ${INT}
+if [ "$?" != 0 ]
+then
+	VECTMSG=""
+	for VECT in 3 4 5 7 9 10 12 15
+	do
+		${CONFBIN}/idcheck -v $VECT
+		RETVCHK=$?
+		if [ "$VECT" = 9 ]
+		then
+			VECT=2
+		fi
+		if [ "$RETVCHK" = 0 ]
+		then
+			VECTMSG="${VECTMSG}\n\tIRQ ${VECT}"
+			VECTLIST="${VECTLIST} ${VECT}"
+		fi
+	done
+	
+	if [ "$VECTLIST" = "" ]
+	then
+		message "The ${PKG} cannot be installed because interrupts \
+2, 3, 4, 5, 7, 10, 12 and 15 are in use"
+		exit 1
+	else
+		while true
+		do
+			VANSWER=""
+			message -d "Available interrupt(s) for the ${NAME}: \
+${VECTMSG}\n\nPlease type one of the above and strike the ENTER key or\n\
+type Q to cancel installation."
+			read VANSWER
+			if [ "x$VANSWER" != xQ -a "x$VANSWER" != xq ]
+			then
+				for i in $VECTLIST
+				do
+					if [ "x$VANSWER" = "x$i" ]
+					then
+						INT="$VANSWER"
+						break 2
+					fi
+				done
+			else
+				exit 1
+			fi
+			message -d "Invalid Answer"
+		done
+	fi
+fi
+
+# find out if selected addresses are available and then
+# prompt the user to select one
+
+ADDCHK=`grep "$REQLADD" /var/sadm/pkg/pc586/install/address`
+set `echo $ADDCHK`
+REQLADD=$1
+REQHADD=$2
+
+${CONFBIN}/idcheck -a -l ${REQLADD} -u ${REQHADD}
+if [ "$?" = 0 ]
+then
+	LADD=${REQLADD}
+	HADD=${REQHADD}
+else
+	INTMSG=""
+	for LADR in 0C0000 0C8000 0D0000 0D8000 F00000 F40000 F80000
+	do
+		ADDCHK=`grep "$LADR" /var/sadm/pkg/pc586/install/address`
+		set `echo $ADDCHK`
+		LADR=$1
+		HADR=$2
+		${CONFBIN}/idcheck -a -l $LADR -u $HADR > /dev/null 2>&1
+		if [ "$?" = 0 ]
+		then
+			INTMSG="${INTMSG}\n\tLAD ${LADR} HAD ${HADR}"
+			INTLIST="${INTLIST} ${LADR}"
+		fi
+	done
+	if [ "$INTLIST" = "" ]
+	then
+		message "The ${PKG} cannot be installed because all available \
+I/O addresses are in use"
+		exit 1
+	else
+		while true
+		do
+			RANS=""
+			message -d "Available address(es) for the ${NAME}: \
+${INTMSG}\n\nPlease type the low address and strike the ENTER key or\n\
+type Q to cancel installation."
+			read RANS
+			if [ "x$RANS" != xQ -a "x$RANS" != xq ]
+			then
+				for i in $INTLIST
+				do
+					VANSWER=`echo "$RANS"|tr '[a-f]' '[A-F]' `
+					if [ "$VANSWER" = "$i" ]
+					then
+						ADDCHK=`grep "$VANSWER" /var/sadm/pkg/pc586/install/address`
+						set `echo $ADDCHK`
+						LADD=$1
+						HADD=$2
+						break 2
+					fi
+				done
+			else
+				exit 1
+			fi
+			message -d "Invalid Answer"
+		done
+	fi
+fi
+
+# Make sure to switch interrupt 2 to 9 so that idbuild will not fail.
+if [ "$INT" = 2 ]
+then
+	INT=9
+fi
+
+sed -e "s/INT/${INT}/" < System > Sys.586
+sed -e "s/LADD/${LADD}/" < Sys.586 > pc586.System
+sed -e "s/HADD/${HADD}/" < pc586.System > Sys.586
+cat Sys.586 > pc586.System
+rm -f Sys.586
+
+sed -e "s/[	 ]N[	 ]/	Y	/" < pc586.System >System
+rm -rf pc586.System
+
+/etc/conf/bin/idinstall -a pc586 2>> $TMP
+if [ $? != 0 ]
+then
+	/etc/conf/bin/idinstall -u pc586 2>> $TMP
+	if [ $? != 0 ]
+	then
+        	message "The installation cannot be completed due to an error \
+in the driver installation. $ERROR1  Please try the installation again.  \
+If the error occurs again, contact your Service Representative."
+		exit $FAILURE
+	fi
+fi
+
+do_strcf $PKGINST
+
+/etc/conf/bin/idbuild 2>> $TMP
+if [ $? != 0 ]
+then
+        message "The installation cannot be completed due to an error in the \
+kernel reconfiguration. $ERROR1  Please try the installation again.  If the \
+error occurs again, contact your Service Representative." 
+	exit $FAILURE
+fi
+errflag=`expr ${errflag:=0} + 10`
+#installf $PKGINST /usr/options/$PKG.name
+
+#this is no longer needed - now being done in pkginfo 
+#echo $NAME > /usr/options/$PKG.name
+
+installf -f $PKGINST
+
+#
+# Now clean up
+#
+removef $PKGINST /tmp/pc586/* >/dev/null 2>&1
+for i in Driver.o Master Space.c System Node
+do
+	removef $PKGINST /tmp/pc586/$i >/dev/null 2>&1
+done
+removef $PKGINST /tmp/pc586 >/dev/null 2>&1
+removef -f $PKGINST >/dev/null 2>&1
+rm -f $TMP 1>/dev/null 2>&1
+exit ${errflag} 
+

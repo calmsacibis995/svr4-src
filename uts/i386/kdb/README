@@ -1,0 +1,17 @@
+#ident	"@(#)kdb:README	1.1"
+
+Kernel debugger support is implemented with several modules.
+A single common module provides basic support services and interface to
+the kernel.  This is combined with one or more actual debugger modules.
+Multiple debuggers may reside in the same kernel; they will each provide
+commands to switch between debuggers.
+
+This directory contains common header files and the top-level makefile.
+
+The "cmd" subdirectory contains user-level utility commands.
+
+The "kdb-util" subdirectory contains the common support module.
+
+The "kdb" subdirectory contains the KDB debugger.
+
+The "gdebugger" subdirectory contains the GDEBUGGER debugger.

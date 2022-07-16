@@ -1,0 +1,72 @@
+#	Copyright (c) 1990  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+#
+
+#ident	"@(#)/usr/src/add-on/pkg.kdbu/postinstall.sl 1.1 4.0 12/08/90 12896 AT&T-USL"
+
+FAILURE=1	# fatal error
+
+MOD=kdb-util
+CONFDIR=/etc/conf
+CONFBIN=${CONFDIR}/bin
+
+TMP=/tmp/${MOD}.err
+
+rm -f $TMP > /dev/null 2>&1
+
+exitstat=0
+
+# check for the right version of the O/S
+
+OSVER=`uname -a | cut -d " " -f3`
+
+case ${OSVER} in
+
+	4.0*) ;;
+	4.1*) ;;
+	*) message "ERROR: The ${NAME} package is not compatible \
+with this release of the AT&T UNIX System V operating system \
+and can not be used with this system."
+	   exit $FAILURE;;
+
+esac
+
+# modify tuneables
+
+/etc/conf/bin/idtune -f KDBSECURITY ${KDBSECURITY:-1}
+
+# install the driver
+
+cd /tmp/${MOD}
+
+${CONFBIN}/idinstall -a ${MOD} 2> ${TMP}
+if
+	[ "$?" != "0" ]
+then
+	${CONFBIN}/idinstall -u ${MOD} 2> ${TMP}
+	if
+		[ "$?" != "0" ]
+	then
+		message "The installation of the ${NAME} cannot be completed \
+due to an error in the driver installation. \
+The file ${TMP} contains the errors."
+		exitstat=${FAILURE}
+	fi
+fi
+
+#
+# Now clean up
+#
+rm -f $TMP >/dev/null 2>&1
+rm -rf /tmp/${MOD} >/dev/null 2>&1
+removef $PKGINST /tmp/${MOD}/* >/dev/null 2>&1
+removef $PKGINST /tmp/${MOD} >/dev/null 2>&1
+removef -f $PKGINST >/dev/null 2>&1
+
+exit ${exitstat}

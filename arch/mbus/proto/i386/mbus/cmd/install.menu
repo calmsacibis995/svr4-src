@@ -1,0 +1,90 @@
+: /bin/sh
+#	Copyright (c) 1987, 1988  Intel Corporation
+#	All Rights Rreserved
+#
+#	INTEL CORPORATION PROPRIETARY INFORMATION
+#
+#	This software is supplied to AT & T under the terms of a license 
+#	agreement with Intel Corporation and may not be copied nor 
+#	disclosed except in accordance with the terms of that agreement.
+
+#ident	"@(#)mbus:proto/i386/mbus/cmd/install.menu	1.1"
+Install_menu () { cat <<HERE
+
+                           System V/${CPU} ${REL}
+
+                           INSTALLATION PROCEDURE
+
+
+
+Select the desired action:
+
+
+1) New installation:        Choose  this action to  install a new system.  If
+                            the  system   you  are  installing   was  in  use
+                            previously, all user  and  system  data  will  be
+                            cleared during format.
+
+
+2) Upgrade installation:    Choose this action to upgrade an existing Release
+                            ${REL} system.  All user data  will remain intact.
+                            System  configuration  files  will be saved in the
+                            directory /opt/unix/save.d
+
+
+HERE
+}
+##
+# Overinstall screen
+#
+Install_over_menu () { cat <<HERE
+
+
+
+
+
+
+
+
+                         *** WARNING! ***
+
+      This installstion procedure will over-write all system files 
+      on your hard disk drive.  The user is responsible for saving 
+      site specific modifications.  
+
+                         *** WARNING! ***
+
+
+
+
+
+HERE
+}
+#
+# Initial Installation screen
+#
+Install_init_menu () { cat <<HERE
+
+
+
+
+
+
+
+
+                         *** CAUTION! ***
+
+       This installation procedure will remove all data from the
+       system hard  disk  drive,  in preparation for  a complete 
+       software installation. Any information on  the  hard disk 
+       drive will  be  destroyed.
+
+                         *** CAUTION! ***
+
+
+
+
+
+
+HERE
+}

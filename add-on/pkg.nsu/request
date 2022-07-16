@@ -1,0 +1,49 @@
+#ident	"@(#)/usr/src/add-on/pkg.nsu/request.sl 1.1 4.0 12/08/90 30449 AT&T-USL"
+
+#	request script for nsu package installation
+
+trap 'exit 3' 15
+
+#
+# Prompt script to allow the user to select installation
+# of the oam NSU forms and menus only if OAM is installed
+#
+
+# check to see if fmli and oam are installed
+
+OAM=`/usr/bin/pkginfo oam >/dev/null 2>&1; echo $?`
+FMLI=`/usr/bin/pkginfo fmli >/dev/null 2>&1; echo $?`
+
+if [ ${OAM} -eq 0 -a ${FMLI} -eq 0 ]
+then
+	ANS=`getyorn -d y \
+	-p  "You have the Operations, Administration, and Maintenance \
+	package installed.  Would you like to add the NSU interface Forms \
+	and Menus?\n"
+	` || exit $?
+else
+	ANS=n
+fi
+
+if [ "$ANS" = n ]
+then
+	CLASSES="none"
+else
+	CLASSES="none OAMadmin OAMmif sysadm"
+fi
+echo "CLASSES=$CLASSES" >> $1
+
+#
+#	Find out how many pseudo-ttys user wants configured
+
+PROMPT="Enter the number of pseudo-terminal devices 
+	to configure on your system.\n"
+HELPMSG="NOTE: since each pseudo-terminal device configured 
+	allocates memory and streams buffers, choose only 
+	the number of terminals you really require."
+
+PTNUM=`ckrange -l 0 -u 256 -d 16 -p "$PROMPT" -h "$HELPMSG"` || exit $?
+
+echo "PTNUM=$PTNUM" >>$1 || exit 1
+
+exit 0

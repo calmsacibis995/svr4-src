@@ -1,0 +1,191 @@
+#ident	"@(#)pkg.nsu:prototype	1.19.10.2"
+
+!PACKDIR=/etc/conf/pack.d
+!MASTDIR=/usr/src/uts/i386/master.d
+
+i pkginfo
+i postinstall
+i preremove
+i copyright
+i request
+
+#	These are the only "variables" we use, since they are guaranteed
+#	to be set by OAM at installation time. If they change, remember
+#	to change directories made below.
+!OAMBASE=/usr/sadm/sysadm
+!PKGINST=nsu
+!PKGSAV=/var/sadm/pkg/$PKGINST/save
+d none	/tmp/nsu	775	bin	bin
+v none /tmp/nsu/clone.Dr=$PACKDIR/clone/Driver.o	?	?	?
+v none /tmp/nsu/clone.Ma=$MASTDIR/clone/mdev	?	?	?
+v none /tmp/nsu/clone.Sy=$MASTDIR/clone/sdev	?	?	?
+
+v none /tmp/nsu/sockmod.Dr=$PACKDIR/sockmod/Driver.o	?	?	?
+v none /tmp/nsu/sockmod.Sp=$MASTDIR/sockmod/space.c	?	?	?
+v none /tmp/nsu/sockmod.Ma=$MASTDIR/sockmod/mdev	?	?	?
+v none /tmp/nsu/sockmod.Sy=$MASTDIR/sockmod/sdev	?	?	?
+
+v none /tmp/nsu/timod.Dr=$PACKDIR/timod/Driver.o	?	?	?
+v none /tmp/nsu/timod.Sp=$MASTDIR/timod/space.c	?	?	?
+v none /tmp/nsu/timod.Ma=$MASTDIR/timod/mdev	?	?	?
+v none /tmp/nsu/timod.Sy=$MASTDIR/timod/sdev	?	?	?
+
+v none /tmp/nsu/tirdwr.Dr=$PACKDIR/tirdwr/Driver.o	?	?	?
+v none /tmp/nsu/tirdwr.Sp=$MASTDIR/tirdwr/space.c	?	?	?
+v none /tmp/nsu/tirdwr.Ma=$MASTDIR/tirdwr/mdev	?	?	?
+v none /tmp/nsu/tirdwr.Sy=$MASTDIR/tirdwr/sdev	?	?	?
+
+v none /tmp/nsu/pckt.Dr=$PACKDIR/pckt/Driver.o	?	?	?
+v none /tmp/nsu/pckt.Ma=$MASTDIR/pckt/mdev	?	?	?
+v none /tmp/nsu/pckt.Sy=$MASTDIR/pckt/sdev	?	?	?
+
+v none /tmp/nsu/ptm.Dr=$PACKDIR/ptm/Driver.o	?	?	?
+v none /tmp/nsu/ptm.Sp=$MASTDIR/ptm/space.c	?	?	?
+v none /tmp/nsu/ptm.Ma=$MASTDIR/ptm/mdev	?	?	?
+v none /tmp/nsu/ptm.Sy=$MASTDIR/ptm/sdev	?	?	?
+
+v none /tmp/nsu/pts.Dr=$PACKDIR/pts/Driver.o	?	?	?
+v none /tmp/nsu/pts.Ma=$MASTDIR/pts/mdev	?	?	?
+v none /tmp/nsu/pts.Sy=$MASTDIR/pts/sdev	?	?	?
+
+v none /tmp/nsu/ptem.Dr=$PACKDIR/ptem/Driver.o	?	?	?
+v none /tmp/nsu/ptem.Sp=$MASTDIR/ptem/space.c	?	?	?
+v none /tmp/nsu/ptem.Ma=$MASTDIR/ptem/mdev	?	?	?
+v none /tmp/nsu/ptem.Sy=$MASTDIR/ptem/sdev	?	?	?
+
+v none /tmp/nsu/log.Dr=$PACKDIR/log/Driver.o	?	?	?
+v none /tmp/nsu/log.Sp=$MASTDIR/log/space.c	?	?	?
+v none /tmp/nsu/log.Ma=$MASTDIR/log/mdev	?	?	?
+v none /tmp/nsu/log.Sy=$MASTDIR/log/sdev	?	?	?
+v none /tmp/nsu/log.No=$MASTDIR/log/node	?	?	?
+
+v none /tmp/nsu/ticlts.Dr=$PACKDIR/ticlts/Driver.o	?	?	?
+v none /tmp/nsu/ticlts.Ma=$MASTDIR/ticlts/mdev	?	?	?
+v none /tmp/nsu/ticlts.Sy=$MASTDIR/ticlts/sdev	?	?	?
+v none /tmp/nsu/ticlts.No=$MASTDIR/ticlts/node	?	?	?
+
+v none /tmp/nsu/ticots.Dr=$PACKDIR/ticots/Driver.o	?	?	?
+v none /tmp/nsu/ticots.Ma=$MASTDIR/ticots/mdev	?	?	?
+v none /tmp/nsu/ticots.Sy=$MASTDIR/ticots/sdev	?	?	?
+v none /tmp/nsu/ticots.No=$MASTDIR/ticots/node	?	?	?
+
+v none /tmp/nsu/ticotsor.Dr=$PACKDIR/ticotsor/Driver.o	?	?	?
+v none /tmp/nsu/ticotsor.Ma=$MASTDIR/ticotsor/mdev	?	?	?
+v none /tmp/nsu/ticotsor.Sy=$MASTDIR/ticotsor/sdev	?	?	?
+v none /tmp/nsu/ticotsor.No=$MASTDIR/ticotsor/node	?	?	?
+
+#	directories: default owner=root group=sys mode=0775
+
+!default 775 root sys
+s none	usr/adm=/var/adm
+d none	usr/adm/streams	775	adm	adm
+d none	usr/lib/saf	775	root	bin
+d none	/usr/net
+d none	/usr/net/nls
+d none  /usr/sadm	755	bin	bin
+d none  /usr/sadm/sysadm	755	bin	bin
+d sysadm  $OAMBASE/menu	755	bin	bin
+d sysadm  $OAMBASE/menu/netservices	755	bin	bin
+d sysadm  $OAMBASE/menu/netservices/name_to_addr	775	root sys
+d sysadm  $OAMBASE/menu/netservices/name_to_addr/loopback	775 root	sys
+d sysadm  $OAMBASE/menu/netservices/name_to_addr/loopback/bin	775 root	sys
+
+#	commands: default owner=root, group=sys, mode=0100
+
+!default 0100 root sys
+f none	usr/sbin/nlsadmin 0755 root adm
+f none	usr/sbin/kmacntl
+s none	usr/bin/kmacntl=usr/sbin/kmacntl
+f none	usr/sbin/kmapr
+s none	usr/bin/kmapr=usr/sbin/kmapr
+f none	usr/sbin/kmamkdb
+s none	usr/bin/kmamkdb=usr/sbin/kmamkdb
+f none	/usr/sbin/strace
+f none	/usr/sbin/strclean
+f none	/usr/sbin/strerr
+s none	/usr/bin/strace=/usr/sbin/strace
+s none	/usr/bin/strclean=/usr/sbin/strclean
+s none	/usr/bin/strerr=/usr/sbin/strerr
+f none	usr/sbin/syslogd
+
+#	header files: default owner=bin group=bin mode=0444
+
+!default 0444 bin bin
+f none	usr/include/sys/un.h=usr/src/uts/i386/sys/un.h
+f none	usr/include/sys/byteorder.h=usr/src/uts/i386/sys/byteorder.h
+f none	usr/include/listen.h=usr/src/head/listen.h
+f none	usr/include/netconfig.h=usr/src/head/netconfig.h
+f none	usr/include/netdir.h=usr/src/head/netdir.h
+f none	usr/include/sac.h=usr/src/head/sac.h
+f none	usr/include/syslog.h=usr/src/head/syslog.h
+f none	usr/include/sys/syslog.h=usr/src/uts/i386/sys/syslog.h
+
+#	library routines: default owner=root group=bin mode=444
+
+!default 0444 root bin
+f none	usr/lib/libnls.a
+f none	usr/lib/pt_chmod 04111 root bin
+f none	usr/lib/libsocket.so
+f none	usr/lib/libsocket.a
+
+!default 0644 root bin
+f none	usr/lib/straddr.so
+
+#	listener files: default owner=root group=bin mode=755
+
+!default 0755 root sys	
+f none	usr/lib/saf/listen
+f none	usr/lib/saf/dbfconv
+f none	usr/lib/saf/nlps_server
+#
+#	OAM directories: default owner=root group=sys mode=0755
+#
+!default 0755 root sys
+x OAMadmin	$OAMBASE/add-ons	755	bin	bin
+x OAMadmin	$OAMBASE/add-ons/$PKGINST
+x OAMadmin	$OAMBASE/add-ons/$PKGINST/netservices
+x OAMadmin	$OAMBASE/add-ons/$PKGINST/netservices/selection
+x OAMadmin	$OAMBASE/add-ons/$PKGINST/netservices/selection/display
+x OAMadmin	$OAMBASE/add-ons/$PKGINST/netservices/selection/modify
+d none	/var/sadm	?	?	?
+d none	/var/sadm/pkg	?	?	?
+x OAMadmin	/var/sadm/pkg/$PKGINST
+x OAMadmin	$PKGSAV
+d OAMmif	$PKGSAV/intf_install
+#
+#	administrative files: default owner=root group=sys mode=0755
+#
+!default 0644 bin bin
+f OAMmif	$PKGSAV/intf_install/selection.mi
+f OAMadmin	$OAMBASE/add-ons/$PKGINST/netservices/selection/Help
+f OAMadmin	$OAMBASE/add-ons/$PKGINST/netservices/selection/display/Text.ns_list
+l OAMadmin	$OAMBASE/add-ons/$PKGINST/netservices/selection/display/Help=$OAMBASE/add-ons/$PKGINST/netservices/selection/Help
+f OAMadmin	$OAMBASE/add-ons/$PKGINST/netservices/selection/modify/Menu.ns_nid
+f OAMadmin	$OAMBASE/add-ons/$PKGINST/netservices/selection/modify/Form.ns_modify
+f OAMadmin	$OAMBASE/add-ons/$PKGINST/netservices/selection/modify/Text.ns_modify
+l OAMadmin	$OAMBASE/add-ons/$PKGINST/netservices/selection/modify/Help=$OAMBASE/add-ons/$PKGINST/netservices/selection/Help
+#
+#	OAM shell scripts: default owner=root group=sys mode=755
+#
+!default 0755 bin bin
+f OAMadmin	$OAMBASE/bin/nslist
+f OAMadmin	$OAMBASE/bin/chgnetconf
+#
+#	OAM Scripts for Name to Address Mapping...
+#
+!default 0644 bin bin
+f sysadm $OAMBASE/menu/netservices/name_to_addr/Help
+f sysadm $OAMBASE/menu/netservices/name_to_addr/loopback/Form.lbserv
+f sysadm $OAMBASE/menu/netservices/name_to_addr/loopback/Help
+f sysadm $OAMBASE/menu/netservices/name_to_addr/loopback/Menu.loopback
+f sysadm $OAMBASE/menu/netservices/name_to_addr/loopback/Text.badport
+f sysadm $OAMBASE/menu/netservices/name_to_addr/loopback/Text.exists
+f sysadm $OAMBASE/menu/netservices/name_to_addr/loopback/Text.lts
+f sysadm $OAMBASE/menu/netservices/name_to_addr/loopback/Text.lts_ord
+f sysadm $OAMBASE/menu/netservices/name_to_addr/loopback/Text.ord
+f sysadm $OAMBASE/menu/netservices/name_to_addr/loopback/Text.ots
+f sysadm $OAMBASE/menu/netservices/name_to_addr/loopback/Text.ots_lts
+f sysadm $OAMBASE/menu/netservices/name_to_addr/loopback/Text.ots_ord
+f sysadm $OAMBASE/menu/netservices/name_to_addr/loopback/Text.success
+f sysadm $OAMBASE/menu/netservices/name_to_addr/loopback/bin/loopback.serv 0755 bin bin
+f sysadm $OAMBASE/menu/netservices/name_to_addr/map.menu

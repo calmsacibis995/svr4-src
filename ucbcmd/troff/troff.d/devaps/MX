@@ -1,0 +1,125 @@
+#ident	"@(#)ucbtroff:troff.d/devaps/MX	1.1"
+#		PROPRIETARY NOTICE (Combined)
+#
+#This source code is unpublished proprietary information
+#constituting, or derived under license from AT&T's UNIX(r) System V.
+#In addition, portions of such source code were derived from Berkeley
+#4.3 BSD under license from the Regents of the University of
+#California.
+#
+#
+#
+#		Copyright Notice 
+#
+#Notice of copyright on this source code product does not indicate 
+#publication.
+#
+#	(c) 1986,1987,1988,1989  Sun Microsystems, Inc
+#	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+#	          All rights reserved.
+# Malibu 2 Bold Italic
+name MX
+internalname 18051
+ligatures fi ff fl ffi ffl 0
+charset
+A	75	2	1
+B	66	2	2
+C	68	2	3
+D	79	2	4
+E	64	2	5
+F	61	2	6
+G	77	2	7
+H	78	2	8
+I	38	2	9
+J	37	2	10
+K	74	2	11
+L	59	2	12
+M	96	2	13
+N	81	2	14
+O	78	2	15
+P	66	2	16
+Q	81	2	17
+R	70	2	18
+S	52	2	19
+T	68	2	20
+U	77	2	21
+V	70	2	22
+W	102	2	23
+X	73	2	24
+Y	62	2	25
+Z	68	2	26
+a	55	0	27
+b	56	2	28
+c	44	0	29
+d	60	2	30
+e	45	0	31
+f	39	2	32
+g	53	1	33
+h	56	2	34
+i	34	0	35
+j	35	1	36
+k	54	2	37
+l	35	2	38
+m	82	0	39
+n	57	0	40
+o	53	0	41
+p	58	1	42
+q	55	1	43
+r	45	0	44
+s	43	0	45
+t	41	2	46
+u	58	0	47
+v	54	0	48
+w	81	0	49
+x	55	0	50
+y	57	1	51
+z	48	0	52
+1	56	2	53
+2	56	2	54
+3	56	2	55
+4	56	2	56
+5	56	2	57
+6	56	2	58
+7	56	2	59
+8	56	2	60
+9	56	2	61
+0	56	2	62
+$	56	0	63
+ct	56	3	64
+&	83	0	65
+:	28	0	66
+;	28	0	67
+.	28	0	68
+,	28	0	69
+`	28	0	70
+'	28	0	71
+?	45	0	72
+!	25	0	73
+%	86	0	74
+*	56	0	75
+(	28	0	76
+)	28	0	77
+/	67	2	78
+hy	44	0	79
+-	"
+em	112	0	80
+ff	69	2	82
+fi	63	2	83
+fl	64	2	84
+Fi	92	2	85
+Fl	94	2	86
+14	87	2	91
+12	87	2	92
+34	87	2	93
+co	85	2	111
+rg	84	2	112
+tm	105	2	113
+#	84	0	116
+@	112	0	120
+bu	28	0	121
+de	55	2	123
+dg	56	3	124
+dd	56	2	125
+sc	56	3	126
+[	39	0	127
+]	39	0	128

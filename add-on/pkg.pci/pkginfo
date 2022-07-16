@@ -1,0 +1,15 @@
+#ident	"@(#)/usr/src/add-on/pkg.pci/pkginfo.sl 1.1 4.0 12/08/90 19708 AT&T-USL"
+#	Copyright (c) 1989  Locus Computing Corporation
+#	All Rights Reserved
+#
+#	@(#)pkginfo	1.1	11/20/89 15:00:11
+#
+PKG="pci"
+NAME="PC-Interface utilities & RS-232 service"
+VERSION="3.0"
+CATEGORY="system,utilities"
+VENDOR="Locus Computing Corporation"
+#HOTLINE=
+#EMAIL=
+RSTATES="S s 1"
+PREDEPEND="yes"

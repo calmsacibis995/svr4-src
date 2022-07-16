@@ -1,0 +1,15 @@
+#ident	"@(#)nametoaddr:oam/name_to_addr/starlan/Text.s_exists	1.1"
+title="ISO Starlan Protocol File Error"
+columns=55
+rows=11
+text="
+The service name entered already exists in
+
+	/etc/net/starlan/services
+
+and
+
+	/etc/net/starlandg/services
+
+If you want to remove them, please edit these files.
+"

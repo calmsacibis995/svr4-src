@@ -1,0 +1,128 @@
+'\"#ident	"@(#)ucbtroff:troff.d/tmac.d/uff	1.1"
+'\"		PROPRIETARY NOTICE (Combined)
+'\"
+'\"This source code is unpublished proprietary information
+'\"constituting, or derived under license from AT&T's UNIX(r) System V.
+'\"In addition, portions of such source code were derived from Berkeley
+'\"4.3 BSD under license from the Regents of the University of
+'\"California.
+'\"
+'\"
+'\"
+'\"		Copyright Notice 
+'\"
+'\"Notice of copyright on this source code product does not indicate 
+'\"publication.
+'\"
+'\"	(c) 1986,1987,1988,1989  Sun Microsystems, Inc
+'\"	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+'\"	          All rights reserved.
+.so /usr/ucblib/doctools/tmac/sun
+.de H
+.ti \\n(.iu
+.RT
+.if \\n(1T .sp
+.RT
+.ne 3.1
+.ft B
+.nr NS \\$1
+.if '\\$1'C' .nr NS 1
+.if '\\$1'C' .nr dT 1
+.if '\\$1'A' .nr NS 1
+.if '\\$1'A' .nr dT 1
+.if '\\$1'PA' .nr NS 1
+.if '\\$1'A' .if !\\n(aP \{\
+.nr aP 1
+.nr H1 0
+.af H1 A \}
+.if '\\$1'PA' .if !\\n(aP \{\
+.nr aP 1
+.nr H1 0
+.af H1 A \}
+.if \\n(NS=1 .if !'\\$1'1' .if !'\\$1'PA'\{\
+.if \\nC .nr H1 \\nC-1
+.nr C 0
+.nr T1 0
+.nr F1 0
+.bp \}
+.af PN 1
+.nr H\\n(NS +1
+.if !\\n(NS-4 .nr H5 0
+.if !\\n(NS-3 .nr H4 0
+.if !\\n(NS-2 .nr H3 0
+.if !\\n(NS-1 .nr H2 0
+.if \\n(NS=1 .ds MT \\$2
+.if \\n(NS=1 .if !'\\$1'1' .if !'\\$1'PA'\{\
+.ad c
+.ps 18
+.vs 24
+.if '\\$1'C' .ds hS Chapter \\n(H1
+.if '\\$1'A' .ds hS Appendix \\n(H1
+\\*(hS
+.sp
+\\$2
+.sp 0.5i
+.ps
+.vs
+.ad b \}
+.if \\n(NS>=1 .if !'\\$1'C' .if !'\\$1'A' .if !'\\$1'PA'\{\
+.sp 10p
+.ne 33p+20p
+.ds SN \\n(H1.
+.if \\n(NS>1 .as SN \\n(H2.
+.if \\n(NS>2 .as SN \\n(H3.
+.if \\n(NS>3 .as SN \\n(H4.
+.if \\n(NS>4 .as SN \\n(H5.
+.if \\n(NS=1 .ft B
+.if \\n(NS=1 .ps 16p
+.if \\n(NS=1 .vs 18p
+.if \\n(NS=2 .ft B
+.if \\n(NS=2 .ps 14p
+.if \\n(NS=2 .vs 18p
+.if \\n(NS=3 .ft I
+.if \\n(NS=3 .ps 12p
+.if \\n(NS=3 .vs 15p
+.if \\n(NS=4 .ft I
+.if \\n(NS=4 .ps 11p
+.if \\n(NS=4 .vs 15p
+.if \\n(NS=5 .ft R
+.if \\n(NS=5 .ps \\n(PSp
+.if \\n(NS=5 .vs \\n(VSp
+.in +\\w'\\*(SN\\ \\ 'u
+.ta \\w'\\*(SN\\ \\ 'u
+.ti -\\w'\\*(SN\\ \\ 'u
+\\*(SN\\ \\ \t\c
+\&\\$2
+.in
+.ps
+.vs
+.sp 7p \}
+.if '\\$1'PA'\{\
+.sp 13p
+.ne 33p+20p
+.ft B
+.ps 16p
+.vs 18p
+.in +\\w'\\*(SN\\ \\ 'u
+.ta \\w'\\*(SN\\ \\ 'u
+.ti -\\w'\\*(SN\\ \\ 'u
+.ds SN Appendix \\n(H1.
+.ti -\\w'\\*(SN\\ \\ 'u
+\\*(SN\\ \\ \t\c
+\&\\$2
+.in
+.ps
+.vs
+.sp 7p \}
+.R
+.if '\\$1'C' .if  \\n(IK \!.tm .CE C "\\$2" \\\\n(PN \\n(dT \\n(H1
+.if '\\$1'C' .if !\\n(IK .tm .CE C "\\$2" \\n(PN \\n(dT \\n(H1
+.if '\\$1'A' .if  \\n(IK \!.tm .CE A "\\$2" \\\\n(PN \\n(dT \\n(H1
+.if '\\$1'A' .if !\\n(IK .tm .CE A "\\$2" \\n(PN \\n(dT \\n(H1
+.if '\\$1'1' .if  \\n(IK \!.tm .CE N "\\$2" \\\\n(PN \\n(dT \\n(H1
+.if '\\$1'1' .if !\\n(IK .tm .CE N "\\$2" \\n(PN \\n(dT \\n(H1
+.if '\\$1'PA' .if  \\n(IK \!.tm .CE N "\\$2" \\\\n(PN \\n(dT \\n(H1
+.if '\\$1'PA' .if !\\n(IK .tm .CE N "\\$2" \\n(PN \\n(dT \\n(H1
+.if \\n(NS>1 .if  \\n(IK \!.tm .CE N "\\$2" \\\\n(PN \\n(dT \\n(H1 \\n(H2 \\n(H3 \\n(H4 \\n(H5
+.if \\n(NS>1 .if !\\n(IK .tm .CE N "\\$2" \\n(PN \\n(dT \\n(H1 \\n(H2 \\n(H3 \\n(H4 \\n(H5
+..
