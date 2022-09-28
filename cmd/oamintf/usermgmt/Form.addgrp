@@ -1,0 +1,106 @@
+#ident	"@(#)oamintf:usermgmt/Form.addgrp	1.2.3.1"
+
+################################################################################
+#	Module Name:  Form.addgrp
+# 	Primary Command:
+#		 groupadd [-g gid [-o] group
+#
+################################################################################
+form="Add a Group"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+close=`rm -f /tmp/gadderr`
+
+done=`message -w "Adding group $F1 to the system.";
+
+	rm -f /tmp/ln /tmp/sgrp;
+
+	addgrp $F1 $F2 $F3 $F4;
+
+	if [ $RET -eq 0 ];
+	then
+      		set -l CMD="OPEN TEXT $OBJ_DIR/Text.agrpok $F1";
+	elif [ $RET -eq 2 ];
+	then
+      		set -l CMD="OPEN TEXT $OBJ_DIR/Text.badprim $F1";
+	elif [ $RET -eq 3 ];
+	then
+      		set -l CMD="OPEN TEXT $OBJ_DIR/Text.badsup $F1";
+	else
+     		set -l CMD="OPEN TEXT $OBJ_DIR/Text.agrpnok $F1";
+	fi`$CMD
+
+#  $F1
+name=Group name:
+lininfo=Form.addgrp:grpname
+nrow=1
+ncol=3
+frow=1
+fcol=15
+rows=1
+columns=8
+
+valid=`valstr -r '^[ -9;-z]\{0,8\}$' $F1 && uniq_gnam $F1`
+invalidmsg=`if [ $RET != 0 ];
+	    then
+		echo "ERROR: Enter 1-8 characters, cannot include a (:) and must be unique.";
+	    fi`
+
+# $F2
+name=Group ID:
+lininfo=Form.addgrp:grpid
+nrow=2
+ncol=3
+frow=2
+fcol=13
+rows=1
+columns=5
+
+value=const `findgid`
+`getmaxuid | set -l MAXUID`
+valid=`valrange -l100 -u$MAXUID $F2 && uniq_gid $F2`
+invalidmsg=`if [ $RET -eq 2 ];
+	    then
+		echo "ERROR: Group ID must be unique.";
+	    else
+		errange -l100 -u$MAXUID;
+	    fi`
+
+# $F3
+name=Primary member(s):
+lininfo=Form.addgrp:primem
+nrow=3
+ncol=3
+frow=3
+fcol=22
+rows=1
+columns=55
+scroll=true
+
+rmenu=OPEN MENU $OBJ_DIR/Menu.mlogins
+valid=`chk_logins $F3`
+
+invalidmsg="ERROR: `readfile /tmp/ln` does not exist."
+
+# $F4
+name=Supplementary member(s):
+lininfo=Form.addgrp:supmem
+nrow=4
+ncol=3
+frow=4
+fcol=28
+rows=1
+columns=49
+scroll=true
+
+rmenu=OPEN MENU $OBJ_DIR/Menu.mlogins
+valid=`chk_logins $F4`
+
+invalidmsg="ERROR: `readfile /tmp/ln` does not exist"
+
+name=RESET
+button=8
+action=RESET

@@ -1,0 +1,22 @@
+#ident	"@(#)portmgmt:port_monitors/Menu.pm_list	1.6.2.1"
+
+menu=List Port Monitor Information & Status
+
+`sacadm -L>/dev/null;
+	regex -e -v "$RET"
+	   '^5$' '`message "No port monitor configured."`'`
+`sacadm -L>/dev/null;
+	regex -v "$RET"
+	   '^0$' '
+name=all
+description="List all port monitors"
+action=OPEN TEXT $OBJ_DIR/Text.pm_lsall
+
+name=by pmtag
+description="List a particular port monitor"
+action=OPEN MENU $OBJ_DIR/Menu.pm_lstag
+
+name=by type
+description="List a particular type of port monitor"
+action=OPEN MENU $OBJ_DIR/Menu.pm_lstype'
+	   '^5$' '`message "No port monitor configured."`'`

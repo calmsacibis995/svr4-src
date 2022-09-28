@@ -1,0 +1,29 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkstat/select/Menu.states	1.2"
+# multiselect menu of states choices
+menu=Available Backup States
+multiselect=TRUE
+
+begrow=any
+begcol=any
+
+`message "[MARK] the states for which you want a report and then press <RETURN>."`
+
+done=`getitems " " | set -l "Form_Choice"`CLOSE
+
+name=active
+description=Job is running now
+
+name=completed
+description=Job finished successfully
+
+name=failed
+description=Job finished unsuccessfully
+
+name=pending
+description=Job has not yet begun executing
+
+name=suspended
+description=Job has been suspended by operator
+
+name=waiting
+description=Job is waiting for operator intervention

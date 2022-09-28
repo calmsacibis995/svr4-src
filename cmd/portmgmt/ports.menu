@@ -1,0 +1,8 @@
+#ident	"@(#)portmgmt:ports.menu	1.2.1.1"
+#menu#Service Access Management
+#life#permanent
+
+port_monitors^Port Monitor Management^port_monitors/pm.menu
+port_services^Port Service Management^port_services/ps.menu
+quick_terminal^Quick Terminal Setup^port_quick/quick.menu
+tty_settings^Terminal Line Setting Management^tty_settings/tty.menu

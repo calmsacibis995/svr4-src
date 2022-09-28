@@ -1,0 +1,209 @@
+#ident	"@(#)oamintf:softwaremgmt/defaults/Form.sd_add	1.4.1.1"
+
+form="Add Installation Defaults File"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+framemsg="`readfile $INTFBASE/form.msg`"
+
+`readfile $INTFBASE/frept.msg | set -l MSG2`
+`set -l PKGADM="/var/sadm/install"`
+
+done=`
+	message -w;
+	run sh -cf "
+		if cat >$PKGADM/admin/$F1 <<-EOF
+			basedir=$F2
+			mail=$F3
+			runlevel=$F6
+			conflict=$F7
+			setuid=$F8
+			action=$F9
+			idepend=$F10
+			rdepend=$F11
+			space=$F12
+			partial=$F13
+			instance=$F14
+			EOF
+		then
+			echo The installation defaults file $F1 has been added.
+		else
+			echo The installation defaults file $F1 could not be added.
+		fi
+	" ;
+	message -f $MSG2;
+`UPDATE `getfrm`
+
+name=Installation defaults filename:
+lininfo=add-file
+nrow=1
+ncol=2
+frow=1
+fcol=35
+rows=1
+columns=14
+choicemsg=Enter the name of the installation defaults file to be created.
+valid=`[ -n $F1 ] && valpath -an $PKGADM/admin/$F1`
+invalidmsg=`
+	if [ -z $F1 ] ;
+	then
+		echo Error - input is required. ;
+	else
+		echo Error - installation defaults file already exists. ;
+	fi
+`
+
+name=Default base directory for packages:
+lininfo=basedir
+scroll=TRUE
+nrow=2
+ncol=2
+frow=2
+fcol=40
+rows=1
+columns=30 
+value=ask
+rmenu={ ask default }
+valid=`[ $F2 = ask ] || [ $F2 = default ] || valpath -ay $F2`
+invalidmsg=Error - specify \"ask\", \"default\" or an absolute pathname to a directory.
+	
+name=List of users to notify:
+lininfo=mail
+scroll=TRUE
+nrow=3
+ncol=2
+frow=3
+fcol=28
+rows=1
+columns=42 
+value=root
+rmenu=OPEN MENU $OBJ_DIR/Menu.logins
+valid=`
+	message -w ;
+	shell "
+		[ -z \"$F3\" ] && exit 1
+		for arg in \`echo \"$F3\" | sed 's/,/ /g'\`
+		do
+			/usr/bin/grep \"^\$arg:\" /etc/passwd && continue
+			exit 1
+		done
+	"
+`
+invalidmsg=Error - specify list of valid login names acceptable to mail(1)
+
+name=ACTION
+nrow=5
+ncol=2
+name=SITUATION
+nrow=5
+ncol=13
+
+name=Incorrect run-level during installation or removal
+lininfo=runlevel
+nrow=6
+ncol=13
+frow=6
+fcol=2
+rows=1
+columns=9
+value=ask
+rmenu={ ask nocheck quit }
+menuonly=TRUE
+
+name=Package contains a pathname in conflict with other packages
+lininfo=conflict
+nrow=7
+ncol=13
+frow=7
+fcol=2
+rows=1
+columns=9
+value=ask
+rmenu={ ask nochange nocheck quit }
+menuonly=TRUE
+
+name=Package contains a setuid/setgid process
+lininfo=setuid
+nrow=8
+ncol=13
+frow=8
+fcol=2
+rows=1
+columns=9
+value=ask
+rmenu={ ask nochange nocheck quit }
+menuonly=TRUE
+
+name=Package contains scripts which may affect security
+lininfo=security
+nrow=9
+ncol=13
+frow=9
+fcol=2
+rows=1
+columns=9
+value=ask
+rmenu={ ask nocheck quit }
+menuonly=TRUE
+
+name=Package dependencies are not met during installation
+lininfo=idepend
+nrow=10
+ncol=13
+frow=10
+fcol=2
+rows=1
+columns=9
+value=ask
+rmenu={ ask nocheck quit }
+menuonly=TRUE
+
+name=Package dependencies are not met during removal
+lininfo=rdepend
+nrow=11
+ncol=13
+frow=11
+fcol=2
+rows=1
+columns=9
+value=ask
+rmenu={ ask nocheck quit }
+menuonly=TRUE
+
+name=Disk space requirements are not met
+lininfo=space
+nrow=12
+ncol=13
+frow=12
+fcol=2
+rows=1
+columns=9
+value=ask
+rmenu={ ask nocheck quit }
+menuonly=TRUE
+
+name=Package is already partially installed
+lininfo=partial
+nrow=13
+ncol=13
+frow=13
+fcol=2
+rows=1
+columns=9
+value=ask
+rmenu={ ask nocheck quit }
+menuonly=TRUE
+
+name=A different instance of the package is already installed
+lininfo=instance
+nrow=14
+ncol=13
+frow=14
+fcol=2
+rows=1
+columns=9
+value=ask
+rmenu={ ask newonly overwrite quit unique }
+menuonly=TRUE
+
+name=RESET
+button=8
+action=reset

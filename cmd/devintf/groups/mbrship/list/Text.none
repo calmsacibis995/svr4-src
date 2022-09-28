@@ -1,0 +1,32 @@
+#ident	"@(#)devintf:groups/mbrship/list/Text.none	1.4"
+
+title="Group Membership"
+help=OPEN TEXT $INTFBASE/Text.itemhelp "NONE"
+begrow=any
+begcol=any
+framemsg=`readfile $INTFBASE/trept.msg`
+wrap=FALSE
+`
+    set -l LIFE=longterm ;
+`
+lifetime=$LIFE
+altslks=TRUE
+
+rows=3
+columns=63
+text="
+The device group \"$ARG1\" does not contain any members."
+
+name="HELP"
+button=9
+action=help
+
+name="CONT"
+button=11
+action=`
+    set -l LIFE=shortterm ;
+`update $FRAMENUM true
+
+name="CANCEL"
+button=14
+action=cleanup

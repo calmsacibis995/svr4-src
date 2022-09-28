@@ -1,0 +1,12 @@
+#ident	"@(#)oamintf:devices/devices.menu	1.10.2.1"
+#menu#Storage Device Operations and Definitions
+#life#permanent
+
+add^Add Storage Device^add/Form.adddevice
+copy^Makes Duplicate Copies of Storage Volumes^copy/copy.menu
+devices^Device Alias and Attribute Management^devices/devices.menu
+display^Displays Information About Storage Devices^display/Menu.display
+erase^Erases the Contents of Storage Volumes^erase/Menu.erase
+format^Formats Removable Volumes^format/Menu.format
+remove^Remove Storage Device^remove/Menu.remove
+preSVR4^Disk Operations^OBJECTS/dskopts/Menu.dskopts

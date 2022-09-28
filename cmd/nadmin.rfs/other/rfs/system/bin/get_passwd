@@ -1,0 +1,15 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/bin/get_passwd	1.5"
+
+# get domain name
+
+DOM=`dname -d`
+
+if [ ! -s /etc/rfs/auth.info/$DOM/passwd ]
+then
+	echo "There are no members in the password file for $DOM."> /usr/tmp/nodel_$$
+else
+	/bin/sed "s/:.*//g" /etc/rfs/auth.info/$DOM/passwd > /usr/tmp/passwd_$$ 2>/dev/null
+fi
+
+#echo the process id so fmli can get the temp file name
+echo $$

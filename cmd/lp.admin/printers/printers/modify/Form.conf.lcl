@@ -1,0 +1,520 @@
+#ident	"@(#)lp.admin:printers/printers/modify/Form.conf.lcl	1.5.4.2"
+
+form="Configure Printer, \"${lp_printer}\" - Local Printer Subtask"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`indicator -w; set -l name_2="/tmp/lp.n2$VPID";
+cosend lpdata "list_classes/a" > $name_2;`
+
+done=`
+	message -w "Modifying printer, please wait.";
+ 	if [ "$F1" = "none" ];
+	then
+		set -f$datafile classes="";
+	else
+                set -f$datafile classes=-c$F1;
+	fi;
+
+ 	if [ "$F2" = "none" -o "$F2" = "" ];
+	then
+		set -f$datafile description="";
+	else
+		set -f$datafile description="-D\"$F2\"";
+	fi;
+
+ 	if [ "$F3" = "" -o "$F3" = "unknown" ];
+	then
+		set -f$datafile prtype="";
+	else
+		set -f$datafile prtype="-T$F3";
+	fi;
+
+	if tput -T $F3 daisy > /dev/null 2>/dev/null;
+	then
+		set -e has_chset=FALSE -e has_pw=TRUE;
+		set -e ina_chset=TRUE -e ina_pw=FALSE;
+	else
+		tput -T $F3 csnm 0 | set -l tmp;
+		if [ -n "$tmp" ];
+		then
+			set -e has_chset=TRUE -e has_pw=FALSE;
+			set -e ina_chset=FALSE -e ina_pw=TRUE;
+		else
+			set -e has_chset=FALSE -e has_pw=FALSE;
+			set -e ina_chset=TRUE -e ina_pw=TRUE;
+		fi;
+	fi;
+	set -e lp_prtype=$F3;
+
+ 	if [ "$F4" = "" -o "$F4" = "none" ];
+	then
+		set -f$datafile Content="";
+	else
+		echo "$F4" | sed 's/, /,/gp' | tr -s " " "," | set -l tmp;
+		set -f$datafile Content="-I$tmp";
+	fi;
+
+	if [ "$F5" = 'yes' -o "$F5" = 'Yes' -o "$F5" = 'YES' ];
+	then
+		set -f$datafile banner="-onobanner";
+	else
+		set -f$datafile banner="-obanner";
+	fi;
+
+ 	if [ "$F6" = "Use printer defaults" ];
+	then
+		set -f$datafile cpi="";
+	else
+	    	set -f$datafile cpi="-o cpi=$F6";
+	fi;
+
+ 	if [ "$F7" = "Use printer defaults" ];
+	then
+		set -f$datafile lpi="";
+	else
+		set -f$datafile lpi="-o lpi=$F7";
+	fi;
+
+ 	if [ "$F8" = "Use printer defaults" ];
+	then
+		set -f$datafile width="";
+	else
+   		set -f$datafile width="-o width=$F8";
+	fi;
+
+ 	if [ "$F9" = "Use printer defaults" ];
+	then
+		set -f$datafile length="";
+	else
+		set -f$datafile length="-o length=$F9";
+	fi;
+
+	if [ "$F10" = "none" -o "$F10" = "" ];
+	then
+	        set -f$datafile alert="-A\"mail lp\"";
+	else
+	        set -f$datafile alert="-A$F10";
+	fi;
+
+	if [ $F11 -gt 0 -o "$F11" = "once" ]; 
+	then
+	        set -f$datafile freq="-W$F11";
+		if [ "$F10" = "none" -o "$F10" = "" ];
+		then
+	       	 	set -f$datafile freq="";
+		fi;
+	else
+	fi;
+
+	set -f$datafile Recover="-F $F12";
+
+	if [ "$F13" = 'yes' -o "$F13" = 'Yes' -o "$F13" = 'YES' ];
+	then
+		set -f$datafile Login=-l;
+	else 
+		set -f$datafile Login=-h;
+	fi;
+
+	if [ -n "$TFADMIN" ]; then shell "LD_BIND_NOW=1 $TFADMIN lpadmin -p $lp_printer $lp_device ${($datafile)classes} ${($datafile)description} ${($datafile)prtype} ${($datafile)Content} ${($datafile)banner} ${($datafile)cpi} ${($datafile)lpi} ${($datafile)width} ${($datafile)length} ${($datafile)alert} ${($datafile)freq} ${($datafile)Recover}  ${($datafile)Login} > /dev/null 2> $error";
+	else shell "LD_BIND_NOW=1 lpadmin -p $lp_printer $lp_device ${($datafile)classes} ${($datafile)description} ${($datafile)prtype} ${($datafile)Content} ${($datafile)banner} ${($datafile)cpi} ${($datafile)lpi} ${($datafile)width} ${($datafile)length} ${($datafile)alert} ${($datafile)freq} ${($datafile)Recover}  ${($datafile)Login} > /dev/null 2> $error"; fi;
+	if [ "$RET" != "0" -a -s $error ];
+	then
+		echo "OPEN TEXT $OAMBASE/add-ons/lp/printers/printers/modify/Text.error";
+	else
+		set -e toclose="$OAMBASE/add-ons/lp/printers/printers/modify/Form.conf.lcl";
+		cosend lpdata "get_printer/n$lp_printer" > /dev/null 2>/dev/null;
+		if [ -n "$TFADMIN" ]; then $TFADMIN lpstat -p $lp_printer -l > /usr/tmp/stat$$;
+		else lpstat -p $lp_printer -l > /tmp/stat$$; fi;
+    		cat /tmp/stat$$ | sed 's/: /=/gp' | 
+		sed 's/^	//gp' | sed 's/After fault/recover/gp' |
+		sed 's/Content types/content/gp'  >> $datafile;
+		cat /etc/lp/printers/$lp_printer/configuration | 
+		sed 's/: /=/gp' >> $datafile;
+		rm -f /tmp/stat$$;
+		set -e lp_prtype=${($datafile)prtype:-unknown};
+		if tput -T $lp_prtype daisy > /dev/null 2>/dev/null;
+		then
+			set -e has_chset=FALSE -e has_pw=TRUE;
+			set -e ina_chset=TRUE -e ina_pw=FALSE;
+		else
+			tput -T $lp_prtype csnm 0 | set -l tmp;
+			if [ -n "$tmp" ];
+			then
+				set -e has_chset=TRUE -e has_pw=FALSE;
+				set -e ina_chset=FALSE -e ina_pw=TRUE;
+			else
+				set -e has_chset=FALSE -e has_pw=FALSE;
+				set -e ina_chset=TRUE -e ina_pw=TRUE;
+			fi;
+		fi;
+		echo "OPEN TEXT $OAMBASE/add-ons/lp/printers/printers/modify/Text.confirm";
+	fi;
+`
+
+close=`
+	rm -f $name_2;
+	codestroy -R printers.add.lpcf lpdata;
+	unset	-l lp_errtmp
+		-l command
+		-f$datafile classes
+		-f$datafile description
+		-f$datafile Content
+		-f$datafile banner
+		-f$datafile cpi
+		-f$datafile lpi
+		-f$datafile width
+		-f$datafile length
+		-f$datafile alert
+		-f$datafile freq
+		-f$datafile Recover
+		-f$datafile Login;
+		echo "close $OAMBASE/add-ons/lp/printers/printers/modify/Form.conf.lcl";
+`
+
+#F1
+name='Class:'
+lininfo="conf.lcl:F1"
+nrow=2
+ncol=1
+frow=2
+fcol=8
+rows=1
+columns=14
+value=`
+	indicator -w;
+	$OAMBASE/add-ons/lp/printers/printers/add/getclass.sh
+`
+rmenu={ `indicator -w;ls /etc/lp/classes` none all }
+valid=`regex -v "$F1" 
+	'^[_a-zA-Z0-9]{1,14}$'	'true'
+	'^.*$'			'false'`
+fieldmsg="Enter class of printers to which this printer should belong."
+invalidmsg="Invalid Entry: Class name must be 1-14 letters, numbers and underscores."
+
+##F2
+name='Description of the printer:'
+lininfo="conf.lcl:F2"
+nrow=3
+ncol=1
+frow=3
+fcol=29
+rows=1
+columns=46
+scroll=true
+value=${($datafile)Description:-none}
+fieldmsg="You may enter a single line of text that will be displayed when requested."
+
+#F3
+name='Printer type:'
+lininfo="conf.lcl:F3"
+nrow=4
+ncol=1
+frow=4
+fcol=15
+rows=1
+columns=14
+value=${($datafile)prtype:-unknown}
+valid=`
+	indicator -w;
+	if tput -T $F3 longname > /dev/null 2> /dev/null;
+	then
+		echo true;
+	else
+		echo false;
+	fi;
+`
+fieldmsg="Enter a type of printer that is known in the Terminfo database."
+invalidmsg="Invalid entry: Entry must be defined in the Terminfo database."
+
+#F4
+name='File types printable without filtering:'
+lininfo="conf.lcl:F4"
+nrow=5
+ncol=1
+frow=5
+fcol=41
+rows=1
+columns=30
+value=${($datafile)content:-simple}
+scroll=TRUE
+valid=`
+	indicator -w;
+	echo "$F4" | tr " " "," | sed 's/,,/,/gp' | set -l types;
+	regex -v "$types"
+	'^[_a-zA-Z0-9]{1,14}$' 			   'true'
+	'^[_a-zA-Z0-9]{1,14}(,[_a-zA-Z0-9]{1,14})*$' 'true'
+	'^.*$'			'false'`
+invalidmsg="Invalid Entry: File types are limited to 14 letters, numbers, and underscores."
+
+#F5
+name='Can a user skip the banner page?'
+lininfo="conf.lcl:F5"
+nrow=6
+ncol=1
+frow=6
+fcol=34
+rows=1
+columns=3
+value=`
+	set -l banneron=${($datafile)Always:Yes};
+	if [ "$banneron" = "" ];
+	then
+		echo no;
+	elif [ "$banneron" = "Yes" ];
+	then
+		echo no;
+	else
+		echo yes;
+	fi
+`
+rmenu={ yes no }
+menuonly=true
+fieldmsg='Enter "yes" or "no".'
+invalidmsg='Invalid entry:  value must be "yes" or "no".'
+
+#F6
+name='Default character pitch:'
+lininfo="conf.lcl:F6"
+nrow=7
+ncol=1
+frow=7
+fcol=26
+rows=1
+columns=20
+value=${($datafile)CPI:-Use printer defaults}
+valid=`
+ 	if [ "$F6" = "Use printer defaults" ];
+	then
+	    	echo true;
+	else
+		regex -v "$F6"
+		'^0$'			'fail'
+		'^0i$'			'fail'
+		'^0c$'			'fail'
+		'^[.0-9]+[ci]$'	'ok'
+		'^[.0-9]+$'			'ok'
+		'^.*$'				'fail'
+		| set -l lp_errtmp;
+
+		if [ "$lp_errtmp" = 'ok' ];
+		then
+	    		echo true;
+		else
+	    		echo false;
+		fi;
+	fi;
+`
+invalidmsg='Invalid: must be a positive decimal number and can be followed by "c" or "i".'
+fieldmsg='Enter \"Use printer defaults\" or a decimal to define characters per interval.'
+
+
+#F7
+name='Default line pitch:'
+lininfo="conf.lcl:F7"
+nrow=8
+ncol=1
+frow=8
+fcol=21
+rows=1
+columns=20
+value=${($datafile)LPI:-Use printer defaults}
+valid=`
+ 	if [ "$F7" = "Use printer defaults" ];
+	then
+	    	echo true;
+	else
+		regex -v "$F7"
+		'^0$'			'fail'
+		'^0i$'			'fail'
+		'^0c$'			'fail'
+		'^[.0-9]+[ci]$'	'ok'
+		'^[.0-9]+$'			'ok'
+		'^.*$'				'fail'
+		| set -l lp_errtmp;
+
+		if [ "$lp_errtmp" = 'ok' ];
+		then
+	    		echo true;
+		else
+	    		echo false;
+		fi;
+	fi;
+`
+invalidmsg='Invalid: must be a positive decimal number and can be followed by "c" or "i".'
+fieldmsg='Enter \"Use printer defaults\" or a decimal to define lines per interval.'
+
+#F8
+name='Default page width:'
+lininfo="conf.lcl:F8"
+nrow=9
+ncol=1
+frow=9
+fcol=21
+rows=1
+columns=20
+value=${($datafile)Width:-Use printer defaults}
+valid=`
+ 	if [ "$F8" = "Use printer defaults" ];
+	then
+	    	echo true;
+	else
+		regex -v "$F8"
+		'^0$'			'fail'
+		'^0i$'			'fail'
+		'^0c$'			'fail'
+		'^[.0-9]+[ci]$'	'ok'
+		'^[.0-9]+$'			'ok'
+		'^.*$'				'fail'
+		| set -l lp_errtmp;
+
+		if [ "$lp_errtmp" = 'ok' ];
+		then
+	    		echo true;
+		else
+	    		echo false;
+		fi;
+	fi;
+`
+invalidmsg='Invalid: must be a positive decimal number and can be followed by "c" or "i".'
+fieldmsg='Enter \"Use printer defaults\" or a decimal to define page width.'
+
+#F9
+name='Default page length:'
+lininfo="conf.lcl:F9"
+nrow=10
+ncol=1
+frow=10
+fcol=22
+rows=1
+columns=14
+columns=20
+value=${($datafile)Length:-Use printer defaults}
+valid=`
+ 	if [ "$F9" = "Use printer defaults" ];
+	then
+	    	echo true;
+	else
+		regex -v "$F9"
+		'^0$'			'fail'
+		'^0i$'			'fail'
+		'^0c$'			'fail'
+		'^[.0-9]+[ci]$'	'ok'
+		'^[.0-9]+$'			'ok'
+		'^.*$'				'fail'
+		| set -l lp_errtmp;
+
+		if [ "$lp_errtmp" = 'ok' ];
+		then
+	    		echo true;
+		else
+	    		echo false;
+		fi;
+	fi;
+`
+invalidmsg='Invalid: must be a positive decimal number and can be followed by "c" or "i".'
+fieldmsg='Enter \"Use printer defaults\" or a decimal to define page length.'
+
+#F10
+name='Command to run for alerts:'
+lininfo="conf.lcl:F10"
+nrow=11
+ncol=1
+frow=11
+fcol=28
+rows=1
+columns=47
+value=`
+	if fmlgrep "On fault" $datafile > /dev/null;
+	then
+		fmlgrep "On fault" $datafile | sed  's/On fault=//gp' |
+		set -l alertline;
+		echo $alertline | fmlcut -f1 -d" " | set -l command;
+		echo $alertline | fmlcut -f3 -d" " | set -l whoto;
+		if [ "$alrtflg" = "alert" ];
+		then
+			echo $alertline | fmlcut -f3 -d" " | set -l alrtflg;
+			echo $alrtflg;
+		else
+			echo "\"$command $whoto\"";
+		fi;
+	else
+		echo "\"mail lp"\";
+	fi;
+`
+rmenu={ "\"mail lp\"" "\"write lp"\" none }
+fieldmsg="Enter full path of command to run for receiving printer problem alerts."
+fieldmsg="Enter full path of command to run for receiving printer problem alerts."
+invalidmsg="Invalid entry: Entry must be an executable command name or \"none\"."
+
+#F11
+name='Frequency of alert (in minutes):'
+lininfo="conf.lcl:F11"
+nrow=12
+ncol=1
+frow=12
+fcol=34
+rows=1
+columns=14
+value=`
+	if echo $alertline | fmlgrep "every" > /dev/null;
+	then
+		echo $alertline | fmlcut -f5 -d" ";
+	else
+		echo once;
+	fi;
+`
+valid=`regex -v "$F11" 
+	'^0$'			'false'
+	'^[0-9]{1,14}$'	'true'
+	'^[o][n][c][e]$'	'true'
+	'^.*$'			'false'`
+fieldmsg="Enter a positive integer or \"once\"."
+invalidmsg="Invalid Entry: Enter a positive integer or \"once\"."
+
+#F12
+name='Printer recovery method:'
+lininfo="conf.lcl:F12"
+nrow=13
+ncol=1
+frow=13
+fcol=26
+rows=1
+columns=9
+value=${($datafile)recover:-beginning}
+rmenu={ beginning continue wait }
+valid=`
+	if [ "$F12" = 'beginning' -o "$F12" = 'continue' -o "$F12" = 'wait' ];
+	then
+	    echo true;
+	else
+	    echo false;
+	fi
+`
+fieldmsg='Enter "beginning", "continue", or "wait".'
+invalidmsg='Invalid entry:  value must be "beginning", "continue", or "wait".'
+
+#F13
+name='Is the printer also a login terminal?'
+lininfo="conf.lcl:F13"
+nrow=14
+ncol=1
+frow=14
+fcol=39
+rows=1
+columns=3
+value=${($datafile)login:-no}
+rmenu={ yes no }
+valid=`
+	if [ "$F13" = 'yes' -o "$F13" = 'Yes' -o "$F13" = 'YES' ];
+	then
+		echo true;
+	elif [ "$F13" = 'no' -o "$F13" = 'No' -o "$F13" = 'NO' ];
+	then
+		echo true;
+	else
+		echo false;
+	fi;
+`
+invalidmsg='Invalid entry:  value must be "yes" or "no".'
+fieldmsg='Enter "yes" or "no".'

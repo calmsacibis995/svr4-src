@@ -1,0 +1,105 @@
+%ident	"@(#)lp:filter/postscript/buildtables/fontfile.ps	1.1.2.1"
+%
+% PostScript procedures that can be used to build ASCII font files. Data can be
+% returned over the communications line and/or printed, depending on the value
+% assigned to dispose. If it's 1 data is returned over the line, 2 it's printed,
+% and 3 means do both. No attempt has been made at expanding tabs in hardcopy
+% output, and in no way should this be taken as an example of good PostScript
+% code - it works, and that's about all there is to say about it.
+%
+
+/dispose 1 def
+/ascenderstring (c+p) def
+/chstring 1 string def
+/charset 300 array def
+/spacewidth (spacewidth) def
+
+/strcattomark {
+    0 counttomark -1 2 {1 sub index length add} for
+    string 0 counttomark -1 3 {
+	-1 roll 3 copy putinterval
+	length add
+    } for
+    pop exch pop
+} def
+
+/setascender {
+    newpath
+    0 0 moveto
+    ascenderstring true charpath flattenpath pathbbox
+    exch pop 3 -1 roll pop
+    /ascenderheight exch dup .1 mul add def
+    /descenderdepth exch .5 mul def
+} def
+
+/getascender {
+    dup 31 gt {
+	newpath 0 0 moveto
+	chstring 0 3 -1 roll put
+	chstring true charpath flattenpath pathbbox
+	exch pop 3 -1 roll pop
+	ascenderheight gt {2} {0} ifelse
+	exch descenderdepth lt {1} {0} ifelse
+	or
+    } {pop} ifelse
+    1 string cvs
+} def
+
+/getwidth {
+    dup 31 gt {
+	chstring 0 3 -1 roll put
+	chstring stringwidth pop .5 add cvi
+    } {pop} ifelse
+    3 string cvs
+} def
+
+/buildfontfile {
+    font findfont unitwidth resolution 72 div mul scalefont setfont
+    setascender
+    /i -1 def
+    mark encoding aload pop {
+	counttomark 0 le {exit} if
+	/i i 1 add def
+	/chcode exch def
+	chcode type () type ne {
+	    chcode getascender /ascender exch def
+	    chcode getwidth /chwidth exch def
+	    /chname exch def
+	    mark chname (\t) chwidth (\t) ascender (\t) chcode 3 string cvs (\n) strcattomark
+	} {
+	    chcode spacewidth eq {
+		mark spacewidth ( ) 32 getwidth (\n) strcattomark
+		/chcode exch def
+	    } if
+	    chcode
+	} ifelse
+	charset exch i exch put
+    } loop
+    returnfontfile
+} def
+
+/returnfontfile {
+    dispose 1 and 1 eq {
+	i -1 0 {charset exch get print flush 100 {1 pop} repeat} for pop
+    } if
+    dispose 2 and 2 eq {printfontfile} if
+} def
+
+/printfontfile {
+    /Courier findfont 10 scalefont setfont
+    /linesp 11 def
+    /line 1 def
+    .5 72 mul 10.5 72 mul translate
+    0 0 moveto
+    i -1 0 {
+	charset exch get show
+	currentpoint pop neg linesp neg rmoveto
+	/line line 1 add def
+	line 66 gt {
+	    gsave showpage grestore
+	    /line 1 def
+	    0 0 moveto
+	} if
+    } for
+    line 1 gt {showpage} if
+} def

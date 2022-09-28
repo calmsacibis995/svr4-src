@@ -1,0 +1,68 @@
+#ident	"@(#)lp.admin:printers/priorities/Help	1.2"
+ABSTRACT:
+	The priorities menu gives you tasks for adjusting the levels
+	of priority available to your users.
+
+menu:L1:Set System Default Priority
+	You use the default task to assign the default priority level
+	that will be used when no priority is explicitily specified
+	by a user in a print request.
+
+menu:L2:List Priority Limits for Users
+	The list task allows you to examine the priority limits and
+	priority defaults for all users.
+
+menu:L3:Remove User(s) Priority Limit
+	The remove task allows you to set the priority limit of a user
+	or group of users back to the system default priority limit.
+
+menu:L4:Set System Priority Limit
+	The system task allows you to set a system default priority
+	limit for those users that have not had a specific limit set.
+
+menu:L5:Set User(s) Priority Limit
+	The users task allows you to assign the priority limit for a
+	user or group of users.
+
+default:F1:Priority level to use as a system default
+	You are expected to enter the default priority to be used
+	when a user does not give a priority to a print request.
+	
+	REMEMBER
+	Priority levels are given numbers from 0 to 39, with 0 being
+	the HIGHEST priority and 39 the LOWEST.
+
+remove:F1:User list
+	You are expected to enter one or more user names, separated by
+	commas or spaces. You may also enter the value all to specify
+	of the users on this system. These users will have a priority
+	limit equal to the system default priority limit when you have
+	completed this task.
+	
+	Please give the login names of the users, not their proper
+	names.
+
+system:F1:System Priority Limit
+	You are expected to enter the priority limit to be used
+	when a user does not otherwise have a priority limit assigned.
+	
+	REMEMBER
+	Priority levels are given numbers from 0 to 39, with 0 being
+	the HIGHEST priority and 39 the LOWEST.
+
+users:F1:User list
+	You are expected to enter one or more user names, separated by
+	commas or spaces. You may also enter the value all to specify
+	of the users on this system. These users will have a priority
+	limit set according to the next field on this form.
+	
+	Please give the login names of the users, not their proper
+	names.
+
+users:F2:Priority Limit
+	You are expected to enter the highest priority allowed for the
+	set of users that you specified in the previous field.
+	
+	REMEMBER
+	Priority levels are given numbers from 0 to 39, with 0 being
+	the HIGHEST priority and 39 the LOWEST.

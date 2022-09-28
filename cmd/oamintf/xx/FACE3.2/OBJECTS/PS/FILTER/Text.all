@@ -1,0 +1,53 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FILTER/Text.all	1.1"
+title="Confirmation"
+lifetime=shortterm
+altslks
+
+begrow=any
+begcol=any
+
+`message Strike the CONT function key to confirm, or strike CANCEL to cancel.`
+
+text="
+  If you confirm, all user created filters on your 
+  system will be deleted. This means that your system 
+  will only recognize the filters that were delivered 
+  with your system.
+  Strike CONT to confirm. If you strike CANCEL, the
+  filters will not be deleted."
+  
+rows=8
+columns=58
+
+name=CANCEL
+button=14
+action=close $VMSYS/OBJECTS/PS/FILTER/Menu.del $VMSYS/OBJECTS/PS/FILTER/Text.all
+
+name=CONT
+button=11
+action=`/usr/vmsys/admin/.chkuser -c "$VMSYS/admin/PS/FILTER/delete :all:"`close $VMSYS/OBJECTS/PS/FILTER/Menu.del $VMSYS/OBJECTS/PS/FILTER/Text.all
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=""
+button=10
+action=nop
+
+name=""
+button=9
+action=nop
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=return cancel
+`indicator -w`

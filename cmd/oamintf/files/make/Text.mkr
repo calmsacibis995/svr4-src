@@ -1,0 +1,51 @@
+#ident	"@(#)filemgmt:make/Text.mkr	1.2"
+################################################################################
+#
+#	Module Name: Text.mkr
+#
+#	Author: P.J. Porter
+#
+#	Date: 11/87
+#
+#	Calling Sequence:
+#
+#	Functional Description: This Text object displays a screen
+#				of information from the new file system make.
+#	How:
+#
+#	Inputs:
+#		ARG1 -  Device file system created on
+#		ARG2 -  Label for device
+#		ARG3 -  File system name when mounted
+#		ARG4 -  Y/N for file system remaining mounted
+#
+#	Functions Called:
+#		rmfile (local script to remove temp. file
+#
+#	Issues:
+#
+#		1) Look closer at help files and have them edited by
+#	 	   documentation as well as error messages.  Determine
+#		   if there is more than 1 help screen per component.
+#
+#		2) 
+#	
+#	
+################################################################################
+
+Title="Creates a File System (make)"
+
+`message "" `
+
+help=OPEN TEXT $INTFBASE/Text.oamhelp $OBJ_DIR/HELP/makeok.help "the Make Task"
+
+begrow=distinct
+begcol=distinct
+rows=19
+columns=75
+
+text="`readfile /tmp/file.make; $OAMBASE/bin/rmfile 'file.make'`"
+
+name=CONT
+button=11
+action=CLEANUP

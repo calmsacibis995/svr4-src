@@ -1,0 +1,379 @@
+#ident	"@(#)lp.admin:printers/filters/Help	1.2.3.2"
+ABSTRACT:Manage Filters for Special Processing
+	The filters menu provides tasks for: adding new filters; modifying the
+	description of a filter; examining the filters available; removing
+	filters; and restoring filters to factory settings.
+	
+	Filters are used by the Line Printer Service to handle several aspects
+	of preparing user files for printing. The printing of a subset of pages;
+	the automatic restarting of printing where it left off; the handling of
+	special modes like one or two-sided, landscape or portrait, draft versus
+	letter-quality; are all handled by filters.  Filters also provide
+	automatic conversion from one type of file to another, so that files
+	produced by various application programs can be printed properly.
+
+menu:L1:Add New Filters
+	You use the add task to add a new filter to the print service.
+	
+	Filters are used when:
+	
+	* a file needs to be printed on a printer, but the printer cannot
+	handle the file type; the filter converts the file into a type that
+	the printer can handle.
+	
+	* a file is to be printed with special modes, such as portrait or
+	landscape orientation, two-sided printing, draft or letter quality,
+	etc.; only filters can provide these special modes.
+	
+	* only a few pages of a file are to be printed; only a filter can
+	correctly break a file into pages.
+	
+	* more sophisticated print fault handling is needed, such as automatic
+	resumption of printing on the page where printing stopped; only a
+	filter can know about ALL the peculiarities of a printer.
+
+menu:L2:Display Filter Information
+	You use the list task to see the definition of a filter.  You can
+	examine a particular filter or all of the filters on the system.
+
+menu:L3:Modify a Filter
+	You use the modify task to modify the definition of a filter. The same
+	information you gave when you added the filter will provide the defaults
+	for each item you are asked to respecify, so you can quickly step
+	through the definition to find the item you want to modify.
+
+menu:L4:Remove Filters
+	You use the remove task to remove a filter from the print service.
+	
+	No more print requests will be accepted for it and the filter definition
+	will be destroyed. Any print requests currently queued that need this
+	filter to print properly will be CANCELED if another filter cannot be
+	found to take its place.
+
+menu:L5:Restore Filters to Factory Settings
+	You use the restore task to restore a filter to its original, installed
+	definition.  This would be helpful if the filter had been damaged or
+	accidentally modified.
+
+add:F1:New Filter
+	You are expected to enter the name you would like to give to the filter.
+	This name is only used to reference this filter again later, when you
+	want to modify its definition, examine it, or remove it.
+	
+	You are free to choose any name as long as it is 14 characters or less
+	and contains only letters, digits, and underscores.
+
+add:F2:Model Filter
+	Enter the name of the filter that you would like to use as a model to 
+	base the definition of your new filter on.
+	
+	You may press CHOICES to obtain a list of the current set of filters on
+	this system. If you do not know what model you would like to base your
+	new filter on, use the default provided, default_filter.  This is a
+	simple filter which should be sufficient for most simple printers and
+	print applications.
+
+mod2:F1:Input types
+	You are expected to give the list of file types this filter can
+	recognize and convert.
+	
+	The names used must be made up of only letters, digits, and DASHES
+	(not underscores).  If the filter will accept any input type, enter
+	the word all.
+	
+	Simple filters probably only recognize one type. If your filter can 
+	handle several types, enter their names separated by commas.
+	
+	Choose the names freely, but remember that the users of the print
+	service will be using these names to describe the types of files they
+	will be printing.
+
+mod2:F2:Output types
+	You are expected to give the list of file types this filter can
+	generate.
+	
+	The names used must be made up of only letters, digits, and DASHES
+	(not underscores).  If the filter will generate any output type, enter
+	the word all.
+	
+	Simple filters probably only generate one type. If your filter can 
+	handle several types, enter their names separated by commas.
+	
+	Choose the names freely, but remember that these names must match up
+	with the names of the file types your printers can accept, or file
+	types other filters can accept.
+	
+	In the next field you can enter the printer types this filter is
+	restricted to. If that is the only type this filter can generate then
+	just enter that name here and in the next field. If the printer types
+	can accept several file types, enter all those file types here.
+
+mod2:F3:Printer types
+	You are expected to enter the printer types this filter will work with.
+	It is hard to say whether it matters or not if your filter is restricted
+	to a few printer types. If the filter is a general one that manipulates
+	the file in a simple fashion (like reverses the pages or adds a left
+	margin), then it will probably work with most printers. If the filter
+	produces printer-specific control sequences, then it is likely to work
+	with only a few printer types.
+	
+	If you use the value any for this field, it will be assumed that the
+	filter does not generate any printer specific code and may be used
+	with any printer type.
+
+mod2:F4:Printers
+	You are expected to enter the names of the printers that are the only
+	ones this filter should be used with. Generally limiting the filter to
+	certain printer types in the previous prompt should be adequate. If,
+	however, some printers of the same type will not work adequately (maybe
+	they are an older model or do not have enough memory capacity, etc.) or
+	if use of this filter on a printer will slow down the through-put and
+	you do not want this to happen for some printers, or if for any other
+	reason you do not want this filter used with some printers, enter their
+	names here.
+	
+	The printers entered here must exist already in the print service
+	configuration.
+	
+	If you use the value any for this field, it will be assumed that the
+	filter may be used with any printer having the appropriate printer type
+	and content type (if applicable).
+
+mod2:F5:Fast or slow filter
+	Enter slow if this filter MUST be run separately from the printer, or
+	enter fast if this filter MUST NOT be run separately from the printer.
+	The Line Printer Service will run slow filters in the background without
+	tying up a printer, to allow print requests that do not need filtering
+	to print. However, some filters must be run while connected to the
+	printer because they need to control the printer or check for responses
+	from the printer and these filters must be designated fast.
+
+mod2:F6:Filter command
+	You are expected to enter the command to run to invoke the filter. You
+	can include command line options, but enter only fixed options that are
+	always needed to run this filter correctly. In the next fields you can
+	enter those options that should be in effect only under certain printing
+	conditions. Use full path names for all commands.
+
+mod2:F7:Existing option templates
+
+mod2:F8:New filter options
+	Enter yes if you wish to add new options for this filter, otherwise
+	enter no.
+
+
+
+options:F2:Filter Options Template
+	You are expected to enter one of these options as a keyword:
+	
+	Enter [CHARSET] to denote character set.
+	Enter [COPIES] to denote number of copies.
+	Enter [CPI] to denote character per inch.
+	Enter [FORM] to denote form name.
+	Enter [INPUT] to denote file types.
+	Enter [LENGTH] to denote page length.
+	Enter [LPI] to denote lines per inch.
+	Enter [MODES] to denote the name of the mode.
+	Enter [OUTPUT] to denote output type.
+	Enter [PAGES] to denote number of pages.
+	Enter [PRINTER] to denote printer.
+	Enter [TERM] to denote printer type.
+	Enter [WIDTH] to denote page width.
+
+options:F3:Filter Options Template
+	In this field, enter the string pattern to be passed for the
+	Keyword entered in the previous field.  If the string contains 
+	any spaces, it must be enclosed in double quotes. If the string 
+	contains an asterisk (*), the asterisk will be replaced with 
+	the keyword entered.
+
+options:1MODES:MODES Pattern	
+	[MODES(pattern)]
+	Enter the name of the mode that the user will pass to lp(1) 
+	with the -y option.  This name should probably be something 
+	obvious and preferably eight characters or less.  For example, 
+	if you have a filter that will convert a document to landscape 
+	mode, you might enter landscape or land.  You could of course 
+	enter just l, but it is not obvious what mode l will do.
+	If you entered land, the user would request landscape mode by
+	entering lp -y land file.
+
+	If the pattern contains any spaces, it must be enclosed in 
+	double quotes. If the pattern contains an asterisk (*), the 
+	asterisk will be replaced with the mode.
+	
+options:2MODES:MODES Replacement
+	[MODES (Replacement)]
+	Enter the string to be passed to the filter for the mode you
+	just specified.  When the mode you entered in the previous 
+	field is matched, the contents of this field will be passed 
+	to the filter as a command line argument.
+	
+	
+	
+options:1INPUT:INPUT Pattern	
+	[INPUT(pattern)]
+	For this field enter the string to be passed for the input type.  
+	If the string contains any spaces, it must be enclosed in 
+	double quotes.  If the string contains an asterisk (*), the 
+	asterisk will be replaced with the input type.
+	
+	
+options:2INPUT:INPUT Replacement
+	[INPUT (Replacement)]
+	Enter the string to be passed to the filter for the input you
+	just specified.  When the input you entered in the previous 
+	field is matched, the contents of this field will be passed 
+	to the filter as a command line argument.
+	
+	
+options:1PRINTER:PRINTER Pattern	
+	[PRINTER(pattern)]
+	For this field enter the string to be passed for the printer.  
+	If the string contains any spaces, it must be enclosed in 
+	double quotes.  If the string contains an asterisk (*), the 
+	asterisk will be replaced with the printer.
+	
+	
+options:2PRINTER:PRINTER Replacement
+	[PRINTER (Replacement)]
+	Enter the string to be passed to the filter for the printer you
+	just specified.  When the input you entered in the previous 
+	field is matched, the contents of this field will be passed 
+	to the filter as a command line argument.
+	
+options:1OUTPUT:OUTPUT Pattern	
+	[OUTPUT(pattern)]
+	For this field enter the string to be passed for the output 
+	type.  If the string contains any spaces, it must be enclosed 
+	in double quotes.  If the string contains an asterisk (*), 
+	the asterisk will be replaced with the output type.
+	
+options:2OUTPUT:OUTPUT Replacement
+	[OUTPUT (Replacement)]
+	Enter the string to be passed to the filter for the output you
+	just specified.  When the output you entered in the previous 
+	field is matched, the contents of this field will be passed 
+	to the filter as a command line argument.
+	
+options:1TERM:TERM Pattern	
+	[TERM(pattern)]
+	For this field enter the string to be passed for the term 
+	type.  If the string contains any spaces, it must be enclosed
+	in double quotes.  If the string contains an asterisk (*), 
+	the asterisk will be replaced with the printer type.
+	
+	
+options:2TERM:TERM Replacement
+	[TERM (Replacement)]
+	Enter the string to be passed to the filter for the term you
+	just specified.  When the term you entered in the previous 
+	field is matched, the contents of this field will be passed 
+	to the filter as a command line argument.
+	
+options:1CPI:CPI Pattern	
+	[CPI(pattern)]
+	For this field enter the string to be passed for the characters 
+	per inch.  If the string contains any spaces, it must be 
+	enclosed in double quotes. If the string contains an asterisk (*), 
+	the asterisk will be replaced with the characters per inch.
+	
+	
+options:2CPI:CPI Replacement
+	[CPI (Replacement)]
+	Enter the string to be passed to the filter for the cpi you
+	just specified.  When the cpi you entered in the previous 
+	field is matched, the contents of this field will be passed 
+	to the filter as a command line argument.
+	
+options:1LPI:LPI Pattern	
+	[LPI]
+	For this field enter the string to be passed for the lines 
+	per inch.  If the string contains any spaces, it must be 
+	enclosed in double quotes. If the string contains an 
+	asterisk (*), the asterisk will be replaced with the lines 
+	per inch.
+	
+	
+options:2LPI:LPI Replacement
+	[LPI (Replacement)]
+	Enter the string to be passed to the filter for the lpi you
+	just specified.  When the lpi you entered in the previous 
+	field is matched, the contents of this field will be passed 
+	to the filter as a command line argument.
+	
+options:1LENGTH:LENGTH Pattern	
+	[LENGTH(pattern)]
+	For this field enter the string to be passed for the page 
+	length.  If the string contains any spaces, it must be enclosed 
+	in double quotes.  If the string contains an asterisk (*), 
+	the asterisk will be replaced with the page length.
+	
+	
+options:2LENGTH:LENGTH Replacement
+	[LENGTH (Replacement)]
+	Enter the string to be passed to the filter for the length you
+	just specified.  When the length you entered in the previous 
+	field is matched, the contents of this field will be passed 
+	to the filter as a command line argument.
+	
+options:1WIDTH:WIDTH Pattern	
+	[WIDTH(pattern)]
+	For this field enter the string to be passed for the page width.  
+	If the string contains any spaces, it must be enclosed in 
+	double quotes.  If the string contains an asterisk (*), the 
+	asterisk will be replaced with the page width.
+	
+	
+options:2WIDTH:WIDTH Replacement
+	[WIDTH (Replacement)]
+	Enter the string to be passed to the filter for the width you
+	just specified.  When the width you entered in the previous 
+	field is matched, the contents of this field will be passed 
+	to the filter as a command line argument.
+	
+options:1PAGES:PAGES Pattern	
+	[PAGES(pattern)]
+	For this field enter the string to be passed for the number 
+	of pages.  If the string contains any spaces, it must be 
+	enclosed in double quotes. If the string contains an 
+	asterisk (*), the asterisk will be replaced with the number 
+	of pages.
+	
+options:2PAGES:PAGES Replacement
+	[PAGES (Replacement)]
+	Enter the string to be passed to the filter for the pages you
+	just specified.  When the pages you entered in the previous 
+	field is matched, the contents of this field will be passed 
+	to the filter as a command line argument.
+	
+options:1FORM:FORM Pattern	
+	[FORM(pattern)]
+	For this field enter the string to be passed for the form name.  
+	If the string contains any spaces, it must be enclosed in 
+	double quotes.  If the string contains an asterisk (*), the 
+	asterisk will be replaced with the form name.
+	
+options:2FORM:FORM Replacement
+	[FORM (Replacement)]
+	Enter the string to be passed to the filter for the form you
+	just specified.  When the form you entered in the previous 
+	field is matched, the contents of this field will be passed 
+	to the filter as a command line argument.
+	
+options:1COPIES:COPIES Pattern	
+	[COPIES(pattern)]
+	For this field enter the string to be passed for the number 
+	of copies.  If the string contains any spaces, it must be 
+	enclosed in double quotes. If the string contains an 
+	asterisk (*), the asterisk will be replaced with the number 
+	of copies.
+	
+	
+options:2COPIES:COPIES Replacement
+	[COPIES (Replacement)]
+	Enter the string to be passed to the filter for the copies you
+	just specified.  When the copies you entered in the previous 
+	field is matched, the contents of this field will be passed 
+	to the filter as a command line argument.
+	

@@ -1,0 +1,37 @@
+#ident	"@(#)portmgmt:port_quick/Menu.ap	1.1.1.1"
+menu="Choices"
+multiselect=true
+
+
+done=`indicator -w ; getitems " " | set -l Form_Choice`close
+
+
+`readfile $INTFBASE/msmenu.msg | message -t`
+#`message "MARK ports you want to setup and strike the ENTER key."`
+
+`cat /usr/tmp/ttylist.$VPID | sort -u | regex '^(.*)$0'
+'name="$m0" 
+#`message "MARK ports you want to setup and strike the ENTER key."`
+'`
+					      
+
+name="MARK"
+action=return 364
+button=2
+
+
+#name=PREV-FRM
+#action=return prev-frm
+#button=4
+
+#name=NEXT-FRM
+#action=return next-frm
+#button=5
+
+name=CMD-MENU
+button=7
+action=cmd-menu
+
+name=""
+button=8
+action=nop

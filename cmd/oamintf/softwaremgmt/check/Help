@@ -1,0 +1,95 @@
+#ident	"@(#)oamintf:softwaremgmt/check/Help	1.2.1.1"
+
+ABSTRACT:
+	This task checks the accuracy of software packages which are either
+	installed on the system or spooled on a device.
+
+installed:ABSTRACT:
+	This task checks software packages which are currently installed on the
+	system.
+
+original:ABSTRACT:
+	This task checks software packages which are currently installed on the
+	system by comparing them against information contained on the original
+	media from which they were installed.
+
+spooled:ABSTRACT:
+	This task checks software packages which are spooled in a directory
+	or on a device.
+
+locspool: Selecting Spooled Package Location
+	Enter the device on which the software to be checked resides
+	(e.g., "diskette1" or "9track1"), or enter the pathname to a
+	directory where the software is spooled.  To indicate the default 
+	spool directory, enter "spool".
+
+locorig: Selecting Original Package Location
+	Enter the device on which the package to be used to check installed
+	software resides (e.g., "diskette1" or "9track1"), or enter the 
+	pathname to a directory where the package is spooled.  To indicate 
+	the default spool directory, enter "spool".
+
+pkgid: Selecting Packages
+	The keyword "all" should be used to indicate that all software 
+	packages should be checked.  To select a specific set of packages,
+	enter a list of package instance identifiers separated by commas
+	(e.g., "spell,rfs,dfm").
+
+pathnm: Selecting Pathnames
+	The keyword "all" should be used to indicate that all pathnames 
+	of the selected packages should be checked.  To select a specific 
+	set of pathnames, enter a list of pathnames separated by commas
+	(e.g., "/bin/sh,/bin/passwd").  Entries ending with an asterisk 
+	(*) may be used to select multiple pathnames (e.g., "/etc/*" will 
+	select all pathnames in the /etc directory and any of its 
+	subdirectories, but will not select the /etc directory alone.)
+	
+attr: Checking Attributes
+	Checking attributes of pathnames will verify the following:
+	    - the pathname currently exists on the system
+	    - the pathname is the correct type (file, directory, etc.)
+	    - if the pathname in not a linked file, the pathname has 
+	      proper permissions, owner and group ids associated with it
+	    - if the pathname is a linked file, it is linked to the 
+	      appropriate pathname
+	    - if the pathname is a device, the pathname has proper major
+	      and minor numbers associated with it
+
+cont: Checking Contents
+	Checking contents of pathnames will verify the following:
+	    - the pathname currently exists on the system
+	    - the pathname is the correct type (file, directory, etc.)
+	    - if the pathname is a regular file, the file is correct in
+	      size, the checksum of the contents is correct and the file
+	      modification time has not changed
+
+hidden: Hidden Files
+	A hidden file is one which has been installed in a directory which
+	was labeled "exclusive" by a means other than package installation.
+	Choosing to check for hidden files will cause these files to be
+	identified. 
+
+fix: Correcting Problems
+	Certain problems with pathnames may be fixed by using this option:
+	    - nonexistent directories, pipes, and special devices will
+	      be created
+	    - incorrect permissions, owner or group will be corrected
+	    - incorrect major/minor numbers will be corrected
+	    - if the file should represent a link but instead is currently
+	      a regular file, the file will be removed and the link will
+	      be established
+	    - if the option to look for hidden files is employed, any
+	      hidden file detected will be removed
+
+volatile: Volatile Files
+	Certain files on the system are expected to change over time due
+	to system activity or modification by an administrator.  These 
+	files are identified by packages as "volatile" to indicate the
+	expected content changes.  Since their contents are expected to
+	change, attempting content verification on these files produces
+	errors which are expected.  To suppress these errors, enter "no"
+	in this field.
+
+verbose: Verbose Display Option
+	Normally only errors are displayed during this task.  This option
+	causes each pathname to be displayed as it is being validated.

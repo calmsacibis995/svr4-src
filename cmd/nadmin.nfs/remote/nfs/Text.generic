@@ -1,0 +1,10 @@
+#ident	"@(#)nadmin.nfs:remote/nfs/Text.generic	1.1"
+title="$ARG1"
+
+`readfile $INTFBASE/display.msg | message -p`
+
+close=CLOSE "$ARG3" "$ARG4" `getfrm`
+
+
+text="`readfile  $ARG2`"
+columns=40

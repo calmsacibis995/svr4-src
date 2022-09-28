@@ -1,0 +1,22 @@
+#ident	"@(#)xenv:i386/make-i386	1.1.1.9"
+#
+#	Front end script to "make" for use in cross compilation of
+#	iAPX386.
+#
+
+MAKECMD=
+
+MAKEOPTS="MAKE=make AS=xxxas CC=xxxcc LD=xxxld TESTDIR=. \
+	OL=$ROOT/ SL=$ROOT/usr/src/cmd \
+	ROOT=$ROOT INCSYS=$INCSYS INC=$INC \
+	SIZE=xxxsize LORDER=xxxlorder STRIP=xxxstrip PFX=xxx \
+	LST=xxxlist DIS=xxxdis NM=xxxnm CONV=xxxconv \
+	AR=xxxar TSORT=xxxtsort"
+
+echo xxx-make
+if [ $# = 0 ]
+then
+	exec $MAKECMD $MAKEOPTS YACC=yacc LEX=lex
+else
+	exec $MAKECMD "$@" $MAKEOPTS YACC=yacc LEX=lex 
+fi

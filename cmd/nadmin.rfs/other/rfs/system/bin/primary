@@ -1,0 +1,15 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/bin/primary	1.6"
+
+# get domain name
+
+DOM=`dname -d`
+ERR=0
+
+/bin/grep "^$DOM[ 	][ 	]*[Pp][ 	][ 	]*$DOM." /etc/rfs/$TRANS/rfmaster 1>/dev/null
+if [ $? -eq 0 ]
+then
+	echo "ERROR: An entry already exists for primary nameserver in the rfmaster file for \"$TRANS\".  To change this entry, go to the 'systems' menu and select 'remove_namesvr', then select 'add_namesvr'.">/usr/tmp/noadd_$$
+fi
+
+#echo the process id so fmli can get the temp file name
+echo $$

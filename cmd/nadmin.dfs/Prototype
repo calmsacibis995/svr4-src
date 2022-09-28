@@ -1,0 +1,27 @@
+#ident	"@(#)nadmin.dfs:Prototype	1.1"
+
+!MENU=usr/sadm/sysadm/menu
+
+## Files from local prototype: component=nadmin.dfs
+
+# basic and extended OAM directories
+
+d OAM_basic $MENU/netservices/remote_files 0755 root sys
+d OAM_basic $MENU/netservices/remote_files/local 0755 bin bin
+d OAM_basic $MENU/netservices/remote_files/other 0755 root sys
+d OAM_basic $MENU/netservices/remote_files/remote 0755 root sys
+d OAM_basic $MENU/netservices/remote_files/setup 0755 root sys
+
+# basic and extended interface
+
+f OAM_basic $MENU/netservices/remote_files/Help 0755 bin bin
+f OAM_basic $MENU/netservices/remote_files/Menu.rfiles 0755 bin bin
+f OAM_basic $MENU/netservices/remote_files/local/Help 0755 bin bin
+f OAM_basic $MENU/netservices/remote_files/local/Menu.local 0755 bin bin
+f OAM_basic $MENU/netservices/remote_files/local/Menu.type 0755 bin bin
+f OAM_basic $MENU/netservices/remote_files/other/Help 0755 bin bin
+f OAM_basic $MENU/netservices/remote_files/other/Menu.ops 0755 bin bin
+f OAM_basic $MENU/netservices/remote_files/remote/Help 0755 bin bin
+f OAM_basic $MENU/netservices/remote_files/remote/Menu.remote 0755 bin bin
+f OAM_basic $MENU/netservices/remote_files/remote/Menu.type 0755 bin bin
+f OAM_basic $MENU/netservices/remote_files/setup/Menu.type 0755 bin bin

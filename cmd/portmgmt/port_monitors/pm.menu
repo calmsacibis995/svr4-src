@@ -1,0 +1,12 @@
+#ident	"@(#)portmgmt:port_monitors/pm.menu	1.3"
+#menu#Port Monitor Management
+#life#permanent
+
+add^Add Port Monitors^add/Form.pm_add
+disable^Disable Port Monitors^disable/Menu.pm_disabl
+enable^Enable Port Monitors^enable/Menu.pm_enable
+list^List Port Monitor Information^list/Menu.pm_list
+modify^Modify Port Monitors^modify/Menu.pm_modify
+remove^Remove Port Monitors^remove/Menu.pm_remove
+start^Start Port Monitors^start/Menu.pm_start
+stop^Stop Port Monitors^stop/Menu.pm_stop

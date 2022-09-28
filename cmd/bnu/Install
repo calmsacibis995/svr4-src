@@ -1,0 +1,101 @@
+#!/usr/bin/sh
+#ident	"@(#)bnu:Install	2.3"
+
+# This shell simulates the action of the install command that
+# is available on system V systems.
+#  It only does the part required for my makefile!
+#
+USAGE="usage: Install -f Directory [-o] [-m mode] [-u owner] [-g group] File"
+#
+# It will copy file to Directory changes the mode, owner and
+# group if specified.  If -o is used, an existing file is moved
+# to OLDfile.
+
+OLD=
+MODE=
+OWNER=
+GROUP=
+FILE=
+
+while [ $# -gt 0 ]
+do
+	case $1 in
+	-o)	OLD="OLD"
+		shift
+		;;
+
+	-f)	shift
+		DIR=$1
+		shift
+		;;
+
+	-f*)	DIR=`echo $1|sed "s/..//"`
+		shift
+		;;
+
+	-m)	shift
+		MODE=$1
+		shift
+		;;
+
+	-m*)	MODE=`echo $1|sed "s/..//"`
+		shift
+		;;
+
+	-u)	shift
+		OWNER=$1
+		shift
+		;;
+
+	-u*)	OWNER=`echo $1|sed "s/..//"`
+		shift
+		;;
+
+	-g)	shift
+		GROUP=$1
+		shift
+		;;
+
+	-g*)	GROUP=`echo $1|sed "s/..//"`
+		shift
+		;;
+
+	*)	FILE=$1
+		break
+		;;
+
+	esac
+done
+
+
+if [ -z "$FILE" -o -z "$DIR" ]; then
+	echo $USAGE
+	exit 1
+fi
+
+if [ -n "$OLD" ]; then
+	echo mv $DIR/$FILE $DIR/OLD$FILE
+	mv $DIR/$FILE $DIR/OLD$FILE
+fi
+
+rm -f $DIR/$FILE
+echo cp $FILE $DIR/$FILE
+cp $FILE $DIR/$FILE
+
+if [ -n "$GROUP" ]; then
+	echo chgrp $GROUP $DIR/$FILE
+	chgrp $GROUP $DIR/$FILE
+fi
+
+if [ -n "$MODE" ]; then
+	echo chmod $MODE $DIR/$FILE
+	chmod $MODE $DIR/$FILE
+fi
+
+
+if [ -n "$OWNER" ]; then
+	echo chown $OWNER $DIR/$FILE
+	chown $OWNER $DIR/$FILE
+fi
+
+ls -l $DIR/$FILE

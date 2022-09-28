@@ -1,0 +1,38 @@
+#ident	"@(#)lp.admin:printers/requests/Menu.requests	1.5.3.1"
+menu=Manage Active Print Requests
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO 
+
+`set -l name_r=/tmp/reqlist$VPID;
+$TFADMIN lpstat -oall | grep -v 'canceled' | cut -d' ' -f1" > $name_r;
+if [ -s "$name_r" ];
+then
+	echo "init=true";
+else
+	echo "init=false";
+	message -b "No print requests are available to cancel, hold, move, or release.";
+fi`
+
+name=cancel
+description=Cancel Print Requests
+lininfo="menu:L1"
+action=OPEN FORM /usr/sadm/sysadm/add-ons/lp/printers/requests/Form.cancel
+
+
+name=hold
+description=Place Pending Print Requests on Hold
+lininfo="menu:L2"
+action=OPEN FORM /usr/sadm/sysadm/add-ons/lp/printers/requests/Form.hold
+
+
+name=move
+description=Move Print Requests to a New Destination
+lininfo="menu:L3"
+action=OPEN FORM /usr/sadm/sysadm/add-ons/lp/printers/requests/Form.move
+
+
+name=release
+description=Release Held Print Requests
+lininfo="menu:L4"
+action=OPEN FORM /usr/sadm/sysadm/add-ons/lp/printers/requests/Form.release
+

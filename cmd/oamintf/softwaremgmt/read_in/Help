@@ -1,0 +1,25 @@
+#ident	"@(#)oamintf:softwaremgmt/read_in/Help	1.1"
+
+ABSTRACT:
+	This task spools software packages into a directory from which
+	they may later be installed.
+
+pkgloc: Software Location
+	Enter the device on which the software to be read in resides
+	(e.g., "diskette1" or "9track1"), or enter the pathname to a
+	directory where the software is spooled.  To indicate the default 
+	spool directory, enter "spool".
+
+pkgid: Package Selection
+	Enter the word "all" to spool all packages which reside on the
+	indicated device.  If you wish to spool a specific package, 
+	enter the package instance identifier (e.g., "spell" or "rfs").  
+	You may enter multiple package identifiers by separating each one 
+	with a comma (e.g., "spell,rfs,windowing"), but these packages
+	must all be available on the same volume.  If you are not sure
+	which packages you want to spool from the indicated device,
+	leave this field blank and you will be prompted to select from
+	the list of available packages.
+
+spool: Spool Location Selection
+	Enter the directory where you wish to spool the software.

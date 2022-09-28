@@ -1,0 +1,31 @@
+# /etc/inet/bootptab: database for bootp server (/etc/inet/bootpd)
+# Last update Mon 11/7/88 18:03
+# Blank lines and lines beginning with '#' are ignored.
+#
+# Legend:
+#
+#	first field -- hostname
+#			(may be full domain name and probably should be)
+#
+#	hd -- home directory
+#	bf -- bootfile
+#	cs -- cookie servers
+#	ds -- domain name servers
+#	gw -- gateways
+#	ha -- hardware address
+#	ht -- hardware type
+#	im -- impress servers
+#	ip -- host IP address
+#	lg -- log servers
+#	lp -- LPR servers
+#	ns -- IEN-116 name servers
+#	rl -- resource location protocol servers
+#	sm -- subnet mask
+#	tc -- template host (points to similar host entry)
+#	to -- time offset (seconds)
+#	ts -- time servers
+
+#
+# Be careful about including backslashes where they're needed.  Weird (bad)
+# things can happen when a backslash is omitted where one is intended.
+#

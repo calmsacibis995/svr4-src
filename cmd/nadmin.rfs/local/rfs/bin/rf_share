@@ -1,0 +1,49 @@
+#ident	"@(#)nadmin.rfs:local/rfs/bin/rf_share	1.2"
+rm /usr/tmp/sh_msg$$ 2>/dev/null
+if [ "$EXPL" ]
+then
+	CMD1="/usr/sbin/share -F rfs -d \"$EXPL\" "
+else
+	CMD1="/usr/sbin/share -F rfs "
+fi
+
+if [ "$CLIENT" ]
+then
+	CLIST=`echo "$CLIENT" | /usr/bin/tr -s '\012' ':'`
+	CMD2="-o $ACC=$CLIST $DIR $RES"
+else
+	CMD2="-o $ACC $DIR $RES"
+fi
+
+if [ "$IMM" = "yes" ]
+then
+	eval `echo "$CMD1" "$CMD2"` 2>/usr/tmp/sh_err$$
+	if [ $? -eq 0 ]
+	then
+		echo "\nThe local directory $DIR is being shared with remote systems as $RES via RFS." >> /usr/tmp/sh_msg$$
+	else
+		echo "ERROR:  $DIR cannot be shared immediately as $RES via RFS." >/usr/tmp/sh_msg$$
+		/bin/sed s"/^.*://" < /usr/tmp/sh_err$$>> /usr/tmp/sh_msg$$
+	fi
+fi
+
+if [ "$AUTO" = "yes" ]
+then
+	/bin/sed "s/^#.*//g" /etc/dfs/dfstab | /usr/bin/tr -s '\011' '\040' >/usr/tmp/fs_$$
+ 	/bin/grep "[ ]$DIR[ ]" /usr/tmp/fs_$$ >/dev/null
+	if [ $? -eq 0 ]
+	then
+		echo "\nThe directory $DIR is currently being shared automatically.  Use the local_resources_modify task to change." >> /usr/tmp/sh_msg$$
+	else
+ 		/usr/bin/egrep "[ ]$RES$" /usr/tmp/fs_$$ >/dev/null
+		if [ $? -eq 0 ]
+		then
+			echo "\nResource name $RES is currently being shared automatically.  Use the local_resources_modify task to change." >> /usr/tmp/sh_msg$$
+		else
+			echo "$CMD1" "$CMD2" >> /etc/dfs/dfstab
+			echo "\nThe local directory $DIR will be shared automatically with remote systems as $RES when RFS begins operation." >> /usr/tmp/sh_msg$$
+		fi
+	fi
+fi
+
+echo $$

@@ -1,0 +1,38 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FORM/Form.csel	1.1"
+form="Form Name"
+lifetime=longterm
+
+#help=open text $VMSYS/OBJECTS/Text.h "Form Name" "PS/FORM/T.hcsel1"
+
+`ls /usr/spool/lp/admins/lp/forms > /usr/tmp/allform.$VPID`
+
+close=`rm -rf /usr/tmp/allform.$VPID /usr/tmp/form.$VPID `
+
+done=`/usr/vmsys/admin/.chkuser -c "/usr/vmsys/admin/PS/FORM/getall.sh :$F1: :/usr/tmp/form.$VPID: "`open form /usr/vmsys/OBJECTS/PS/FORM/Form.change "$F1"
+
+
+`message "Strike the CHOICES function key.  Strike SAVE when you complete the form."`
+
+name=Form Name:
+nrow=1
+ncol=2
+rows=1
+columns=8
+frow=1
+fcol=13
+rmenu={ `readfile /usr/tmp/allform.$VPID` }
+menuonly=true
+fieldmsg="Strike CHOICES for choices. Strike SAVE when you complete the form."
+invalidmsg=`regex -e -v "$F1"  '^$'  '\"Form Name\" is a manadatory field. Strike CHOICES for choices.'
+			'.*'   '$F1 is not a form on your system. Strike CHOICES for valid choices.'`
+choicemsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+
+name=CMD-MENU
+button=7
+action=cmd-menu
+
+
+name=""
+button=8
+actio=nop

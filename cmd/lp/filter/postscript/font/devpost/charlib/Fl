@@ -1,0 +1,5 @@
+%ident	"@(#)lp:filter/postscript/font/devpost/charlib/Fl	1.2.3.1"
+/build_Fl {
+    pop
+    size .05 mul neg 0 (ffl) ashow
+} def

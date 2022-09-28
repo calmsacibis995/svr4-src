@@ -1,0 +1,37 @@
+#ident	"@(#)bkrs:rsintf.d/restores/rsstat/select/Help	1.3.1.1"
+
+ABSTRACT: Selective Report of Pending Restore Requests
+	The "selective" task allows you to display a report of pending
+	restore requests selected by jobid, user or destination device.  If
+	you choose to select on jobid, user and destination device (or on
+	any pair of these), the display will consist of status log entries
+	that satisfy all of them.  For example, if you specify selection
+	based on user "root" and destination device type "diskette", then
+	the display will list only those entries with destination device
+	types of "diskette" which were initiated by user "root".
+
+TITLE: Selective Report of Pending Restore Requests
+
+F1: Jobids
+	"Jobids:"  Enter a comma- or blank-separated list of restore jobids
+	(of the form "rest-NA", where N is a number of digits and A is a
+	letter) or the keyword "all" (which is the default).  These are the
+	only restore requests you want to appear on this listing of the
+	report.
+
+F2: Users
+	"Users:"  Enter a comma- or blank-separated list of login ids
+	valid for this machine or the keyword "all" (which is the
+	default).  These are the users whose restore request status you
+	want to see.
+
+F3: Destination device type
+	"Destination device type:"  Enter a device type valid for this
+	machine or the keyword "all" (which is the default).  This is the
+	type of device that was used to create the backup from which this
+	restore request will be satisfied.  Only entries in the status log
+	whose device types match the value entered will be displayed.
+
+F4: Destination volume labels
+	"Destination volume labels:"  Enter volume labels for which
+	there may be restore requests waiting or the keyword "all".

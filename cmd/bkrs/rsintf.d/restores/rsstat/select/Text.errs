@@ -1,0 +1,28 @@
+#ident	"@(#)bkrs:rsintf.d/restores/rsstat/select/Text.errs	1.3"
+
+title="Errors Displaying Selective Report of Pending Restore Requests"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp "ABSTRACT"
+
+begrow=any
+begcol=any
+rows=5
+columns=77
+
+text="   The following errors occurred trying to display selected restore requests:
+
+`readfile $ARG1`"
+
+close=`rm -f $ARG1`
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

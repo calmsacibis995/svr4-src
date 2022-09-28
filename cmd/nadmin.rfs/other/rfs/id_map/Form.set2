@@ -1,0 +1,95 @@
+#ident	"@(#)nadmin.rfs:other/rfs/id_map/Form.set2	1.5"
+###############################################################################
+#    Module Name:  Form.set
+#    Description:  
+###############################################################################
+form="Sets Current User ID Mappings"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/form.msg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/rfs/id_map`
+
+done=`indicator -w;
+	set -e UMAP="$F9";
+	getfrm | set -l FRM;
+	message "User ID Mapping has been changed to $UMAP.";
+	"$INTFBASE/netservices/remote_files/other/rfs/id_map/bin/uid_map";
+	`CLOSE $ARG1 $FRM
+
+#F1
+name="The following user id mappings are available:"
+nrow=1
+ncol=1
+frow=1
+fcol=47
+rows=1
+
+#F2
+name="allguest    Maps each remote numeric user id to the local guest"
+nrow=3
+ncol=1
+frow=3
+fcol=52
+rows=1
+
+#F3
+name="            numeric id MAXUID + 1"
+nrow=4
+ncol=1
+frow=4
+fcol=20
+rows=1
+
+#F4
+name="0guest      Maps each remote numeric user id to the same local"
+nrow=6
+ncol=1
+frow=6
+fcol=52
+rows=1
+
+#F5
+name="            numeric user id, but maps ids 0 (root) to MAXUID + 1."
+nrow=7
+ncol=1
+frow=7
+fcol=52
+rows=1
+
+#F6
+name="0to99guest  Maps each remote numeric user id to the same local"
+nrow=9
+ncol=1
+frow=9
+fcol=52
+rows=1
+
+#F7
+name="            numeric user id, but maps ids 0-99 (the system ids)"
+nrow=10
+ncol=1
+frow=10
+fcol=52
+rows=1
+
+#F8
+name="            to MAXUID + 1."
+nrow=11
+ncol=1
+frow=11
+fcol=30
+rows=1
+
+#F9
+name="User mapping:"
+nrow=13
+ncol=13
+frow=13
+fcol=28
+rows=1
+columns=10
+rmenu={ allguest 0guest 0to99guest }
+menuonly=true
+value="0to99guest"
+lininfo=set2:umap
+invalidmsg="Press CHOICES to select valid responses."

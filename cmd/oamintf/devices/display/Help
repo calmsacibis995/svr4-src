@@ -1,0 +1,27 @@
+#ident	"@(#)oamintf:devices/display/Help	1.3.2.1"
+ABSTRACT:
+	The "display" task allows you to display hard disk
+	partitioning information.
+
+Menu.display:Devices Available
+	The devices available menu contains an entry for each type
+	of device which supports the display operation.
+	Select the desired device type from the menu.  You will then
+	be prompted for a device group and/or a specific device.
+
+devgrp:Device Group
+	Enter the device group you will be working with.
+	Press CHOICES to see the available device groups.
+
+devdr:Device Drive
+	Enter the particular device drive for which to display information.
+	Press CHOICES to see available choices for this field.
+
+Text.display:ABSTRACT
+	You are looking at a display of the device information you requested.
+
+Text.disperr:ABSTRACT
+	An error occurred while attempting to create the display you
+	requested.  Examine the message in the error display for things
+	you may do to correct the situation.  You may attempt to repeat
+	the task, or you may press CANCEL to leave the "display" task.

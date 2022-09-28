@@ -1,0 +1,7 @@
+#ident	"@(#)nadmin.nfs:remote/nfs/bin/auto_unmount	1.1"
+
+echo "^$SERV:$RDIR[ 	]+-[ 	]+$RES[ 	]+nfs[ 	]+-[ 	]+yes" > /usr/tmp/VFS
+/usr/bin/egrep -v "^$SERV:$RDIR[ 	]+-[ 	]+$RES[ 	]+nfs[ 	]+-[ 	]+yes" /etc/vfstab > /usr/tmp/vfstab$$
+cp /etc/vfstab /etc/o.vfstab
+cp /usr/tmp/vfstab$$ /etc/vfstab
+rm /usr/tmp/vfstab$$ 

@@ -1,0 +1,28 @@
+#ident	"@(#)oamintf:devices/remove/Help	1.4.2.1"
+ABSTRACT:
+	The "remove" task allows storage devices to be removed from the
+	system.  All information about the device is removed from the
+	system and the device becomes inaccessible to the system.
+	After completing the "remove" task and powering down the machine
+	the device may be physically disconnected.
+
+Menu.remove:Devices Available
+	The devices available menu contains an entry for each type
+	of device which supports the remove operation.
+	Select the desired device type from the menu.  You will then
+	be prompted for a device group and/or a specific device.
+	
+	"Selection Not Available" indicates you have no de-configurable
+	devices.
+
+devgrp:Device Group
+	Enter the device group you will be working with.
+	Press CHOICES to see the available device groups.
+
+devdr:Device Drive
+	Enter the device drive to be removed.
+	Press CHOICES to see available choices for this field.
+
+Text.remove:ABSTRACT
+	This screen is a warning.  If you continue you will make the
+	device inaccessible to the system.

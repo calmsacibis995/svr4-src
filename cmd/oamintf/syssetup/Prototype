@@ -1,0 +1,63 @@
+#ident	"@(#)oamintf:syssetup/Prototype	1.2.2.1"
+!MENU=/usr/sadm/sysadm/menu
+!INTFBIN=/usr/sadm/sysadm/bin
+
+f intf $MENU/nextstep 0644 bin bin
+d intf $MENU/syssetup 0755 bin bin
+v intf $MENU/syssetup/syssetup.menu 0644 bin bin
+d intf $MENU/syssetup/datetime 0755 bin bin
+v intf $MENU/syssetup/datetime/datetime.menu 0644 bin bin
+f intf $MENU/syssetup/datetime/Form.dateset 0644 bin bin
+f intf $MENU/syssetup/datetime/Menu.timezones 0644 bin bin
+f intf $MENU/syssetup/datetime/Text.datenok 0644 bin bin
+f intf $MENU/syssetup/datetime/Text.dateok 0644 bin bin
+f intf $MENU/syssetup/datetime/Text.datedisp 0644 bin bin
+d intf $MENU/syssetup/nodename 0755 bin bin
+v intf $MENU/syssetup/nodename/nodename.menu 0644 bin bin
+f intf $MENU/syssetup/nodename/Form.nodeset 0644 bin bin
+f intf $MENU/syssetup/nodename/Text.nodenotok 0644 bin bin
+f intf $MENU/syssetup/nodename/Text.nodeokay 0644 bin bin
+f intf $MENU/syssetup/nodename/Text.nodedisp 0644 bin bin
+d intf $MENU/syssetup/password 0755 bin bin
+f intf $MENU/syssetup/password/Form.chgpasswd 0644 bin bin
+f intf $MENU/syssetup/password/Form.syspasswd 0644 bin bin
+f intf $MENU/syssetup/password/Menu.syspasswd 0644 bin bin
+f intf $MENU/syssetup/password/Text.nologins 0644 bin bin
+f intf $MENU/syssetup/password/Text.apswdok 0644 bin bin
+f intf $MENU/syssetup/password/Text.apswdnok 0644 bin bin
+d intf $MENU/syssetup/setup 0755 bin bin
+f intf $MENU/syssetup/setup/Form.datetime 0644 bin bin
+f intf $MENU/syssetup/setup/Menu.timezones 0644 bin bin
+f intf $MENU/syssetup/setup/Text.dterr 0644 bin bin
+f intf $MENU/syssetup/setup/Text.dtok 0644 bin bin
+f intf $MENU/syssetup/setup/Form.nodename 0644 bin bin
+f intf $MENU/syssetup/setup/Text.nderr 0644 bin bin
+f intf $MENU/syssetup/setup/Text.ndok 0644 bin bin
+f intf $MENU/syssetup/setup/Text.setup 0644 bin bin
+f intf $MENU/syssetup/setup/Form.setup3 0644 bin bin
+f intf $MENU/syssetup/setup/Form.setup4 0644 bin bin
+f intf $MENU/syssetup/setup/Text.setup2 0644 bin bin
+f intf $MENU/syssetup/setup/Form.addusr 0644 bin bin
+f intf $MENU/syssetup/setup/Form.addpswd 0644 bin bin
+f intf $MENU/syssetup/setup/Menu.syspasswd 0644 bin bin
+f intf $MENU/syssetup/setup/Menu.pgrp 0644 bin bin
+f intf $MENU/syssetup/setup/Menu.sgrp 0644 bin bin
+f intf $MENU/syssetup/setup/Form.setchgps 0644 bin bin
+f intf $MENU/syssetup/setup/Form.setadmps 0644 bin bin
+f intf $MENU/syssetup/setup/Text.setlogerr 0644 bin bin
+f intf $MENU/syssetup/setup/Text.psok 0644 bin bin
+f intf $MENU/syssetup/setup/Text.pserr 0644 bin bin
+f intf $MENU/syssetup/setup/Text.ausrnok 0644 bin bin
+f intf $MENU/syssetup/setup/Text.setpsok 0644 bin bin
+f intf $MENU/syssetup/setup/Text.setpserr 0644 bin bin
+f intf $INTFBIN/dateset 0755 bin bin
+f intf $INTFBIN/datechk 0755 bin bin
+f intf $INTFBIN/gettz 0755 bin bin
+f intf $INTFBIN/syspwck 0755 bin bin
+f intf $INTFBIN/syspwend 0755 bin bin
+f intf $MENU/syssetup/Help 0644 bin bin
+f intf $MENU/syssetup/datetime/Help 0644 bin bin
+f intf $MENU/syssetup/nodename/Help 0644 bin bin
+f intf $MENU/syssetup/setup/Help 0644 bin bin
+f intf $MENU/syssetup/password/Help 0644 bin bin
+

@@ -1,0 +1,111 @@
+#ident	"@(#)xenv:i386/README	1.1.1.2"
+#
+#       MASTER README FOR THE INTEL iAPX386 SGS
+#
+#
+This README file is in a directory called ....(path name).../xenv/i386.
+
+The source files composing the iAPX386 SGS are stored in a directory
+structure of the form:
+
+	../../inc/i386
+	../../inc/common
+	../../inc/3b
+	../../<tool>/i386
+	../../<tool>/common
+	../../../make
+	../../../../<lib>/i386
+	../../../../<lib>/common
+
+where ../../inc/* contain the header files, ../../<tool>/* contains the
+source files used to build a particular tool, e.g. "as", and ../../../../<lib>/*
+contains the source files used to build a particular library, e.g. "libc".
+While some tools are composed principally of common files, all of them are
+built in the i386 structure.
+
+The directory containing this README file also contains the following
+files:
+	pathedit-- shell script to set path names in paths.h, sgs.h,
+		   makefile, make-i386, env-i386,
+		   ../../sgs.mk and ../../../../.lib.mk
+
+	pted.shlink-- file to link the libc source files to shlibc
+                      (this file is invoked by pathedit)
+
+	paths.h -- a reusable skeleton of ../../inc/i386/paths.h
+
+	sgs.h   -- a reusable copy of ../../inc/i386/sgs.h
+
+	template.mk -- a reusable skeleton of iAPX386 Master SGS makefile
+
+	make-i386 -- a reusable skeleton of the front-end to make.
+
+	env-i386 -- a reusable skeleton of the cross-environment script
+
+To build the tools, the paths.h file (in ../../inc/i386/paths.h)
+must be set up properly.  This file contains the absolute path
+names for various tools and directories.  These path names can
+be set using the pathedit shell program in this directory.
+Pathedit will also set the path names in the master SGS makefile
+(./makefile), the global makefile (../../sgs.mk) which makes both the SGS
+and the cross-libraries, the master library makefile (../../../../.lib.mk),
+the front-end to make (./make-i386) and the cross-environment script (./env-i386),
+as well as the SGS prefix in sgs.h (../../inc/i386/sgs.h).
+
+$(BASE) will denote the directory where the SGS source is rooted.
+
+Let:
+	MACH 	= Target machine, i.e. the machine for which SGS will produce
+		  code. This parameter is used to define the appropriate
+		  variable in the C preprocessor. For the iAPX386, the
+		  legal response is i386.
+
+	BINDIR = directory containing the tools which are called
+		 directly, such as i386cc, i386size, etc.. Default value
+		 is $(BASE)/$(MACH)/bin.
+
+	LIBDIR = directory containing indirectly called passes of
+		 various tools, such as comp and cpp, as well as the
+		 libraries (libld.a, libc.a, etc.). Default value 
+		 is $(BASE)/$(MACH)/lib.
+
+        USRINC  = the ABSOLUTE name of the default include directory for
+                  the cpp. This is the directory in which the cross
+		  cpp will look for header files. Default value is
+		  $(BASE)/$(MACH)/usr/include.
+
+	PREFIX = generic prefix used for command names, e.g. setting
+		 this to "i386" causes the command name for the C
+		 compiler to be called "i386cc". Default value is the target
+		 machine name, $(MACH).
+
+To set the pathnames, run pathedit giving the names of the parameters
+as requested.  Pathedit should be executed with /bin/sh and thus execute
+it as follows:
+
+        sh pathedit <cr>
+
+Now the cross-SGS can be made. Simply type the following:
+
+	cd ../..		- go the root directory of the SGS source
+
+	make -f sgs.mk          - builds all iAPX386 SGS tools and the
+				  cross-libraries and installs them in BINDIR and
+				  LIBDIR
+
+
+Some other make capabilities are:
+
+	make -f sgs.mk sgs      - builds the iAPX386 SGS tools and libraries only
+				  This does not build the cross-libraries.
+
+	make -f sgs.mk install	- installs tools in BINDIR and LIBDIR 
+
+	make -f sgs.mk shrink	- removes ALL non-source files (i.e. .o and
+				  executable) from the i386 and common directory
+			  	  structures. This DOES NOT remove the
+			  	  installed files.
+	
+
+If you encounter any problems, contact the iAPX386 SGS coordinator at
+Interactive Systems Corp.

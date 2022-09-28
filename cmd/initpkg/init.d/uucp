@@ -1,0 +1,8 @@
+#ident	"@(#)initpkg:init.d/uucp	1.2.2.1"
+#	Clean-up uucp locks, status, and temporary files
+
+set `/sbin/who -r`
+if [ $9 = "S" -o $9 = "1" ]
+then
+	/usr/bin/rm -rf /usr/spool/locks/*
+fi

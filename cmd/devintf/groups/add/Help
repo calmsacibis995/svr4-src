@@ -1,0 +1,23 @@
+#ident	"@(#)devintf:groups/add/Help	1.1.2.1"
+
+add:ABSTRACT:
+	The "add" task adds a device group definition to the Device Management 
+	tables.  You will be asked to supply a device group name and the 
+	devices that are to be members of the device group.
+
+Form.add:Name:the Group Name field
+	This field names the group that is to be added to the list of device
+	groups.
+	
+	The group name must contain only alphanumeric characters and the 
+	characters '.', '-', '_', and '$'.  It may not be longer than 14 
+	characters.  This field may not be blank.
+
+Form.add:Member:the Membership fields
+	These fields name the device aliases that are to be members of the group
+	being added.  If an alias is specified that is not currently defined, 
+	the task will issue a warning message but accept the alias as a member.
+	
+	The aliases must be valid aliases (i.e. they contain only alphanumeric
+	characters and the characters '.', '-', '_', and '$' and contain no more
+	than 14 characters).  These fields may be blank.

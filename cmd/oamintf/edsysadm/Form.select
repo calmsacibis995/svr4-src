@@ -1,0 +1,83 @@
+#ident	"@(#)oamintf:edsysadm/Form.select	1.7.1.1"
+
+################################################################################
+#	Module Name: Form.select
+#
+#	ARGS PASSED IN:
+#			ARG1 -> menu/task flag
+#
+#	ARGS PASSED OUT:
+#			ARG1 -> menu/task definition info. file name
+################################################################################
+Form="Select an Existing Menu or Task"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`set -l ONLINE=true;
+if [ "$ARG1" = "chgmenu" ] ;
+then
+	set -l OBJ="menu" ;
+else
+	if [ "$ARG1" = "chgtask" ] ;
+	then
+		set -l OBJ="task" ;
+	else
+	;
+	fi;
+fi`
+
+done=`set -l GETINFO=/tmp/${VPID}pkg;
+
+	message -w "Retrieving online interface definition for $F1.";
+
+	getintdef "$F2":"$F1" > $GETINFO;
+
+	if [ $RET = 0 ] ;
+	then 
+		set -l KEYCMD="OPEN FORM $EDSYSADM/Form.$OBJ $ARG1" ;
+	else
+		if [ $RET = 1 ] ;
+		then 
+			message "Error - could not locate menu or task definition.";
+			set -l KEYCMD="UPDATE" ;
+		else
+		;
+		fi;
+	fi`$KEYCMD
+
+
+#begrow=distinct
+#begcol=distinct
+
+name=Name:
+lininfo=mname
+nrow=1
+ncol=3
+frow=1
+fcol=9
+rows=1
+columns=16
+valid=`regex -e -v "$F1" '^[_a-z]{1,16}$'`
+
+invalidmsg=const `errstr -e "Must be 16 lower case characters or less."`
+choicemsg=const "Name must be less than or equal to 16 lower case characters & underscores."
+
+name=Location:
+lininfo=loc
+nrow=2
+ncol=3
+frow=2
+fcol=13
+rows=1
+columns=50
+#valid=`regex -e -v "$F2" '^[:A-Za-z0-9]{1,50}$'`
+valid=`regex -v "$F2" '::' 'FALSE' 'main' 'TRUE' ':$' 'FALSE' 'main:[\_\:A-Za-z0-9]' 'TRUE' '.*' 'FALSE'`
+
+choicemsg="Start with 'main' and separate menu location levels with ':'."
+invalidmsg="Start with 'main', use a through z & underbars. Separate levels with ':'."
+
+name=RESET
+button=8
+action=reset

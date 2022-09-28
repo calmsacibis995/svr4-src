@@ -1,0 +1,57 @@
+#ident	"@(#)oamintf:Install	1.5"
+
+INS=install
+xinstall:
+	@eval `sed -e '/^![^=]*=/!d' -e 's/^!//' $(PROTO)` ;\
+	: $${TMPDIR:=/tmp} ;\
+	mkpath() { \
+		while true ;\
+		do \
+			tmpdir=$$1 ;\
+			[ -d $$tmpdir ] && break ;\
+			while [ ! -d $$tmpdir ] ;\
+			do \
+				lastdir=$$tmpdir ;\
+				tmpdir=`dirname $$tmpdir` ;\
+			done ;\
+			mkdir $$lastdir ;\
+		done ;\
+	} ;\
+	set -- $(OBJDEST) ;\
+	for object in $(OBJECTS) ;\
+	do \
+		srcfile="$$object" ;\
+		if [ $$# -gt 0 ] ;\
+		then \
+			if [ $$1 != "-" ] ;\
+			then \
+				srcfile=$$object ;\
+				object=$$1 ;\
+			fi ;\
+			shift ;\
+		fi ;\
+		(grep "[ 	/]$$object[= 	]" $(PROTO) \
+			|| echo "unable to install $$object" >&2) |\
+		sed 's/^[0-9]*[ 	]*//' |\
+		while read type class path mode owner group extra ;\
+		do \
+			path=`eval echo $$path` ;\
+			expr $$path : '[^/]' >/dev/null && \
+				path=$(BASEDIR)/$$path ;\
+			dir=$(ROOT)`dirname $$path` ;\
+			[ ! -d $$dir ] && mkpath $$dir ;\
+			if [ $$srcfile != $$object ] ;\
+			then \
+				object=`basename $$object` ;\
+				echo Installing $$srcfile as $$dir/$$object ;\
+				cp $$srcfile $$TMPDIR/$$object ;\
+				$(INS) -f $$dir -m $$mode -u $$owner \
+				   -g $$group $$TMPDIR/$$object >/dev/null ;\
+				rm -f $$TMPDIR/$$object ;\
+			else \
+				echo Installing $$dir/$$object ;\
+				$(INS) -f $$dir -m $$mode -u $$owner \
+				   -g $$group $$object >/dev/null ;\
+			fi ;\
+		done ;\
+	done

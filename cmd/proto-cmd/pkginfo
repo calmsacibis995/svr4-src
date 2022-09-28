@@ -1,0 +1,5 @@
+#ident	"@(#)proto-cmd:pkginfo	1.1"
+VERSION=Static
+NAME=Built into the Base, can not be removed.
+CATEGORY=system
+ARCH=i386

@@ -1,0 +1,8 @@
+
+#ident	"@(#)adm:i386/ttysrch	1.1.2.1"
+
+/dev/term
+/dev/pts
+/dev/xt
+/dev/sxt
+/dev

@@ -1,0 +1,7 @@
+#ident	"@(#)devintf:groups/mbrship/Help	1.2"
+
+ABSTRACT:
+	The "membership" menu provides access to tasks that administer the
+	membership of a device group.  The tasks available include those that
+	add a member to a device group, remove a member from a device group,
+	and list the membership of a device group.

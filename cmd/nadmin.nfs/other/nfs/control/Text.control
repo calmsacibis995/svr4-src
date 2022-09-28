@@ -1,0 +1,8 @@
+#ident	"@(#)nadmin.nfs:other/nfs/control/Text.control	1.1"
+title="Check Status of NFS File Service"
+columns=50
+close=`/bin/rm /var/tmp/nfs_stat$PID;unset -l PID`
+
+`readfile $INTFBASE/display.msg | message -p`
+
+text="`readfile /var/tmp/nfs_stat$PID`"

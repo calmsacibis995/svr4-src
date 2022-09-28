@@ -1,0 +1,10 @@
+#ident	"@(#)oamintf:files/diskuse/Help	1.1.1.1"
+ABSTRACT:
+	The "diskuse" task lets you know what percentage of the 
+	built-in disks are currently occupied by files.  The
+	list is organized by file system names.
+TITLE:Display File System space usage information
+diskusetask:
+	The "diskuse" task lets you know what percentage of the 
+	built-in disks are currently occupied by files.  The
+	list is organized by file system names.

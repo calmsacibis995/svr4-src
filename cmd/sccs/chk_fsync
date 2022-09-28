@@ -1,0 +1,16 @@
+rm -f cppargs
+cat > test.c << EOF
+main() { fsync(); }
+EOF
+
+cc test.c > /dev/null 2>&1
+
+if [ $? -eq 0 ]; then
+	echo '-DNFS_OK' > cppargs
+else
+	touch cppargs
+fi
+
+rm -f test.c test.o a.out
+
+exit 0	

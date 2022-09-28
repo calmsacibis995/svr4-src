@@ -1,0 +1,38 @@
+The Printer Setup Menu enables you to set up and customize a serial
+or parallel printer for use with your computer.
+
+The items on the Printer Setup Menu are:
+ 
+      Configure a Printer:  Enables you to customize your printer's
+      operations.  When a port is set up for a printer, a default
+      configuration is used for the initial setup.  This function
+      enables you to change this default configuration to meet your
+      specific printing requirements.
+ 
+         NOTE: Before you use this function to change printer
+         configuration, you must set up the port using "Parallel
+         Printer Port Setup" or "Serial Printer Port Setup".
+
+      Filters, Forms, and Printwheels:  After setting up the serial
+      or parallel printer port, you can set up filters, forms, and
+      printwheels for use with the printers. Define filters, forms,
+      and printwheels before changing the configuration of your
+      printer. (Default filters are available. See the
+      Operations/System Administration Guide for information on
+      filters).
+
+      Parallel Printer Port Setup:  Sets up your parallel port for use
+      with your printer. This is the first step in setting up a printer
+      for use on your system. Presently, only Parallel Port 01 (your
+      first parallel port) can be configured. If you have a ports board
+      configured for your system, additional parallel ports will be
+      available. 
+
+      Serial Printer Port Setup:  Sets up your serial port for use
+      with a printer. You will have one port available unless you
+      have a ports board configured for your system.
+
+NOTE: The first printer defined on the system will be automatically
+defined as the default printer. Use Change Default Printer on the 
+Printer Operations menu to change the default printer.
+

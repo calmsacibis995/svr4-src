@@ -1,0 +1,24 @@
+#ident	"@(#)devintf:groups/mbrship/remove/Help	1.2"
+
+remove:ABSTRACT:
+	The "remove" task removes a member from a device group.  You will be
+	asked for the name of a device group and the member of that group to
+	remove.
+
+Form.remove:Name:the Device Group Name field
+	This field names the device group from which you wish to remove a
+	member.
+	
+	This field must be a valid device group name (i.e. only alphanumeric
+	characters and the characters '.', '-', '_', and '$' and no more than
+	14 characters).  This field may not be blank.
+
+Form.remove:Member:the Member field
+	This field names the device group member you wish to remove from the
+	named device group.
+	
+	This field must be a valid device alias (i.e. only alphanumeric
+	characters and the characters '.', '-', '_', and '$' and no more than
+	14 characters) or pathname (i.e. begins with a '/' character).  The
+	alias of pathname must be a member of the named device group.  This
+	field may not be blank.

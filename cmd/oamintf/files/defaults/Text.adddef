@@ -1,0 +1,17 @@
+#ident	"@(#)filemgmt:defaults/Text.adddef	1.1.2.1"
+Title="Add Defaults"
+lifetime=shortterm
+
+framemsg=`readfile $INTFBASE/display.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp adddeftask
+
+close=`CLOSE $OBJ_DIR/Text.adddef`
+
+begrow=distinct
+begcol=distinct
+rows=5
+columns=65
+
+text="
+Defaults for this file system already exist. Use modify, remove or display to modify, remove or display defaults for this file system."

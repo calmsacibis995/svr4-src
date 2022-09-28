@@ -1,0 +1,37 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkrem/add/Help	1.2.1.1"
+
+ABSTRACT: Add Entries to Backup Reminder Schedule
+	The "add" task allows you to add entries to the backup reminder
+	message schedule.  Each entry contains when the backup reminder
+	message should appear (time, days of the week and month) as well as
+	which originating object names should be included in the reminder.
+	For example, you may want to be reminded at 5:00pm every weekday
+	that the /usr file system backup needs to be run.
+
+TITLE: Add Entries to Backup Reminder Schedule
+
+F1:Time Field
+	"Time:"  Enter the time of day at which the backup reminder message
+	should appear.  The time is represented by a string of the form
+	hh:mm, where hh is 00-23 and mm is 00-59.  For example, for the
+	message to appear at 8:15pm, enter "20:15".
+
+F2:Day(s) Field
+	"Day(s):"  Enter a list of weekdays on which this message should
+	appear.  Days are represented by the digits 0 (=Sunday) to 6
+	(=Saturday).  You may enter the keyword "all" if the reminder
+	message is to appear every day.
+
+F3:Month(s) Field
+	"Month(s):"  Enter a list of months (1-12) in which this reminder
+	is to appear.  You may represent ranges of months by month numbers
+	separated by a "-".  For example, for the message to appear from
+	July through December, enter "7-12".  You may enter the keyword
+	"all" if the reminder should appear every month.
+
+F4:Originating Name(s) Field
+	"Originating Name(s):"  Enter the names of the objects about whose
+	backup you want to be reminded.  For example, if you want to be
+	reminded to back up the /usr file system, enter "/usr" in this
+	field. You may enter the keyword "all" if you want to be reminded
+	to back up all file systems and data partitions (if any).

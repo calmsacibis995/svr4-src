@@ -1,0 +1,68 @@
+#ident	"@(#)oamintf:devices/copy/Text.copy3	1.4.8.2"
+
+################################################################################
+#	Module Name: Text.copy3
+################################################################################
+# Note: dd is done for copy. Copying large disks (1.44) to small (1.2)
+# will fail and the text err screen will be displayed.
+################################################################################
+title="Copying from $ARG1 to $ARG2"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+init=`devreserv ${VPID} $ARG1 $ARG2 > /dev/null 2>/tmp/$VPID.rsvrd; set -l RSVRD=$RET`
+close=`rm -f /tmp/$VPID.rsvrd;
+       if [ "$RSVRD" = "0" ];
+       then
+          devfree ${VPID} $ARG1 $ARG2;
+       fi`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp Text.copy3:ABSTRACT
+
+text="`devattr $ARG1 desc | set -l DESC1;
+      devattr $ARG2 desc | set -l DESC2;
+      if [ "$RSVRD" != "0" ];
+      then
+         echo "\nReservation of $DESC1 and/or $DESC2 failed.";
+         message "Press CONT for additional information or CANCEL to return to the menu.";
+      else
+        echo "Insert the original volume in the $ARG1 drive.
+It is recommended that you write-protect the original.
+
+Insert a writable volume into the $ARG2 drive.";
+      fi`"
+
+rows=5
+columns=65
+
+altslks
+
+name=CONT
+button=11
+action=`if [ "$RSVRD" != "0" ];
+        then
+           set -l CMD="OPEN TEXT $OBJ_DIR/../Text.rsvrd2 $ARG1 $ARG2 $RSVRD";
+        else
+           set -l A=another;
+
+	   message -w "Copying of the original volume to a writable volume is in progress.";
+
+	   devattr $ARG1 cdevice | set -l DEV1;
+
+	   devattr $ARG2 cdevice | set -l DEV2;
+
+	   dd if=$DEV1 of=$DEV2 ibs=2048 obs=2048 >/dev/null 2>/dev/null;
+
+	   if [ "$RET" -eq 0 ];
+	   then
+	      message -w "Copying is complete.";
+	      set -l CMD="OPEN TEXT $OBJ_DIR/Text.copy2 $DEV1 $DEV2 $A";
+	   else
+	      message -w "";
+	      set -l CMD="OPEN TEXT $OBJ_DIR/Text.cperr3 $ARG1 $ARG2";
+           fi;
+	fi`$CMD
+
+name=CANCEL
+button=14
+action=CLEANUP

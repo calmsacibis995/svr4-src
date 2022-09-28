@@ -1,0 +1,15 @@
+:
+
+#ident	"@(#)adm:bsetdate	1.1.1.1"
+#  Display date - since the date is taken from the battery backed-up
+#  clock, there should be no need to ask for a verification
+#  fd will correct time for timezone/dst difference
+
+. /etc/TIMEZONE
+/etc/fd > /dev/null 2>&1
+date
+if [ -f /etc/.firstfsck ]
+then
+	touch /etc/.lastfsck >/dev/null 2>&1
+	rm -f /etc/.firstfsck >/dev/null 2>&1
+fi

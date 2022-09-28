@@ -1,0 +1,60 @@
+#ident	"@(#)lp:filter/postscript/font/devpostaps/FONTMAP	1.1"
+#
+# Used by makemap to build ASCII font and device files that can be used
+# by dimpress when it tries to print files formatted for the MHCC APS-5
+# using raster files in directory ..
+#
+# makemap reads this file, the ASCII font files for the APS-5, and the
+# binary font files for device i300. It was run in directory .. using a
+# command line that looks something like,
+#
+#
+#	makemap -mi300 -Ssource_dir -Fbinary_dir aps
+#
+#
+# where source_dir is wherever you keep the ASCII font files for the APS-5
+# (minus the suffix "/devaps") and binary_dir tells the program where to
+# look for the binary font files for the device selected using the -m
+# option. In this case it expects to find a directory "binary_dir/devi300".
+#
+# All these extra files are really just used to map font+character pairs
+# for the APS-5 into pairs that can be used with the raster files in
+# directory ... A lot of the extra files could be eliminated by omitting
+# the S font from the map list, since the post-processor searches all the
+# special fonts anyway. But including S makes sure we can print characters
+# in the requested font no matter what other fonts have been mounted.
+#
+
+synonyms
+	R	*R
+	U	*U
+	Q	*Q
+	W	*W
+	*e	xe
+	*t	xh
+	*k	xk
+	<-	ld
+	->	rd
+	.	.
+
+map R  into	R
+map I  into	I
+map B  into	B
+map H  into	H
+map CW into	CW
+map S  into	S
+map S1 into	S S1
+map GR into	S
+
+map BI int	BI
+map HI into	HI
+map HB into	HB
+map HX into	HX
+map Hr into	H
+map Hi into	HI
+map Hb into	HB
+map PA into	PA
+map PI into	PI
+map PB into	PB
+map PX into	PX
+

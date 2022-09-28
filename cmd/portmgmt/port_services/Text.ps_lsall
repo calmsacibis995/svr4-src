@@ -1,0 +1,12 @@
+#ident	"@(#)portmgmt:port_services/Text.ps_lsall	1.2.1.1"
+
+title=Lists All Port Services 
+lifetime=shortterm
+framemsg="Press CANCEL to return to the port services list."
+text="`pmadm -l|sed 's/./~&/'| tr ~ '\12'`
+"
+
+columns=60
+rows=18
+#wrap=true
+

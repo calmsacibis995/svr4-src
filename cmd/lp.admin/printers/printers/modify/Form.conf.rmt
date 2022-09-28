@@ -1,0 +1,149 @@
+#ident	"@(#)lp.admin:printers/printers/modify/Form.conf.rmt	1.5.4.1"
+
+form="Configure Printer, \"${lp_printer}\" - Remote Printer Subtask"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`indicator -w; set -l name_2="/tmp/lp.n2$VPID";`
+
+done=`
+	message -w "Modifying printer, please wait.";
+ 	if [ "$F1" = "none" -o "$F1" = "" ];
+	then
+		set -f$datafile description="";
+	else
+		set -f$datafile description="-D\"$F1\"";
+	fi;
+
+ 	if [ "$F2" = "" -o "$F2" = "unknown" ];
+	then
+		set -f$datafile Prtype="";
+	else
+		set -f$datafile Prtype="-T$F2";
+	fi;
+	if tput -T $F2 daisy > /dev/null 2>/dev/null;
+	then
+		set -l has_chset=FALSE -l has_pw=TRUE;
+	else
+		tput -T $F2 csnm 0 | set -l tmp;
+		if [ -n "$tmp" ];
+		then
+			set -l has_chset=TRUE -l has_pw=FALSE;
+		else
+			set -l has_chset=FALSE -l has_pw=FALSE;
+		fi;
+	fi;
+	set -e lp_prtype=$F2;
+
+ 	if [ "$F3" = "" -o "$F3" = "none" ];
+	then
+		set -f$datafile Content="";
+	else
+		echo "$F3" | sed 's/, /,/gp' | tr -s " " "," | set -l tmp;
+		set -f$datafile Content="-I$tmp";
+	fi;
+ 
+	shell "LD_BIND_NOW=1 lpadmin -p $lp_printer ${($datafile)description} ${($datafile)Prtype} ${($datafile)Content} > /dev/null 2> $error;";
+	if [ "$RET" != "0" -a -s $error ];
+	then
+		echo "OPEN TEXT $OAMBASE/add-ons/lp/printers/printers/modify/Text.error";
+	else
+		set -e toclose="$OAMBASE/add-ons/lp/printers/printers/modify/Form.conf.rmt";
+		cosend lpdata "get_printer/n$lp_printer" > /dev/null 2>/dev/null;
+		if [ -n "$TFADMIN" ]; then $TFADMIN lpstat -p $lp_printer -l > /usr/tmp/stat$$;
+		else lpstat -p $lp_printer -l > /tmp/stat$$; fi;
+    		cat /tmp/stat$$ | sed 's/: /=/gp' | 
+		sed 's/^	//gp' | sed 's/After fault/recover/gp' |
+		sed 's/Content types/content/gp'  >> $datafile;
+		rm -f /tmp/stat$$;
+		cat /etc/lp/printers/$lp_printer/configuration | 
+		sed 's/: /=/gp' >> $datafile;
+		set -e lp_prtype=${($datafile)prtype:-unknown};
+		if tput -T $lp_prtype daisy > /dev/null 2>/dev/null;
+		then
+			set -e has_chset=FALSE -e has_pw=TRUE;
+			set -e ina_chset=TRUE -e ina_pw=FALSE;
+		else
+			tput -T $lp_prtype csnm 0 | set -l tmp;
+			if [ -n "$tmp" ];
+			then
+				set -e has_chset=TRUE -e has_pw=FALSE;
+				set -e ina_chset=FALSE -e ina_pw=TRUE;
+			else
+				set -e has_chset=FALSE -e has_pw=FALSE;
+				set -e ina_chset=TRUE -e ina_pw=TRUE;
+			fi;
+		fi;
+		echo "OPEN TEXT $OAMBASE/add-ons/lp/printers/printers/modify/Text.confirm";
+		fi;
+`
+
+close=`
+	rm -f $name_2;
+	codestroy -R printers.add.lpcf lpdata;
+	unset	-l lp_errtmp
+		-f$datafile classes
+		-f$datafile description
+		-f$datafile Content
+		-f$datafile cpi
+		-f$datafile lpi
+		-f$datafile width
+		-f$datafile length;
+		echo "close $OAMBASE/add-ons/lp/printers/printers/modify/Form.conf.rmt";
+`
+
+#F1
+name='Description of the printer:'
+lininfo="conf.lcl:F2"
+nrow=1
+ncol=1
+frow=1
+fcol=29
+rows=1
+columns=46
+scroll=true
+value=${($datafile)Description:-none}
+fieldmsg="You may enter a single line of text that will be displayed when requested."
+
+#F2
+name='Printer type:'
+lininfo="conf.lcl:F3"
+nrow=2
+ncol=1
+frow=2
+fcol=15
+rows=1
+columns=14
+value=${($datafile)prtype:-unknown}
+valid=`
+	inicator -w;
+	if tput -T $F2 longname > /dev/null 2> /dev/null;
+	then
+		echo true;
+	else
+		echo false;
+	fi;
+`
+fieldmsg="Enter a type of printer that is known in the Terminfo database."
+invalidmsg="Invalid entry: Entry must be defined in the Terminfo database."
+
+#F3
+name='File types printable without filtering:'
+lininfo="conf.lcl:F4"
+nrow=3
+ncol=1
+frow=3
+fcol=41
+rows=1
+columns=14
+value=${($datafile)content:-simple}
+scroll=true
+valid=`
+	indicator -w;
+	echo "$F3" | tr " " "," | sed 's/,,/,/gp' | set -l types;
+	regex -v "$types"
+	'^[_a-zA-Z0-9]{1,14}$' 			   'true'
+	'^[_a-zA-Z0-9]{1,14}(,[_a-zA-Z0-9]{1,14})*$' 'true'
+	'^.*$'			'false'`
+invalidmsg="Invalid Entry: File types must be letters, numbers and underscores."
+

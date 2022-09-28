@@ -1,0 +1,9 @@
+%ident	"@(#)lp:filter/postscript/font/devpost/charlib/ci	1.2.3.1"
+/build_ci {
+    pop
+    size 3 mul 8 div /rad exch def
+    currentpoint
+    newpath
+    rad add exch rad add exch rad 0 360 arc
+    stroke
+} def

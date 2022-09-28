@@ -1,0 +1,37 @@
+#ident	"@(#)oamintf:usermgmt/Form.list	1.2.1.1"
+
+################################################################################
+#	Module Name:  Form.list
+################################################################################
+form="List Users or Groups"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`if [ "$F1" = "user" ];
+      then
+	set -l CMD="OPEN TEXT $OBJ_DIR/Text.lsusr";
+      else
+	set -l CMD="OPEN TEXT $OBJ_DIR/Text.lsgrp";
+      fi`$CMD
+
+name=User or group:
+lininfo=Form.list:list
+nrow=1
+ncol=3
+frow=1
+fcol=17
+rows=1
+columns=5
+
+value=user
+rmenu={ user group }
+menuonly=TRUE
+
+choicemsg=const "Select user or group."
+invalidmsg=const "ERROR: Choices are user and group."
+
+name=RESET
+button=8
+action=RESET

@@ -1,0 +1,61 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksched/modify/Help	1.2.1.1"
+
+ABSTRACT: Modify Entries in the Backup Schedule
+	The "modify" task allows you to select an entry in the backup
+	schedule and to modify it.  Press [CHOICES] to display the current
+	backup schedule and to decide which line you want to modify.  Press
+	[CANCEL] to return to the line number form.  Enter the number of
+	the line to be modified and then press [SAVE] to bring up the form
+	with the contents of that backup schedule entry.
+	
+TITLE: Modify Entries in the Backup Schedule
+
+values:
+	This form lists the current values for the backup schedule line you
+	selected and allows you to modify any or all of them.  Make the
+	modifications you want and then press [SAVE] to make the
+	modifications permanent or press [CANCEL] to leave the entry as it is
+	currently.
+
+modify:F1:
+	"Line Number(s):"  Enter the number corresponding to the backup
+	schedule line whose contents you want to modify.  Press [CHOICES]
+	to list the lines in the backup schedule with their associated
+	line numbers.
+
+values:F1:
+	"Time:"  Enter the time of day at which the backup command should
+	run.  The time is represented by a string of the form hh:mm, where
+	hh is 00-23 and mm is 00-59.  For example, to run the backup command
+	at 8:15pm, enter "20:15".
+
+values:F2:
+	"Days of week:"  Enter a list of weekdays on which this backup is to
+	run.  Days are represented by the digits 0 (=Sunday) to 6
+	(=Saturday).  You may enter the keyword "all" if this backup command
+	is to run every day.
+
+values:F3:
+	"Months:"  Enter a list of months (1-12) in which this backup is to
+	run.  You may represent ranges of months by month numbers separated
+	by a "-".  For example, to run this backup from July through
+	December, enter "7-12".  You may enter the keyword "all" to run this
+	backup in all months.
+
+values:F4:
+	"Table:"  Enter the path to the backup register table this backup is
+	to use.  This register must exist when the backup actually runs.  The
+	invoked backup command will read this table to determine which backup
+	operations are to be run.
+
+values:F5:
+	"Mode:"  Enter the mode in which you want the backup to run.  The
+	choices are "background" or "automated".  In background mode, you
+	will be notified by mail whenever a backup operation requires
+	operator intervention.  In automated mode, it is assumed that there
+	is no operator available, so any operation that requires operator
+	intervention fails.
+
+values:F6:
+	"Notify:"  Enter "yes" to receive mail when the backup job has
+	completed.  Enter "no" if you do not wish to be notified.

@@ -1,0 +1,62 @@
+#ident	"@(#)lp.admin:printers/printers/add/Form.pwheel	1.5.3.1"
+
+form='Removeable Print Wheel Naming Subtask'
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO 
+
+done=`
+	set -e toclose="$toclose $OAMBASE/add-ons/lp/printers/printers/add/Form.pwheel";
+	message -w "Saving print wheel information, please wait.";
+	if [ -n "$TFADMIN" ]; then $TFADMIN lpadmin -p $lp_printer -S "$F2" > /dev/null 2> $error; 	
+	else lpadmin -p $lp_printer -S "$F2" > /dev/null 2> $error; 	fi;
+	if [ "$RET" != "0" -a -s $error ];
+	then
+		echo "OPEN TEXT $OAMBASE/add-ons/lp/printers/printers/add/Text.pwheel";
+	else
+		message -w "Print wheel information saved. Going to next subtask, please wait.";
+		echo "OPEN FORM $OAMBASE/add-ons/lp/printers/printers/add/Form.access";
+	fi;
+`
+
+name=Printer:
+nrow=1
+ncol=1
+frow=1
+fcol=10
+rows=1
+columns=14
+value=$lp_printer
+inactive=TRUE
+
+name=Print wheel(s) available for this printer:
+lininfo="apwheel:F1"
+nrow=3
+ncol=1
+frow=3
+fcol=45
+rows=1
+columns=30
+value=`
+	indicator -w;
+	if fmlgrep "^charsets=" $datafile | sed 's/charsets=//gp' | fmlgrep "=" > /dev/null;
+	then
+		echo none;
+	else
+		if fmlgrep "^charsets=" $datafile  > /dev/null;
+		then
+			fmlgrep "^charsets=" $datafile | sed 's/charsets=//gp';
+		else
+			echo none;
+		fi;
+	fi
+`
+scroll=TRUE
+valid=`
+	indicator -w;
+	echo "$F2" | tr " " "," | sed 's/,,/,/gp' | set -l types;
+	regex -v "$types"
+	'^[_a-zA-Z0-9]{1,14}$' 			   'true'
+	'^[_a-zA-Z0-9]{1,14}(,[_a-zA-Z0-9]{1,14})*$' 'true'
+	'^.*$'			'false'`
+fieldmsg="Enter the list of print wheels or font cartridges that are available."
+invalidmsg="Invalid: Printwheel names are limited to 14 letters, numbers and underscores."

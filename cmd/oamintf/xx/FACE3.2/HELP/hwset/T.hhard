@@ -1,0 +1,31 @@
+The Peripheral Setup Menu enables you to set up your computer to
+support your printers, second hard disk, and additional serial port
+connections. The serial ports can be used for terminals, modems,
+serial printers, other devices such as a Develcon switch, or a
+connection to another computer.  Parallel ports can only be used
+with a printer.
+
+The items on the Peripheral Setup Menu are:
+
+      Enable/Disable Second Serial Port:  Enables or disables the
+      COM2 interrupt to let your computer know that you have
+      installed or removed a serial port board. This is the first step
+      in setting up a second serial port for use with any device.
+
+      Printer Setup:  Sets up a serial or parallel printer for use
+      with your computer. First, you must set up the printer port
+      (serial or parallel), define (if necessary) what filters, forms,
+      and printwheels (font cartridges are same as printwheels) will be
+      used with the printer. Then, you may customize the printer
+      configuration.
+
+      Second Hard Disk Setup:  If you have physically added a second
+      hard disk, this item executes the "diskadd" command to
+      configure that disk.
+ 
+      Serial Ports Setup:  Sets up a serial device other than a
+      printer for use on a serial port. The port can be the one that
+      comes with your computer or one on a ports board or internal
+      modem.  If you are setting up a device on a second serial
+      port (COM 2), remember that you must first enable the port.
+

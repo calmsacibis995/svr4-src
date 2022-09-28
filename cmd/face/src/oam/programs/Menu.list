@@ -1,0 +1,15 @@
+#ident	"@(#)face:src/oam/programs/Menu.list	1.4"
+
+menu="List Global Programs"
+
+framemsg="Press CANCEL to return to the previous frame."
+
+lifetime=shortterm
+
+help=open TEXT $INTFBASE/Text.itemhelp F1
+
+`fmlgrep '^vmsys:' /etc/passwd | fmlcut -f6 -d: | set -e VMSYS;
+$VMSYS/bin/listserv -l VMSYS|regex '^(init.*)$0$' '$m0'
+'^(.*)$0$' '
+name=$m0
+action=badchar'`

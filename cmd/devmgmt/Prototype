@@ -1,0 +1,32 @@
+#ident	"@(#)devmgmt:Prototype	1.6.3.1"
+
+!INTFBIN=usr/sadm/sysadm/bin
+
+## Files from local prototype: component=devmgmt
+
+# foundation set (predecessor) directories
+
+d foundation etc 0755 root sys
+d foundation usr 0755 root sys
+d foundation usr/bin 0755 root sys
+d foundation usr/sadm 0755 bin bin
+d foundation usr/sadm/sysadm 0755 bin bin
+d foundation $INTFBIN 0755 bin bin
+
+# foundation set files
+
+f foundation etc/device.tab 0644 root bin
+f foundation etc/dgroup.tab 0644 root bin
+f foundation usr/bin/devattr 0755 bin bin
+f foundation usr/bin/getdev 0755 bin bin
+f foundation usr/bin/getdgrp 0755 bin bin
+f foundation usr/bin/listdgrp 0755 bin bin
+f foundation usr/bin/devreserv 0755 bin bin
+f foundation usr/bin/devfree 0755 bin bin
+f foundation usr/bin/putdev 0750 root bin
+f foundation usr/bin/putdgrp 0750 root bin
+f foundation usr/bin/getvol 0755 bin bin
+
+# basic and extended interface
+
+f OAM_basic $INTFBIN/confck 0755 bin bin

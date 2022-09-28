@@ -1,0 +1,53 @@
+#ident	"@(#)bkrs:basic.d/sched/Text.nocron	1.1"
+
+title=Warning
+lifetime=shortterm
+altslks
+
+begrow=center
+begcol=center
+rows=6
+columns=59
+
+`message "Strike the CONT function key to continue or strike CANCEL to cancel."`
+
+text="
+ The task scheduler is not currently running, however you
+ may proceed to schedule a backup. The backup will not run
+ until the task scheduler is started. Notify the person
+ that maintains your system to start the scheduler.
+"
+
+name=""
+button=9
+action=nop
+
+name=""
+button=10
+action=nop
+
+name=CONT
+button=11
+action=open menu $OBJ_DIR/sched/Menu.sched
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=CANCEL
+button=14
+action=return cancel
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=nop
+
+`indicator -w`

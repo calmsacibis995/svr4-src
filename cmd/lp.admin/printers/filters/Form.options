@@ -1,0 +1,145 @@
+#ident	"@(#)lp.admin:printers/filters/Form.options	1.5.3.1"
+
+form=Filter Options Template for $ARG1
+altslks=true
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`message -w;
+	if [ -n "$F2" -a -n "$F3" -a -n "$F4" ];
+	then
+		set -l doneflag=ON;
+		message "Saving template with options: $F2 $F3 $F4.";
+		sleep 3;
+		echo "Options: $F2 $F3 = $F4" >> $basicdata;
+		message "Enter option keyword or press [CHOICES] for selection";
+	else
+		message "Template incomplete - reenter or press [CANCEL] to exit";
+		sleep 3;
+	fi;
+	`update
+
+
+#F1
+name=
+nrow=1
+ncol=1
+frow=1
+fcol=1
+rows=1
+columns=44
+inactive=true
+value=const "Keyword     Pattern         Replacement"
+
+#F2
+name=
+nrow=2 
+ncol=1
+frow=2
+fcol=1
+rows=1
+columns=7
+value=
+lininfo="options:F2"
+menuonly=true
+rmenu={ CHARSET COPIES CPI FORM INPUT LENGTH LPI MODES OUTPUT PAGES PRINTER TERM WIDTH }
+fieldmsg="Enter option keyword or press [CHOICES] for selection"
+invalidmsg="Invalid Entry: Press [CHOICES] for selection or [CANCEL] to exit"
+
+#F3
+name=
+nrow=2 
+ncol=1
+frow=2
+fcol=11
+rows=1
+columns=14
+lininfo="options:1$F2"
+value=
+valid=`
+    regex -v "$F3"
+	'[^\\][=,]'	'Invalid Entry: You must precede commas and equal signs with a backslash'
+	'^[=,]'		'Invalid Entry: You must precede commas and equal signs with a backslash'
+	'^.*$'		'ok'
+    | set -l badval;
+    if [ "$badval" = 'ok' ];
+    then
+	if [ -z "$F3" ];
+	then
+		echo false;
+		set -l badval="Invalid Entry: Pattern field is mandatory.";
+	else
+		echo true;
+	fi;
+    else
+	false;
+    fi;
+`
+fieldmsg='Enter the pattern to be specified by the user'
+invalidmsg=$badval
+
+
+#F4
+name="= "
+nrow=2
+ncol=26
+frow=2
+fcol=28
+rows=1
+lininfo="options:2$F2"
+columns=16
+scroll=true
+value=
+valid=`
+    regex -v "$F4"
+	'[^\\][=,]'	'Invalid Entry: You must precede commas and equal signs with a backslash'
+	'^[=,]'		'Invalid Entry: You must precede commas and equal signs with a backslash'
+	'^.*$'		'ok'
+    | set -l badval;
+    if [ "$badval" = 'ok' ];
+    then
+	if [ -z "$F4" ];
+	then
+		echo false;
+		set -l badval="Invalid Entry: Replacement field is mandatory.";
+	else
+		echo true;
+	fi;
+    else
+	false;
+    fi;
+`
+fieldmsg='Enter the string to be used when the pattern matches.'
+invalidmsg=$badval
+
+name=HELP
+button=9
+action=help
+
+name=CHOICES
+button=10
+action=choices
+
+name=SAVE
+button=11
+action=done
+
+name=PREV-FRM
+button=12
+action=prev-frm
+
+name=NEXT-FRM
+button=13
+action=next-frm
+
+name=CANCEL
+button=14
+action=`message -w;
+	message -w "$ARG2 $ARG1 in the filter table ";
+	if [ -n "$TFADMIN" ]; then $TFADMIN lpfilter -f $ARG1 -F $basicdata;
+	else lpfilter -f $ARG1 -F $basicdata; fi;
+	echo "close /usr/sadm/sysadm/add-ons/lp/printers/filters/Form.options /usr/sadm/sysadm/add-ons/lp/printers/filters/Form.mod2 /usr/sadm/sysadm/add-ons/lp/printers/filters/Form.$ARG2"
+`
+
+name=CMD-MENU
+button=15
+action=cmd-menu

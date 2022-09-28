@@ -1,0 +1,34 @@
+#ident	"@(#)oamintf:machinemgmt/reboot.Help	1.1.1.1"
+ABSTRACT:
+	The "reboot" task will cause the machine to reboot.  Rebooting the
+	machine can be used to get out of some types of system trouble,
+	such as when a process cannot be killed, or to change certain types
+	of system software, such as drivers or tunable parameters.
+	
+	Before the machine reboots, it stops all running programs, closes
+	any open files, and writes out information to disk (such as
+	directory information).
+	
+	The "reboot" task displays all users currently logged into the
+	system before it asks you to specify a "grace period".  The grace
+	period is the amount of time (in seconds) the machine will wait
+	before it actually shuts down.  Users who are logged in will be
+	notified that they must log off within this period or the machine
+	will log them off automatically.
+	
+	NOTE: the visual interface is not available during the reboot.
+	After the machine returns to a multi-user mode, you will need to
+	reinvoke "sysadm" to use it again.
+
+Form.reboot:reboot:Number of Seconds Before Shutdown Starts
+	Enter the number of seconds to wait before rebooting the machine.
+	Users will be warned to clean up and log off in the amount of time
+	you specify here.  You may specify any integer between '0' and
+	'9999'.
+	
+	Do not enter '0' unless absolutely necessary because it causes an
+	immediate shutdown. It does not allow other users to clean up and
+	log off.
+	
+	WARNING:  Once you press SAVE, the current task cannot be stopped
+	and your OA&M session will be terminated.

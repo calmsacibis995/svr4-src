@@ -1,0 +1,14 @@
+#ident	"@(#)oamintf:devices/copy/Prototype	1.3.2.1"
+!MENU=/usr/sadm/sysadm/menu
+!INTFBIN=/usr/sadm/sysadm/bin
+
+d intf $MENU/devices/copy 0755 bin bin
+f intf $MENU/devices/copy/Form.diskette 0644 bin bin
+f intf $MENU/devices/copy/Help 0644 bin bin
+f intf $MENU/devices/copy/Text.copy1  0644 bin bin
+f intf $MENU/devices/copy/Text.copy2  0644 bin bin
+f intf $MENU/devices/copy/Text.copy3  0644 bin bin
+f intf $MENU/devices/copy/Text.cperr1  0644 bin bin
+f intf $MENU/devices/copy/Text.cperr2  0644 bin bin
+f intf $MENU/devices/copy/Text.cperr3  0644 bin bin
+f intf $MENU/devices/copy/copy.menu 0644 bin bin

@@ -1,0 +1,70 @@
+#ident	"@(#)pcintf:support/sys5/pcistart	1.1"
+#! /bin/sh
+# @(#)pcistart	1.11	Changed   11/17/89	13:11:50	
+
+# PC Interface (TM Locus Computing Corporation)
+# (c) 1986 Locus Computing Corporation.  All rights reserved.
+
+# Start up PC Interface service
+
+umask 002
+pciFileLimit=2048
+
+# File names
+tmpPrefix=/tmp/PCI
+psOut=${tmpPrefix}psOut
+
+# Set local time zone environment
+if [ -f /etc/TIMEZONE ]
+then
+	. /etc/TIMEZONE
+else
+	TZ=EST5EDT
+	export TZ
+fi
+
+# Set default values for environment variables PRINTPROG and PRINTPATH
+PRINTPROG=lp
+export PRINTPROG
+PRINTPATH=/bin:/usr/bin
+export PRINTPATH
+
+# enable server debug if we are passed the argument "debug"
+debugflag=0000
+
+case $# in
+	1 )	if [ "$1" = "debug" ] ; then debugflag=ffff ; fi ;;
+esac
+
+
+# Print copyright message and start map and connection servers
+echo "\nStarting PC Interface (TM Locus Computing Corporation)"
+echo "Copyright (c) 1984, 1985, 1986, 1987, 1988, 1989 Locus Computing Corporation."
+echo "All rights reserved.\n"
+
+# Get list of executing PC Interface processes to see if either server
+# is already running
+ps -e >$psOut 2>/dev/null
+
+cd /usr/pci
+
+# NB:	The next two paragraphs are dependent on the output format of ps!
+if grep '[0-9] pcimapsv' $psOut > /dev/null 2>&1; then
+	echo "PC Interface Map server (pcimapsvr.eth) is already running"
+else
+	./loadpci -PMAPSVR -D${debugflag} pcimapsvr.eth &
+fi
+
+if grep '[0-9] pciconsv' $psOut > /dev/null 2>&1; then
+	echo "PC Interface Connection server (pciconsvr.eth) is already running"
+else
+	ulimit -f $pciFileLimit
+	./loadpci -D${debugflag} -L${debugflag} -B -b pciconsvr.eth &
+fi
+
+# Keep servers from premature deaths by giving them a chance to execute
+# their setpgrp() calls.  Once they have, they will not get the SIGINT
+# generated when the shell interpreting this file dies.
+sleep 4
+
+rm -f ${tmpPrefix}*

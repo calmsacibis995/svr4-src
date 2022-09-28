@@ -1,0 +1,22 @@
+#ident	"@(#)bkrs:rsintf.d/restores/rsstat/full/Help	1.2.1.1"
+
+ABSTRACT: Full Report of Pending Restore Requests
+	The "full" task displays a full report pending restore requests.
+	The report displays the jobid, requester's login, file (path of
+	object to be restored), date of file to be restored, target path
+	to which to restore the object, the date the object was backed up,
+	the method used to back it up, the type of device used to make the
+	backup, the volume labels for the data volumes of the backup and
+	the volume labels of the table-of-contents volumes, if any.
+
+TITLE: Full Report of Pending Restore Requests
+
+full: Full Report of Pending Restore Requests
+	The entire report of the pending restore requests has been
+	displayed.  The information displayed is: the jobid, the
+	requestor's login, file, date of file to be restored, target
+	path to which to restore the object, the date the object was
+	backed up, the method used for backup, the type of device
+	used for backup, the volume labels for the data volumes of
+	the backup, and the volume labels of the table-of-contents
+	volumes.

@@ -1,0 +1,43 @@
+#!/usr/bin/sh
+#ident	"@(#)bnu:Teardown	1.5"
+
+export IFS PATH
+IFS=" 	
+"
+PATH="/usr/bin"
+
+#
+#	This shell tries to convert uucp from the QFT format back to the
+#	the regular HoneyDanBer format and removes all sub directories
+#	that created while running the QFT version of uucp.
+#
+
+echo "Converting uucp from QFT Format back to HoneyDanBer format\n"
+
+SPOOL=/var/spool/uucp
+#	chdir to remote spool directory
+cd $SPOOL
+if [ `pwd` != "$SPOOL" ]
+then
+	echo "CAN'T cd to $SPOOL"
+	echo "$0 failed."
+	exit 0
+fi
+for d in */?
+do
+#	chdir to grade directories of the remote
+	cd $d
+	if [ "$?" = 0 ]
+	then
+#	   move everything to parent (machine) directory
+	   find . -print | cpio -pdvm ..
+	   if [ "$?" = 0 ]
+	   then
+#		now remove everything in this directory
+		rm -rf *
+	   fi
+	   cd $SPOOL
+#	   if grade directory is now empty, remove it.
+	   rmdir $d
+	fi
+done >/dev/null 2>&1

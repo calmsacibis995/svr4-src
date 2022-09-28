@@ -1,0 +1,13 @@
+#ident	"@(#)lp:filter/postscript/font/devpostaps/charlib/sq	1.1"
+/build_sq {
+    pop
+    size 2 div /side exch def
+    currentpoint
+    newpath
+    moveto
+    0 side rlineto
+    side 0 rlineto
+    0 side neg rlineto
+    closepath
+    font B eq {fill} {stroke} ifelse
+} def

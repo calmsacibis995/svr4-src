@@ -1,0 +1,19 @@
+#ident	"@(#)oamintf:devices/display/Menu.display	1.1.2.1"
+menu=Devices Available
+
+framemsg=`readfile $INTFBASE/ssmenu.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp Menu.display
+
+# Determine if there are any available devices in the system configuration.
+`indicator -w;
+	listtypes displaycmd > /dev/null;
+	regex -e -v "$RET"
+		'^1$' '`message -t "There are no devices to display in this system configuration." "`init=false' "false"`
+		'^.*$' "true"
+
+`listtypes displaycmd | sed -e 's/[0-9]*$//' | regex '^(.*)$0:(.*)$1$' '
+
+name="$m0"
+description="$m1"
+action=OPEN FORM $OBJ_DIR/Form.display "$m0"' `

@@ -1,0 +1,53 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/Text.prset	1.1"
+title="Warning"
+lifetime=shortterm
+altslks
+
+begrow=any
+begcol=any
+
+`message  "Strike CONT to continue or strike CANCEL."`
+
+text="
+Please note that the following menus are intended to provide
+backwards compatibility for preSVR4 add-on packages that depend
+on the existence of the preSVR4 FACE user interface.  It is
+recommended that you use the other selections provided in the
+Line Printer Configuration and Operation menu if your package
+is release 4.0 compatible."
+
+rows=7
+columns=65
+
+name=CANCEL
+button=14
+action=return cancel
+
+name=CONT
+button=11
+action=OPEN MENU /usr/vmsys/OBJECTS/PS/Menu.prset
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=""
+button=10
+action=nop
+
+name=""
+button=9
+action=nop
+
+name=""
+button=15
+action=nop
+
+name=""
+button=16
+action=nop
+`indicator -w`

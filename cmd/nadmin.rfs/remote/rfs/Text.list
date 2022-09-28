@@ -1,0 +1,5 @@
+#ident	"@(#)nadmin.rfs:remote/rfs/Text.list	1.2"
+title="Lists Remote Resources Automatically-Currently Mounted via RFS"
+`readfile $INTFBASE/display.msg | message -p`
+text="`readfile $ARG1`"
+columns=60

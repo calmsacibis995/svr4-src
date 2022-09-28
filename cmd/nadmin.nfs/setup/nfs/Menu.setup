@@ -1,0 +1,32 @@
+#ident	"@(#)nadmin.nfs:setup/nfs/Menu.setup	1.3"
+menu=Initial Network File System Setup
+close=unset -l PID
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/ssmenu.msg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/setup/nfs`
+
+name=start
+description=Start Network File System Operations
+action=`indicator -w;
+	message -f "Starting Network File System Operations.  Please wait...";
+	run /sbin/sh /etc/init.d/nfs start;
+	$INTFBASE/netservices/remote_files/other/nfs/control/bin/status | set -l PID;
+	if [ -f "/var/tmp/start_stat$PID" ];
+	then
+		message -f "Network File System Operations have been started.";
+	else
+		message -f "Network File System Operations could not be started.";
+	fi;
+	/bin/rm /var/tmp/start_stat$PID 2>/dev/null`NOP
+lininfo=control:start
+
+name=share
+description=Shares Local Resources via Network File System
+action=OPEN FORM $INTFBASE/netservices/remote_files/local/nfs/Form.share 
+lininfo=setup:share
+
+name=mount
+description=Mounts Remote Resources via Network File System
+action=OPEN FORM $INTFBASE/netservices/remote_files/remote/nfs/Form.mount
+lininfo=setup:mount

@@ -1,0 +1,13 @@
+#ident	"@(#)devintf:devices/reserve/free/Help	1.2.1.1"
+
+free:ABSTRACT:
+	The "free" task releases a reservation on a reserved device.  You will
+	be asked to supply the alias of a reserved device.
+
+Form.free:Device:the Device field
+	This is the name of the currently reserved device whose reservation
+	you wish to release.  The device may be referenced by the device
+	alias.
+	
+	This field may not be blank and must reference a device that is
+	currently reserved.

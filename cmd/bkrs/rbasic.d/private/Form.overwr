@@ -1,0 +1,21 @@
+#ident	"@(#)bkrs:rbasic.d/private/Form.overwr	1.1.1.1"
+form="Disk Restore"
+help=open text /usr/vmsys/OBJECTS/Text.h "$T" "$F"
+done=`echo "$ARG1" | sed 's/\/$//' | set -l DIR; run sh -c '/usr/bin/restore $ARG2 $ARG3 $ARG4 `/usr/sadm/sysadm/bin/owrchk $F1` "$DIR/*"'`close $OBJ_DIR/private/Form.overwr $OBJ_DIR/private/Menu.private
+
+
+name=Overwrite files that have been modified since last backup?
+nrow=1
+ncol=4
+rows=1
+columns=4
+frow=1
+fcol=63
+value=" No"
+rmenu={ "Yes" " No" }
+menuonly=true
+choicemsg=const "Strike the CHOICES function key.  Strike SAVE when you complete the form."
+fieldmsg=`set -l T=Overwrite -l F=restore/T.hoverwr1`Strike the CHOICES function key.  Strike SAVE when you complete the form.
+
+name=""
+button=16

@@ -1,0 +1,16 @@
+#ident	"@(#)bnu.admin:Menu.psysname	1.1"
+
+################################################################################
+#
+#	Module Name:Menu.psysname
+#
+#	Functional Description: This menu is a popup menu for device type 
+#                               selection.  Systems are derived from uucp 
+#                               Poll file.
+################################################################################
+menu="Systems Name Select"
+
+`cat /etc/uucp/Poll | cut -f1 -d" " | sort -u | regex '^([A-Za-z0-9][A-Za-z0-9]*)$0' 
+'name="$m0"
+action=`set -l "Form_Choice=$m0"`CLOSE'`
+

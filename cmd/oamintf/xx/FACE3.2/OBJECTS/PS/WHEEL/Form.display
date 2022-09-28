@@ -1,0 +1,97 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/WHEEL/Form.display	1.1"
+form="Display A Printwheel"
+lifetime=longterm
+altslks=true
+
+done=close /usr/vmsys/OBJECTS/PS/WHEEL/Form.display
+
+`regex -e -v "${(/usr/tmp/wheel.$VPID)fault}" 'mail' 
+			'`set -l FD="send mail to ${(/usr/tmp/wheel.$VPID)login}"`'
+			'.*' '`set -l FD="${(/usr/tmp/wheel.$VPID)fault}"`'`
+
+close=`/usr/vmsys/admin/.chkuser -c "/bin/rm :-rf: :/usr/tmp/wheel.$VPID:"`
+
+`message  Strike the CONT function key to continue.`
+
+name=""
+nrow=1
+ncol=1
+rows=1
+columns=1
+frow=1
+fcol=1
+noecho=true
+
+name=Printwheel name:
+nrow=1
+ncol=2
+rows=1
+columns=8
+frow=1
+fcol=19
+value=$ARG1
+inactive=true
+
+name=Mount form alert type:
+nrow=3
+ncol=2
+rows=1
+columns=40
+frow=3
+fcol=25
+#value=${(/usr/tmp/wheel.$VPID)fault}
+value=$FD
+inactive=true
+
+name=Frequency of alert:
+nrow=5
+ncol=2
+rows=1
+columns=4
+frow=5
+fcol=22
+value=${(/usr/tmp/wheel.$VPID)freq}
+inactive=true
+
+name=Number of requests to wait before alert:
+nrow=7
+ncol=2
+rows=1
+columns=2
+frow=7
+fcol=43
+value=${(/usr/tmp/wheel.$VPID)requests}
+inactive=true
+
+
+name=CANCEL
+button=14
+action=close /usr/vmsys/OBJECTS/PS/WHEEL/Form.display /usr/vmsys/OBJECTS/PS/WHEEL/Form.dsel
+
+name=""
+button=10
+action=nop
+
+name=CONT
+button=11
+action=close /usr/vmsys/OBJECTS/PS/WHEEL/Form.display /usr/vmsys/OBJECTS/PS/WHEEL/Form.dsel
+
+name=PREV-FRM
+button=12
+action=prev-frm 
+
+name=NEXT-FRM
+button=13
+action=next-frm 
+
+name=""
+button=9
+action=nop
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=nop

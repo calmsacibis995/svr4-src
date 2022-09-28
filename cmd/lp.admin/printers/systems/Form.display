@@ -1,0 +1,48 @@
+#ident	"@(#)lp.admin:printers/systems/Form.display	1.4"
+
+#######################################################
+#
+#       Module Name: printers/systems/Form.display
+#
+#######################################################
+
+form=Display Available System Connections
+framemsg="Enter system connection(s) to display and press SAVE when done."
+
+help=open TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`set -l name_2=/tmp/lp.n2$VPID`
+
+close=`/usr/bin/rm -f $name_2`
+
+done=`echo "$F1" | tr ',' ' ' | regex '^all$' '' '^all ' '' ' all ' '' ' all$' '' '^(.*)$0$' '$m0'|set -l C_list`open TEXT $OBJ_DIR/Text.display
+
+name=System(s):
+lininfo="display:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=12
+rows=1
+scroll=true
+columns=58
+value=all
+rmenu=OPEN MENU $OBJ_DIR/Menu.cremove
+valid=`indicator -w;
+	unset -l bad_one;
+	fmlgrep '^[^#]' /etc/lp/Systems | fmlcut -f1 -d: > $name_2;
+	echo "all" >> $name_2;
+	if [ -z "$F1" ];
+	then
+		set -l no_value=true -l name_valid=false;
+	else
+		set -l no_value=false -l name_valid=true;
+	fi;
+	echo "$F1" | tr " ," "[\012*]" | regex -e '^(.*)$0$'
+	'`fmlgrep "^$m0\$" $name_2 || set -l bad_one="$m0" -l name_valid=false`' > /dev/null`$name_valid
+invalidmsg=`if [ "$no_value" = "true" ];
+	then
+		echo "You must enter a value for this field.";
+	else
+		echo "$bad_one is not a valid system name.";
+	fi`

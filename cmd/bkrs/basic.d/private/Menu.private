@@ -1,0 +1,17 @@
+#ident	"@(#)bkrs:basic.d/private/Menu.private	1.1.1.1"
+menu="Personal Backup"
+help=open text /usr/vmsys/OBJECTS/Text.h "Personal Backup" backup/private/T.hbackpri
+
+name=Backup Files under $HOME
+itemmsg="Move to an item with the arrow keys and strike the ENTER key to select"
+action=`Ckdev f1_or_mt | regex -e
+    0 '`run sh -c \'/usr/bin/backup -u $LOGNAME -d /dev/rdsk/f0t\'`close $OBJ_DIR/private/Menu.private'
+    2 'open menu $OBJ_DIR/private/Menu.backusr -u $LOGNAME' `
+
+
+name=Selective Backup of Files under $HOME
+itemmsg="Move to an item with the arrow keys and strike the ENTER key to select"
+action=`Ckdev f1_or_mt | regex -e
+    0 'open form $OBJ_DIR/private/Form.files -d /dev/rdsk/f0t -f'
+    2 'open $OBJ_DIR/private/Menu.backsel' `
+

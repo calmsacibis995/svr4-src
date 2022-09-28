@@ -1,0 +1,48 @@
+#ident	"@(#)oamintf:softwaremgmt/Prototype	1.2.2.1"
+!MENU=/usr/sadm/sysadm/menu
+
+d intf $MENU/softwaremgmt 755 bin bin
+f intf $MENU/softwaremgmt/Help 644 bin bin
+f intf $MENU/softwaremgmt/software.menu 644 bin bin
+f intf $MENU/softwaremgmt/Menu.pkg 644 bin bin
+f intf $MENU/softwaremgmt/pkg 555 bin bin
+
+d intf $MENU/softwaremgmt/read_in 755 bin bin
+f intf $MENU/softwaremgmt/read_in/Form.read_in 644 bin bin
+f intf $MENU/softwaremgmt/read_in/Help 644 bin bin
+
+d intf $MENU/softwaremgmt/install 755 bin bin
+f intf $MENU/softwaremgmt/install/Form.install 644 bin bin
+f intf $MENU/softwaremgmt/install/Help 644 bin bin
+
+d intf $MENU/softwaremgmt/interact 755 bin bin
+f intf $MENU/softwaremgmt/interact/Form.interact 644 bin bin
+f intf $MENU/softwaremgmt/interact/Help 644 bin bin
+
+d intf $MENU/softwaremgmt/remove 755 bin bin
+f intf $MENU/softwaremgmt/remove/Form.remove 644 bin bin
+f intf $MENU/softwaremgmt/remove/Help 644 bin bin
+
+d intf $MENU/softwaremgmt/check 755 bin bin
+f intf $MENU/softwaremgmt/check/Form.inst 644 bin bin
+f intf $MENU/softwaremgmt/check/Form.orig 644 bin bin
+f intf $MENU/softwaremgmt/check/Form.spool 644 bin bin
+f intf $MENU/softwaremgmt/check/task.inst 755 bin bin
+f intf $MENU/softwaremgmt/check/task.orig 755 bin bin
+f intf $MENU/softwaremgmt/check/task.spool 755 bin bin
+f intf $MENU/softwaremgmt/check/check.menu 755 bin bin
+f intf $MENU/softwaremgmt/check/Help 644 bin bin
+
+d intf $MENU/softwaremgmt/list 755 bin bin
+f intf $MENU/softwaremgmt/list/Form.list 644 bin bin
+f intf $MENU/softwaremgmt/list/Text.list 644 bin bin
+f intf $MENU/softwaremgmt/list/Help 644 bin bin
+
+d intf $MENU/softwaremgmt/defaults 755 bin bin
+f intf $MENU/softwaremgmt/defaults/Menu.logins 644 bin bin
+f intf $MENU/softwaremgmt/defaults/defaults.menu 644 bin bin
+f intf $MENU/softwaremgmt/defaults/Form.sd_add 644 bin bin
+f intf $MENU/softwaremgmt/defaults/Form.sd_list 644 bin bin
+f intf $MENU/softwaremgmt/defaults/Form.sd_mod 644 bin bin
+f intf $MENU/softwaremgmt/defaults/Form.sd_remove 644 bin bin
+f intf $MENU/softwaremgmt/defaults/Help 644 bin bin

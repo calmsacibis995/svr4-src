@@ -1,0 +1,28 @@
+#ident	"@(#)oamintf:softwaremgmt/remove/Help	1.1.1.1"
+
+ABSTRACT:
+	This task removes software packages from the system or spooled
+	on a device.
+
+pkgloc: Software Location
+	Enter the word "installed" to indicate that you want to remove 
+	software which is currently installed on your system.  To remove 
+	software which is spooled, enter the device on which the software 
+	resides (e.g., "diskette1" or "9track1".)  To indicate the default 
+	spool directory, enter "spool".
+
+pkgid: Package Selection
+	To remove a specific package, enter the package instance identifier
+	(e.g., "spell" or "rfs").  To remove multiple package identifiers,
+	separate each with a comma (e.g., "spell,rfs,windowing".)  To 
+	remove all instances of a particular package, use a wildcard
+	format (e.g. "dbase.*").
+
+	WARNING:  Do NOT remove package associated with the operation of
+	sysadm from within sysadm.  These include 'fmli', 'lp' and 'oam'.
+	If you want to remove these packages, it is HIGHLY recommended
+	that you use the 'pkgrm' command from outside of sysadm.  If you
+	wish to remove all packages (which includes the packages necessary
+	for sysadm to work) you can enter 'pkgrm all' from the shell
+	command line.  'All' is NOT a valid choice for a package under
+	remove.

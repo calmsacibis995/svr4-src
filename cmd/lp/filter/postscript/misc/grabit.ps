@@ -1,0 +1,579 @@
+%ident	"@(#)lp:filter/postscript/misc/grabit.ps	1.1.2.1"
+%
+% Some complicated PostScript that reads objects (typically a dictionary) and
+% occasionally returns something close to legitimate PostScript that's ready to
+% be sent back through the interpreter.
+%
+% An easy way to use the stuff is put a key and value on the stack and then call
+% procedure grabit. For example,
+%
+%	/userdict userdict grabit
+%
+% returns the contents of userdict to the host. If you appear to be having flow
+% control problems try setting slowdown (defined below) to 50 or so. It controls
+% how many times a dummy repeat loop in tprint is executed every time a string
+% is returned to the host. If postio is available,
+%
+%	postio -lmy/printer -t grabit.ps >userdict
+%
+% grabit.ps to the printer connected to my/printer and recovers the data that's
+% returned from the printer in a file called userdict.
+%
+
+/TypeDict 100 dict dup begin
+
+/slowdown 0 def
+/rmargin 80 def
+/cp 0 def
+
+/level 0 def
+/multiline 100 array def
+
+/nextlevel {/level level 1 add def multiline level 0 put} def
+/lastlevel {/level level 1 sub def} def
+
+/lengthonly false def
+/arraylength 0 def
+
+/dummystring 100 string def
+/cvsprint {dummystring cvs tprint ( ) tprint} def
+/indent {level {(    ) tprint} repeat} def
+/newline {(\n) tprint lengthonly not {/cp 0 def} if} def
+
+%
+% Every string returned to the host goes through tprint. The first pass through an
+% array has lengthonly set to true.
+%
+
+/tprint {
+	lengthonly {
+		length arraylength add /arraylength exch def
+	}{
+		dup length cp add /cp exch def
+		print flush
+		slowdown {1 pop} repeat
+	} ifelse
+} def
+
+%
+% Expects a key and values on the stack (called from dicttype) and looks for the
+% the key in array SkipNames. If found true is left on the stack, otherwise false
+% is returned. Used to eliminate things from the listing that's returned to the
+% host.
+%
+
+/SkipNames [/TypeDict /grabit] def
+
+/skipit {
+	2 copy pop
+	false exch
+	SkipNames {1 index eq {exch pop true exch exit} if} forall
+	pop
+} def
+
+%
+% If we run into a dictionary and we can't find its name in any of the standard
+% places we make up a unique name and save the new name and value in otherdicts.
+%
+
+/otherdicts 200 dict def
+
+/nextname 0 def
+/prefix (UnknownDict) def
+/suffix (   ) def
+/fullname prefix length suffix length add string def
+
+/makedictname {
+	/nextname nextname 1 add def
+
+	/nextsuffix nextname suffix cvs def
+	fullname 0 prefix putinterval
+	fullname prefix length nextsuffix putinterval
+	fullname 0 prefix length nextsuffix length add getinterval cvn
+} def
+
+/register {
+	dup type /dicttype eq {
+		dup otherdicts exch makedictname exch put
+	} if
+} def
+
+%
+% Tries to replace array or dictionary values by known names. Lookups are in the
+% standard PostScript dictionaries and in otherdicts. If the value (ie. whatever's
+% on top of the stack) is found it's replaced by the corresponding name, which is
+% also made executable so nametype will omit the leading /.
+%
+
+/replace {
+	false
+	1 index type /dicttype eq {pop true} if
+	1 index type /arraytype eq 2 index xcheck not and {pop true} if
+	{
+		false
+		[userdict systemdict statusdict serverdict otherdicts] {
+			{
+				3 index eq
+					{exch pop exch pop cvx true exit}
+					{pop}
+				ifelse
+			} forall
+			dup {exit} if
+		} forall
+		pop
+	} if
+} def
+
+%
+% Most of the simple type handlers. In some cases (eg. in fonttype) what's returned
+% is the best we can do, but can't be sent back through the interpreter.
+%
+
+/booleantype {{(true )}{(false )} ifelse tprint} def
+/marktype {pop (mark ) tprint} def
+/nulltype {pop (null ) tprint} def
+
+/integertype {cvsprint} def
+/realtype {cvsprint} def
+
+/filetype {pop (-file- ) tprint} def
+/fonttype {pop (-fontID- ) tprint} def
+/savetype {pop (-saveobj- ) tprint} def
+
+%
+% Special formatting for operators is enabled if the flag in multiline (for the
+% current level) is set to 1. In that case each operator, after being printed,
+% is looked up in OperatorDict. If found the value obtained from that dictionary
+% is used as an index into array operatorprocs that retrieves a procedure which is
+% then executed. Right now the single procedure defined in operatorprocs controls
+% which operators end a line.
+%
+
+/operatortype {
+	dup cvsprint
+	multiline level get 1 eq {
+		dummystring cvs cvn dup OperatorDict exch known {
+			OperatorDict exch get
+			operatorprocs exch get exec
+		}{
+			pop
+			cp rmargin gt {newline indent} if
+		} ifelse
+	} {pop} ifelse
+} def
+
+%
+% Executable names are passed along to operatortype, while non-executable names
+% are preceeded with a /.
+%
+
+/nametype {
+	dup xcheck {
+		operatortype
+	}{
+		(/) tprint cvsprint
+	} ifelse
+} def
+
+%
+% Arrays are processed in two passes. The first computes the length of the string
+% that would be returned without any special formatting. If that string extends
+% past the right margin we enable additional formatting for the array by setting
+% a flag in array multiline. Arrays are processed using a for loop so we can
+% figure out when we get to the last element, and at that point we disable the
+% operator level formatting by setting the multiline flag to 2.
+%
+
+/packedarraytype {arraytype} def
+
+/arraytype {
+	nextlevel
+	lengthonly not {
+		/lengthonly true def
+		/arraylength 0 def
+		dup dup type exec
+		arraylength 20 gt arraylength cp add rmargin gt and {
+			multiline level 1 put
+		} if
+		/lengthonly false def
+	} if
+
+	dup rcheck not {
+		(-array- ) tprint pop
+	}{
+		dup xcheck {({)}{([)} ifelse tprint
+		multiline level get 0 ne {newline indent} {( ) tprint} ifelse
+		0 1 2 index length 1 sub {
+			2 copy exch length 1 sub eq multiline level get 1 eq and {
+				multiline level 2 put
+			} if
+			2 copy get exch pop
+			dup type /dicttype eq {
+				replace
+				dup type /dicttype eq {
+					dup register replace
+					2 copy cvlit exch count 2 roll
+					exch pop
+				} if
+			} if
+			dup type exec
+			dup xcheck not multiline level get 1 eq and {
+				0 index type /arraytype eq
+				1 index type /packedarray eq or
+				1 index type /stringtype eq or {newline indent} if
+			} if
+		} for
+		multiline level get 0 ne {newline lastlevel indent nextlevel} if
+		xcheck {(} )}{(] )} ifelse tprint
+	} ifelse
+	lastlevel
+} def
+
+%
+% Dictionary handler. An attempt is made to replace dictionaries or non-executable
+% arrays by names (in replace) before processing the value.
+%
+
+/dicttype {
+	dup
+	rcheck not {
+		(-dictionary- ) tprint pop
+	}{
+		dup maxlength cvsprint (dict dup begin) tprint newline
+		nextlevel
+		{
+			skipit {
+				pop pop
+			}{
+				indent
+				replace		% arrays and dicts by known names
+				register	% new dictionaries in otherdicts
+				exch
+				cvlit dup type exec	% key first - force a /
+				dup type exec		% then the value
+				(def) tprint newline
+			} ifelse
+		} forall
+		lastlevel
+		indent
+		(end ) tprint
+	} ifelse
+} def
+
+%
+% Strings that contain characters not defined in AsciiDict are returned in hex.
+% All others are returned as ASCII strings and use the AsciiDict mappings to
+% determine what should be returned for each character.
+%
+
+/onecharstring ( ) def
+/twocharstring (  ) def
+
+/stringtype {
+	dup
+	rcheck not {
+		(-string- ) tprint
+	}{
+		/hexit false def
+		dup {
+			onecharstring 0 3 -1 roll put
+			AsciiDict onecharstring cvn known not {
+				/hexit true def exit
+			} if
+		} forall
+
+		hexit {(<)}{(\()} ifelse tprint
+		0 1 2 index length 1 sub {
+			2 copy 1 getinterval exch pop
+			hexit {
+				0 get /n exch def
+				n -4 bitshift 16#F and 16 twocharstring cvrs pop
+				n 16#F and twocharstring 1 1 getinterval 16 exch cvrs pop
+				twocharstring
+			} {cvn AsciiDict exch get} ifelse
+			tprint
+			cp rmargin gt {
+				hexit not {(\\) tprint} if
+				newline
+			} if
+		} for
+		hexit {(> )}{(\) )} ifelse tprint
+	} ifelse
+	pop
+} def
+
+%
+% ASCII characters and replacement strings. Used when we're handling a string and
+% want to be certain what's returned will, when passed back through the scanner,
+% reproduce what we just read. Strings that include a characters not in this list
+% are returned as hex strings.
+%
+
+/AsciiDict 128 dict dup begin
+	(\n) cvn (\\n) def
+	(\r) cvn (\\r) def
+	(\t) cvn (\\t) def
+	(\b) cvn (\\b) def
+	(\f) cvn (\\f) def
+	( ) cvn ( ) def
+	(!) cvn (!) def
+	(") cvn (") def
+	(#) cvn (#) def
+	($) cvn ($) def
+	(%) cvn (\\%) def
+	(&) cvn (&) def
+	(') cvn (') def
+	(\() cvn (\\\() def
+	(\)) cvn (\\\)) def
+	(*) cvn (*) def
+	(+) cvn (+) def
+	(,) cvn (,) def
+	(-) cvn (-) def
+	(.) cvn (.) def
+	(/) cvn (/) def
+	(0) cvn (0) def
+	(1) cvn (1) def
+	(2) cvn (2) def
+	(3) cvn (3) def
+	(4) cvn (4) def
+	(5) cvn (5) def
+	(6) cvn (6) def
+	(7) cvn (7) def
+	(8) cvn (8) def
+	(9) cvn (9) def
+	(:) cvn (:) def
+	(;) cvn (;) def
+	(<) cvn (<) def
+	(=) cvn (=) def
+	(>) cvn (>) def
+	(?) cvn (?) def
+	(@) cvn (@) def
+	(A) cvn (A) def
+	(B) cvn (B) def
+	(C) cvn (C) def
+	(D) cvn (D) def
+	(E) cvn (E) def
+	(F) cvn (F) def
+	(G) cvn (G) def
+	(H) cvn (H) def
+	(I) cvn (I) def
+	(J) cvn (J) def
+	(K) cvn (K) def
+	(L) cvn (L) def
+	(M) cvn (M) def
+	(N) cvn (N) def
+	(O) cvn (O) def
+	(P) cvn (P) def
+	(Q) cvn (Q) def
+	(R) cvn (R) def
+	(S) cvn (S) def
+	(T) cvn (T) def
+	(U) cvn (U) def
+	(V) cvn (V) def
+	(W) cvn (W) def
+	(X) cvn (X) def
+	(Y) cvn (Y) def
+	(Z) cvn (Z) def
+	([) cvn ([) def
+	(\\) cvn (\\\\) def
+	(]) cvn (]) def
+	(^) cvn (^) def
+	(_) cvn (_) def
+	(`) cvn (`) def
+	(a) cvn (a) def
+	(b) cvn (b) def
+	(c) cvn (c) def
+	(d) cvn (d) def
+	(e) cvn (e) def
+	(f) cvn (f) def
+	(g) cvn (g) def
+	(h) cvn (h) def
+	(i) cvn (i) def
+	(j) cvn (j) def
+	(k) cvn (k) def
+	(l) cvn (l) def
+	(m) cvn (m) def
+	(n) cvn (n) def
+	(o) cvn (o) def
+	(p) cvn (p) def
+	(q) cvn (q) def
+	(r) cvn (r) def
+	(s) cvn (s) def
+	(t) cvn (t) def
+	(u) cvn (u) def
+	(v) cvn (v) def
+	(w) cvn (w) def
+	(x) cvn (x) def
+	(y) cvn (y) def
+	(z) cvn (z) def
+	({) cvn ({) def
+	(|) cvn (|) def
+	(}) cvn (}) def
+	(~) cvn (~) def
+end def
+
+%
+% A special operator dictionary that helps format procedure listing. Operators
+% defined in OperatorDict are indices into the operatorprocs array. The procedure
+% retrieved from operatorprocs is executed after an opertor is printed, provided
+% the multiline flag for the current level is set to 1. It's an attempt to make
+% things look nice, and although it can't possibly work all the time it does
+% help.
+%
+
+/operatorprocs [{} {newline indent}] def
+
+/OperatorDict 250 dict def
+
+OperatorDict	/arc			1 put
+OperatorDict	/arcn			1 put
+OperatorDict	/ashow			1 put
+OperatorDict	/awidthshow		1 put
+OperatorDict	/banddevice		1 put
+OperatorDict	/begin			1 put
+OperatorDict	/charpath		1 put
+OperatorDict	/clear			1 put
+OperatorDict	/cleardictstack		1 put
+OperatorDict	/clearinterrupt		1 put
+OperatorDict	/cleartomark		1 put
+OperatorDict	/clip			1 put
+OperatorDict	/clippath		1 put
+OperatorDict	/closefile		1 put
+OperatorDict	/closepath		1 put
+OperatorDict	/concat			1 put
+OperatorDict	/copypage		1 put
+OperatorDict	/curveto		1 put
+OperatorDict	/def			1 put
+OperatorDict	/disableinterrupt	1 put
+OperatorDict	/echo			1 put
+OperatorDict	/enableinterrupt	1 put
+OperatorDict	/end			1 put
+OperatorDict	/eoclip			1 put
+OperatorDict	/eofill			1 put
+OperatorDict	/erasepage		1 put
+OperatorDict	/exchdef		1 put
+OperatorDict	/exec			1 put
+OperatorDict	/exit			1 put
+OperatorDict	/fill			1 put
+OperatorDict	/flattenpath		1 put
+OperatorDict	/flush			1 put
+OperatorDict	/flushfile		1 put
+OperatorDict	/for			1 put
+OperatorDict	/forall			1 put
+OperatorDict	/framedevice		1 put
+OperatorDict	/grestore		1 put
+OperatorDict	/grestoreall		1 put
+OperatorDict	/gsave			1 put
+OperatorDict	/handleerror		1 put
+OperatorDict	/if			1 put
+OperatorDict	/ifelse			1 put
+OperatorDict	/image			1 put
+OperatorDict	/imagemask		1 put
+OperatorDict	/initclip		1 put
+OperatorDict	/initgraphics		1 put
+OperatorDict	/initmatrix		1 put
+OperatorDict	/kshow			1 put
+OperatorDict	/lineto			1 put
+OperatorDict	/loop			1 put
+OperatorDict	/moveto			1 put
+OperatorDict	/newpath		1 put
+OperatorDict	/nulldevice		1 put
+OperatorDict	/pathforall		1 put
+OperatorDict	/print			1 put
+OperatorDict	/prompt			1 put
+OperatorDict	/productinit		1 put
+OperatorDict	/put			1 put
+OperatorDict	/putinterval		1 put
+OperatorDict	/quit			1 put
+OperatorDict	/rcurveto		1 put
+OperatorDict	/redwrite		1 put
+OperatorDict	/renderbands		1 put
+OperatorDict	/repeat			1 put
+OperatorDict	/resetfile		1 put
+OperatorDict	/restore		1 put
+OperatorDict	/reversepath		1 put
+OperatorDict	/rlineto		1 put
+OperatorDict	/rmoveto		1 put
+OperatorDict	/rotate			1 put
+OperatorDict	/run			1 put
+OperatorDict	/scale			1 put
+OperatorDict	/setblink		1 put
+OperatorDict	/setcachedevice		1 put
+OperatorDict	/setcachelimit		1 put
+OperatorDict	/setcacheparams		1 put
+OperatorDict	/setcharwidth		1 put
+OperatorDict	/setdash		1 put
+OperatorDict	/setdefaulttimeouts	1 put
+OperatorDict	/setdostartpage		1 put
+OperatorDict	/seteescratch		1 put
+OperatorDict	/setflat		1 put
+OperatorDict	/setfont		1 put
+OperatorDict	/setgray		1 put
+OperatorDict	/sethsbcolor		1 put
+OperatorDict	/setidlefonts		1 put
+OperatorDict	/setjobtimeout		1 put
+OperatorDict	/setlinecap		1 put
+OperatorDict	/setlinejoin		1 put
+OperatorDict	/setlinewidth		1 put
+OperatorDict	/setmargins		1 put
+OperatorDict	/setmatrix		1 put
+OperatorDict	/setmiterlimit		1 put
+OperatorDict	/setpacking		1 put
+OperatorDict	/setpagetype		1 put
+OperatorDict	/setprintname		1 put
+OperatorDict	/setrgbcolor		1 put
+OperatorDict	/setsccbatch		1 put
+OperatorDict	/setsccinteractive	1 put
+OperatorDict	/setscreen		1 put
+OperatorDict	/settransfer		1 put
+OperatorDict	/setstreams		1 put
+OperatorDict	/show			1 put
+OperatorDict	/showpage		1 put
+OperatorDict	/start			1 put
+OperatorDict	/stop			1 put
+OperatorDict	/store			1 put
+OperatorDict	/stroke			1 put
+OperatorDict	/strokepath		1 put
+OperatorDict	/translate		1 put
+OperatorDict	/widthshow		1 put
+OperatorDict	/write			1 put
+OperatorDict	/writehexstring		1 put
+OperatorDict	/writestring		1 put
+
+end def
+
+%
+% Put a key and value on the stack and then call grabit. For example,
+%
+%	/Times-Roman dup findfont grabit
+%
+% prints the readable portions of the Times-Roman font dictionary, while
+%
+%	/userdict userdict grabit
+%
+% returns a listing of userdict.
+%
+
+/grabit {
+	TypeDict begin
+		{
+			count 0 eq {exit} if
+
+			count 2 mod 0 ne {
+				(error - bad stack count\n) print
+				exit
+			} if
+			exch dup type /nametype ne {
+				(error - expecting a name on stack\n) print
+				exit
+			} if
+
+			dup type exec
+			dup type exec
+			(def\n\n) print
+		} loop
+	end
+} def
+
+%/Times-Roman dup findfont grabit
+%/userdict userdict grabit

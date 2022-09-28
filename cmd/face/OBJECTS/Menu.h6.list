@@ -1,0 +1,92 @@
+#ident	"@(#)face:OBJECTS/Menu.h6.list	1.3"
+
+menu="Help Facility: Commands Overview"
+
+help=OPEN TEXT OBJECTS/Text.help T.h1.help 'Using Help'
+
+framemsg="Move to an item with arrow keys and press ENTER to select the item."
+
+begrow=current
+begcol=current
+
+name=cancel
+action=OPEN TEXT OBJECTS/Text.help cancel 'cancel'
+
+name=cleanup
+action=OPEN TEXT OBJECTS/Text.help cleanup 'cleanup'
+
+name=copy
+action=OPEN TEXT OBJECTS/Text.help copy 'copy'
+
+name=create
+action=OPEN TEXT OBJECTS/Text.help create 'create'
+
+name=delete
+action=OPEN TEXT OBJECTS/Text.help delete 'delete'
+
+name=display
+action=OPEN TEXT OBJECTS/Text.help display 'display'
+
+name=exit
+action=OPEN TEXT OBJECTS/Text.help exit 'exit'
+
+name=find
+action=OPEN TEXT OBJECTS/Text.help find 'find'
+
+name=frm-mgmt
+action=OPEN TEXT OBJECTS/Text.help frm-mgmt 'frm-mgmt'
+
+name=goto
+action=OPEN TEXT OBJECTS/Text.help goto 'goto'
+
+name=help
+action=OPEN TEXT OBJECTS/Text.help help 'help'
+
+name=move
+action=OPEN TEXT OBJECTS/Text.help move 'move'
+
+name=next-frm
+action=OPEN TEXT OBJECTS/Text.help next-frm 'next-frm'
+
+name=organize
+action=OPEN TEXT OBJECTS/Text.help organize 'organize'
+
+name=prev-frm
+action=OPEN TEXT OBJECTS/Text.help prev-frm 'prev-frm'
+
+name=print
+action=OPEN TEXT OBJECTS/Text.help print 'print'
+
+name=redescribe
+action=OPEN TEXT OBJECTS/Text.help redescribe 'redescribe'
+
+name=refresh
+action=OPEN TEXT OBJECTS/Text.help refresh 'refresh'
+
+name=rename
+action=OPEN TEXT OBJECTS/Text.help rename 'rename'
+
+name=run
+action=OPEN TEXT OBJECTS/Text.help run 'run'
+
+name=security
+action=OPEN TEXT OBJECTS/Text.help security 'security'
+
+name=show-path
+action=OPEN TEXT OBJECTS/Text.help show-path 'show-path'
+
+name=time
+action=OPEN TEXT OBJECTS/Text.help time 'time'
+
+name=undelete
+action=OPEN TEXT OBJECTS/Text.help undelete 'undelete'
+
+name=unix-system
+action=OPEN TEXT OBJECTS/Text.help unix 'unix-system'
+
+name=update
+action=OPEN TEXT OBJECTS/Text.help update 'update'
+
+name="CONTENTS"
+button=8
+action=OPEN MENU OBJECTS/Menu.h0.toc

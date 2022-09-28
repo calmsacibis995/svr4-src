@@ -1,0 +1,28 @@
+#ident	"@(#)filemgmt:diskuse/Form.diskuse	1.1.1.1"
+#	Functional Description: This Text object displays a screen
+#				of file system space usage information.
+Form="Displays File System Disk Usage Information"
+help=OPEN TEXT $INTFBASE/Text.itemhelp diskusetask 
+
+done=OPEN TEXT $OBJ_DIR/Text.duse2
+
+`echo "Press SAVE to continue." | message -p`
+
+name="Diskuse processing involves accessing each disk mounted"
+nrow=1
+ncol=1
+frow=1
+fcol=1
+
+name="on your system. In environments with remotely mounted"
+nrow=2
+ncol=1
+frow=2
+fcol=1
+
+name="file systems, processing may appear to be slow."
+nrow=3
+ncol=1
+frow=3
+fcol=1
+

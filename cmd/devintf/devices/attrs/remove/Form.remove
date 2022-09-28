@@ -1,0 +1,122 @@
+#ident	"@(#)devintf:devices/attrs/remove/Form.remove	1.3.1.1"
+
+form="Remove an Attribute"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+lifetime=longterm
+begrow=any
+begcol=any
+framemsg=`readfile $INTFBASE/form.msg`
+
+init=`
+    getdev | set -l ALIASES ;
+    if [ $ALIASES ] ;
+    then set -l OK=TRUE ;
+    else
+	set -l OK=FALSE ;
+	message "There are no devices from which to remove an attribute." ;
+    fi ;
+`$OK
+
+
+done=`
+    indicator -w "" ;
+    getfrm | set -l FRAMENUM ;
+    putdev -d "$F1" "$F2" ;
+    if [ $RET -eq 0 ] ;
+    then set -l ENDMSG="The \"$F2\" attribute was successfully removed from the description of the device \"$F1\"." ;
+    elif [ $RET -eq 2 ] ;
+    then set -l ENDMSG="Unable to open or create device tables." ;
+    elif [ $RET -eq 4 ] ;
+    then set -l ENDMSG="The \"$F2\" attribute is not defined for the device \"$F1\"." ;
+    else set -l ENDMSG="Internal error $RET" ;
+    fi ;
+    indicator "" ;
+`OPEN TEXT $OBJ_DIR/Text.c_rem "$ENDMSG"
+
+name="Device Alias:"
+lininfo="Form.remove:Alias"
+nrow=1
+ncol=1
+frow=1
+fcol=15
+rows=1
+columns=14
+invalidmsg=$INVMSG
+valid=`
+    indicator -w "" ;
+    if [ "$F1" ] ;
+    then
+	regex -v "$F1" '^[-.$_a-zA-Z0-9]+$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+	if [ $VALID = "TRUE" ] ;
+	then
+	    devattr "$F1" alias >/dev/null ;
+	    if [ $RET -ne 0 ] ;
+	    then if [ $RET -eq 3 ] ;
+		 then set -l INVMSG="The device alias \"$F1\" is not defined." ;
+		 else set -l INVMSG="Internal error $RET" ;
+		 fi ;
+		 set -l VALID=FALSE ;
+	    fi ;
+	else set -l INVMSG="The value \"$F1\" is not a valid device alias." ;
+	fi ;
+    else
+	set -l VALID=FALSE ;
+	set -l INVMSG="This field may not be blank." ;
+    fi ;
+    indicator "" ;
+`$VALID
+rmenu={ ` 
+    indicator -w "" ; 
+    getdev ; 
+    indicator "" ;
+` }
+
+name="Attribute:"
+lininfo="Form.remove:Attribute"
+nrow=2
+ncol=1
+frow=2
+fcol=15
+rows=1
+columns=14
+invalidmsg=$INVMSG
+valid=`
+    indicator -w "" ;
+    if [ "$F2" ] ;
+    then
+	regex -v "$F2" '^[-.$_0-9a-zA-Z]+$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+	if [ $VALID = "TRUE" ] ;
+	then
+	    devattr "$F1" "$F2" >/dev/null ;
+	    if [ $RET -eq 0 ] ;
+	    then
+		if [ $F2 = "alias" ] ;
+		then
+		    set -l VALID=FALSE ;
+		    set -l INVMSG="The \"$F2\" attribute cannot be removed." ;
+		fi ;
+	    elif [ $RET -eq 4 ] ;
+	    then
+		set -l VALID=FALSE ;
+		set -l INVMSG="The attribute \"$F2\" is not defined for the device \"$F1\"." ;
+	    else
+		set -l VALID=FALSE ;
+		set -l INVMSG="Internal error $RET" ;
+	    fi ;
+	else set -l INVMSG="The value \"$F2\" is not a valid attribute name." ;
+	fi ;
+    else
+	set -l INVMSG="This field may not be blank." ;
+	set -l VALID=FALSE ;
+    fi ;
+    indicator "" ;
+`$VALID
+rmenu=vary { `
+    indicator -w "" ;
+    devattr -v "$F1" | sed 's/=.*//g' | sed '/^alias$/d' ;
+    indicator "" ;
+` }
+
+name=RESET
+button=8
+action=reset

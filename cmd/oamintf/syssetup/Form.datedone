@@ -1,0 +1,75 @@
+#ident	"@(#)oamintf:syssetup/Form.datedone	1.2.1.1"
+################################################################################
+#
+#	Module Name: Form.datedone
+#
+#	Author: P.J. Porter
+#
+#	Date: 10/87
+#
+#	Calling Sequence: This form is invoked through the Form.datetime
+#			  "syssetup" Menu option.
+#
+#	Functional Description:	Prompt the user for an okay on (re)setting the 
+#                               date, time,and timezone of the system and then 
+#                               calling dateset to take the appropriate action.
+#
+#	Inputs: $F1-8 ( MM DD YY hh mm AM/PM TZ DST[y/n] )
+#
+#	Outputs: $ARG1-8 to the shell script dateset for processing of date, 
+#                time and timezone; as well as $ARG1-6 to the Text.dateok &
+#                Text.datenok for echoing back date/time (re)set or not.
+#
+#	Functions Called: dateset, Text.dateok, Text.datenok, datetime.help
+#
+#	Issues:
+#		1) 
+#		  
+################################################################################
+Form="Date and Time Changed"
+
+help=OPEN TEXT $INTFBASE/Text.oamhelp $OBJ_DIR/HELP/datetime.help "the Datetime Task"
+
+begrow=1
+begcol=1
+
+done=`regex -e -v "$F3"
+	'y' '`message "Please wait...";
+	      $OAMBASE/bin/dateset "$ARG1" "$ARG2" "$ARG3" "$ARG4" 
+				       "$ARG5" "$ARG6" "$ARG7" "$ARG8";
+              regex -e -v "$RET"
+		\'^0$\' \'OPEN TEXT $OBJ_DIR/Text.dateok "$ARG1" "$ARG2" "$ARG3" "$ARG4" "$ARG5" "$ARG6" "$ARG7"\'
+		\'^.*$\' \'OPEN TEXT $OBJ_DIR/Text.datenok "$ARG1" "$ARG2" "$ARG3" "$ARG4" "$ARG5" "$ARG6" "$ARG7"\'`'
+	'n' 'CLOSE'`
+
+name=""
+nrow=1
+ncol=1
+frow=1
+fcol=1
+rows=1
+columns=76
+value=const "Please Note: This task should be done in single-user mode."
+inactive=true
+
+name=""
+nrow=2
+ncol=1
+frow=2
+fcol=1
+rows=1
+columns=76
+value=const "It's bad practice to change the date while the system is running multi-user."
+inactive=true
+
+name="Date and Time will be set to\n $ARG1 $ARG2, $ARG3 $ARG4:$ARG5 $ARG6 $ARG7 OK?"
+nrow=4
+ncol=1
+frow=5
+fcol=45
+rows=1
+columns=1
+value=n
+invalidmsg=const `erryorn`
+choicemsg=const `helpyorn`
+valid=`valyorn "$F3"`

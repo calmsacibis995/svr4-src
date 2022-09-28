@@ -1,0 +1,27 @@
+#ident	"@(#)lp.admin:printers/priorities/Form.priority	1.2"
+
+#######################################################
+#
+#       Module Name: printer_service/priorities/Form.priority
+#
+#######################################################
+
+form=Set Default Priorities
+
+help=OPEN TEXT $INTFBASE/Text.oamhelp $PRINTSERV/HELP/priorities/priority.help "Set Default Priorities"
+
+name=Priority level to use as a system default:
+nrow=1
+ncol=1
+frow=1
+fcol=44
+rows=1
+columns=2
+value=20
+
+# An integer in the range of [0..39], mandatory.
+#valid=`if [ "$F1" -lt "40" ]`
+#valid=`regex -v "$F1" '[0-3][0-9]' || regex -v "$F1" '[1-9][\ ]'`
+
+invalidmsg="Enter an integer in the range 0 to 39."
+fieldmsg="Enter an integer in the range 0 to 39."

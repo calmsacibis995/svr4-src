@@ -1,0 +1,68 @@
+#!/sbin/sh
+
+
+#ident	"@(#)adm:cleanup	1.1.2.3"
+#
+# Perform once per week, Sunday Morning at 5:17 (via cron).
+#
+
+#----------------------------------------------
+# clean up the super-user log
+#----------------------------------------------
+if [ -f /var/adm/sulog ]
+then mv /var/adm/sulog /var/adm/Osulog
+fi
+> /var/adm/sulog
+chmod 600 /var/adm/sulog
+
+#----------------------------------------------
+# clean up the volcopy log
+#----------------------------------------------
+if [ -f /var/adm/log/filesave.log ]
+then mv /var/adm/log/filesave.log /var/adm/log/Ofilesave.log
+fi
+> /var/adm/log/filesave.log
+chown root /var/adm/log/filesave.log
+chgrp sys /var/adm/log/filesave.log
+chmod 666 /var/adm/log/filesave.log
+
+#----------------------------------------------
+# clean up the wtmp file
+#----------------------------------------------
+> /var/adm/wtmp
+if [ ! -f /etc/wtmp ]
+then rm -rf /etc/wtmp
+     ln -s /var/adm/wtmp /etc/wtmp
+elif [ ! -h /etc/wtmp ]
+then rm -rf /etc/wtmp
+     ln -s /var/adm/wtmp /etc/wtmp
+fi
+> /var/adm/wtmpx
+
+#----------------------------------------------
+# clean up core files
+#----------------------------------------------
+( cd /
+	for i in *
+	do
+		[ -d $i ] || continue
+		case $i in
+			subnet)	continue;;
+			export)	continue;;
+		esac
+		find $i -local -name core -atime +7 -exec rm -f {} \;
+	done
+)
+
+#----------------------------------------------
+# clean up the lost+found directory
+#----------------------------------------------
+if [ ! -d /lost+found ]
+then
+	mkdir /lost+found
+	chown root /lost+found	
+	chgrp root /lost+found	
+	chmod 755 /lost+found
+fi
+touch /lost+found
+find /lost+found -mtime +14 -exec rm -rf {} \; >/dev/null 2>&1

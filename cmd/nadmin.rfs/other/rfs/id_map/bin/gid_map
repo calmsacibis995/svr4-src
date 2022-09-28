@@ -1,0 +1,34 @@
+#ident	"@(#)nadmin.rfs:other/rfs/id_map/bin/gid_map	1.4"
+if [ ! -d "/etc/rfs/auth.info" ]
+then
+	/bin/mkdir -p /etc/rfs/auth.info;
+	/bin/chmod 755 /etc/rfs/auth.info;
+	/bin/chgrp bin /etc/rfs/auth.info;
+fi;
+
+echo "$GMAP" >/usr/tmp/gtmp
+
+case "$GMAP" in
+"allguest") 	echo "global" > /etc/rfs/auth.info/gid.rules
+		/bin/chgrp bin /etc/rfs/auth.info/gid.rules
+		/usr/bin/idload
+		break
+		;;
+
+"0guest")	echo "global" > /etc/rfs/auth.info/gid.rules
+		echo "default transparent" >> /etc/rfs/auth.info/gid.rules
+		echo "exclude 0" >> /etc/rfs/auth.info/gid.rules
+		/bin/chgrp bin /etc/rfs/auth.info/gid.rules
+		/usr/bin/idload
+		break
+		;;
+
+"0to9guest")	echo "global" > /etc/rfs/auth.info/gid.rules
+		echo "default transparent" >> /etc/rfs/auth.info/gid.rules
+		echo "exclude 0-10" >> /etc/rfs/auth.info/gid.rules
+		/bin/chgrp bin /etc/rfs/auth.info/gid.rules
+		/usr/bin/idload
+		break
+		;;
+
+esac

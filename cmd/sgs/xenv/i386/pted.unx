@@ -1,0 +1,400 @@
+#ident	"@(#)xenv:i386/pted.unx	1.1.1.27"
+#
+#	Cross Pathedit for i386 SGS
+#
+#
+#	This script is executed by master pathedit when building
+#	cross SGS for Unix target.
+#	Format of the call: 	pted.unx <machine>
+#	where machine is i386
+#
+
+# 
+# Function mkadir: attempts to make the directory structure specified
+# in $1.  Since the -p flag to make is not present on older systems,
+# it may be necessary to create intermediate directories.  The
+# function creates the directories by tricking the shell into using
+# recursion.
+#
+
+mkadir() {
+	dir=`dirname $1`
+	if [ ! -d $dir ] 
+	then
+		(mkadir $dir) 
+		mkdir $1
+	elif [ ! -d $1 ]
+	then
+		mkdir $1
+	fi
+}
+
+mach=$1
+echo "exit 255" >vax
+echo "exit 255" >u3b
+echo "exit 255" >u370
+echo "exit 255" >u3b15
+echo "exit 255" >u3b5
+echo "exit 255" >u3b2
+echo "exit 255" >uts
+echo "exit 255" >i286
+echo >i386
+chmod 755 vax u3b u370 u3b15 u3b5 u3b2 uts i286 i386
+eval `id | sed 's/([^)]*)//gp'`
+
+__MACH=$mach
+
+BASE=`cd ../../../../../..; pwd`
+
+__PROOT=""
+__INCDIR=/tmp/$mach
+__TMPDIR=/usr/tmp
+__DBO=RBO
+
+cont="T"
+echo "Do you want the SGS built with the default parameters? (y or n):  \c"
+while [ "$cont" = "T" ]
+do
+	x=`line`
+	if [ "$x" = "y" ]
+	then
+		stdparam="T"
+		cont="F"
+	elif [ "$x" = "n" ]
+	then
+		stdparam="F"
+		cont="F"
+	else
+		echo "Please type 'y' or 'n': \c"
+	
+	fi
+done
+
+if [ "$stdparam" = "T" ]
+then
+	__BIN=$BASE/$mach/bin
+	__LIB=$BASE/$mach/lib
+	__CBIN=$BASE/$mach/usr/ccs/bin
+	__CLIB=$BASE/$mach/usr/ccs/lib
+	__USRLIB=$BASE/$mach/usr/lib
+	__USRBIN=$BASE/$mach/usr/bin
+	__INC=$BASE/$mach/usr/include
+	__ETC=$BASE/$mach/etc
+	__SHLIB=$BASE/$mach/shlib
+	__PREFIX=$mach
+	__MAC=
+	__OWN=$uid
+	__GRP=$gid
+else
+
+	echo "Enter absolute directory for CCS run-time binaries:  \c"
+	x=`line`
+	__CBIN=${x:=$BASE/$mach/usr/ccs/bin}
+
+	echo "Enter absolute directory for CCS run-time libraries:  \c"
+	x=`line`
+	__CLIB=${x:=$BASE/$mach/usr/ccs/lib}
+
+	echo "Enter absolute directory for non-CCS run-time binaries:  \c"
+	x=`line`
+	__BIN=${x:=$BASE/$mach/bin}
+
+	echo "Enter absolute directory for non-CCS run-time libraries:  \c"
+	x=`line`
+	__LIB=${x:=$BASE/$mach/lib}
+
+	echo "Enter absolute directory for non-CCS run-time usr libraries:  \c"
+	x=`line`
+	__USRLIB=${x:=$BASE/$mach/usr/lib}
+
+	echo "Enter absolute directory for non-CCS run-time usr binaries:  \c"
+	x=`line`
+	__USRBIN=${x:=$BASE/$mach/usr/bin}
+
+	echo "Enter absolute directory for header files:  \c"
+	x=`line`
+	__INC=${x:=$BASE/$mach/usr/include}
+
+	echo "Enter absolute directory for etc files:  \c"
+	x=`line`
+	__ETC=${x:=$BASE/$mach/etc}
+
+	echo "Enter absolute directory for shlib files:  \c"
+	x=`line`
+	__SHLIB=${x:=$BASE/$mach/shlib}
+
+	echo "Enter generic prefix for names:  \c"
+	x=`line`
+	__PREFIX=${x:=$mach}
+
+	echo "Enter owner of executables:  \c"
+	x=`line`
+	__OWN=${x:=$uid}
+
+	echo "Enter group of executables:  \c"
+	x=`line`
+	__GRP=${x:=$gid}
+fi
+
+# Need these directories for cross-compilation of libcurses
+(mkadir $BASE/usr/tmp)
+(mkadir $BASE/usr/bin)
+(mkadir $BASE/etc)
+
+(mkadir $__CBIN)
+(mkadir $__CLIB)
+(mkadir $__BIN)
+(mkadir $__LIB)
+(mkadir $__USRLIB)
+(mkadir $__USRLIB/libp)
+(mkadir $__USRBIN)
+(mkadir $__INC)
+(mkadir $__INC/sys)
+(mkadir $__ETC)
+(mkadir $__SHLIB)
+
+if /bin/vax || /bin/i386
+then
+	__ARCH=AR32WR
+else
+	__ARCH=AR32W
+fi
+
+__CPP=$__LIB/cpp
+
+echo "These parameters are used for your SGS:"
+echo "CCSBIN:		$__CBIN"
+echo "CCSLIB:		$__CLIB"
+echo "BIN:		$__BIN"
+echo "LIB:		$__LIB"
+echo "USRLIB:		$__USRLIB"
+echo "USRBIN:		$__USRBIN"
+echo "INC:		$__INC"
+echo "ETC:		$__ETC"
+echo "SHLIB:		$__SHLIB"
+echo "PREFIX:		$__PREFIX"
+echo "MAC:		$__MAC"
+echo "OWN:		$__OWN"
+echo "GRP:		$__GRP"
+
+echo "Do you want the SGS built with these parameters? (y or n):  \c"
+x=`line`
+if [ "$x" != "y" ]
+then
+	echo "Run pathedit again."
+	exit
+fi
+
+cp paths.h ../../inc/i386/paths.h
+cp sgs.h ../../inc/i386/sgs.h
+chmod 0644 ../../inc/i386/paths.h ../../inc/i386/sgs.h
+echo "\n ******** Making paths.h ********"
+ed ../../inc/i386/paths.h <<!
+1,\$s|SGS|$__PREFIX|g
+1,\$s|I386BINDIR|$__CBIN|
+1,\$s|I386LIBDIR|$__CLIB|
+1,\$s|I386LIBPATH|$__CLIB:$__USRLIB|
+1,\$s|I386ABILIBDIR|$__CLIB/minabi|
+1,\$s|I386INCDIR|$__INCDIR|
+1,\$s|I386TMPDIR|$__TMPDIR|
+1,\$s|I386CPP|$__CPP|
+w
+q
+!
+echo "\n ******** Making sgs.h ********"
+ed ../../inc/i386/sgs.h <<Y
+g|SGS|s|".*"|"$__PREFIX"|
+w
+q
+Y
+
+if [ -s ../../sgs.mk ]
+then
+    chmod 0644 ../../sgs.mk
+fi
+chmod 0644 ../../../../lib/.libmk.temp
+echo "\n ******** Making global makefile ********"
+__YACC="${BASE}/usr/src/cmd/sgs/yacc/i386/yacc -p${BASE}/usr/src/cmd/sgs/yacc/common/yaccpar"
+__LEX=${BASE}/usr/src/cmd/sgs/lex/i386/lex
+ed ../../sgs.mk.i386 <<X
+1,\$s|^SGS.*|SGS=$__PREFIX|
+1,\$s|^CCSBIN.*|CCSBIN=$__CBIN|
+1,\$s|^CCSLIB.*|CCSLIB=$__CLIB|
+1,\$s|^USRLIB.*|USRLIB=$__USRLIB|
+1,\$s|^YACC.*|YACC=$__YACC|
+1,\$s|^LEX.*|LEX=$__LEX|
+w ../../sgs.mk
+q
+X
+echo "\n ******** Making SGS makefile ********"
+ed template.mk <<X
+1,\$s|^CCSBIN.*|CCSBIN=$__CBIN|
+1,\$s|^CCSLIB.*|CCSLIB=$__CLIB|
+1,\$s|^INC=.*|INC=$__INC|
+1,\$s|^INCSYS=.*|INCSYS=$__INC|
+1,\$s|^DFLTINC.*|DFLTINC=$__INC|
+1,\$s|^ETC.*|ETC=$__ETC|
+1,\$s|^SGS=.*|SGS=$__PREFIX|
+1,\$s|^ARCH.*|ARCH=$__ARCH|
+1,\$s|^DBO.*|DBO=$__DBO|
+1,\$s|^ROOT.*|ROOT=$__PROOT|
+1,\$s|^NATIVE.*|NATIVE=no|
+1,\$s|^MAKE.*|MAKE=make|
+1,\$s|^OWN.*|OWN=$__OWN|
+1,\$s|^GRP.*|GRP=$__GRP|
+w makefile
+q
+X
+chmod 0644 makefile
+echo "\n ******** Making library makefile ********"
+ed ../../../../lib/.libmk.temp <<X
+1,\$s|^LIB=.*|LIB=$__LIB|
+1,\$s|^USRLIB=.*|USRLIB=$__USRLIB|
+1,\$s|^CCSLIB=.*|CCSLIB=$__CLIB|
+1,\$s|^LIBP=.*|LIBP=$__CLIB/libp|
+1,\$s|^MACH=.*|MACH=i386|
+1,\$s|^SGS.*|SGS=$__PREFIX|
+1,\$s|^OWN.*|OWN=$__OWN|
+1,\$s|^GRP.*|GRP=$__GRP|
+w ../../../../lib/.lib.mk
+q
+X
+chmod 0644 ../../../../lib/.lib.mk
+chmod 0644 ../../optim/i386/makefile
+chmod 0644 ../../as/i386/makefile
+#
+# The optimizer makefile is modified to prevent optimizing
+#    the optimizer on VAX running UNIX 5.0
+#    and allow optimisation of the optimizer on all other hosts.
+#
+#
+echo "\n ******** Modifying optimizer makefile ********"
+OP=`uname -r | fgrep 5.0 || uname -r | fgrep 3.10`
+if /bin/vax && [ "$OP" ]
+then
+echo "Your optimizer will not be optimized \n"
+ed ../../optim/i386/makefile <<Z
+1,\$s|^CFLAGS=.*|CFLAGS=-c|
+w
+q
+Z
+else echo "Your optimizer will be optimized \n"
+ed ../../optim/i386/makefile <<W
+1,\$s|^CFLAGS=.*|CFLAGS=-c -O|
+w
+q
+W
+fi
+
+#
+# The assembler makefile is modified to prevent optimizing
+#    the assembler on VAX running UNIX 5.0
+#    and allow optimisation of the optimizer on all other hosts.
+#
+#
+echo "\n ******** Modifying assembler makefile ********"
+OP=`uname -r | fgrep 5.0 || uname -r | fgrep 3.10`
+if /bin/vax && [ "$OP" ]
+then
+echo "Your assembler will not be optimized \n"
+ed ../../as/i386/makefile <<Z
+1,\$s|^CFLAGS=.*|CFLAGS=-c|
+w
+q
+Z
+else echo "Your assembler will be optimized \n"
+ed ../../as/i386/makefile <<W
+1,\$s|^CFLAGS=.*|CFLAGS=-c -O|
+w
+q
+W
+fi
+
+echo "\n ******** Making front-end to make ********"
+ed make-i386 <<X
+1,\$s|^MAKECMD=.*|MAKECMD=$__CBIN/xxxmake|
+1,\$s|xxx|$__PREFIX|g
+1,\$s|YACC=yacc|YACC="${__PREFIX}yacc -p${__CLIB}/yaccpar"|g
+1,\$s|LEX=lex|LEX="${__PREFIX}lex -l${__CLIB}/lex/ncform"|g
+w make.tmp
+q
+X
+chmod 777 make.tmp
+
+echo "\n ******** Making cross environment script ********"
+ed env-i386 <<X
+1,\$s|^ROOT.*|ROOT=$BASE|
+1,\$s|^PATH.*|PATH=$__CBIN:$__BIN:$__USRBIN:\$PATH|
+1,\$s|^INC=.*|INC=$__INC|
+1,\$s|^INCSYS=.*|INCSYS=$__INC|
+1,\$s|^PS1=.*|PS1="${mach}crossenv: "|
+1,\$s|^LIB=.*|LIB=$__LIB|
+1,\$s|^CCSLIB=.*|CCSLIB=$__CLIB|
+1,\$s|^USRLIB=.*|USRLIB=$__USRLIB|
+1,\$s|^LIBP=.*|LIBP=$__CLIB/libp|
+1,\$s|^PFX=.*|PFX=$__PREFIX|
+w env.tmp
+q
+X
+chmod 777 env.tmp
+
+
+echo "\n ******** Setting proper version of elftypes.h *******"
+rm -f ../../inc/common/sys/elftypes.h
+if  /bin/i386 
+then 
+	ln ../../inc/common/sys/etype_I386.h ../../inc/common/sys/elftypes.h
+else 
+if  /bin/u3b2 || /bin/u3b15
+then
+	ln ../../inc/common/sys/etype_M32.h ../../inc/common/sys/elftypes.h
+else 
+if  /bin/uts 
+then
+	ln ../../inc/common/sys/etype_UTS.h ../../inc/common/sys/elftypes.h
+else 
+if  /bin/vax 
+then
+	ln ../../inc/common/sys/etype_VAX.h ../../inc/common/sys/elftypes.h
+fi
+fi
+fi
+fi
+#
+echo "\n ******** Installing header files ********"
+
+# list of system header sub-directories - release dependent
+SYSLIST="des klm net netinet nfs rpc sys"
+if [ "$__INC" != "$BASE/usr/include" ]
+    then
+	HEAD=$BASE/usr/src/head
+	SYSHEAD=$BASE/usr/src/uts/$mach
+	MACHSYS=$__INC/${mach}sys
+
+	if [ -d $HEAD -a -d $SYSHEAD ]
+	    then
+		rm -rf $__INC
+		mkdir $__INC $MACHSYS
+		cd $HEAD
+		find . -print|cpio -pdu $__INC
+		cd $SYSHEAD
+		find $SYSLIST -print|cpio -pdu $__INC
+		find $SYSLIST -print|cpio -pdlu $MACHSYS
+	    else
+		echo ${0}:" ERROR files not in expected places"
+		exit 1
+	fi
+else
+	if /bin/vax && [ ! -s values.h3b20 ]
+	then
+		cp values.h values.h3b20
+		cp math.h math.h3b20
+	fi
+fi
+
+if /bin/vax
+then
+	rm -f $__INC/values.h $__INC/math.h
+	cp values.h3b5x $__INC/values.h
+	cp math.h3b5x $__INC/math.h
+fi

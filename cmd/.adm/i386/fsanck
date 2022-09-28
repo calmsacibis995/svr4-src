@@ -1,0 +1,27 @@
+#!/sbin/sh
+
+
+#ident	"@(#)adm:i386/fsanck	1.1.2.1"
+
+# Script to check root filesystem, periodically, at shutdown
+# to catch any possible filesystem corruption early and correct.
+#
+PATH=/bin:/usr/bin:/etc		# make absolutely sure of PATH
+LAST=/etc/.lastfsck
+
+# see how long its been since the last fsck at shutdown.
+	if [ ! -f $LAST ] ; then
+		touch 0101000071 $LAST
+	fi
+	its_time=`find $LAST -mtime +0 -print`
+	if [ -z "$its_time" ] ; then exit 0; fi
+
+# get name of root filesystem
+	rfs=`/etc/devnm / | tr -s "\040\011" "\011*" | cut -f1 | \
+			sed -e "/swap/d" -e "s!^!/dev/!"`
+
+# call fsck and update .lastfsck
+	# echo "Checking root filesystem ($rfs)."
+	touch $LAST; sync; sleep 7
+	/etc/fsck -y -s -b $rfs > /dev/null 2>&1
+# Using the -b option will force user to reboot.

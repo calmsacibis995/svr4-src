@@ -1,0 +1,35 @@
+#ident	"@(#)filemgmt:filesize/Form.filesize	1.1.3.1"
+form="List Largest File(s) in a Given Directory"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/form.msg | message`
+
+done=`indicator -w;
+	$OAMBASE/bin/getfilesize "$F1" "$F2";
+	regex -e -v $RET 
+	'^0$' 'OPEN TEXT $OBJ_DIR/Text.sizeok "$F1" "$F2"'
+	'^.*$' 'OPEN TEXT $OBJ_DIR/Text.sizenok "$F1" "$F2"'`
+
+name="Directory to be searched: "
+lininfo=F1
+nrow=1
+ncol=1
+frow=2
+fcol=1
+rows=1
+scroll=true
+columns=50
+valid=`regex -v "$F1" '^[/].*' && [ -d "$F1" ]`
+invalidmsg=const 'Directory name must begin with "/" and must be a valid directory name.'
+
+name="Number of large files to be reported:"
+lininfo=F2
+nrow=3
+ncol=1
+frow=3
+fcol=40
+rows=1
+columns=3
+value=10
+valid=`[ $F2 -ge 1 -a $F2 -le 999 ]`
+invalidmsg=const 'Answer must be an integer between 1 and 999'

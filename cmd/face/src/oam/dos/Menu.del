@@ -1,0 +1,10 @@
+#ident	"@(#)face:src/oam/dos/Menu.del	1.2"
+
+menu="Remove Global MS-DOS Programs"
+
+help=open TEXT $INTFBASE/Text.itemhelp F1
+
+framemsg="Move the cursor to the item you want and press ENTER to select it."
+
+`fmlgrep '^vmsys:' /etc/passwd | fmlcut -f6 -d: | set -e VMSYS;
+$VMSYS/bin/listserv -p -d VMSYS`

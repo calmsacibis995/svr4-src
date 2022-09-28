@@ -1,0 +1,25 @@
+#ident	"@(#)oamintf:files/make/Menu.mkfsch	1.1"
+
+################################################################################
+#	Module Name: Menu.mkfsch
+################################################################################
+menu="File System Type Choices"
+
+framemsg=`readfile $INTFBASE/ssmenu.msg`
+
+help=OPEN MENU $INTFBASE/Text.itemhelp Menu.make:ABSTRACT
+
+`$OAMBASE/bin/sysfs | sort | regex '(.*)$0' 'name="$m0"
+`if [ ! -f /etc/fs/$m0/mkfs ];
+then
+	echo inactive=true;
+fi`action=`set -l "Form_Choice=$m0"`CLOSE'`
+
+name=
+button=1
+action=
+
+name=
+button=7
+action=
+

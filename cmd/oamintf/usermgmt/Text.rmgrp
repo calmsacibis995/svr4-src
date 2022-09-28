@@ -1,0 +1,49 @@
+#ident	"@(#)oamintf:usermgmt/Text.rmgrp	1.4.3.1"
+
+################################################################################
+#	Module Name:  Text.rmgrp
+#	Command: groupdel group [-z machine[[, machine]...]]
+################################################################################
+title="Confirmation of Group Removal"
+`readfile $INTFBASE/conf.msg | message -t`
+#framemsg=`readfile $INTFBASE/conf.msg`
+
+#`set -l LIFE=longterm`
+#lifetime=$LIFE
+lifetime=shortterm
+
+wrap=false
+
+text="
+Group name:                   `fmlgrep "^$ARG1:" /etc/group | fmlcut -d: -f1`
+Group ID:                     `fmlgrep "^$ARG1:" /etc/group | fmlcut -d: -f3`
+Primary Membership:           `getprimary "$ARG1" >/dev/null`
+Supplementary Membership:     `fmlgrep "^$ARG1:" /etc/group | fmlcut -d: -f4`
+
+Once the group is removed, some invalid references to the group ID
+will be seen when user login information is displayed until the logins
+are reassigned to other groups."
+
+rows=12
+columns=75
+
+altslks
+
+name=CONT
+button=11
+action=`message -w "Removing $ARG1 group from the system.";
+
+	set -l GRMERR=/tmp/$VPID.rge;
+
+	groupdel $ARG1 2> $GRMERR;
+
+	if [ $RET -eq 0 ];
+	then
+      	    set -l CMD="OPEN TEXT $OBJ_DIR/Text.rgrpok $ARG1";
+	else
+            set -l CMD="OPEN TEXT $OBJ_DIR/Text.rgrpnok $ARG1";
+	fi`$CMD
+
+name=CANCEL
+button=14
+action=CLEANUP

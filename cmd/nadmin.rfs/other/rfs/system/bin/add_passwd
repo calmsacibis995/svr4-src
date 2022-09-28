@@ -1,0 +1,29 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/bin/add_passwd	1.4.1.1"
+DOM=`dname -d`
+rm /usr/tmp/no_add  /usr/tmp/add 2>/dev/null
+
+for system in `echo $SYSTEMS`;  do
+	{
+	/usr/bin/rfadmin -a $DOM.$system 
+	if [ $? -eq 0 ]
+	then
+		echo "$system" >>/usr/tmp/add$$
+	else
+		echo "$system" >>/usr/tmp/no_add$$
+	fi
+	}
+done
+
+rm /usr/tmp/add 2>/dev/null
+if [ -r /usr/tmp/add$$ ]
+then
+	echo "The following systems have been added to the domain password file:\n" >/usr/tmp/add
+	cat /usr/tmp/add$$ >>/usr/tmp/add
+fi
+
+if [ -r /usr/tmp/no_add$$ ]
+then
+	echo "\nErrors occured while trying to add the following systems to the domain password file.\nCheck the System Administrators Guide for details:\n" >>/usr/tmp/add
+	cat /usr/tmp/no_add$$ >>/usr/tmp/add
+fi
+rm /usr/tmp/no_add$$ /usr/tmp/add$$ 2>/dev/null

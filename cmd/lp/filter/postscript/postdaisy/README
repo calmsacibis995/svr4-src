@@ -1,0 +1,5 @@
+
+Source code for a simple program that translates Diablo 630 daisy-wheel files
+into PostScript. No guarantees are given with this program - quite a bit hasn't
+been implemented, and what's done isn't well tested.
+

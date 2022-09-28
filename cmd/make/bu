@@ -1,0 +1,173 @@
+#ident	"@(#)make:bu	1.5
+*
+*   make(1) error messages
+*
+-1
+"no description argument after -f flag"
+make(1) requires a description file name to follow the -f
+flag.  For further help see the manual page for make(1).
+-2
+"no viewpath argument after -v flag"
+The make(1) command format requires a viewpath to be specified after
+the -v flag.  For further help see the manual page for make(1).
+-4
+"viewpath name too long for array"
+The buffer used to internally store the viewpath is limited to the
+constant MAXVPATH (= 3*MAXNAMLEN = 512*3 characters).
+-5
+"getcwd"
+An error occurred during the execution of the system routine getcwd(3C).
+-6
+"viewpath contains non-existent directory"
+A directory listed in the specified viewpath doesn't exist OR read
+permission for that directory has not been granted.
+-7
+"no arguments or description file"
+No makefile was found.
+-9
+"Description file error"
+An error occurred while parsing the makefile.
+-10
+"too many command lines for '...' "
+Only a single set of commands is allowed for a particular target. 
+Although the makefile may contain multiple occurrences of the same
+target, only one of those occurrences may contain a command set.  (A
+command set may contain only one command.) 
+-11
+"too many criteria for <target>"
+Only a single set of criteria is allowed for a particular target. 
+Although the makefile may contain multiple occurrences of the same
+target, only one of those occurrences may contain a set of criteria.
+-12
+"warning: cannot copy <file>"
+A system copy error occurred while copying the specified library file
+into the user's node.
+-13
+"Don't know how to make <target>"
+make(1) was unable to find the specified target and there
+was not sufficient information to generate it.
+-14
+"<target> not remade because of errors"
+While processing the above target, errors were encountered.  Processing
+continued since these errors were flagged as 'ignorable'.
+-15
+"warning: cannot copy <file>"
+A system copy error occurred while attempting to copy the specified
+file.  Check to see that the file actually exists and is accessible.
+-16
+"warning: <file> not removed"
+This error should only occur in connection with error (bu15).  This is
+either a system copy error as indicated in (bu15), or a bug in
+make(1).
+-17
+"cannot open <file>"
+A system error occurred while attempting to open <file> for reading.
+-18
+"cannot open <file>"
+A system error occurred while attempting to open <file> for writing.
+-19
+"cp: fread error"
+A system error has occurred while attempting the system function
+fread().
+-20
+"cp: fwrite error"
+A system error has occurred while attempting the system function
+fwrite().
+-21
+"*** Error code '...' " OR  "*** Termination code '   ' "
+This error is reported but does not occur in make(1).  It
+is associated with the last command executed.  See the UNIX manual for
+additional information on the error codes for that command.  If
+"ignored" has been printed on the line immediately following the above 
+error message, this error is ignored by make(1).  Errors
+will be ignored if the -i option was set on execution, or if the dummy
+target .IGNORE appears in the makefile, or if the particular command was
+prefaced with a minus sign (-).
+-22
+"couldn't load shell"
+This system error could result if the system is overloaded.  Try again.
+-23
+"bad wait code"
+This system error could result if the system is overloaded.  Try again. 
+-24
+"cannot load <file>"
+This system error may occur if the command doesn't exist.  No further
+help available.
+-25
+"cannot touch <file>"
+An error has occurred with either open(), close(), write(), creat(), or
+the file to be touched doesn't exist.
+-28
+"<file> is not an archive"
+In targets of the form lib((e)) and lib(m), lib must be a UNIX archive.
+-31
+"out of memory"
+A call to the system function calloc() has resulted in the return of a
+null pointer.  There is either no available memory or the arena has been
+detectably corrupted by storing outside the bounds of a block.
+-32
+"infinitely recursive macro?"
+The macro nesting depth has exceeded 100 levels.  An infinitely
+recursive macro is probably the cause -- recheck your code.
+-33
+"warning: <macro> changed after being used"
+The specified macro has been previously defined and used, and is now
+being changed.  Recheck your code to make sure this is what you want. 
+This is only a warning message.
+-34
+"line <lineno>: '......'"
+The above error originated in YACC.
+-35
+"$? list too long"
+Ignore this error message if you are not using the macro $? in the
+makefile.  If you are, the list of names in $? will be incomplete.
+-36
+"inconsistent rules lines for <target>"
+The specified target was used in both single colon (:) and double colon
+mode (::).  One consistent mode must be used for multiple occurrences of
+the same target.
+-37
+"multiple make lines for <target>"
+Only a single set of commands is allowed for a particular target. 
+Although the makefile may contain multiple occurrences of the same
+target, only one of those occurrences may contain a command set.  (A
+command set may contain only one command.)
+-38
+"multiple build criteria for <target>"
+Only a single set of build criteria is allowed for a particular target. 
+Although the makefile may contain multiple occurrences of the same
+target, only one of those occurrences may contain a set of build
+criteria.
+-39
+"must be a separator on rules line <lineno>"
+If the command begins a newline it must be preceded by a tab.  Check to
+see that a tab has been used, rather than 7 spaces.  Commands that occur
+on the same line must be separated by semicolons.  Comment lines must
+begin with a '#'.
+-40
+"bad character ' ' (octal ' ')"
+The specified bad character was encountered while parsing the makefile.
+-41
+"line too long"
+The length of an input line is limited by the constant INMAX (=1500),
+defined in ../build/defs.h.  This problem may possibly be solved by
+using multiple target occurrences to break up long lists of
+dependencies.
+-42
+"don't know how to make <target>"
+make(1) was unable to find the specified target and couldn't
+find sufficient information in the makefile to generate the it.
+-43
+"<file> is not an object module"
+<file> is not in the format specified by a.out(4).
+-44
+"improper viewpath specification"
+The first node in the viewpath includes a directory which is not in the
+path of the current working directory.  Check the spelling of the node
+name.  If it is correct, see the manual page for make(1) for an
+explanation of the viewpath concept.
+-45
+"hash table overflow"
+The makefile being parsed contains in excess of HASHSIZE(=506) names
+which have to be stored in make(1).  Decrease the number of
+targets in the makefile, break the makefile into two or more makefiles.

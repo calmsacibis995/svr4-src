@@ -1,0 +1,152 @@
+#ident	"@(#)oamintf:softwaremgmt/check/Form.inst	1.1.1.1"
+
+form="Check Installed Software"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+framemsg="`readfile $INTFBASE/form.msg`"
+
+`readfile $INTFBASE/frept.msg | set -l MSG2`
+`set -l PKGBIN=/usr/sadm/install/bin`
+
+done=`
+	message -w ;
+	run sh -cf "
+		$OBJ_DIR/task.inst \"$F1\" \"$F2\" \"$F3\" \"$F4\" \"$F5\" \"$F6\" \"$F7\" \"$F8\"
+	" ;
+	message -f $MSG2;
+	echo FALSE
+`
+
+name=Package identifier(s) to check:
+lininfo=pkgid
+scroll=TRUE
+nrow=1
+ncol=2
+frow=1
+fcol=35
+rows=1
+columns=20
+value=all
+rmenu=OPEN MENU $OBJ_DIR/../Menu.pkg -N
+valid=`
+	message -w;
+	if [ -z $F1 ] ;
+	then
+		echo FALSE ;
+	else 
+		shell "	
+			for arg in \`echo \"$F1\" | sed 's/,/ /g'\`
+			do
+				$OBJ_DIR/../pkg installed \"\$arg\" >/dev/null 2>&1 
+				if [ \"\$?\" -eq 0 ]
+				then
+					exit 1
+				fi
+			done
+			exit 0
+		" ;
+	fi
+`
+invalidmsg=Error - invalid package instance identifier.
+
+name=Pathname(s) to check:
+lininfo=pathnm
+scroll=TRUE
+nrow=2
+ncol=2
+frow=2
+fcol=25
+rows=1
+columns=30
+value=all
+choicemsg=Enter specific pathname(s) to check (if desired) or keyword \"all\".
+valid=`
+	message -w;
+	shell "	
+		[ -z \"$F2\" ] && exit 1
+		[ "$F2" = all ] && exit 0
+		for arg in \`echo \"$F2\" | sed 's/,/ /g'\`
+		do
+			valpath -a \"\$arg\" && continue
+			exit 1
+		done
+	"
+`
+invalidmsg=Error - input must be a list of absolute pathnames.
+
+name=Check for attribute consistency?
+lininfo=attr
+nrow=4
+ncol=10
+frow=4
+fcol=2
+rows=1
+columns=3
+value=yes
+rmenu={ yes no }
+menuonly=TRUE
+
+name=Check for content consistency?
+lininfo=cont
+nrow=5
+ncol=10
+frow=5
+fcol=2
+rows=1
+columns=3
+value=yes
+rmenu={ yes no }
+menuonly=TRUE
+
+name=Check for hidden files?
+lininfo=hidden
+nrow=6
+ncol=10
+frow=6
+fcol=2
+rows=1
+columns=3
+value=no
+rmenu={ yes no }
+menuonly=TRUE
+
+name=Correct all detected inconsistencies?
+lininfo=fix
+nrow=7
+ncol=10
+frow=7
+fcol=2
+rows=1
+columns=3
+value=no
+rmenu={ yes no }
+menuonly=TRUE
+
+name=Check files which are likely to have changed?
+lininfo=volatile
+nrow=8
+ncol=10
+frow=8
+fcol=2
+rows=1
+columns=3
+value=no
+rmenu={ yes no }
+menuonly=TRUE
+
+name=Display each pathname as it is verified?
+lininfo=verbose
+nrow=9
+ncol=10
+frow=9
+fcol=2
+rows=1
+columns=3
+value=yes
+rmenu={ yes no }
+menuonly=TRUE
+
+name=RESET
+button=8
+action=reset
+
+

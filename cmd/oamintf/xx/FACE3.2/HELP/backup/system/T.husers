@@ -1,0 +1,10 @@
+The Backup Users Menu allows you to select "all" or specific login
+names from a list.
+
+Move to the login name with the arrow keys and strike the MARK 
+function key.  When you have finished selecting login names to 
+backup, strike ENTER.
+
+All files in the user's $HOME directory will be backed up. You need
+system administration privileges to back up other user's files.
+

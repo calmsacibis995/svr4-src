@@ -1,0 +1,5 @@
+#ident	"@(#)alint:lib/llib-lmalloc	1.1"
+/* LINTLIBRARY */
+/* PROTOLIB1 */
+
+#include <malloc.h>

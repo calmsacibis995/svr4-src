@@ -1,0 +1,30 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/hwset/Menu.hard	1.1"
+
+menu=Peripherals Setup
+lifetime=longterm
+#help=open text $VMSYS/OBJECTS/Text.h "Peripherals Setup" hwset/T.hhard
+
+`fmlgrep "^action=" $OBJ_DIR/Menu.hard | fmlgrep -v "nop$" | set -l FRAMES;
+if [ -z "$FRAMES" ];
+then
+	echo framemsg=Strike CANCEL or for more information, please strike ENTER;
+	echo name=preSVR4;
+	echo description=Selection Not Available;
+	echo action=OPEN TEXT $OBJ_DIR/Text.compat;
+fi`
+
+name=Enable/Disable Second Serial Port
+action=nop
+show=false
+
+name=Printer Setup
+action=nop
+show=false
+
+name=Second Hard Disk Setup
+action=nop
+show=false
+
+name=Serial Ports Setup
+action=nop
+show=false

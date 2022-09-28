@@ -1,0 +1,7 @@
+#ident	"@(#)adm:root	1.1.5.1"
+17 5 * * 0 /bin/su root -c "/sbin/cleanup > /dev/null"
+48 11,14 * * 1-5 /bin/su uucp -c "/usr/lib/uucp/uudemon.admin > /dev/null 2>&1"
+45 23 * * * ulimit 5000; /bin/su uucp -c "/usr/lib/uucp/uudemon.cleanup > /dev/null 2>&1"
+40 * * * * /bin/su uucp -c "/usr/lib/uucp/uudemon.poll > /dev/null"
+26,56 * * * * /bin/su uucp -c "/usr/lib/uucp/uudemon.hour > /dev/null"
+0 2 * * 0,4 /etc/cron.d/logchecker

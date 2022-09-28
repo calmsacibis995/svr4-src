@@ -1,0 +1,11 @@
+The Personal Restore Menu enables you to restore all or selected files
+that were backed up on removable media from your HOME directory.
+
+The items on the Personal Restore Menu are:
+
+      Restore Files under <HOME directory>:  You can restore all
+      files (directories or regular files).
+
+      Selective Restore of Files under <HOME directory>:  You can
+      select specific files to be restored.
+

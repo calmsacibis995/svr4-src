@@ -1,0 +1,33 @@
+#ident	"@(#)face:OBJECTS/Text.merror	1.5"
+
+title="Invalid Mail Destinations"
+help=OPEN TEXT OBJECTS/Text.h "Invalid Mail Destinations" T.hmerror
+framemsg=const "Press the CANCEL function key to cancel."
+lifetime=longterm
+
+header="No mail was sent to the
+following mail destinations:
+"
+
+`set -l EFRAME=true`
+
+begrow=any
+begcol=any
+
+close=`set -l EFRAME=false;rm -f /tmp/f.my.${VPID}`
+
+`readfile /tmp/f.mx.${VPID} | regex '^bad system name: (.+)$0$' '$m0!'
+			'^mail: Can\'t send to (.+)$0$' '$m0' | xargs -l5 > /tmp/f.my.${VPID}`
+
+text="`readfile /tmp/f.my.${VPID}`"
+columns=`longline | set -l LL;
+if [ "${LL}" -gt "72" ];
+then
+	echo 72;
+elif [ "${LL}" -lt "30" ];
+then
+	echo 30;
+else
+	echo ${LL};
+fi`
+rows=8

@@ -1,0 +1,18 @@
+#ident	"@(#)nadmin.rfs:other/rfs/Help	1.1"
+ABSTRACT:
+
+other:control:Remote File Sharing Control
+	The control menu allows you to start, monitor, and 
+	stop Remote File Sharing operation.
+
+other:id_map:User and Group ID Mapping Management
+	The id_mappings menu allows you to administer user and
+	group id mappings.
+
+other:netwk:Supporting Networks Management
+	The networks menu allows you to manage the 
+	network-related aspects of Remote File Sharing.
+
+other:system:Cooperating Systems Management
+	The systems menu allows you to manage how your system
+	relates to remote systems in Remote File Sharing.

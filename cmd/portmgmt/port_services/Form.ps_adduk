@@ -1,0 +1,43 @@
+#ident	"@(#)portmgmt:port_services/Form.ps_adduk	1.4.2.1"
+
+form= Add Port Services 
+lifetime=shorterm
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+done=`message -w "Adding service <$ARG1> to the system.";
+	echo -m \"\` "$F1" \`\" >> /var/tmp/cmd$PID;
+	sh /var/tmp/cmd$PID >/var/tmp/err$PID 2>/var/tmp/err$PID;
+   	regex -e -v "$RET"
+		'^0$'  '`message "Service <$ARG1> is added successfully."`'
+		'^4$'  '`message "Service <$ARG1> is added successfully."`'
+		'^.*$' '`message "Service <$ARG1> is not added."`';
+	RESET`
+
+# $F1
+name=Full command line to generate port specific information on stdout:
+nrow=1
+ncol=2
+frow=3
+fcol=5
+rows=1
+columns=60
+lininfo=pspmspec
+choicemsg=const "Enter the full command line."
+fieldmsg=const "Enter the full command line."
+scroll=TRUE
+
+# $F2
+name=Fill in the form and then press SAVE.
+nrow=5
+ncol=4
+inactive=TRUE
+
+name=" "
+nrow=6
+ncol=2
+inactive=TRUE
+show=FALSE
+
+name=Page 2 of 2
+nrow=0
+ncol=50
+inactive=TRUE

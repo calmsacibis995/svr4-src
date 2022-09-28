@@ -1,0 +1,8 @@
+#ident	"@(#)lp.admin:printers/classes/cont.slks	1.1"
+name=CANCEL
+button=14
+action=CLOSE
+
+name=CONTINUE
+button=11
+action=UPDATE

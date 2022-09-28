@@ -1,0 +1,23 @@
+#ident	"@(#)oamintf:syssetup/Menu.setlogins	1.2.1.1"
+
+
+################################################################################
+#	Module Name: Menu.setlogins - was Menu.mlogins
+#	Author: Mike Coufal
+#	Date: 2/88
+#	Description: This menu provides the user with a multiselect pop-up
+#		     menu for login selection.  /etc/passwd is sorted
+#		     and piped through regex to set the name and description
+#		     fields while selecting only login ids that are less 100.
+#		     Form_Choice is set to the items the user selects.
+################################################################################
+menu="Valid User Logins"
+
+multiselect=TRUE
+
+`message "[MARK] each login wanted and press <RETURN>."`
+
+done=`getitems "," | set -l "Form_Choice"`CLOSE
+
+`sort +0 -1 -t: /etc/passwd |  regex '^([^:][^:]*)$0:[^:]*:([0-9][0-9][0-9][0-9]*)$1:.*$' 'name="$m0"
+description="$m1"'`

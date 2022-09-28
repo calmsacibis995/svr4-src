@@ -1,0 +1,9 @@
+#ident	"@(#)bnu.admin:bnu.menu	1.1.1.1"
+#menu#Basic Networking Utilities Management
+#help#Help^Basic Networking Utilities Management
+#life#permanent
+
+devices^Adding, Listing, and Removing Networking Devices^devices/devices.menu
+polling^Adding, Listing, and Removing Systems to be Polled^polling/polling.menu
+#setup^Initial Basic Networking Setup^setup/setup.menu
+systems^Adding, Listing, and Removing Remote Systems^systems/systems.menu

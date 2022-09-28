@@ -1,0 +1,24 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkrem/display/Text.display	1.4"
+
+title="Display the Schedule of Backup Reminder Messages"
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp "ABSTRACT"
+
+begrow=any
+begcol=any
+rows=18
+columns=77
+
+text="`bkscddisp bkmsg`"
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

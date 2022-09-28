@@ -1,0 +1,58 @@
+#ident	"@(#)filemgmt:mount/Form.mount3	1.1.3.1"
+Form=Mount a File System with no defaults
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+done=`if [ "$F1" = "unknown" ];
+	then
+		message -t "Attempting to identify the file system type. Please wait...";
+		$OAMBASE/bin/findtype "$ARG1";
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.findtype";
+	else
+		message -t "Checking file system before mounting. Please wait...";
+		$OAMBASE/bin/checkfilsys "$F1" "$ARG1" "$ARG2" "$F2" "$F3" >/dev/null;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.mountok";
+ 	fi;
+	`$CMD
+
+name="File system Type (IMPORTANT: DO NOT GUESS):" 
+lininfo=Form.mount3:F1
+nrow=1
+ncol=1
+frow=1
+fcol=45
+rows=1
+columns=14
+rmenu={ `$OAMBASE/bin/sysfs; echo unknown` }
+menuonly=true
+invalidmsg="Press CHOICES to select valid response."
+
+
+name="Read and Write Privileges:"
+lininfo=Form.mount3:F3
+nrow=2
+ncol=1
+frow=2
+fcol=28
+rows=1
+columns=10
+rmenu={ read/write read-only }
+value="read/write"
+menuonly=true
+invalidmsg="Press CHOICES to select valid response."
+show=`[ "$F1" != "unknown" ]`
+
+name="Should setuid programs be allowed:"
+lininfo=Form.mount3:F4
+nrow=3
+ncol=1
+frow=3
+fcol=36
+rows=1
+columns=3
+rmenu={ yes no na }
+menuonly=true
+value="yes"
+invalidmsg="Press CHOICES to select valid response."
+show=`[ "$F1" != "unknown" ]`

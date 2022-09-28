@@ -1,0 +1,8 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkstat/Help	1.3.1.1"
+
+ABSTRACT: Status Log Administration for Backup Jobs
+	The "status" menu allows you to cancel, suspend or resume backup
+	jobs, to view the status of backup requests, and to limit the size
+	of the backup status log.
+
+TITLE: Status Log Administration for Backup Jobs

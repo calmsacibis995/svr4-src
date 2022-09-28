@@ -1,0 +1,22 @@
+#ident	"@(#)oamintf:edsysadm/Menu.pkg	1.4"
+
+################################################################################
+#	Module Name: Menu.pkg
+#	Date: August 1987
+#
+#	This the first menu displayed when edsysadm is invoked.
+################################################################################
+menu="OAM Interface Editing Tool"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+name=menu
+lininfo=Menu.pkg:menu
+description="Create or Modify a Menu"
+action=OPEN MENU $EDSYSADM/Menu.menu
+
+name=task
+lininfo=Menu.pkg:task
+description="Create or Modify a Task"
+action=OPEN MENU $EDSYSADM/Menu.task
+

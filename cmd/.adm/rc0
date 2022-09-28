@@ -1,0 +1,12 @@
+#ident	"@(#)adm:rc0	1.1.1.1"
+#	Run commands needed when shuting down the system
+
+stty sane 2>/dev/null
+echo 'The system is coming down. Please wait.'
+for f in /etc/shutdown.d/*
+{
+	if [ -f ${f} ]
+	then
+		/bin/sh ${f}
+	fi
+}

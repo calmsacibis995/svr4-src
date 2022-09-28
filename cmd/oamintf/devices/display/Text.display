@@ -1,0 +1,36 @@
+#ident	"@(#)oamintf:devices/display/Text.display	1.5.4.1"
+
+################################################################################
+#	Module Name: Text.display
+################################################################################
+title="Displaying Device Information"
+
+`message "Press CANCEL to return to the menu."`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp:ABSTRACT
+
+close=`rm -f $DFILE`
+
+rows=17
+columns=70
+
+text="
+`readfile $DFILE`"`
+
+altslks
+
+name=
+button=9
+action=nop
+
+name=
+button=10
+action=nop
+
+name=
+button=11
+action=nop
+
+name=CANCEL
+button=14
+action=CLEANUP

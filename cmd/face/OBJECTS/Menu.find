@@ -1,0 +1,35 @@
+#ident	"@(#)face:OBJECTS/Menu.find	1.4"
+
+menu=Objects Found in `pathconv -t -v "${ARG1:-$OPWD}"`
+
+help=OPEN TEXT OBJECTS/Text.mfhelp T.m.found 'Objects Found'
+
+framemsg="Move to an item with arrow keys and press ENTER to select the item."
+
+close=`unset FINDRET`nop
+rows=18
+
+init="$FINDRET"
+
+#
+# see if find can should be done
+#
+`regex -v "${ARG1:-$OPWD}" '^/$' &&
+ set -l DOFIND=false -l FINDRET=false || set -l DOFIND=true`
+
+#
+# if find can be executed, call genfind which will produce a list
+# of the found files
+#
+`regex -v "$DOFIND" "true" && genfind -1 "${ARG1:-$OPWD}" "$ARG2" "$ARG3" "$ARG4" "$ARG5" | regex '(.*)$0;(.*)$1;(.*)$2;(.*)$3' '
+name=$m2
+arg=$m0
+description=$m3
+action=OPEN $m1 $m0' && set -l FINDRET=true || set -l FINDRET=false`
+
+#
+# print appropriate message ... 
+#
+`regex -v "$DOFIND" "false" && message "Can not invoke the \"find\" command from root (/).";
+ regex -v "$DOFIND" "true" && regex -v "$FINDRET" "false" &&
+ message "No objects found."`

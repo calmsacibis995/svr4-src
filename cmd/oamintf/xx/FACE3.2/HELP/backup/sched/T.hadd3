@@ -1,0 +1,10 @@
+Strike CHOICES to display the days. You may select one day, a
+combination of days, or "all" days.
+
+Move to the day(s) desired with the arrow keys, then strike the MARK
+function key. When your selection is completed, strike ENTER.
+
+You can indicate a series of days by typing the first day
+and last day separated by a "-".  For example, 17 - 24 would schedule
+the backup for the 17th, 18th, 19th, 20th, 21st, 22nd, 23rd, and 24th.
+

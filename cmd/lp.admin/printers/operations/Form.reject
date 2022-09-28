@@ -1,0 +1,101 @@
+#ident	"@(#)lp.admin:printers/operations/Form.reject	1.4"
+
+#######################################################
+#
+#       Module Name: printer_service/printers/operations/Form.reject
+#       Date: July 1988
+#
+#######################################################
+
+form="Stop Class(es) and/or Printer(s) from Accepting Print Requests"
+
+help=open TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`indicator -w; set -l name_2="/tmp/lp.n2$VPID";
+cosend lpdata "list_classes/a" > $name_2;
+cosend lpdata "list_printers/a" >> $name_2;
+if [ -s "$name_2" ];
+then
+	echo "init=true";
+else
+	echo "init=false";
+	message -b "All defined class(es) and/or printer(s) are already rejecting print requests.";
+fi`
+
+
+close=`/usr/bin/rm -f $name_2;
+	unset -l do_all -l name_2 -l name_valid -l bad_one`
+
+done=`message -w "Changing acceptance state, please wait...";
+	echo "$F1" | tr ',' ' ' | set -l NF1;
+	set -l do_all=false;
+	echo "$NF1" | regex '^all$' 'true' '^all ' 'true' ' all$' 'true' ' all ' 'true' | set -l do_all;
+	if [ "$do_all" = "true" ];
+	then
+		cosend lpdata "list_classes/a" > $name_2;
+		cosend lpdata "list_printers/a" >> $name_2;
+		if [ -s $name_2 ];
+		then
+		    shell "/usr/sbin/reject -r\"$F2\" \`cat $name_2\` > /dev/null 2>&1";
+		    echo "close";
+		    message " ";
+		else
+		    message -b "All defined class(es) and/or printer(s) are already rejecting print requests.";
+		    echo "close";
+		fi;
+	else
+		shell "/usr/sbin/reject -r\"$F2\" $NF1 > /dev/null 2>&1";
+		message "Enter new values and press SAVE to repeat or CANCEL to quit.";
+		echo "update $OBJ_DIR/Form.reject true";
+	fi`
+
+name="Printer(s) and/or Class(es):"
+lininfo="reject:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=30
+rows=1
+columns=40
+fieldmsg="Enter printers and/or classes known to the system and press SAVE when finished."
+scroll=true
+value=" "
+rmenu=OPEN MENU $OBJ_DIR/Menu.creject
+valid=`indicator -w;
+	unset -l bad_one;
+	cosend lpdata "list_classes/a" > $name_2;
+	cosend lpdata "list_printers/a" >> $name_2;
+	echo "all" >> $name_2;
+	if [ -z "$F1" ];
+	then
+		set -l no_value=true -l name_valid=false;
+	else
+		set -l no_value=false -l name_valid=true;
+	fi;
+	echo "$F1" | tr " ," "[\012*]" | regex -e '^(.*)$0$'
+	'`fmlgrep "^$m0\$" $name_2 || set -l bad_one="$m0" -l name_valid=false`' > /dev/null`$name_valid
+invalidmsg=`if [ "$no_value" = "true" ];
+	then
+		echo "You must enter a value for this field.";
+	else
+		echo "$bad_one is not a class or printer currently accepting requests.";
+	fi`
+
+name="Reason for rejecting:"
+lininfo="reject:F2"
+nrow=2
+ncol=1
+frow=2
+fcol=23
+rows=1
+columns=47
+fieldmsg="Enter the reason for rejection and press SAVE when finished."
+scroll=true
+valid=`fmlexpr "$F2" : '.*' | set -l F2_len;
+	if [ $F2_len -lt 1024 ];
+	then
+		echo true;
+	else
+		echo false;
+	fi`
+invalidmsg="The reason entered here must be less than 1024 characters long."

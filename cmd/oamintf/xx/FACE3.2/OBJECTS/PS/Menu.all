@@ -1,0 +1,36 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/Menu.all	1.1"
+menu="Filters, Forms and Printwheels"
+
+`/usr/vmsys/admin/.chkuser -u | set -l PRIV`
+
+
+help=open text $VMSYS/OBJECTS/Text.h "Filters, Forms, and Printwheels Menu" "PS/T.hall"
+
+`message "Move to an item with the arrow keys and strike ENTER to select."`
+
+name=Filters
+action=`echo $PRIV  | regex
+			0 	"open menu /usr/vmsys/OBJECTS/PS/FILTER/Menu.filter"
+			1 	"open text /usr/vmsys/OBJECTS/PS/Text.datpriv"`
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+name=Forms
+action=`echo $PRIV  | regex
+			0 	"open menu /usr/vmsys/OBJECTS/PS/FORM/Menu.form"
+			1 	"open text /usr/vmsys/OBJECTS/PS/Text.datpriv"`
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+name=Printwheels
+action=`echo $PRIV  | regex
+			0 	"open menu /usr/vmsys/OBJECTS/PS/WHEEL/Menu.wheel"
+			1 	"open text /usr/vmsys/OBJECTS/PS/Text.datpriv"`
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+
+name=CMD-MENU
+button=7
+action=cmd-menu
+
+name=""
+button=8
+actio=nop

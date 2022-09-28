@@ -1,0 +1,265 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/modify/Form.values	1.4.1.2"
+# Form displays contents of requested entry from bkreg table.
+
+form="Contents of Entry $ARG2"
+
+lifetime=shortterm
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+close=`rm -f $ERR`
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+`set -l CMD=""`
+
+`echo $ARG1 >/tmp/_bkreg_$ARG3`
+
+done=`message -w "Trying to Modify entry.";
+	set -l ERR=/tmp/$VPID.bea;
+	change "$ARG1" "$ARG2" "$F10" "$F1" "$F2" "$F12" "$F5" "$F6" "$F4" "$F7" "$F11" "" "$F3" "$F8" "$F9" >$ERR 2>$ERR;
+	if [ $RET -eq 0 ] ;
+	then
+		message -w "Successfully modified entry $ARG2";
+
+		set -l CMD="update $FNUM true";
+	else
+		message -w "An error occurred when modifying entry $ARG2.";
+
+		set -l CMD="update $FNUM true";
+	fi`$!CMD
+
+
+begrow=any
+begcol=any
+
+# Originating name field - F1
+name=Originating name:
+lininfo=values:F1
+nrow=1
+ncol=2
+
+frow=1
+fcol=20
+rows=1
+columns=57
+scroll=true
+
+value=`echo $VALS | fmlcut -f2 -d:`
+
+choicemsg="Enter name of object to be backed up - a nodename or pathname."
+valid=`valpath -oy "$F1"`
+invalidmsg=`errpath -oy`
+
+# Originating device field - F2
+name=Originating device:
+lininfo=values:F2
+nrow=2
+ncol=2
+
+frow=2
+fcol=22
+rows=1
+columns=55
+scroll=true
+
+value=`echo $VALS | fmlcut -f3 -d:`
+
+choicemsg="Enter path to the raw device for object to be backed up."
+
+valid=`valpath "$F2"`
+
+invalidmsg=`errpath`
+
+# Destination device field - F3
+name=Destination device:
+lininfo=values:F3
+nrow=3
+ncol=2
+
+frow=3
+fcol=22
+rows=1
+columns=55
+scroll=true
+
+value=`echo $VALS | fmlcut -f11 -d:`
+
+choicemsg="Enter path to the raw device for where the object is to be backed up to."
+
+valid=`valpath "$F3"`
+
+invalidmsg=`errpath`
+
+# Method field - F4
+name=Method:
+lininfo=values:F4
+nrow=4
+ncol=2
+
+frow=4
+fcol=10
+rows=1
+columns=14
+
+value=`echo $VALS | fmlcut -f7 -d:`
+
+choicemsg="Enter the name of the backup method to be used."
+
+rmenu=OPEN MENU $OBJ_DIR/Menu.methods
+
+valid=`valmeth $F4`
+invalidmsg="The backup method name must be one listed in the [CHOICES] menu."
+
+#Weeks field - F5
+name=Week(s):
+lininfo=values:F5
+nrow=5
+ncol=2
+
+frow=5
+fcol=11
+rows=1
+columns=66
+scroll=true
+
+value=`echo $VALS | fmlcut -f5 -d:`
+
+choicemsg="Enter a list of week ranges or 'demand' or 'all'."
+
+valid=`valweeks "$F5" all "$ARG1"`
+
+invalidmsg=`errweeks all "$ARG1"`
+
+# Days field - F6
+name=Day(s):
+lininfo=values:F6
+nrow=6
+ncol=2
+
+frow=6
+fcol=10
+rows=1
+columns=67
+
+value=`echo $VALS | fmlcut -f6 -d:`
+
+show=`regex -v "$F5" 'demand' FALSE '^.*' TRUE`
+
+choicemsg="Enter a list of day ranges or 'all'."
+
+valid=`valdays "$F6" all`
+
+invalidmsg=`errdays all`
+
+# Method Options field - F7
+name=Method options:
+lininfo=values:F7
+nrow=8
+ncol=2
+
+frow=8
+fcol=18
+rows=1
+columns=59
+scroll=true
+
+value=`echo $VALS | fmlcut -f8 -d:`
+
+choicemsg="Enter the options to be passed to the backup method."
+
+valid=`regex -v "$F7" '^.*'`
+
+# Destination characteristics field - F8
+name=Destination characteristics:
+lininfo=values:F8
+nrow=9
+ncol=2
+
+frow=9
+fcol=31
+rows=1
+columns=46
+scroll=true
+
+value=`echo $VALS | fmlcut -f12 -d:`
+
+choicemsg="Enter device characteristics to override device table defaults."
+
+valid=`regex -v "$F8" '^.*'`
+
+# Destination volume labels field - F9
+name=Destination volume label(s):
+lininfo=values:F9
+nrow=10
+ncol=2
+
+frow=10
+fcol=31
+rows=1
+columns=46
+scroll=true
+
+value=`echo $VALS | fmlcut -f13 -d:`
+
+choicemsg="Enter a list of volume labels for the destination volumes."
+
+valid=`regex -v "$F9" '^.*'`
+
+# Priority - F10
+name=Priority:
+lininfo=values:F10
+nrow=11
+ncol=2
+
+frow=11
+fcol=12
+rows=1
+columns=3
+
+value=`echo $VALS | fmlcut -f9 -d:`
+
+choicemsg=`helprange -h "~Enter the priority at which to run the backup (0 to 100, low to high)." -l 0 -u 100`
+
+valid=`valrange -l 0 -u 100 "$F10"`
+
+invalidmsg=`errange -l 0 -u 100`
+
+# Dependencies field - F11
+name=Dependencies:
+lininfo=values:F11
+nrow=12
+ncol=2
+
+frow=12
+fcol=16
+rows=1
+columns=51
+scroll=true
+
+value=`echo $VALS | fmlcut -f14 -d:`
+
+choicemsg="Enter the tags of backups on which this one depends."
+
+valid=`regex -v "$F11" '^.*'`
+
+# Originating volume label field - F12
+# For the time being, no validation is done on this field, other than that
+# the name cannot be longer than 6 characters, which is restricted by the field
+# length.
+name=Originating volume label:
+lininfo=values:F12
+nrow=13
+ncol=2
+
+frow=13
+fcol=28
+rows=1
+columns=6
+
+value=`echo $VALS | fmlcut -f4 -d:`
+
+choicemsg="Enter the volume label for the object to be backed up."
+
+valid=`regex -v "$F12" '^.*'`
+

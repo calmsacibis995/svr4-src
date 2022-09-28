@@ -1,0 +1,50 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkhist/full/Form.oldfile	1.5"
+form="Write a Full Report of Backup History to a File"
+
+help=OPEN TEXT $INTFBASE/Text.oamhelp $OBJ_DIR/HELP/oldf.help "Writing Full Report of Backup History to File"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+`set -l LIFE=longterm`
+lifetime=$LIFE
+
+done=`message -w;
+	bkhtofile full $F2 $ARG1 | set -l ERR;
+	getfrm | set -l FNUM;
+	set -l LIFE=shortterm;
+	if [ "$ERR" = 'ok' ];
+	then
+		set -l CMD="OPEN FORM $OBJ_DIR/Text.bkhok $ARG1 $ARG2";
+	else
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.bkherr /tmp/bkherr$ERR $ARG2";
+	fi`$CMD
+
+close=`rm -f /tmp/bkherr$ERR`
+
+begrow=any
+begcol=any
+
+# Information field - no input - F1
+name=File already exists.  How should output be written to the file?
+lininfo=oldfile:F1
+nrow=2
+ncol=2
+
+inactive=TRUE
+
+# Output method field - F2
+name=Output method:
+lininfo=oldfile:F2
+nrow=4
+ncol=2
+
+frow=4
+fcol=18
+rows=1
+columns=9
+
+value=append
+choicemsg="Enter 'append' to add output to end of file or 'overwrite' to replace file contents."
+invalidmsg="You must enter either 'append' or 'overwrite'."
+rmenu={ append overwrite }
+menuonly

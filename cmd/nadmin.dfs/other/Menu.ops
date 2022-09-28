@@ -1,0 +1,14 @@
+#ident	"@(#)nadmin.dfs:other/Menu.ops	1.2"
+
+###############################################################################
+#    Description:  
+###############################################################################
+menu="Other Distributed File System Operations"
+help=OPEN TEXT $INTFBASE/Text.oamhelp "$INTFBASE/netservices/remote_files/other/HELP/ops.help" 'Other Distributed File System Operations'
+
+`readfile $INTFBASE/ssmenu.msg | message -p`
+
+`sort +0 -1 /etc/dfs/fstypes  |  regex '^([^ 	]*)$0[ 	]*(.*)$1$' 'name="$m0"
+description="$m1"
+		action=OPEN MENU "$INTFBASE/netservices/remote_files/other/$m0/Menu.$m0" 
+

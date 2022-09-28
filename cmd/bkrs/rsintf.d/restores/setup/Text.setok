@@ -1,0 +1,34 @@
+#ident	"@(#)bkrs:rsintf.d/restores/setup/Text.setok	1.2"
+
+title="Setting Restore Operator"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp "ABSTRACT"
+
+begrow=any
+begcol=any
+rows=18
+columns=77
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+lifetime=shortterm
+
+wrap=FALSE
+text="Restore operator set to $ARG1.
+
+`readfile $ERR`"
+
+close=`rm -f $ERR`
+
+rows=4
+columns=60
+
+altslks
+
+name=CONT
+button=11
+action=update $ARG2 true
+
+name=CANCEL
+button=14
+action=CLEANUP

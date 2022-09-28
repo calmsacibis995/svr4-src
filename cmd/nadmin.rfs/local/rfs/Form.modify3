@@ -1,0 +1,172 @@
+#ident	"@(#)nadmin.rfs:local/rfs/Form.modify3	1.5"
+form="Modifies Current Sharing of a Local Resource via RFS"
+altslks=true
+close=`/bin/rm /usr/tmp/sh_msg 2>/dev/null`
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+done=`indicator -w;
+	if [ "$F11" = "yes" ];
+	then
+		set -e DIR="$F3" -e NRES="$F4" -e ACC="$F5" -e DESC="$F6" -e CLIENT="$F10";
+		"$INTFBASE/netservices/remote_files/local/rfs/bin/imm_mod";
+		set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/local/rfs/Text.shmsg 'Modifies Current Sharing of a Local Resource via RFS' '/usr/tmp/sh_msg'";
+	else
+		set -l KEYCMD="CLOSE";
+	fi;
+	`$!KEYCMD
+		
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/local/rfs`
+`echo "Fill in the form and press NEXTPAGE to continue" | message -p`
+
+# F1
+name="This is how the specified resource is"
+nrow=1
+ncol=1
+frow=1
+fcol=41
+rows=1
+
+# F2
+name="currently shared:"
+nrow=2
+ncol=1
+frow=2
+fcol=30
+rows=1
+
+# F3
+name="Directory:"
+nrow=4
+ncol=1
+frow=4
+fcol=12
+rows=1
+columns=60
+valid=`test -d $F3`
+value="$DIR"
+invalidmsg="Directory must be the pathname of a directory that exists on the local system."
+lininfo=modify3:dir
+
+# F4
+name="Resource:"
+nrow=5
+ncol=1
+frow=5
+fcol=11
+rows=1
+columns=30
+valid=`regex -v "$F4" '^.{1,14}$' && regex -v "$F4" '^[^ ./:]*$'`
+value="$RES"
+invalidmsg="Name must be 1-14 printable chars, & must not contain a space, ".", "/", or ":"".
+lininfo=modify3:res
+
+# F5
+name="Access:"
+nrow=6
+ncol=1
+frow=6
+fcol=9
+rows=1
+columns=10
+rmenu={ read-only read-write }
+menuonly=true
+value="$ACC"
+lininfo=modify3:acc
+invalidmsg="Press CHOICES to select valid response."
+
+# F6
+name="Description:"
+nrow=7
+ncol=1
+frow=7
+fcol=14
+rows=1
+columns=32
+value="$DESC"
+lininfo=modify3:desc
+
+# F7
+name="Modify the above information until you are satisfied"
+nrow=9
+ncol=1
+frow=9
+fcol=53
+rows=1
+
+# F8
+name="with the way the resource will be shared via RFS."
+nrow=10
+ncol=1
+frow=10
+fcol=50
+rows=1
+
+# F9
+name="Modifies the List of Remote Systems That Can Mount the Resource:"
+page=2
+nrow=1 
+ncol=1
+frow=1
+fcol=60
+rows=1
+
+# F10
+name="Client:"
+page=2
+nrow=2
+ncol=1
+frow=2
+fcol=9
+rows=5
+columns=29
+scroll=true
+value="$CLIENT"
+lininfo=modify3:client
+
+
+# F11
+name="OK to modify how the resource is currently being shared?"
+page=3
+nrow=1
+ncol=1
+frow=1
+fcol=58
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+lininfo=modify3:ok
+
+name="HELP"
+button=9
+action=HELP
+
+name="CHOICES"
+button=10
+action=CHOICES
+
+name="SAVE"
+button=11
+action=DONE
+
+name="NEXTPAGE"
+button=12
+name="CONTINUE"
+action=`echo "Fill in the form and press SAVE" | message -p`NEXTPAGE
+
+name="PREVPAGE"
+button=13
+action=PREVPAGE
+
+name="CANCEL"
+button=14
+action=CLOSE
+
+name="CMD-MENU"
+button=15
+action=CMD-MENU
+
+name=""
+button=16
+action=NOP
+

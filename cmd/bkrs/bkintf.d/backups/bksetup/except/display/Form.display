@@ -1,0 +1,61 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/except/display/Form.display	1.5"
+form="Display Entries in a Backup Exception List"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+done=`message -w;shell "TFILE=/tmp/bkex$$
+			echo \"Exception list file is $F1\" >\$TFILE
+			if [ \"$F2\" = \"all\" ]
+			then
+				bkexcept -t $F1 >>\$TFILE 2>&1
+				RC=\$?
+			else
+				bkexcept -d \"$F2\" -t $F1 >>\$TFILE 2>&1
+				RC=\$?
+			fi
+			echo \$TFILE
+			exit \$RC" | set -l FILE;
+			getfrm | set -l FNUM;
+			regex -e -v "$RET"
+				'^0' 'OPEN TEXT $OBJ_DIR/Text.display $FILE $FNUM'
+				'^.*$' 'OPEN TEXT $OBJ_DIR/Text.errs $FILE $FNUM' `
+
+begrow=any
+begcol=any
+
+# File Name field - F1
+name=File name:
+lininfo=F1
+nrow=2
+ncol=2
+
+frow=2
+fcol=13
+rows=1
+columns=50
+
+value=`brfindtab bkexcept`
+
+scroll=true
+choicemsg="Enter the file name containing the exception list."
+
+valid=`valpath -gw "$F1"`
+
+invalidmsg=`errpath -gw`
+
+# Patterns field - F2
+name=Pattern(s):
+lininfo=F2
+nrow=3
+ncol=2
+
+frow=3
+fcol=14
+rows=3
+columns=50
+
+value=all
+scroll=true
+choicemsg="Enter patterns for the entries you want to display or 'all'."

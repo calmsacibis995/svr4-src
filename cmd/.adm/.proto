@@ -1,0 +1,5 @@
+#ident	"@(#)adm:.proto	1.2"
+cd $d
+ulimit $l
+umask $m
+$<

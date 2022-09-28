@@ -1,0 +1,16 @@
+#ident	"@(#)nadmin.nfs:other/nfs/Menu.nfs	1.1"
+###############################################################################
+#    Module Name:  NFS.menu
+#    Description:  
+#      Menu for 'Other operations' under 'netservices/remote_files', 'remote files'
+###############################################################################
+menu=Other Network File System Operations
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/ssmenu.msg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/nfs`
+
+name=control
+description=Nertwork File System Control
+action=OPEN MENU $INTFBASE/netservices/remote_files/other/nfs/control/Menu.control
+lininfo=other:control

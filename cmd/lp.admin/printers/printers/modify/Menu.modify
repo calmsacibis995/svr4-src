@@ -1,0 +1,55 @@
+#ident	"@(#)lp.admin:printers/printers/modify/Menu.modify	1.4.3.1"
+
+menu="Modify Printer, $lp_printer Subtasks"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+reread=true
+
+close=`rm -f $datafile`
+
+name=configure
+lininfo="modify:L1"
+description='Local Printer Configuration Subtask'
+action=OPEN FORM $OAMBASE/add-ons/lp/printers/printers/modify/Form.conf.lcl
+inactive=$remc
+
+name=configure
+lininfo="modify:L2"
+description='Remote Printer Configuration Subtask'
+show=`
+    indicator -w;
+	if [ -f /usr/lib/lp/lpNet ];
+    then
+	true;
+    else
+	false;
+    fi;
+`
+action=OPEN FORM $OAMBASE/add-ons/lp/printers/printers/modify/Form.conf.rmt
+inactive=$localc
+
+name=comm_setup
+lininfo="modify:L3"
+description='Local Printer Communication Subtask'
+action=OPEN FORM $OAMBASE/add-ons/lp/printers/printers/modify/Form.comm.lcl
+inactive=$remc
+
+name=charset
+lininfo="modify:L4"
+description='Software Selectable Character Set Aliasing Subtask'
+action=`
+	set -e saveinit=/tmp/init$VPID;
+	message -w "Gathering character set data, please wait.";
+	echo "OPEN FORM $OAMBASE/add-ons/lp/printers/printers/modify/Form.charset"`
+inactive=$ina_chset
+
+name=printwheel
+lininfo="modify:L5"
+description='Removeable Print Wheel Naming Subtask'
+action=OPEN FORM $OAMBASE/add-ons/lp/printers/printers/modify/Form.pwheel
+inactive=$ina_pw
+
+name=access
+lininfo="modify:L6"
+description='Printer Access Setup Subtask'
+action=OPEN FORM $OAMBASE/add-ons/lp/printers/printers/modify/Form.access

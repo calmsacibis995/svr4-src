@@ -1,0 +1,52 @@
+#ident	"@(#)oamintf:edsysadm/Form.chgtask	1.5"
+
+################################################################################
+#	Module Name: Form.chgtask
+#	Date: March 1988
+#
+#	ARGS PASSED OUT:
+#			ARG1 -> chgtask flag
+################################################################################
+form="Change a Task"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`if [ "$F2" = "on-line" ];
+      then
+	set -l CMD="OPEN FORM $EDSYSADM/Form.select chgtask" ;
+      else if [ "$F2" = "packaged" ];
+           then
+		set -l CMD="OPEN FORM $EDSYSADM/Form.getpkg chgtask";
+	   fi;
+      fi`$CMD
+
+name=""
+nrow=1
+ncol=3
+frow=1
+fcol=3
+rows=1
+columns=40
+value=const "Do you want to change an on-line task"
+inactive=true
+
+name="or a task saved for packaging?"
+lininfo=Form.chgtask:chgtask
+nrow=2
+ncol=3
+frow=2
+fcol=34
+rows=1
+columns=8
+
+rmenu={ on-line packaged }
+menuonly=true
+
+invalidmsg=const "Error: choices are on-line (on-line task) or packaged (packaged task)."
+choicemsg=const "Enter 'on-line' or 'packaged'.
+
+name=RESET
+button=8
+action=reset

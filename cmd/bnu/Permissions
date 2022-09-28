@@ -1,0 +1,11 @@
+#ident	"@(#)bnu:Permissions	2.2.1.1"
+# This entry for public login.
+# It provides the default permissions.
+# See the Basic Networking Utilities Guide for more information.
+
+LOGNAME=nuucp \
+MACHINE=OTHER \
+READ=/usr/spool/uucppublic \
+WRITE=/usr/spool/uucppublic \
+SENDFILES=call REQUEST=no \
+COMMANDS=/usr/bin/rmail

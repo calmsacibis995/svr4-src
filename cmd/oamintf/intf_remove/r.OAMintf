@@ -1,0 +1,11 @@
+#ident	"@(#)oamintf:intf_remove/r.OAMintf	1.1"
+
+# class action script for sysadm removal package
+
+while read file
+do
+	/usr/sadm/install/bin/intf_remove $file
+done
+
+exit 0
+

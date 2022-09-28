@@ -1,0 +1,6 @@
+#ident	"@(#)oamintf:xx/OAM4.0/oam.mi	1.1"
+#status#new
+main:software:check^Checks Accuracy of Installation^check.menu
+main:software:defaults^Sets Installation Defaults^defaults.menu
+main:software:interact^Stores Interactions with Package^Form.interact
+main:software:read_in^Stores Packages Without Installing^Form.read_in

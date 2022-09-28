@@ -1,0 +1,153 @@
+assoc.o:	../common/assoc.C
+	$(CPLUS_CMD) -c ../common/assoc.C
+
+callstack.o:	../common/callstack.C
+	$(CPLUS_CMD) -c ../common/callstack.C
+
+change_pc.o:	../common/change_pc.C
+	$(CPLUS_CMD) -c ../common/change_pc.C
+
+create.o:	../common/create.C
+	$(CPLUS_CMD) -c ../common/create.C
+
+curr_src.o:	../common/curr_src.C
+	$(CPLUS_CMD) -c ../common/curr_src.C
+
+destroy.o:	../common/destroy.C
+	$(CPLUS_CMD) -c ../common/destroy.C
+
+disassem.o:	../common/disassem.C
+	$(CPLUS_CMD) -c ../common/disassem.C
+
+disp_break.o:	../common/disp_break.C
+	$(CPLUS_CMD) -c ../common/disp_break.C
+
+eval_addr.o:	../common/eval_addr.C
+	$(CPLUS_CMD) -c ../common/eval_addr.C
+
+eval_expr.o:	../common/eval_expr.C
+	$(CPLUS_CMD) -c ../common/eval_expr.C
+
+find_fcn.o:	../common/find_fcn.C
+	$(CPLUS_CMD) -c ../common/find_fcn.C
+
+first_line.o:	../common/first_line.C
+	$(CPLUS_CMD) -c ../common/first_line.C
+
+get_addr.o:	../common/get_addr.C
+	$(CPLUS_CMD) -c ../common/get_addr.C
+
+grab_core.o:	../common/grab_core.C
+	$(CPLUS_CMD) -c ../common/grab_core.C
+
+grab_proc.o:	../common/grab_proc.C
+	$(CPLUS_CMD) -c ../common/grab_proc.C
+
+grabbed.o:	../common/grabbed.C
+	$(CPLUS_CMD) -c ../common/grabbed.C
+
+inform.o:	../common/inform.C
+	$(CPLUS_CMD) -c ../common/inform.C
+
+istep.o:	../common/istep.C
+	$(CPLUS_CMD) -c ../common/istep.C
+
+istepover.o:	../common/istepover.C
+	$(CPLUS_CMD) -c ../common/istepover.C
+
+num_lines.o:	../common/num_lines.C
+	$(CPLUS_CMD) -c ../common/num_lines.C
+
+pc_curr.o:	../common/pc_curr.C
+	$(CPLUS_CMD) -c ../common/pc_curr.C
+
+print_map.o:	../common/print_map.C
+	$(CPLUS_CMD) -c ../common/print_map.C
+
+regs.o:	../common/regs.C
+	$(CPLUS_CMD) -c ../common/regs.C
+
+rel_proc.o:	../common/rel_proc.C
+	$(CPLUS_CMD) -c ../common/rel_proc.C
+
+rem_break.o:	../common/rem_break.C
+	$(CPLUS_CMD) -c ../common/rem_break.C
+
+rem_watch.o:	../common/rem_watch.C
+	$(CPLUS_CMD) -c ../common/rem_watch.C
+
+remallbk.o:	../common/remallbk.C
+	$(CPLUS_CMD) -c ../common/remallbk.C
+
+remallwp.o:	../common/remallwp.C
+	$(CPLUS_CMD) -c ../common/remallwp.C
+
+run.o:	../common/run.C
+	$(CPLUS_CMD) -c ../common/run.C
+
+set_break.o:	../common/set_break.C
+	$(CPLUS_CMD) -c ../common/set_break.C
+
+set_path.o:	../common/set_path.C
+	$(CPLUS_CMD) -c ../common/set_path.C
+
+set_sig.o:	../common/set_sig.C
+	$(CPLUS_CMD) -c ../common/set_sig.C
+
+set_stmt.o:	../common/set_stmt.C
+	$(CPLUS_CMD) -c ../common/set_stmt.C
+
+set_watch.o:	../common/set_watch.C
+	$(CPLUS_CMD) -c ../common/set_watch.C
+
+src_text.o:	../common/src_text.C
+	$(CPLUS_CMD) -c ../common/src_text.C
+
+sstep.o:	../common/sstep.C
+	$(CPLUS_CMD) -c ../common/sstep.C
+
+sstepover.o:	../common/sstepover.C
+	$(CPLUS_CMD) -c ../common/sstepover.C
+
+sufxpath.o:	../common/sufxpath.C
+	$(CPLUS_CMD) -c ../common/sufxpath.C
+
+OBJECTS	=  \
+	assoc.o \
+	callstack.o \
+	change_pc.o \
+	create.o \
+	curr_src.o \
+	destroy.o \
+	disassem.o \
+	disp_break.o \
+	eval_addr.o \
+	eval_expr.o \
+	find_fcn.o \
+	first_line.o \
+	get_addr.o \
+	grab_core.o \
+	grab_proc.o \
+	grabbed.o \
+	inform.o \
+	istep.o \
+	istepover.o \
+	num_lines.o \
+	pc_curr.o \
+	print_map.o \
+	regs.o \
+	rel_proc.o \
+	rem_break.o \
+	rem_watch.o \
+	remallbk.o \
+	remallwp.o \
+	run.o \
+	set_break.o \
+	set_path.o \
+	set_sig.o \
+	set_stmt.o \
+	set_watch.o \
+	src_text.o \
+	sstep.o \
+	sstepover.o \
+	sufxpath.o

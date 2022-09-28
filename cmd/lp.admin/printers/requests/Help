@@ -1,0 +1,86 @@
+#ident	"@(#)lp.admin:printers/requests/Help	1.2.2.1"
+ABSTRACT:Manage Active Print Requests
+	The "requests" menu gives you tasks for print request
+	maintenance.  These tasks include canceling requests,
+	putting requests on hold, moving print requests from one
+	printer or class to another, and releasing requests that
+	have previously been put on hold.
+menu:L1:cancel
+	You use the "cancel" task to cancel print request(s).
+	A print request can be canceled by specifying the printer(s),
+	the print request id(s), or the originating users.
+menu:L2:hold
+	You use the "hold" task to put print request(s) on hold
+	to be printed later when you release them.  A print request 
+	can be held by specifying the print request id(s).
+menu:L3:move
+	You use the "move" task to move print request(s) to another
+	printer.  A print request can be moved by specifying the 
+	current printer(s), the print request id(s), and the new
+	printer that you are moving the print request(s) to.
+menu:L4:release
+	You use the "release" task to stop holding print request(s).
+	A print request can be released by specifying the print 
+	request id(s).
+
+cancel:F1:Printers
+	[Names of printers ...]
+	You are expected to enter a printer.
+	You can enter a list of
+	names by separating them with a comma.
+	You can use the CHOICES function key to
+	obtain a list of valid choices.
+	
+cancel:F2:Print request-ids
+	[IDs of the print requests ...]
+	You are expected to enter a print request ID.
+	You can enter a list of
+	IDs by separating them with a comma.
+	You can use the CHOICES function key to
+	obtain a list of valid choices.
+	
+cancel:F3:Originating users
+	[Originating users...]
+	You are expected to enter a user (his or
+	her login name, not proper name). You can enter a list of
+	names by separating them with a comma.
+	You can use the CHOICES function key to
+	obtain a list of valid choices.
+	
+hold:F1:Request-ids
+	[IDs of the print requests ...]
+	You are expected to enter a print request ID.
+	You can enter a list of
+	IDs by separating them with a comma.
+	You can use the CHOICES function key to
+	obtain a list of valid choices.
+	
+move:F1:Current Printers
+	You are expected to enter a printer that
+	already has print requests assigned to it.
+	You can enter a list of
+	names by separating them with a comma.
+	You can use the CHOICES function key to
+	obtain a list of valid choices.
+	
+move:F2:Request ID number(s)
+	[IDs of the print requests ...]
+	You are expected to enter a print request ID.
+	You can enter a list of
+	IDs by separating them with a comma.
+	You can use the CHOICES function key to
+	obtain a list of valid choices.
+	
+move:F3:New Printer
+	You are expected to enter a printer that
+	you wish to move your print requests to.
+	You can use the CHOICES function key to
+	obtain a list of valid choices.
+	
+release:F1:Request-ids 
+	[IDs of the print requests ...]
+	You are expected to enter a print request ID.
+	You can enter a list of
+	IDs by separating them with a comma.
+	You can use the CHOICES function key to
+	obtain a list of valid choices.

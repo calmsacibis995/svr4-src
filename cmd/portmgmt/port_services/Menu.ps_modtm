@@ -1,0 +1,26 @@
+#ident	"@(#)portmgmt:port_services/Menu.ps_modtm	1.1.1.1"
+
+menu="Svctag    Pmtag    Pmtype  (Modify Services)"
+close=`unset -l KEYCMD`
+`pmadm -L -t ttymon>/dev/null;
+	regex -e -v "$RET"
+	   '^0$' '`message "Move cursor to the service you want to modify and press ENTER."`'
+	   '^5$' '`message "No port services configured."`'
+	   '^.*$' '`message "No port services configured."`'`
+
+`pmadm -L -t ttymon | sed 's/#.*$//' | regex '^([^:][^:]*)$0:([^:][^:]*)$1:([^:][^:]*)$2:[^:]*:[^:]*:(.*)$3$'
+ 'name="  $m2"
+  description="$m0     $m1"
+  action=` 
+	  if [ $m1 = "ttymon" ];
+	  then
+		set -l KEYCMD="OPEN FORM $OBJ_DIR/Form.ps_modtm $m2 $m0 $m1";
+	  else
+		  if [ $m1 = "listen" ];
+		  then
+			set -l KEYCMD="OPEN FORM $OBJ_DIR/Form.ps_modls $m2 $m0 $m1";
+		  else
+			message "Sorry, do not know how to modify port monitors of type <$m1>.";
+			set -l KEYCMD="RESET";
+		  fi;
+	  fi`$KEYCMD

@@ -1,0 +1,22 @@
+#ident	"@(#)bnu:Limits	1.1"
+#
+# 	Limits provides a means of specifying the maximum number of
+#	simultaneous uucicos, uuxqts, and uuscheds that are permitted.
+#	5 uucicos, 2 uuxqts, and 2 uuscheds are reasonable.
+#
+#	FORMAT:
+#
+#	service=<service name> max=<number>
+#
+#	where <service name> is "uucico" or "uuxqt" or "uusched",
+#	      <number> is the limit that is permitted for that service.
+#	The fields are order insensitive, case sensitive, and the first
+#	match in the file wins.
+#
+#	If the Limits file does not exist or it is unreadable or <number>
+#	is not a positive number, then there will  no overall limit
+#	for that service.
+#
+service=uucico max=5
+service=uuxqt max=2
+service=uusched max=2

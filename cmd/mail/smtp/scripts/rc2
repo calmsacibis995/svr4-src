@@ -1,0 +1,49 @@
+#ident	"@(#)mail:smtp/scripts/rc2	1.5.5.6"
+#
+# /etc/rc[23].d/S88smtpd - Start the SMTP daemon (smtpd).
+#
+
+#
+# The network and streams should already be built by the time
+# this script runs.
+#
+# If smtpd is already executing, don't re-execute it.
+#
+PATH=/usr/bin:/bin
+CNFG=/etc/mail/mailcnfg
+
+domain () {
+	[ -r $1 ] && sed -n '/^domain/s/^domain[     ]*//p' < $1
+}
+
+cnfg () {
+	sed -e 's/^[ 	]*//' -e 's/[ 	]*=[ 	]*/=/' $CNFG |
+		egrep $1 |
+		sed 's/^[^=]*=//'
+}
+
+# Check if TCP library libresolv.so is installed
+if [ ! -f /usr/lib/libresolv.so ]
+then
+	exit 0
+fi
+
+pids=`ps -e | egrep smtpd | cut -c1-6`
+if [ -z "$pids" ]
+then
+	DOMAIN=
+	CLUSTER=
+	if [ -r $CNFG ]
+	then
+		DOMAIN=`cnfg DOMAIN`
+		CLUSTER=`cnfg CLUSTER`
+	fi
+	[ -z "$DOMAIN" ] && DOMAIN=`domain /etc/resolv.conf`
+	[ -z "$DOMAIN" ] && DOMAIN=`domain /etc/inet/named.boot`
+	[ -z "$DOMAIN" ] && DOMAIN=`domain /etc/named.boot`
+	[ -z "$DOMAIN" ] && DOMAIN=`(domainname) 2>/dev/null`
+	NODE=$CLUSTER
+	[ -z "$NODE" ] && NODE=`uname -n`
+	HELO=`echo $NODE.$DOMAIN | sed -e 's/^\.*//' -e 's/\.\././g' -e 's/\.*$//'`
+	LIBDIR/smtpd -H "$HELO"
+fi

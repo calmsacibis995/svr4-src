@@ -1,0 +1,16 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkrem/Help	1.3.1.1"
+
+ABSTRACT: Reminder Schedule for Backup Jobs
+	The "reminder" menu allows you to manage the schedule of backup
+	reminder messages.  You can schedule reminders to be mailed to root
+	notifying you that certain file systems are due to be backed up.
+	Tasks are provided to add reminders to the schedule, to change
+	existing scheduled reminders, to remove entries from the reminder
+	schedule and to display the current schedule.
+	
+	Note that the backup reminders only notify you that the time has
+	come to back up your file systems.  You must still invoke the
+	backup command or schedule backups to run automatically in order
+	to back up your file systems and data partitions.
+
+TITLE: Reminder Schedule for Backup Jobs

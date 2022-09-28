@@ -1,0 +1,27 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkoper/Text.bjpnok	1.1"
+################################################################################
+#	Module Name: Text.bjpnok
+################################################################################
+title="Errors Setting Backup Job Operator"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+close=`rm -f $ERR`
+
+rows=6
+columns=75
+
+text="
+An error occurred attempting to set backup job operator to $ARG1.
+
+   `readfile $ERR`"
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

@@ -1,0 +1,192 @@
+#ident	"@(#)nadmin.rfs:local/rfs/Form.modify2	1.4"
+form="Modifies Automatic Sharing of a Local Resource via RFS"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/fcontmsg | message -f`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/local/rfs`
+
+altslks=true
+close=unset -e NDIR -e NRES -e ACC -e DESC -e CLIENT -e DIR -e RES
+
+done=`if [ "$F11" = "yes" ];
+	then
+		set -e NDIR="$F3" -e NRES="$F4" -e ACC="$F5" -e DESC="$F6" -e CLIENT="$F10";
+		"$INTFBASE/netservices/remote_files/local/rfs/bin/auto_mod";
+		message -t "Automatic sharing of $RES has been modified.";
+	else
+		message -t "Automatic sharing of $RES has NOT been modified.";
+	fi;
+	if [ "$IMM" = "yes" ];
+	then
+		"$INTFBASE/netservices/remote_files/local/rfs/bin/imm_attr" | set -l PID;
+		if [ -s "/usr/tmp/cmsg_$PID" ];
+		then
+			message "This resource is not shared currently.";
+			set -l KEYCMD="NOP";
+		else
+			/usr/bin/cut -s -d" " -f1 "/usr/tmp/c_attr$PID" | set -el RES;
+			/usr/bin/cut -s -d" " -f2 "/usr/tmp/c_attr$PID" | set -el DIR;
+			/usr/bin/cut -s -d" " -f3 "/usr/tmp/c_attr$PID" | set -el ACC;
+			/usr/bin/cut -s -d"\"" -f2 "/usr/tmp/c_attr$PID" | set -el DESC;
+			/usr/bin/cut -s -d"\"" -f3 "/usr/tmp/c_attr$PID" | /usr/bin/tr '\072' '\012' | set -el CLIENT;
+			set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/local/rfs/Form.modify3";
+		fi;
+	else
+		set -l KEYCMD="CLOSE";
+	fi;
+	`$!KEYCMD
+		
+
+# F1
+name="This is how the specified resource is shared"
+nrow=1
+ncol=1
+frow=1
+fcol=41
+rows=1
+
+# F2
+name="automatically when Remote File Sharing begins:"
+nrow=2
+ncol=1
+frow=2
+fcol=30
+rows=1
+
+# F3
+name="Directory:"
+nrow=4
+ncol=1
+frow=4
+fcol=12
+rows=1
+columns=60
+valid=`test -d $F3`
+value="$DIR"
+invalidmsg="Directory must be the pathname of a directory that exists on the local system."
+lininfo=modify2:dir
+
+# F4
+name="Resource:"
+nrow=5
+ncol=1
+frow=5
+fcol=11
+rows=1
+columns=30
+valid=`regex -v "$F4" '^.{1,14}$' && regex -v "$F4" '^[^ ./:]*$'`
+value="$RES"
+lininfo=modify2:res
+invalidmsg="Name must be 1-14 printable chars, & must not contain a space, ".", "/", or ":"".
+
+# F5
+name="Access:"
+nrow=6
+ncol=1
+frow=6
+fcol=9
+rows=1
+columns=10
+rmenu={ read-only read-write }
+menuonly=true
+value="$ACC"
+invalidmsg="Press CHOICES to select valid response."
+lininfo=modify2:acc
+
+# F6
+name="Description:"
+nrow=7
+ncol=1
+frow=7
+fcol=14
+rows=1
+columns=32
+value="$DESC"
+lininfo=modify2:desc
+
+# F7
+name="Modify the above information until you are satisfied"
+nrow=9
+ncol=1
+frow=9
+fcol=53
+rows=1
+
+# F8
+name="with the way the resource will be shared via RFS."
+nrow=10
+ncol=1
+frow=10
+fcol=50
+rows=1
+
+# F9
+name="Modifies the List of Remote Systems That Can Mount the Resource:"
+page=2
+nrow=1 
+ncol=1
+frow=1
+fcol=60
+rows=1
+
+# F10
+name="Client:"
+page=2
+nrow=3
+ncol=1
+frow=3
+fcol=9
+rows=5
+columns=29
+scroll=true
+value="$CLIENT"
+lininfo=modify2:client
+
+
+# F11
+name="OK to modify how the resource is automaticallly being shared?"
+page=3
+nrow=1
+ncol=1
+frow=1
+fcol=63
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+valid=`readfile $INTFBASE/form.msg | message -f`
+lininfo=modify2:ok
+
+name="HELP"
+button=9
+action=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+name="CHOICES"
+button=10
+action=CHOICES
+
+name="SAVE"
+button=11
+action=DONE
+
+name="NEXTPAGE"
+button=12
+name="CONTINUE"
+action=NEXTPAGE
+
+name="PREVPAGE"
+button=13
+action=PREVPAGE
+
+name="CANCEL"
+button=14
+action=CLOSE
+
+name="CMD-MENU"
+button=15
+action=CMD-MENU
+
+name=""
+button=16
+action=NOP

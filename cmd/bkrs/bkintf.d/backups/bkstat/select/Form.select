@@ -1,0 +1,100 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkstat/select/Form.select	1.10"
+form="Display a Selective Report of Status of Backup Requests"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+done=`message -w;
+	bkssel "$F1" "$F2" "$F3" | set -l TFILE;
+	getfrm | set -l FNUM;
+	regex -e -v "$RET"
+		'^0$' 'OPEN TEXT $OBJ_DIR/Text.select $TFILE $FNUM'
+		'^.*$' 'OPEN TEXT $OBJ_DIR/Text.errs $TFILE' `
+
+begrow=any
+begcol=any
+
+# States field - F1
+name=State(s):
+lininfo=F1
+nrow=2
+ncol=2
+
+value=active
+
+frow=2
+fcol=12
+rows=1
+columns=60
+
+rmenu=OPEN MENU $OBJ_DIR/Menu.states
+valid=`shell "for i in \`echo $F1 | sed -e \"s/,/ /g\"\`
+	do
+		case \$i in
+		active)
+			;;
+		completed)
+			;;
+		failed)
+			;;
+		pending)
+			;;
+		suspended)
+			;;
+		waiting)
+			;;
+		*)		exit 1;
+				;;
+		esac
+	done
+	exit 0"`
+invalidmsg="Error - invalid state name.  Press [CHOICES] for a list of valid states."
+
+# Job_ids field - F2
+name=Job id(s):
+lininfo=F2
+nrow=4
+ncol=2
+
+frow=4
+fcol=13
+rows=1
+columns=60
+scroll=true
+
+value=all
+choicemsg="Enter the jobids of backup jobs whose status you want to see or 'all'."
+valid=`shell "if [ \"$F2\" = \"all\" ]
+		then
+			exit 0;
+		else
+			valbkids \"$F2\";
+		fi"`
+invalidmsg="Error - you must enter a backup jobid (back-N, where N is a number) or 'all'."
+
+# Users field - F3
+name=User(s):
+lininfo=F3
+nrow=6
+ncol=2
+
+frow=6
+fcol=11
+rows=1
+columns=60
+scroll=true
+
+value=all
+
+choicemsg="Enter the users whose backup job status you want to see or 'all'."
+
+valid= `shell "if [ \"$F3\" = \"all\" ]
+		then
+			exit 0;
+		else 
+			valusers \"$F3\";
+		fi"`
+
+invalidmsg="Error - enter a list of logins that appear in the password file or 'all'."
+

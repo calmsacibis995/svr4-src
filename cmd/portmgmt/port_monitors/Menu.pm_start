@@ -1,0 +1,27 @@
+#ident	"@(#)portmgmt:port_monitors/Menu.pm_start	1.5.1.1"
+
+menu="Pmtag    Pmtype (Start Port Monitors)"
+multiselect=true
+close=` rm /var/tmp/cmd$PID; 
+	unset -l PID -l KEYCMD`
+`sacadm -L|egrep "NOTRUNNING|FAILED|STOPPING">/dev/null;
+	regex -e -v "$RET"
+	   '^0$' '`message "MARK all port monitors you want to start and then press ENTER."`'
+	   '^5$' '`message "No port monitor to start."`'
+	   '^.*$' '`message "No port monitor to start."`'`
+done=`getitems | tr -d '\0' > /var/tmp/cmd$PID;
+	if [ -s /var/tmp/cmd$PID ];
+	then
+		message "Starting [MARK]ed port monitors.";
+		sh /var/tmp/cmd$PID;
+		message "All [MARK]ed port monitors are started.";
+		set -l KEYCMD="CLOSE";
+	else
+		message "No item is [MARK]ed.";
+		set -l KEYCMD="RESET";
+	fi`$KEYCMD
+
+`sacadm -L|egrep "NOTRUNNING|FAILED"|sort +0 -1 -t:|  regex '^([^:][^:]*)$0:([^:][^:]*)$1:.*$' 
+ 'name="   $m0"
+  description="    $m1"
+  lininfo="sacadm -s -p $m0"'`

@@ -1,0 +1,39 @@
+#ident	"@(#)oamintf:sched/Menu.sched	1.1"
+
+menu="Schedule Automatic Task"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`set VMSYS=/usr/vmsys`
+
+name=Add
+lininfo=add.Help
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+action=open form $OBJ_DIR/Form.add
+
+name=Change
+lininfo=change.Help
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+action=`indicator -w; prtask -t -l -c /tmp/chgtask.$VPID /tmp/taskc.$VPID | regex
+		'^1$' "open menu $OBJ_DIR/Menu.chg /tmp/chgtask.$VPID"
+		'^0$' "open text $OBJ_DIR/Text.notask"`
+
+name=Delete
+lininfo=delete.Help
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+action=`indicator -w; prtask -t -l -d /tmp/deltask.$VPID /tmp/taskd.$VPID | regex
+		'^1$' "open menu $OBJ_DIR/Menu.del /tmp/deltask.$VPID /tmp/taskd.$VPID"
+		'^0$' "open text $OBJ_DIR/Text.notask"`
+
+name=Display
+lininfo=display.Help
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+action=`indicator -w; prtask -t -l -p /tmp/dpltask.$VPID | regex
+		'^1$' "open text $OBJ_DIR/Text.display /tmp/dpltask.$VPID"
+		'^0$' "open text $OBJ_DIR/Text.notask"`
+
+name=""
+button=8
+action=nop
+
+`indicator -w`

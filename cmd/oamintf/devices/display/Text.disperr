@@ -1,0 +1,29 @@
+#ident	"@(#)oamintf:devices/display/Text.disperr	1.4.2.1"
+
+################################################################################
+#	Module Name: Text.disperr
+################################################################################
+title="Error in Displaying Device Information"
+
+framemsg=`readfile $INTFBASE/nodev.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp Text.disperr:ABSTRACT
+
+close=`rm -f $DFILE`
+
+
+rows=4
+columns=65
+
+text="                                                                 
+An error occurred attempting to display information
+about the $ARG1 device."
+
+altslks
+
+name=""
+button=11
+
+name=CANCEL
+button=14
+action=CLEANUP

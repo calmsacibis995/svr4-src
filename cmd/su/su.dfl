@@ -1,0 +1,4 @@
+#ident	"@(#)su:su.dfl	1.2.3.1"
+SULOG=/var/adm/sulog
+#CONSOLE=/dev/console
+PATH=/usr/bin

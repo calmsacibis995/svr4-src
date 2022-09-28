@@ -1,0 +1,187 @@
+
+------------------------
+Version 3.15	5/10/89
+------------------------
+
+ 1: Reversed the sense of the -y option in dpost, postprint and postdaisy. A
+    positive displacement now moves everything up the page. Change was made
+    for compatibility with other translators and with the orientation of
+    PostScript's default coordinate system. Only changes were to the man pages
+    and the prologue files postscript/dpost.ps, postscript/postprint.ps and
+    postscript/postdaisy.ps.
+
+ 2: Added height and slant request processing to dpost. Changes were to files
+    dpost/dpost.c and postscript/dpost.ps.
+
+ 3: Fixed dimensions() in postdmd so memory is no longer allocated when we're
+    done with all the bitmaps - occasionally caused problems on 3B2s.
+
+ 4: Changed the extern declaration of mesg[] in slowsend.c.
+
+ 5: Removed PDQ font tables from directory ./font and changed font/font.mk.
+
+ 6: Removed file doc/reagan.ps. The document describing the picture inclusion
+    macros will still print, but the bitmap picture of reagan will be replaced
+    by white space.
+
+ 7: Included a preliminary version of a man page for the picture inclusion
+    macros. File is man/mpictures.5 but is not installed by default. You can
+    remove the file or add it to the MAN5 list in file man/man.mk.
+
+ 8: Added misc/ibmfont.c as another unsupported, but potentially useful
+    program. Converts font files from IBM PC to Unix format.
+ 
+
+------------------------
+Version 3.1	11/15/88
+------------------------
+
+ 1: postio can run as one or two processes (-R option) and can establish an
+    interactive connection with a postscript printer (-i option). Parsing of
+    status reports has been improved. The status query mechanism can be disabled
+    using the -q option. An exit status of 1 implies a system error (eg. can't
+    open the line) while 2 usually means there was an error in the PostScript
+    file. By default postio runs as a single process. The -B, -R, and -q options
+    can be used to speed things up some. A version of the program (previously
+    supplied in postio.tmp) that can help if you seem to be having flow control
+    problems can be obtained using the -S option. It's not generally recommended
+    and should only be used as a last resort!
+
+ 2: Several widthshow encoding schemes have been added to dpost and can reduce
+    print time by 20% or more. The method used to encode lines of text can be
+    changed on the command line using the -e option. Level 0 produces output
+    essentially identical to previous versions of dpost. The default can be
+    changed by modifying the definition of ENCODING in ./Makefile. At present
+    only level 0 is thoroughly tested, although level 2 (ie. -e2) may be the
+    default and is undoubtedly worth a try.
+
+ 3: dpost now supports color selection and reverse video. Access in troff is via
+    the stand-alone macro package ./macros/color. Examples are,
+
+	.so /usr/lib/macros/color
+	.CL red "this prints in red"
+	.CL "white on black" "and this prints white text on a black background"
+
+    The postscript procedures that handle color and reverse video can be found
+    in ./postscript/color.ps. Additional colors can be added to the colordict
+    dictionary defined in ./postscript/color.ps.
+
+ 4: The dpost drawing routines have been improved and have been moved from the
+    prologue (ie. ./postscript/dpost.ps) to ./postscript/draw.ps. That file is
+    only included if needed. Drawing routines now support the ability to group
+    a series of drawing commands together as a single path. May be useful for
+    future versions of pic that wish to fill regions with colors or gray levels.
+    Access is via the new "x X BeginPath" and "x X DrawPath" device control
+    commands. In addition there's some complicated PostScript code in file
+    ./postscript/baseline.ps, that can be used to set text along an arbitrary
+    curve. It's terribly confusing and I doubt anyone will have the patience to
+    bother to figure it out.
+
+ 5: A simple picture packing troff preprocessor (picpack) has been included and
+    the code needed to recover pictures and text has been added to dpost. The
+    program is designed to supplement to the original picture inclusion mechanism,
+    and should ONLY be used when absolutely necessary. Using dpost to pull picture
+    files into a document is strongly recommended and will always be the more
+    efficient and portable approach. picpack simply provides a way to combine
+    pictures and text in a single file before dpost is executed. It may help in
+    a distributed printing environment where the user runs everything through
+    troff while a spooling daemon (eg. lp) handles the postprocessing. There
+    are serious disadvantages to this approach, with perhaps the most important
+    being that troff output files (when picpack is used) will likely result in
+    files that can no longer be reliably passed through other important post-
+    processors like proof.
+
+ 6: Code to handle host resident PostScript fonts in dpost has been tested and
+    finally works. The -H option points dpost to a host resident font directory,
+    which by default is NULL. Host resident font files stored in that directory
+    must be assigned a name that corresponds to the one or two character troff
+    font name. Width tables must also be built (see buildtables/README), the new
+    binary font files must be installed in /usr/lib/font/devpost, and a mapping
+    definition from troff's name to the PostScript font name must be added to
+    ./postscript/dpost.ps.
+
+ 7: The default pattern length in postdmd has been reduced to from 10 to 6 bytes.
+    Printers with fast processors (eg. PS-810s) often benefit from a further
+    reduction, while optimal performance on slower printers (eg PS-800s) may
+    require larger pattern sizes. The pattern length can be set using the -b
+    option. Increasing the pattern size usually increases the size of the output
+    file.
+
+ 8: Line drawing in posttek and postbgi includes code that automatically ties
+    lines to device space coordinates when you select a non-zero width. Helps
+    eliminate the variation in line thickness that many observed. The default
+    line width in posttek and postbgi is still 0 (which gets 1 pixel). If you
+    want a different default change the definition of variable linewidth in files
+    ./postscript/posttek.ps and ./postscript/postbgi.ps.
+
+ 9: Defocused lines in posttek have been fixed.
+
+10: postbgi now supports color and can be used to translate most PRISM (color
+    BGI) jobs. Special device specific tuning needed for many PRISM jobs can be
+    enabled by using the -P"/prism true" option. Missing pieces (eg. subroutines)
+    needed for translating PRISM jobs, have also been implemented.
+
+11: postreverse can reverse the pages in documents that conform to Adobe's 1.0
+    or 2.0 file structuring conventions, and it works with all the translators in
+    this package. The new version is backwards compatible, but files produced by
+    the new translators should not be passed through old versions of postreverse.
+    The likely result will be no output at all. If you choose to do a partial
+    installation put the new postreverse up first!
+
+12: All translators attempt to conform to Adobe's Version 2.0 file structuring
+    conventions. dpost output falls short, but only in the interest of efficiency.
+    Passing dpost output through postreverse (perhaps with the -r option) produces
+    a minimally conforming PostScript file.
+
+13: All the translators now support three options that pass arbitrary PostScript
+    through to the output file. The -P and -C options add a string and the
+    contents of a file respectively immediately after the prologue. It's assumed
+    whatever is added is legitimate PostScript - there is no checking. In each
+    case the added PostScript code becomes part of the job's global environment.
+
+    The -R option can be used to request special action (eg. manualfeed) on a
+    global or page basis.  The argument should be "request", "request:page", or
+    "request:page:file". If page is given as 0 or omitted the request applies
+    globally. If file is omitted the lookup is in /usr/lib/postscript/ps.requests.
+    The collection of recognized requests can be modified or extended by changing
+    /usr/lib/postscript/ps.requests.
+
+14: PostScript code (from Johnathan Shopiro) that produces bolder versions of the
+    Courier fonts has been included in file postscript/fatcourier.ps. The file
+    can  be added to individual prologue files (eg. dpost.ps) or pulled in as
+    needed using the -C option.
+
+15: postmd is a new program that can be used to display a large matrix as a gray
+    scale image. May help if you're looking for patterns in a large matrix. A very
+    optimistic estimate suggests you can display up to a 600x600 matrix (with five
+    different shades of gray) on 300dpi printer using 8.5x11 inch paper.
+
+16: What's available in buildtables has been cleaned up and works well with the
+    new version of postio. It can be used to have PostScript printers build troff
+    width tables for both printer and host resident fonts.
+
+17: The PostScript bind operator has been applied to all procedures that are
+    expected to be executed more than once. Redefined save and restore procedures
+    are no longer needed and saverestore.ps is not included in this package.
+
+18: The bizarre PostScript code used to get to the upper left corner of a page
+    in old versions of dpost.ps and postprint.ps has been replaced by something
+    that's at least slightly more comprehensible. All prologues have also been
+    changed so picture inclusion (eg. including a pic picture that's been run
+    through troff and dpost) should work better than previous versions. Still
+    missing (from most translators) is the %%BoundingBox comment and even when
+    it's put out (by postdmd) only the dimensions are correct - sorry!
+
+19: The careless mistake in the DKHOST section of postio that some noticed belongs
+    to me (not Allan Buckwalter) and has now been fixed.
+
+20: By default all prologues still use the current clipping path to determine page
+    dimensions, but that behavior can be disabled by setting boolean useclippath
+    (in each prologue) to false. In that case the page dimensions will be taken
+    from array pagebbox, which by default is initialized to 8x11 inch paper. The
+    -P options (in each translator) can change useclippth and pagebbox.
+
+21: New in the misc directory is sample lp support from Maryann Csaszar and a
+    simple program that converts host resident font files obtained from a Macintosh
+    to a format that works on Unix.
+

@@ -1,0 +1,5 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/bin/find_trans	1.2"
+
+ls -p /etc/rfs | /bin/sed -e "s/^.*[^/]$//g" -e "s/\/$//g" | /bin/uniq -u | /usr/bin/egrep -v "auth.info"| /bin/sed -e "/^$/d" >/var/tmp/TP_$$
+
+echo $$

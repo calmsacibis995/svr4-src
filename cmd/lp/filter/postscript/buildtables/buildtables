@@ -1,0 +1,88 @@
+#
+# Builds ASCII font files using the postscript printer attached to $LINE and dumps
+# the files in directory ./devpost. Arguments should be one or two character font
+# names that have corresponding template files in directory ./devpost.data. If no
+# arguments are given ASCII tables for all the files in ./devpost.data are built.
+#
+# For example,
+#
+#	./buildtables -l/dev/tty01 R I B BI
+#
+# builds troff's ASCII font files for the R, I, B, and BI fonts from the template
+# tables in devpost.data using the PostScript printer attached to /dev/tty01.
+#
+# This program can handle host-resident PostScript fonts. All you have to do is
+# make up a name for the new font (say XX), build an XX template file and put it
+# in devpost.data, copy the PostScript host resident font to file XX in some
+# directory (say /tmp/hostresident), and then point this program to that directory
+# using the -H option. The command line,
+#
+#	./buildtables -l/dev/tty01 -H/tmp/hostresident XX
+#
+# sends file /tmp/hostresident/XX the printer attached to /dev/tty01 and then uses
+# ./fontfile.ps and devpost.data/XX to build ASCII font file.
+#
+# A printer line (eg. /dev/tty01) must always be given using the -l option and
+# the new tables are always put in directory ./devpost. When you're certain the
+# new font files are ready move them from ./devpost to ../font/devpost (that's
+# where the real source tables are located) and type,
+#
+#	cd ..
+#	make TARGETS=font install
+#
+# to build and install new binary tables. If your system is running PDQs you'll
+# need to build new PDQ tables before doing the install (see ../font/README).
+#
+
+POSTIO=/usr/lbin/postscript/postio
+HOSTRESIDENT=
+LINE=
+OPTIONS=
+
+for i do
+    case $i in
+	-P*) POSTIO=`echo $i | sed s/-P//`
+	     shift;;
+
+	-H*) HOSTRESIDENT=`echo $i | sed s/-H//`
+	     shift;;
+
+	-l*) LINE=`echo $i | sed s/-l//`
+	     shift;;
+
+	-*)  OPTIONS="$OPTIONS $i"
+	     shift;;
+
+	*)   break;;
+    esac
+done
+
+if [ ! "$LINE" ]; then
+    echo "$0: no line"
+    exit 1
+fi
+
+#
+# Figure out what tables need to be built - no arguments means build them all.
+#
+
+FILES=$*
+if [ $# = 0 ]; then
+    cd devpost.data
+    FILES=`echo ? ?? S.pdq`
+    cd ..
+fi
+
+set -e
+for i in $FILES; do
+    if [ -r devpost.data/$i ]; then
+	echo "=== Building $i ==="
+	ALLFILES="fontfile.ps devpost.data/$i"
+	if [ -d "$HOSTRESIDENT" -a -r "$HOSTRESIDENT/$i" ]; then
+	    ALLFILES="$HOSTRESIDENT/$i $ALLFILES"
+	fi
+	$POSTIO -t -l $LINE $OPTIONS $ALLFILES >devpost/$i
+	echo
+    fi
+done
+

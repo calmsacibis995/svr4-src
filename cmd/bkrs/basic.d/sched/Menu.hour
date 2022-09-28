@@ -1,0 +1,103 @@
+#ident	"@(#)bkrs:basic.d/sched/Menu.hour	1.1.1.1"
+
+menu=Choices
+multiselect
+lifetime=shortterm
+done=`getitems "," | /usr/sadm/sysadm/bin/format 24 | set -l Form_Choice`close
+
+name=00
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=01
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=02
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=03
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=04
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=05
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=06
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=07
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=08
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=09
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=10
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=11
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=12
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=13
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=14
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=15
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=16
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=17
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=18
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=19
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=20
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=21
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=22
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=23
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=all
+itemmsg=const "Mark hour(s) of the day with the MARK function key, and strike the ENTER key."
+
+name=""
+button=1
+action=nop
+
+name=""
+button=4
+action=nop
+
+name=""
+button=5
+action=nop
+
+name=""
+button=7
+action=nop
+
+name=""
+button=8
+action=nop
+
+`indicator -w`

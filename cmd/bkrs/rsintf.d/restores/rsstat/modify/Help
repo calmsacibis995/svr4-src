@@ -1,0 +1,19 @@
+#ident	"@(#)bkrs:rsintf.d/restores/rsstat/modify/Help	1.2.1.1"
+
+ABSTRACT: Modify
+	The "modify" task allow you to cancel a pending restore request or
+	to mark a pending restore request complete.  If there was no
+	history information about the object restored, you will have to
+	mark the job as complete when you know the restore has succeeded.
+
+TITLE: Modify
+
+F1:Operation Field
+	"Operation:"  Enter the keyword corresponding to the new status for
+	the restore request.  Press the [CHOICES] key to display the
+	choices. You must enter one of the keywords displayed.
+
+F2:Jobid Field
+	"Jobid:"  Enter the restore job id for the request whose status you
+	are trying to modify.  Restore jobids are of the form "rest-NA",
+	where "N" is a number of digits and "A" is a letter.

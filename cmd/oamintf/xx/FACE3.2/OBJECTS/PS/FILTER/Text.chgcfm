@@ -1,0 +1,47 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FILTER/Text.chgcfm	1.1"
+title="Confirmation"
+lifetime=shortterm
+altslks
+
+begrow=any
+begcol=any
+
+`message "Strike the CONT function key to continue."`
+
+text="Filter $ARG1 has been changed."
+
+rows=1
+columns=58
+
+name=CANCEL
+button=14
+action=`rm -f /usr/tmp/pname.$VPID`close $VMSYS/OBJECTS/PS/FILTER/Form.change $VMSYS/OBJECTS/PS/FILTER/Text.chgcfm $VMSYS/OBJECTS/PS/FILTER/Form.cd
+
+name=CONT
+button=11
+action=`rm -f /usr/tmp/pname.$VPID`close $VMSYS/OBJECTS/PS/FILTER/Form.change $VMSYS/OBJECTS/PS/FILTER/Text.chgcfm $VMSYS/OBJECTS/PS/FILTER/Form.cd
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=""
+button=10
+action=nop
+
+name=""
+button=9
+action=nop
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=return cancel
+`indicator -w`

@@ -1,0 +1,98 @@
+#ident	"@(#)lp.admin:printers/filters/Form.restore	1.1.1.1"
+
+form=Restore Filters to Factory Settings
+
+
+init=`indicator -w;
+	set -l basicdata="/tmp/lp.flr$VPID"
+	`
+done=`message -w "Restoring filter $F1";
+	if [ -n "$TFADMIN" ]; then $TFADMIN lpfilter -x -f $F1 > /dev/null;
+	else lpfilter -x -f $F1 > /dev/null; fi;
+	fmlgrep ":$F1:" /etc/lp/filter.table.i | set -l line;
+	echo "$line" | fmlcut -d: -f4 - |
+	set -l input;
+	echo "$line" | fmlcut -d: -f6 - |
+	set -l output;
+	echo "$line" | fmlcut -d: -f2 - |
+	set -l printer_types;
+	echo "$line" | fmlcut -d: -f3 - |
+	set -l printers;
+	echo "$line" | fmlcut -d: -f7 - |
+	set -l filter_type;
+	echo "$line" | fmlcut -d: -f8 - |
+	set -l command;
+	echo "$line" | fmlcut -d: -f9 - |
+	set -l options;
+	echo 'Input Types: '$input > $basicdata;
+	echo 'Output Types: '$output >> $basicdata;
+	echo 'Printer Types: '$printer_types >> $basicdata;
+	echo 'Printers: '$printers >> $basicdata;
+	echo 'Filter Type: '$filter_type >> $basicdata;
+	echo 'Command: '$command >> $basicdata;
+	echo 'Options: '$options >> $basicdata;
+	if [ -n "$TFADMIN" ]; then $TFADMIN lpfilter -f $F1 -F $basicdata;
+	else lpfilter -f $F1 -F $basicdata; fi;
+	message"";
+	`update
+
+close=`
+	/usr/bin/rm $basicdata;
+	unset	-l basicdata;
+	unset	-l input;
+	unset	-l output;
+	unset	-l printers;
+	unset	-l printer_types;
+	unset	-l filter_type;
+	unset	-l command;
+	unset	-l options;
+	unset	-l line;
+	`
+
+name=Filter:
+nrow=1
+ncol=1
+frow=1
+fcol=10
+rows=1
+columns=14
+menuonly=true
+rmenu={ `fmlgrep '^:' /etc/lp/filter.table.i | fmlcut -d: -f5 - | /usr/bin/sort` }
+choicemsg="Select filter then press ENTER"
+fieldmsg="Enter filter to be restored then press [SAVE]"
+invalidmsg=" $badval"
+
+valid=`
+    regex -v "$F1"
+	'^([Aa][Ll][Ll])$0$'		'"$m0" is a reserved word'
+	'^([Aa][Nn][Yy])$0$'		'"$m0" is a reserved word'
+	'^([Nn][Oo][Nn][Ee])$0$'	'"$m0" is a reserved word'
+	' '                             'Multiple filters not permitted'
+	','                             'Multiple filters not permitted'
+	'^[a-zA-Z0-9_]{1,14}$' 		'ok'
+	'^.*'				'Filter name must be 1-14 letters, numbers and underscores.'
+    | set -l badval;
+
+    if [ "$badval" != 'ok' ];
+    then
+	false;
+    else
+	if fmlcut -d: -f5 /etc/lp/filter.table.i | fmlgrep "^$F1\$";
+	then
+	    set -l filter="$F1";
+	    if fmlcut -d: -f5 /etc/lp/filter.table.i | fmlgrep "^$F1\$";
+	    then
+		set -l restore=true;
+	    fi;
+	    true;
+	else
+	    set -l badval="\"$F1\" has no factory setting";
+	    false;
+	fi;
+    fi;
+`
+
+
+
+
+

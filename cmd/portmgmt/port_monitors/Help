@@ -1,0 +1,89 @@
+#ident	"@(#)portmgmt:port_monitors/Help	1.3.2.1"
+
+ABSTRACT:
+	The subcommands in the "port_monitors" menu provide functions
+	for managing port monitors under Service Access Facility.
+	It includes such subtasks as adding, disabling, enabling,
+	listing, modifying, removing, starting and stopping port monitors.
+
+pmtag:Port Monitor Tag
+	Port monitor tag is a unique tag that identifies a particular
+	port monitor. The tag may consist of up to 14 alphanumeric
+	characters.
+
+pmtype:Port Monitor Type
+	Port monitor type identifies the type of a port monitor
+	(e.g. ttymon, listen, etc.). It may consist of up to 14
+	alphanumeric characters.
+
+pmcmd:Command
+	The command is a string representing the command that
+	will start the port monitor. Full path name must be specified.
+
+pmversion:Version Number
+	Version number refers to the version number of the port 
+	monitor's database file.
+
+pmcount:Restart Count
+	Restart count is the number of times that the port monitor
+	will be restarted if it fails. If it cannot be restarted
+	after this many tries, it will be placed in a failed
+	state.
+
+pmstate:Start State
+	Start state is the state the port monitor will be placed into
+	when it is started. The two valid states are ENABLED and 
+	DISABLED. The default state is ENABLED.
+
+pmxflag:Start port monitor immediately?
+	Start port monitor immediately?
+	If "Yes" is selected, the port monitor will be started 
+	automatically. Otherwise, the port monitor will not be started
+	and the administrator has to use the "start" task or sacadm 
+	command to start it.
+
+pmscript:Port Monitor Configuration Script
+	This is the full path name of the file that contains the
+	per-port monitor configuration script. The content of this file
+	will be copied to the port monitor configuration script file.
+	Later changes to the named file have no effect.
+
+pmcomments:Comments
+	This is used to specify comments that should be associated with
+	the port monitor entry. This comment will be displayed when 
+	information about the port monitor is requested. It is not used
+	by the system.
+
+add:ABSTRACT:
+	The "add" task creates the supporting directory structure for
+	the port monitor and adds an entry for it in the Service
+	Access Controller data file.
+
+disable:ABSTRACT:
+	The "disable" task disables port monitors on the system, thus
+	denying subsequent connection requests to the disabled port
+	monitors.
+
+enable:ABSTRACT:
+	The "enable" task enables port monitors on the system, thus
+	allowing connection requests to be accepted.
+
+list:ABSTRACT:
+	The "list" task lists detailed port monitor configuration and
+	status information.
+
+modify:ABSTRACT:
+	The "modify" task modifies port monitor information such as
+	command string, port monitor flags, restart count, and comments.
+
+remove:ABSTRACT:
+	The "remove" task removes port monitors from the system. Port
+	monitors that are currently in use will be removed after all
+	connections they are controlling are terminated by the users.
+
+start:ABSTRACT:
+	The "start" task starts port monitors on the system.
+
+stop:ABSTRACT:
+	The "stop" task stops port monitors on the system.
+

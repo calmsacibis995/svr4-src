@@ -1,0 +1,10 @@
+#ident	"@(#)portmgmt:port_services/Text.ps_lstag	1.1"
+
+title=Lists Port Services by Tag
+lifetime=shortterm
+text="`pmadm -l -p $ARG1`
+
+   press [CANCEL] to return to the port services list."
+columns=70
+#wrap=true
+

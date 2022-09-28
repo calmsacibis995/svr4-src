@@ -1,0 +1,49 @@
+#ident	"@(#)bkrs:rsintf.d/restores/restore/Help	1.4.1.1"
+
+ABSTRACT: Restore
+	The "restore" task allows you to restore files, directories, a file
+	system or a data partition from a backup archive.
+
+TITLE: Restore
+
+F1: Type of Restore
+	"Type of Restore:"  Press [CHOICES] to see the available object
+	types, then select the type of object you wish to restore.
+
+F2: Name(s)
+	"Name(s):"  Enter the names of the objects you want to restore.  If
+	you are restoring files or directories, you may enter a list of
+	files or directories to be restored.  For file systems and data
+	partitions, you may only enter the name for the file system or data
+	partition. All names entered must be valid absolute pathnames.
+	Note that these names must specify the objects as they were backed
+	up.
+
+F3: Target
+	"Target:"  Enter the path to where the object should be restored.
+	If you leave this field blank, the object will be restored to the
+	you leave this field blank, the object will be restored to the
+	current directory (which appears as the default in this field).
+
+F4: Date
+	"Date:"  Enter the date from which you want the object restored.
+	This date should be entered in the form mm/dd/yy.  The default is
+	today's date, which will request the most recent version of the
+	object.
+
+F5: Display Mode
+	"Display:"  If you wish to display the history log information
+	relevant to restoring this object instead of actually requesting
+	that it be restored, enter 'yes'.  If you want to request that
+	the object be restored, enter 'no'.
+
+F6: Notify
+	"Notify:"  Enter 'yes' to receive mail when the restore request
+	completes.  Enter 'no' if you do not wish to be notified by mail.
+	Mail is only sent if an online restore is unavailable or cannot
+	complete.
+
+F6: Trace Mode
+	"Trace Mode:"  If you wish to display trace information relevant
+	to restoring the object, enter 'yes'.  Enter 'no' if you do not
+	wish to view this information.

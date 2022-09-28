@@ -1,0 +1,18 @@
+#ident	"@(#)filemgmt:display/Text.dispfstyp	1.1.2.1"
+Title="Installed File System Types"
+
+framemsg=`readfile $INTFBASE/nodev.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp dispfstyptask
+
+
+begrow=distinct
+begcol=distinct
+rows=7
+columns=35
+
+text="`$OAMBASE/bin/sysfs | sort`"
+
+name=CONT
+button=11
+action=CLOSE $OBJ_DIR/Text.dispfstype

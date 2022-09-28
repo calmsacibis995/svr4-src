@@ -1,0 +1,17 @@
+#ident	"@(#)oamintf:machinemgmt/boot.Help	1.1"
+ABSTRACT:
+	The "boot defaults" task allows you to specify the default program
+	to use when booting the system manually and the device to use when
+	booting automatically.
+	
+	The task provides an explanation of types of files or devices that
+	may be used as the boot default.  After reading the explanation, you
+ 	will be offered the choice to continue with the task or to back out
+	without changing the current defaults.
+	
+	If you choose to continue, the screen will clear and a series of
+	questions will appear to allow you to set the boot defaults.  Online
+	help accessed through the HELP key is unavailable after the screen
+	clears until you have completed the task.  After the task completes,
+	you will be prompted to press <RETURN> to return to the visual
+	interface.

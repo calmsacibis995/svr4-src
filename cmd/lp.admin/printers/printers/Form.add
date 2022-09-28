@@ -1,0 +1,399 @@
+#ident	"@(#)lp.admin:printers/printers/Form.add	1.2"
+
+#######################################################
+#
+#       Module Name: printer_service/printers/configure/Form.add
+#
+#######################################################
+
+form=Add a New Printer
+
+help=OPEN TEXT $INTFBASE/Text.oamhelp $PRINTSERV/HELP/printers/configure/add.help "Add a New Printer"
+
+name=Name of the new printer:
+nrow=1
+ncol=1
+frow=1
+fcol=25
+rows=1
+columns=50
+
+valid=`regex -v "$F1" '[a-zA-Z0-9_]{1,14}'`
+# \fIUnknown printer\fR [PRINTERS], mandatory.
+
+#choicemsg="N/A"
+invalidmsg="Enter only alpha-numeric characters or \"-\"."
+fieldmsg="Enter name of new printer."
+page=1
+
+
+name=If this printer is similar to one already added, enter the name 
+nrow=2
+ncol=1
+frow=2
+fcol=65
+rows=1
+columns=10
+
+#valid=`regex -v "$F2" '[a-zA-Z0-9_]{1,14}' '' '.*'`
+# \fIKnown printer\fR [PRINTERS], optional.
+
+choicemsg="A list of the printers known to the system."
+invalidmsg="A list of the printers known to the system."
+fieldmsg="A list of the printers known to the system."
+page=1
+
+
+name=Class to add it to ...
+nrow=3
+ncol=1
+frow=3
+fcol=23
+rows=1
+columns=52
+
+#valid=`regex -v "$F3" '[a-zA-Z0-9_]{1,14}(,[a-zA-Z0-9_]{1,14})*' '' '.*'`
+# \fILegal class-list\fR [CLASSES], optional.
+
+choicemsg="A list of the classes known to the system."
+invalidmsg="A list of the classes known to the system."
+fieldmsg="A list of the classes known to the system."
+page=1
+
+
+name=Enter one line that describes the printer for your users ...
+nrow=4
+ncol=1
+frow=4
+fcol=61
+rows=1
+columns=14
+
+#valid=`regex -v "$F4" 'unknown pattern'`
+# Optional.
+
+#choicemsg="N/A"
+#invalidmsg="N/A"
+#fieldmsg="N/A"
+page=1
+
+
+name=Type of printer ...
+nrow=5
+ncol=1
+frow=5
+fcol=20
+rows=1
+columns=55
+
+# default=``unknown''
+
+#valid=`regex -v "$F5" '[a-zA-Z0-9-]{1,14}'`
+# \fIKnown terminfo\fR [TERMINFO], mandatory.
+
+#choicemsg="N/A"
+#invalidmsg="N/A"
+#fieldmsg="N/A"
+page=1
+
+
+name=Types of files printable without filtering ...
+nrow=6
+ncol=1
+frow=6
+fcol=47
+rows=1
+columns=28
+
+# default=``simple''
+
+#valid=`regex -v "$F6" '[a-zA-Z0-9-]{1,14}(,[a-zA-Z0-9-]{1,14})*'`
+# \fILegal type-list\fR [TYPES], mandatory.
+
+#choicemsg="N/A"
+#invalidmsg="N/A"
+#fieldmsg="N/A"
+page=1
+
+
+name=Printer interface to use ...
+nrow=7
+ncol=1
+frow=7
+fcol=29
+rows=1
+columns=46
+
+# default=standard
+
+#valid=`regex -v "$F7" 'unknown pattern'`
+# Standard filename syntax, executable and readable, mandatory.
+
+choicemsg="A list of the programs in /usr/spool/lp/models."
+invalidmsg="A list of the programs in /usr/spool/lp/models."
+fieldmsg="A list of the programs in /usr/spool/lp/models."
+page=1
+
+
+name=Can a user skip the banner page? ...
+nrow=8
+ncol=1
+frow=8
+fcol=37
+rows=1
+columns=38
+rmenu={ yes no }
+# yes or no, mandatory.
+menuonly=true
+
+value=yes
+
+
+choicemsg="yes, no"
+invalidmsg="yes, no"
+fieldmsg="yes, no"
+page=1
+
+
+name=Use the default page size and printing pitch? ...
+nrow=9
+ncol=1
+frow=9
+fcol=50
+rows=1
+columns=25
+rmenu={ yes no }
+# yes or no, mandatory.
+menuonly=true
+value=yes
+
+
+choicemsg="yes, no"
+invalidmsg="yes, no"
+fieldmsg="yes, no"
+page=1
+
+
+name=Enter a command to run to alert you when the printer faults ...
+nrow=10
+ncol=1
+frow=10
+fcol=64
+rows=1
+columns=11
+
+# default=``mail''
+
+valid=`regex -v "$F10" 'mail' '' 'write' '' 'none' '' '^/.*' '' '.*'`
+# \fILegal alert-command\fR [COMMANDS], optional.
+
+choicemsg="``mail,'' ``write,'' or a shell-command"
+invalidmsg="``mail,'' ``write,'' or a shell-command"
+fieldmsg="``mail,'' ``write,'' or a shell-command"
+page=1
+
+
+name=How often should you be alerted ...
+nrow=11
+ncol=1
+frow=11
+fcol=36
+rows=1
+columns=39
+
+value=ONCE
+
+#valid=`regex -v "$F11" 'unknown pattern'`
+# a positive integer or ONCE, mandatory.
+
+#choicemsg="N/A"
+#invalidmsg="N/A"
+#fieldmsg="N/A"
+#page=1
+
+
+name=How should printing restart after you fix a printer fault? ...
+nrow=12
+ncol=1
+frow=12
+fcol=63
+rows=1
+columns=12
+rmenu={ beginning continue wait }
+# One of beginning, continue, or wait, mandatory.
+menuonly=true
+
+value=wait
+
+
+choicemsg="beginning, continue, wait"
+invalidmsg="beginning, continue, wait"
+fieldmsg="beginning, continue, wait"
+page=1
+
+
+name=If the printer is directly connected, enter the port to use.
+nrow=13
+ncol=1
+frow=13
+fcol=61
+rows=1
+columns=14
+
+#valid=`regex -v "$F13" 'unknown pattern'`
+# A pathname to a device, a phone number, or a network address, mandatory.
+#
+#choicemsg="N/A"
+#invalidmsg="N/A"
+#fieldmsg="N/A"
+page=1
+
+
+name=Is the printer directly connected? ...
+nrow=14
+ncol=1
+frow=14
+fcol=39
+rows=1
+columns=36
+
+# default=yes
+
+#valid=`regex -v "$F14" 'unknown pattern'`
+# yes or no, mandatory.
+
+choicemsg="yes, no"
+invalidmsg="yes, no"
+fieldmsg="yes, no"
+page=1
+
+
+name=Is the printer also a login terminal? ...
+nrow=15
+ncol=1
+frow=15
+fcol=42
+rows=1
+columns=33
+
+# default=no
+
+#valid=`regex -v "$F15" 'unknown pattern'`
+# yes or no, mandatory.
+
+choicemsg="yes, no"
+invalidmsg="yes, no"
+fieldmsg="yes, no"
+page=1
+
+
+name=List the print wheels you have available for this printer ...
+nrow=16
+ncol=1
+frow=16
+fcol=62
+rows=1
+columns=13
+
+valid=`regex -v "$F16" '[a-zA-Z0-9_]{1,14}(,[a-zA-Z0-9_]{1,14})*' '' '.*'`
+# \fILegal charset-list\fR [CHARSETS], optional.
+
+#choicemsg="N/A"
+#invalidmsg="N/A"
+#fieldmsg="N/A"
+page=1
+
+
+name=Map these names into aliases ...
+nrow=17
+ncol=1
+frow=17
+fcol=33
+rows=1
+columns=42
+
+## default=Current value(s) from terminfo.
+
+valid=`regex -v "$F17" '[a-zA-Z0-9_]{1,14}(,[a-zA-Z0-9_]{1,14})*' '' '.*'`
+# \fILegal charset-list\fR [CHARSETS], optional.
+
+#choicemsg="N/A"
+#invalidmsg="N/A"
+fieldmsg="Strike Down Arrow key to get next page."
+page=1
+
+
+name=List the users who are denied access to this printer...
+nrow=1
+ncol=1
+frow=1
+fcol=56
+rows=1
+columns=19
+
+# default=ALL
+
+#valid=`regex -v "$F18" '?user-list?' '' '.*'`
+# \fILegal user-list\fR [USERS], ALL, or NONE, optional.
+
+#choicemsg="N/A"
+#invalidmsg="N/A"
+#fieldmsg="N/A"
+page=2
+
+
+name=List the users who are allowed access to this printer ...
+nrow=2
+ncol=1
+frow=2
+fcol=58
+rows=1
+columns=17
+
+# default=NONE
+
+#valid=`regex -v "$F19" '?user-list?' '' '.*'`
+# \fILegal user-list\fR [USERS], ALL, or NONE, optional.
+
+#choicemsg="N/A"
+#invalidmsg="N/A"
+#fieldmsg="N/A"
+page=2
+
+
+name=List the forms that can\'t be used with this printer ...
+nrow=3
+ncol=1
+frow=3
+fcol=56
+rows=1
+columns=19
+
+# default=ALL
+
+#valid=`regex -v "$F20" 'unknown pattern' '' '.*'`
+# \fILegal form-list\fR [FORMS], ALL, or NONE, optional.
+
+choicemsg="A list of the forms known to the system."
+invalidmsg="A list of the forms known to the system."
+fieldmsg="A list of the forms known to the system."
+page=2
+
+
+name=List the forms that can be used with this printer ...
+nrow=4
+ncol=1
+frow=4
+fcol=54
+rows=1
+columns=21
+
+# default=NONE
+
+#valid=`regex -v "$F21" 'unknown pattern' '' '.*'`
+## \fILegal form-list\fR [FORMS], ALL, or NONE, optional.
+
+choicemsg="A list of the forms known to the system."
+invalidmsg="A list of the forms known to the system."
+fieldmsg="A list of the forms known to the system."
+page=2

@@ -1,0 +1,11 @@
+
+#ident	"@(#)rpcsvc:net_files/slaves	1.2"
+
+#----------------------------------------------------------------------#
+# This file contains the list of all the Secure RPC slaves.            #
+# If a slave is using NFS to share the /etc directory then the entry   #
+# for that slave in this file is the 'uname' of the slave.             #
+# If a slave is using RFS then the entry must be 'RFS_domain.uname'.   #
+# If the slave is in the same RFS domain as the master then the entry  #
+# may or may not contain the RFS domain.                               #
+#----------------------------------------------------------------------#

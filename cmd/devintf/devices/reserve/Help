@@ -1,0 +1,7 @@
+#ident	"@(#)devintf:devices/reserve/Help	1.2.2.1"
+
+ABSTRACT:
+	The "reservation" menu provides device reservation services for
+	the devices described in the Device Management tables.  Tasks
+	available in this menu provide the capability to reserve a device,
+	free a reserved device, and list the current device reservations.

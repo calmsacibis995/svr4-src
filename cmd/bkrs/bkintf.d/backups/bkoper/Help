@@ -1,0 +1,19 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkoper/Help	1.3.2.1"
+
+ABSTRACT: Respond to Backup Job Requests
+
+	The "backup_respond" task allows you to interact with backup
+	operations that require operator intervention.  This is the
+	mechanism used to respond to requests for operator intervention
+	for backup jobs executed in background (default) mode.  You
+	must select which operations you want to interact with by
+	specifying the login of the user who started the backup job(s).
+	
+	NOTE: This task clears the screen and puts you into scrolling
+	mode.  When the task is finished executing, you will be prompted
+	to press <RETURN> to return to the screen-based mode.
+
+TITLE: Respond to Backup Job Requests
+
+F1:User Field
+	Login whose backup operation prompts you wish to access.

@@ -1,0 +1,55 @@
+#ident	"@(#)filemgmt:check/Form.checkfs	1.1.2.1"
+Form="File System Check"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/form.msg | message -p`
+
+done=`indicator -w;
+	message "Checking File System. Please wait..."; 
+	if [ "$F2" = "check only" ];
+	then
+		$OAMBASE/bin/checkfs $ARG1 $F2 $ARG2;
+		if [ "$RET" = "0" ];
+		then
+			set -l CMD="OPEN TEXT $OBJ_DIR/Text.ckok";
+		else
+			set -l CMD="OPEN TEXT $OBJ_DIR/Text.cknok $ARG1 $F2";
+		fi;
+	else
+		if [ "$F2" = "interactive fix" ];
+		then
+			run $OAMBASE/bin/chkrun $ARG1 $ARG2;
+			set -l CMD="CLOSE";
+		else
+			$OAMBASE/bin/checkfs "$ARG1" "$F2" "$ARG2";
+			if [ "$RET" -eq "0" ];
+			then
+				set -l CMD="OPEN TEXT $OBJ_DIR/Text.ckok";
+			else
+				set -l CMD="OPEN TEXT $OBJ_DIR/Text.cknok $ARG1 $F2";
+			fi;
+		fi;
+	fi`$CMD
+
+name=Device to be checked:  "$ARG1"
+lininfo=Form.checkfs:F1
+nrow=1
+ncol=1
+frow=1
+fcol=41
+rows=1
+columns=6
+inactive=true
+
+name="Type of checking:"
+lininfo=Form.checkfs:F2
+nrow=2
+ncol=1
+frow=2
+fcol=20
+rows=1
+columns=16
+value=check only
+rmenu={ "check only" "interactive fix" "automatic fix" }
+invalidmsg="Press CHOICES to select valid response."
+menuonly=true

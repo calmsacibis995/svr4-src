@@ -1,0 +1,180 @@
+list:TITLE:Lists Local Resources Automatically-Currently Shared via RFS
+
+list:curr:
+	Choose 'yes' to see the local resources
+	that are currently shared.
+
+list:auto:
+	Choose "yes" to see the local resources
+	that are shared automatically when Remote File
+	Sharing operation begins.
+
+modify:TITLE:Modifies Automatic-Current Sharing of a Local Resource via RFS
+
+modify:res:
+	Choose the pathname or RFS resource name
+	of a directory on the 
+	local system that is currently or
+	automatically shared via RFS.
+
+modify:curr:
+	Choose "yes" to modify immediately now
+	the local resource is currently shared.
+
+modify:auto:
+	Choose "yes" to modify how the resource is shared automatically when
+	Remote File Sharing begins operation.
+
+modify2:TITLE:Modifies Automatic Sharing of a Local Resource via RFS
+
+modify2:dir:
+	Enter the name of the local directory that you want to share.
+
+modify2:res:
+	Enter the name by which remote systems will refer to the resource.
+
+modify2:acc:
+	Choose "read-only" if you want the resource to be 
+	readable but not writable by RFS clients.  Choose
+	"read-write" if you want the resource to be readable
+	and writable.
+
+modify2:desc:
+	Enter a description of the resource.  The 
+	description should help users and other administrators
+	understand what you are sharing.
+
+modify2:client:
+	Enter the name of each client in one of the following
+	forms:
+	
+	system
+	domain.system
+	domain
+	
+	If you do not specify any clients, then all clients
+	that can connect to your system will have access to
+	the resource.  
+
+modify2:ok:
+	Answer "yes" if you want to change
+	how the resource is shared with remote
+	systems when Remote File Sharing begins
+	operatons.
+	Current use of the resource by remote
+	systems will not be affected.
+	Remote systems not currently using the
+	resource will be able to access the resource
+	until RFS is started again.
+              
+modify3:TITLE:Modifies Current Sharing of a Local Resource via RFS
+
+modify3:dir:
+	Enter the name of the local directory that you want to share.
+	
+modify3:res:
+	Enter the name by which remote systems will refer to the resource.
+
+modify3:acc:
+	Choose "read-only" if you want the resource to be 
+	readable but not writable by RFS clients.  Choose
+	"read-write" if you want the resource to be readable
+	and writable.
+
+modify3:desc:
+	Enter a description of the resource.  The 
+	description should help users and other administrators
+	understand what you are sharing.
+
+modify3:client:
+	Enter the name of each client in one of the following
+	forms:
+	
+	system
+	domain.system
+	domain
+	
+	If you do not specify any clients, then all clients
+	that can connect to your system will have access to
+	the resource.  
+
+modify3:ok:
+	Answer "yes" if you want to change
+	how remote systems can begin to access
+	the resource by Remote File Sharing
+	Current use of the resource by remote
+	systems will not be affected.
+
+share:TITLE:Shares a Local Resource Automatically-Immediately via RFS
+share2:TITLE:Shares a Local Resource Automatically-Immediately via RFS
+
+share:dir:
+	Enter the name of the local directory that you want to share.
+
+share:res:
+	Enter the name by which remote systems will refer to the resource.
+	
+share:imm:
+	Choose 'yes' to share the resource immediately.
+
+share:auto:
+	Choose 'yes' to share the resource automatically when
+	Remote File Sharing begins operation.
+
+share:desc:
+	Enter a description of the resource.  The 
+	description should help users and other administrators
+	understand what you are sharing.
+
+share:acc:
+	Choose "read-only" if you want the resource to be 
+	readable but not writable by RFS clients.  Choose
+	"read-write" if you want the resource to be readable
+	and writable.
+
+share2:cli:
+	Enter the name of each client in one of the following
+	forms:
+	
+	system
+	domain.system
+	domain
+	
+	If you do not specify any clients, then all clients
+	that can connect to your system will have access to
+	the resource.  
+
+unshare:TITLE:Terminates Automatic-Current Sharing of a Local Resource via RFS
+
+unshar2:TITLE:Terminates Automatic-Current Sharing of a Local Resource via RFS
+
+unshar2:ok:
+	Answser "yes" if you want the displayed local resource
+	no longer to be made available automatically for use
+	by remote systems via Remote File Sharing.  Current
+	availability of the resource to remote systems will
+	not be affected.
+
+unshar3:TITLE:Terminates Automatic-Current Sharing of a Local Resource via RFS
+unshar3:ok:
+	Answer "All" if you want to terminate
+	current access and prevent future access
+	by remote system.
+	Answer "new" if you want remote systems not
+	to begin using the local resource displayed 
+	above.
+	Answer "None" if you want the resource to
+	continue to be available for remote systems.
+
+unshare:res:
+	Enter either the pathname or the RFS resource
+	name of a directory on the local system 
+	that is currently or automatically shared via
+	RFS.
+
+unshare:imm:
+	Choose "yes" to unshare the resource immediately.
+unshare:auto:
+	Choose "yes" to terminate the
+	automatic sharing of the resource when
+	Remote File Sharing begins operation.

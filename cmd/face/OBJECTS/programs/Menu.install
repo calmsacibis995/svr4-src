@@ -1,0 +1,25 @@
+#ident	"@(#)face:OBJECTS/programs/Menu.install	1.4"
+
+menu=Programs Administration
+
+help=OPEN TEXT $VMSYS/OBJECTS/Text.h "Programs Administration" programs/T.sadm 
+
+framemsg="Move to an item with arrow keys and press ENTER to select the item."
+
+`set -l NARG1="${ARG1:-HOME}"`
+
+name=Add Programs
+action=OPEN FORM $VMSYS/OBJECTS/programs/Form.add "${NARG1}"
+
+name=List Programs
+action=OPEN MENU $VMSYS/OBJECTS/programs/Menu.list "" "${NARG1}" "2" "List Programs"
+
+name=Modify Programs
+action=OPEN MENU $VMSYS/OBJECTS/programs/Menu.list "-m" "${NARG1}" "1" "Modify Programs"
+
+name=Remove Programs
+action=OPEN MENU $VMSYS/OBJECTS/programs/Menu.list "-d" "${NARG1}" "3" "Remove Programs"
+
+name=""
+button=8
+action=nop

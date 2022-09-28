@@ -1,0 +1,7 @@
+#ident	"@(#)localedef:colltbl/colltbl_C	1.1"
+
+# codeset for "C" locale
+
+codeset		LC_COLLATE
+
+order is	\001;...;\377

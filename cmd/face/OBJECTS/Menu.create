@@ -1,0 +1,39 @@
+#ident	"@(#)face:OBJECTS/Menu.create	1.5"
+
+menu="Create $ARG3"
+
+help=OPEN TEXT OBJECTS/Text.h "Create New Object" T.hcreate
+
+framemsg="Move to an item with arrow keys and press ENTER to select the item."
+
+begrow=any
+begcol=any
+lifetime=longterm
+
+name="File folder"
+action=`run -s /bin/mkdir $ARG1/$ARG2; 
+	if test -d $ARG1/$ARG2;
+	then
+		message "File folder $ARG3 created in $ARG4";
+	else
+		message "File folder $ARG3 not created in $ARG4";
+	fi`close
+
+name="Standard file"
+action=`if run -e -t"Suspended $EDITOR $ARG3" ${EDITOR} $ARG1/$ARG2;
+	then
+		if test -f $ARG1/$ARG2;
+		then
+			message "Standard file $ARG3 created in $ARG4";
+		else
+			message "Standard file $ARG3 not created in $ARG4";
+		fi;
+	fi`close
+
+name=""
+button=4
+action=nop
+
+name=""
+button=5
+action=nop

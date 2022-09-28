@@ -1,0 +1,7 @@
+Input types: simple
+Output types: 473
+Printer types: any
+Printers: any
+Filter type: fast
+Command: /usr/lib/lp/bin/473_filter
+Options: TERM * = -t*,WIDTH * = -w*,MODES emphasized = -e,MODES e = -e,MODES doublestrike = -d,MODES ds = -d,MODES compressed = -c,MODES compress = -c,MODES co = -c,MODES reset473 = -r

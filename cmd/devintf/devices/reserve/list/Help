@@ -1,0 +1,11 @@
+#ident	"@(#)devintf:devices/reserve/list/Help	1.2.1.1"
+
+list:ABSTRACT:
+	The "list" task lists the current device reservations.  The first
+	column is the alias of the reserved device and the second column
+	is the key on which the device was reserved.
+
+LISTING:the Reserved Devices screen
+	This screen shows the current status of the device reservation system.
+	The first column lists the devices that are currently reserved; the
+	second column lists the key on which those devices were reserved.

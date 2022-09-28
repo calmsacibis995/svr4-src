@@ -1,0 +1,101 @@
+#ident	"@(#)libelf:common/error.list	1.6"
+
+BUG	bug	Internal error
+	COOKSTAT	cook status
+	COOKTYPE	cook data type
+	SCNLIST	broken section list
+
+
+COFF	coff	COFF error
+	RELOFF	relocation offset
+	RELSYM	relocations without symtab
+	RELTYP	bad relocation type
+	STRSZ	strtab size
+	SYMPTR	symtab file offset
+	SYMSTR	symbol string index
+	SYMSZ	symtab size
+
+
+FMT	fmt	Format error
+	ARBUG	archive header collision
+	ARFMAG	archive fmag
+	ARHDRSZ	archive header truncated
+	ARMEMSZ	archive member truncated
+	ARSTRNM	archive strtab name
+	ARSYM	archive symtab truncated
+	ARSYMSTR	archive symtab strings
+	ARSYMSZ	archive symtab size
+	ARUNKNM	archive special name unknown
+	DATA	data region truncated
+	EHDRSZ	ehdr size
+	ENTSZ	shdr entry size
+	PHDRSZ	phdr entry size
+	PHTAB	phdr table truncated
+	SCNSZ	section sh_size too small for data
+	SHDRSZ	shdr entry size
+	SHTAB	shdr table truncated
+	VER2	ehdr EI_VERSION/e_version mismatch
+	VM	reference outside file
+
+
+IO	io	I/O error
+	FBIG	file too big for memory
+	FSZ	get file size
+	READ	raw read
+	SEEK	seek
+	SYNC	output msync
+	VM	region read
+	WRITE	output write
+
+
+MEM	mem	Memory error
+	ARMEM	archive member header
+	ARSYM	archive symtab
+	CEHDR	coff ehdr
+	CFIX	coff fixup space
+	COPT	coff opt header
+	CPHDR	coff phdr
+	CREL	coff relocation
+	CSHDR	coff section header
+	CSTR	coff string table
+	DATA	section data
+	DNODE	data node
+	EHDR	ehdr
+	ELF	elf descriptor
+	OUT	output file space
+	PHDR	phdr table
+	SCN	scn descriptors
+	SHDR	shdr table
+	SNODE	section node
+	VM	vm stats
+
+
+REQ	req	Request error
+	AR	not archive
+	ARMEMFD	archive/member fildes mismatch
+	ARRDWR	archive/member begin() for writing
+	BEGIN	begin() ELF_C_...
+	CLASS	class file/memory mismatch
+	CNTLCMD	cntl() ELF_C_...
+	CNTLWRT	cntl() ELF_C_FD... on output file
+	COFFAOUT	can't write COFF a.out
+	DATA	data/scn mismatch
+	DSZ	destination too small
+	ENCODE	unknown data encoding
+	FLAG	flag() ELF_C_...
+	NDX	no section at index
+	NOFD	file descriptor disabled
+	RAND	offset out of range
+	RDWR	begin() ELF_C_... mismatch with parent
+	SCNNULL	can't manipulate null section
+	STROFF	string offset out of range
+	STRSCN	no string table
+	TYPE	unknown ELF_T_...
+	UPDATE	update() ELF_C_...
+	UPDWRT	update() for write on read-only file
+	VER	unknown version
+
+
+SEQ	seq	Sequence error
+	EHDR	ehdr not created
+	VER	version not set

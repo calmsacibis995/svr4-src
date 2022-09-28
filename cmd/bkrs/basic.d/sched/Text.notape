@@ -1,0 +1,54 @@
+#ident	"@(#)bkrs:basic.d/sched/Text.notape	1.1"
+
+title=Warning
+lifetime=shortterm
+altslks
+
+begrow=center
+begcol=center
+rows=7
+columns=66
+
+`message "Strike the CONT function key to continue."`
+
+text="
+ The Cartridge Tape Utilities add-on is not currently installed
+ on your system. Any scheduled backups to the Cartridge Tape will
+ fail unless the hardware and support software are installed. Use
+ the \"Install UNIX System Application\" in the \"Software Setup\"
+ menu to install this package.
+"
+
+name=""
+button=9
+action=nop
+
+name=""
+button=10
+action=nop
+
+name=CONT
+button=11
+action=return cancel
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=CANCEL
+button=14
+action=return cancel
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=nop
+
+`indicator -w`

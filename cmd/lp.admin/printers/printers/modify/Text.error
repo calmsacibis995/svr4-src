@@ -1,0 +1,21 @@
+#ident	"@(#)lp.admin:printers/printers/modify/Text.error	1.1.1.1"
+
+title="Error: Printer Configuration Subtask"
+
+close=`rm -f $error`
+
+row=15
+columns=65
+
+begrow=distinct
+begcol=distinct
+
+text="
+    Press CANCEL to return to the form.
+
+    While configuring the printer, the
+    following error(s) occurred:
+
+`readfile $error`
+
+"

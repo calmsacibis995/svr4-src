@@ -1,0 +1,46 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FORM/Menu.fdelete	1.1"
+menu="Delete Forms"
+multiselect
+
+#help=open text $VMSYS/OBJECTS/Text.h "Delete Forms" "PS/FORM/T.hdelete"
+
+done=`getitems "," | set -l VAL ; 
+regex -v "$VAL" '^$' "open text /usr/vmsys/OBJECTS/PS/FORM/Text.nmark"
+	'all' "open text /usr/vmsys/OBJECTS/PS/FORM/Text.cadel \"$VAL\" "
+	'.*' "open text /usr/vmsys/OBJECTS/PS/FORM/Text.cdel \"$VAL\" "`
+
+
+close=`rm -rf /usr/tmp/forms.$VPID`
+
+`/usr/vmsys/admin/PS/FORM/getform.sh`
+
+`message "MARK the forms to delete from the system and strike ENTER key."`
+
+`cat /usr/tmp/forms.$VPID  | regex '^(.*)$0'
+'name="$m0"
+itemmsg="MARK the forms to delete from the system and strike ENTER key." '
+`
+					      
+
+name="MARK"
+action=return 364
+button=2
+
+
+name=PREV-FRM
+action=return prev-frm
+button=4
+
+name=NEXT-FRM
+action=return next-frm
+button=5
+
+
+name=CMD-MENU
+button=7
+action=cmd-menu
+
+
+name=""
+button=8
+actio=nop

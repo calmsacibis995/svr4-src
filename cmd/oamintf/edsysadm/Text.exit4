@@ -1,0 +1,25 @@
+#ident	"@(#)oamintf:edsysadm/Text.exit4	1.2"
+
+################################################################################
+#	Module Name: Text.exit4
+#	Date: August 1987
+################################################################################
+title="Packaging Error"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+text="
+    More than 1 menu information file exist in current directory."
+
+rows=4
+columns=65
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

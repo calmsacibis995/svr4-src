@@ -1,0 +1,12 @@
+#ident	"@(#)alint:lib/llib-lm	1.3"
+/* LINTLIBRARY */
+/* PROTOLIB1 */
+#include <math.h>
+
+int signgam;
+
+#if defined(__STDC__)
+extern const enum version _lib_version;
+#else
+extern enum version _lib_version;
+#endif

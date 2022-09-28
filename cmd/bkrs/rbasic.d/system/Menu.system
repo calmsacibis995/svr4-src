@@ -1,0 +1,22 @@
+#ident	"@(#)bkrs:rbasic.d/system/Menu.system	1.1.1.1"
+menu="System Restore"
+help=open text /usr/vmsys/OBJECTS/Text.h "System Restore" restore/system/T.hsystem
+
+`message "Move to an item with the arrow keys and strike the ENTER key to select."`
+
+name=Restore System
+action=`.chkuser -u | regex -v $RET -e
+    '^0$' '`Ckdev f1_or_mt | regex -e
+		0 \'open form $OBJ_DIR/system/Form.overwr -c -d /dev/rdsk/f0t\'
+		2 \'open menu $OBJ_DIR/system/Menu.device -c\' `'
+    '.*' 'open text $OBJ_DIR/Text.privil' `
+
+name=Selective System Restore
+action=`.chkuser -u | regex -v $RET -e
+    '^0$' '`Ckdev f1_or_mt | regex -e
+		0 \'open form $OBJ_DIR/system/Form.overwr2 -d /dev/rdsk/f0t\'
+		2 \'open menu $OBJ_DIR/system/Menu.device2\' `'
+    '.*' 'open text $OBJ_DIR/Text.privil' `
+
+name=""
+button=16

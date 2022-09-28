@@ -1,0 +1,18 @@
+#ident	"@(#)devmgmt:data/device.tab	1.10.3.1"
+#
+#	Device Table
+#
+#  Format:  Colon-list
+#  alias:cdevice:bdevice:pathname:attrs
+#
+#  Fields:
+#	alias		The device alias (primary key)
+#	cdevice		Pathname to the inode for the character device
+#	bdevice		Pathname to the inode for the block device
+#	pathname	Pathname to the inode for the device
+#	attrs		Expression-list: attributes of the device
+#			An expression in this list is of the form attr="value"
+#			where attr is the attribute name and value is the
+#			value of that attribute.
+#
+spool:::/usr/spool/pkg:desc="Packaging Spool Directory"

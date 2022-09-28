@@ -1,0 +1,35 @@
+#ident	"@(#)oamintf:usermgmt/list.Help	1.2.1.1"
+ABSTRACT:
+	The "list" task allows you to list either user definitions
+	or group definitions on your system.
+
+Form.list:list:User or Group
+	Enter either "user" or "group".  The default is "user".
+
+Text.lsgrp:ABSTRACT:Groups Currently Defined
+	You are looking at a listing of all groups currently defined
+	in the system.  This list is updated automatically whenever
+	a group is added, modified or deleted.  The list includes
+	the group name, numeric group ID and lists of the primary
+	and supplementary group members.  Primary members have this
+	as their group when they log in.  Supplementary members may
+	do a "newgrp" to this group after they have logged in, but
+	have some other group at login.
+
+Text.lsusr:ABSTRACT:Users Currently Defined
+	You are looking at a display of all the users that are currently
+	defined on your system.
+
+	For each user login the following information is displayed:
+	login, numeric user ID (UID), all group membership information
+	(the primary group will be the first group displayed), user
+	name, home directory, login shell and password status and
+	aging information.
+
+	The information is displayed in the following format:
+
+	login	   UID	 grp membership    membership GID    user name
+		   home directory
+		   login shell
+		   password information
+

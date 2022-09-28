@@ -1,0 +1,211 @@
+#ident	"@(#)bkrs:basic.d/sched/Menu.minute	1.1.1.1"
+
+menu=Choices
+multiselect
+lifetime=shortterm
+done=`getitems "," | /usr/sadm/sysadm/bin/format 60 | set -l Form_Choice`close
+
+name=00
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=01
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=02
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=03
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=04
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=05
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=06
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=07
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=08
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=09
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=10
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=11
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=12
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=13
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=14
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=15
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=16
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=17
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=18
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=19
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=20
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=21
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=22
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=23
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=24
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=25
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=26
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=27
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=28
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=29
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=30
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=31
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=32
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=33
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=34
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=35
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=36
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=37
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=38
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=39
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=40
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=41
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=42
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=43
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=44
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=45
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=46
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=47
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=48
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=49
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=50
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=51
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=52
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=53
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=54
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=55
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=56
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=57
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=58
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=59
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=all
+itemmsg=const "Mark minute(s) with the MARK function key, and strike the ENTER key."
+
+name=""
+button=1
+action=nop
+
+name=""
+button=4
+action=nop
+
+name=""
+button=5
+action=nop
+
+name=""
+button=7
+action=nop
+
+name=""
+button=8
+action=nop
+
+`indicator -w`

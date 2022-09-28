@@ -1,0 +1,3 @@
+#ident	"@(#)bkrs:rsintf.d/restores/16122026388.mi	1.5.2.1"
+#status#new
+main:#restore_service:extended^Extended Restore Services^restore.menu

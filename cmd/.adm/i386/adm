@@ -1,0 +1,6 @@
+#ident	"@(#)adm:i386/adm	1.1.1.1"
+#
+# The adm crontab file should contain startup of performance collection if
+# the profiling and performance feature has been installed.
+#
+15	*	*	*	*	/usr/lib/acct/ckpacct > /dev/sysmsg 2>&1

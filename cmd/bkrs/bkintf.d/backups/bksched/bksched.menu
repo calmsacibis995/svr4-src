@@ -1,0 +1,8 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksched/bksched.menu	1.5.1.1"
+#menu#Schedule Automatic Backups
+#life#permanent
+
+add^Add Entries to the Backup Schedule^add/Form.add
+display^Display the Backup Schedule^display/Text.display
+modify^Modify Entries in the Backup Schedule^modify/Form.modify
+remove^Remove Entries from the Backup Schedule^remove/Form.remove

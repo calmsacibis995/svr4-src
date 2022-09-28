@@ -1,0 +1,8 @@
+#ident	"@(#)nadmin.rfs:local/rfs/Text.shmsg	1.3"
+title=$ARG1
+close=`unset -e RES -e DESC -e DIR -e ACC`CLOSE `getfrm` "$ARG3"
+
+`readfile "$INTFBASE/display.msg" | message -p`
+
+text="`readfile $ARG2`"
+

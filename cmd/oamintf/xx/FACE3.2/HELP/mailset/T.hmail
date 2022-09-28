@@ -1,0 +1,20 @@
+The Mail Setup menu enables you to give your computer a node name so
+other systems can send mail to your system and it enables you to
+setup your system to send mail to other systems.
+
+Before you use Set Up Mail you must exchange this information with the
+users of the other computer: System names, Mail names, Passwords,
+Data phone numbers, Data communication line speeds.
+
+Before you can actually send mail or receive mail, you must establish
+a physical connection to the other system through a Modem, Direct
+connection, or Data switch by setting up the serial port using Serial
+Port Setup under Peripheral Setup.
+
+The items on the Set Up Mail Menu are:
+
+      This System:  Set up your system to receive mail.
+
+      Other Systems:  Set up your system to send mail to other
+      systems.
+

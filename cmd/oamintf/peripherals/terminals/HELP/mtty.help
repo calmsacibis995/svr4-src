@@ -1,0 +1,7 @@
+#ident	"@(#)oamintf:peripherals/terminals/HELP/mtty.help	1.1"
+
+   The "modtty" task helps you create tty line setting entries.  You
+   might want to add line settings that are not in the current set or
+   create hunt sequences with only specific line settings in them.
+   The created hunt sequences are circular; stepping past the last
+   setting puts you on the first.

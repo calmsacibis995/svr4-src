@@ -1,0 +1,9 @@
+ABSTRACT:
+	This task allows the administrator of a system to list all of the
+	applications installed as Global Programs on this system.
+
+F1:List Programs
+	The List Programs task lists the Global Programs that you have
+	installed in FACE.
+	
+	It is not possible to execute the programs from this list.

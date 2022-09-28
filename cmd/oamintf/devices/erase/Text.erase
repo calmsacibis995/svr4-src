@@ -1,0 +1,60 @@
+#ident	"@(#)oamintf:devices/erase/Text.erase	1.1.3.1"
+
+################################################################################
+#	Module Name:  Text.erase
+################################################################################
+title="Erase Volume in $ARG1 Drive"
+help=OPEN TEXT $INTFBASE/Text.itemhelp Text.erase:ABSTRACT
+framemsg=`readfile $INTFBASE/conf.msg`
+lifetime=shortterm
+
+init=`devreserv $VPID $ARG1 > /dev/null 2>/tmp/$VPID.rsvrd; echo $RET | set -l RSVRD`
+close=`rm -f /tmp/$VPID.rsvrd;
+       if [ "$RSVRD" = "0" ];
+       then
+          devfree ${VPID} $ARG1;
+       fi`
+
+rows=3
+columns=70
+
+text="`devattr $ARG1 desc | set -l DESC;
+ if [ "$RSVRD" != "0" ];
+ then
+	echo "\nReservation of $DESC failed.";
+	message "Press CONT for additional information or CANCEL to return to the menu.";
+ else
+	echo "\nInsert the volume to be erased into $DESC.";
+ fi`"
+
+altslks
+
+name=
+button=9
+action=nop
+
+name=
+button=10
+action=nop
+
+name=CONT
+button=11
+action=`if [ "$RSVRD" != "0" ];
+ then
+	set -l CMD="OPEN TEXT $OBJ_DIR/../Text.rsvrd $ARG1 $RSVRD";
+ else
+	message -f -w "The volume in $DESC is being erased.";
+
+	devtabcmd $ARG1 erasecmd > /dev/null 2>/dev/null;
+
+	if [ $RET -eq 0 ];
+	then
+	  set -l CMD="OPEN TEXT $OBJ_DIR/Text.eraseok $ARG1";
+	else
+	  set -l CMD="OPEN TEXT $OBJ_DIR/Text.eraserr $ARG1";
+	fi;
+ fi`$CMD
+
+name=CANCEL
+button=14
+action=CLEANUP

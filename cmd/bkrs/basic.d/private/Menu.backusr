@@ -1,0 +1,20 @@
+#ident	"@(#)bkrs:basic.d/private/Menu.backusr	1.1.2.1"
+menu="Select Removable Media"
+lifetime=shortterm
+help=open text /usr/vmsys/OBJECTS/Text.h "Select Removable Media" backup/private/T.hdevice
+
+name=Floppy Drive 1
+itemmsg="Move to an item with the arrow keys and strike the ENTER key to select"
+action=`run sh -c '/usr/bin/backup "$ARG1" "$ARG2" -d /dev/rdsk/f0t'`close $OBJ_DIR/private/Menu.backusr $OBJ_DIR/private/Menu.private
+
+`Ckdev f1| regex '^2$' '
+name=Floppy Drive 2
+itemmsg="Move to an item with the arrow keys and strike the ENTER key to select"
+action=`run sh -c \'/usr/bin/backup "$ARG1" "$ARG2" -d /dev/rdsk/f1t\'`close $OBJ_DIR/private/Menu.backusr $OBJ_DIR/private/Menu.private
+'`
+
+`Ckdev mt | regex '^2$' '
+name=Cartridge Tape
+itemmsg="Move to an item with the arrow keys and strike the ENTER key to select"
+action=`run sh -c \'/usr/bin/backup "$ARG1" "$ARG2" -d /dev/rmt/c0s0 -t\'`close $OBJ_DIR/private/Menu.backusr $OBJ_DIR/private/Menu.private'`
+

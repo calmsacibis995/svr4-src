@@ -1,0 +1,30 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkhist/select/Text.select	1.4"
+
+title="Selective Report of Backup History Information"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp "ABSTRACT"
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+lifetime=shortterm
+
+begrow=any
+begcol=any
+rows=18
+columns=77
+
+`bkhsel "$ARG1" "$ARG2" "$ARG3" "$ARG4" | set -l TFILE`
+
+text="`readfile "$TFILE"`"
+
+close=`rm -f $TFILE`
+
+altslks
+
+name=CONT
+button=11
+action=update $ARG5 true
+
+name=CANCEL
+button=14
+action=CLEANUP

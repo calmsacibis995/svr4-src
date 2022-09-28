@@ -1,0 +1,27 @@
+#ident	"@(#)nadmin.rfs:other/rfs/control/Menu.passctl	1.6"
+###############################################################################
+#    Module Name:  Menu.passctl
+#    Description:  
+###############################################################################
+
+menu="Passes Name Server Responsibility Back to Primary"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+multiselect=true
+close=unset -el NETSPECS -l PID
+
+`readfile $INTFBASE/msmenu.msg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/rfs/control`
+
+done=`indicator -w;
+	getitems "," | set -el NETSPECS;
+	if [ "$NETSPECS" ];
+	then
+		"$INTFBASE/netservices/remote_files/other/rfs/control/bin/ns_pass" | set -l PID;
+		set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/other/rfs/control/Text.msg 'Passes Name Server Responsibility Back to a Primary RFS Name Server' /var/tmp/pass$PID";
+	else
+		set -l KEYCMD="NOP";
+	fi;
+	`$KEYCMD	
+
+`sort +0 -1 < "/var/tmp/netid_$PPID" |  regex '^(.*)$0$' 'name="$m0"
+lininfo=pass_ctl:netid

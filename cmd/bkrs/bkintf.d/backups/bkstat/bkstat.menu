@@ -1,0 +1,8 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkstat/bkstat.menu	1.6.2.1"
+#menu#Backup Status Management
+#life#permanent
+
+full^Display a Full Report of Pending Backup Requests^full/Text.full
+limit^Limit the Backup Status Log Size^limit/Form.limit
+modify^Modify the Status of Pending Backup Requests^modify/Form.modify
+selective^Display Selective Report of Backup Requests^selective/Form.select

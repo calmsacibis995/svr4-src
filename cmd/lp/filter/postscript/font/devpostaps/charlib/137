@@ -1,0 +1,16 @@
+%ident	"@(#)lp:filter/postscript/font/devpostaps/charlib/137	1.1.2.1"
+% Build file for _ (ASCII code 137).
+
+/build_137 {
+	pop
+	gsave
+	newpath
+	0 0 moveto
+	(\137) false charpath flattenpath pathbbox pop pop exch pop .4 mul neg
+	grestore
+	gsave
+	(\137) stringwidth pop .19 mul exch rmoveto
+	.64 1 scale
+	(\137) show
+	grestore
+} bind def

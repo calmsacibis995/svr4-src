@@ -1,0 +1,52 @@
+#ident	"@(#)oamintf:files/make/Form.bfs	1.1.1.1"
+Form="Create A bfs File System (make)"
+lifetime=shortterm
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=unset -l BLOCKS -l INODES
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+done=` indicator -w;
+	set -l BLOCKS="$F1" -l INODES="$F2";
+
+	$OAMBASE/bin/ifdiskette $DEVICE | set -l RVAL;
+	if [ "$RVAL" = "true" ];
+	then
+		set -l CMD="OPEN FORM $OBJ_DIR/Form.bfsins";
+	else
+		message -f "Creating a bfs file system on $DEVICE. Please Wait...";
+		$OAMBASE/bin/mkfs_bfs $DEVICE $BLOCKS $INODES 2>\&1 >/dev/null;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.make";
+	fi;
+	`$!CMD
+
+name="Number of Blocks:"
+lininfo=Form.s52:F2
+nrow=1
+ncol=1
+frow=1
+fcol=19
+rows=1
+columns=10
+valid="`valint $F1`"
+value=`if [ "$DEVICE" ];
+	then
+		$OAMBASE/bin/numblocks "$DEVICE";
+	fi;`
+invalidmsg="Error - invalid number of blocks."
+
+name="Number of Files:"
+lininfo=Form.s52:F3
+nrow=2
+ncol=1
+frow=2
+fcol=18
+rows=1
+columns=10
+value=`/bin/expr  $F1 / 4`
+valid=`if [ ! -z "$F2" ];
+then
+	/bin/expr $F1 / 4 | set -l NFILES;
+	[ $F2 -le $NFILES ];
+fi`
+invalidmsg="Error - number of files, $F2, is too large."

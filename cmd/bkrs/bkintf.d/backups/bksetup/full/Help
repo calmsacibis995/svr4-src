@@ -1,0 +1,25 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/full/Help	1.2.1.1"
+
+ABSTRACT: Full Display of Backup Table
+	The "full" task displays the contents of all the fields in a backup
+	table.  This display is extremely long, with several terminal lines
+	of data for each table entry.
+
+TITLE: Full Display of Backup Table
+
+F1:Table Field
+	"Table:"  Enter the name of the backup table whose contents you
+	want displayed.  The name must be a path to an existing file.
+
+F2:Weeks Field
+	"Weeks:"  Enter a list of week ranges  or the keyword "demand" or
+	the keyword "all".  This value will be used to filter the display.
+	Only entries with weeks values included in this field will be
+	displayed.
+
+F3:Days Field
+	"Days:"  Enter a list of day ranges or the keyword "all".  This
+	value will be used with the Weeks value to filter the display.
+	Only those entries with days values included in this field will
+	be displayed. Note that if the value "demand" is entered in the
+	Weeks field, no value may be entered in this field.

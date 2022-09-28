@@ -1,0 +1,27 @@
+#ident	"@(#)portmgmt:port_services/Text.ps_msg	1.1.1.1"
+
+title= $ARG3 Port Services 
+lifetime=shortterm
+framemsg="Press CONT to repeat this task, or CANCEL to return to the menu."
+
+`if [ $ARG1 = 0 ];
+ then
+	echo "   Service <$ARG2> is $ARG4 successfully.\n" > /var/tmp/err$PID;
+ else
+	echo "   Service <$ARG2> is not $ARG4." >> /var/tmp/err$PID;
+ fi`
+text="
+`readfile /var/tmp/err$PID`
+"
+
+columns=68
+wrap=true
+altslks=TRUE
+
+name=CONT
+button=11
+action=UPDATE $ARG5 TRUE
+
+name=CANCEL
+button=14
+action=cleanup

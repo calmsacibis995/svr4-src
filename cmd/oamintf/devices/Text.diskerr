@@ -1,0 +1,24 @@
+#ident	"@(#)oamintf:devices/Text.diskerr	1.1"
+################################################################################
+#	Module Name: Text.rmdisknok
+################################################################################
+Title="Disk Error"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+rows=4
+columns=75
+
+text="	
+Disks available that contain either the root or /usr file
+system."
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

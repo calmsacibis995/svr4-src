@@ -1,0 +1,14 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/bin/act_nserve	1.4"
+echo >/usr/tmp/nsrv_$$
+
+# call rfadmin first to see if it returns any errors(such as machine not on
+# network)
+
+rfadmin 2> /usr/tmp/rferr_$$ 1>/usr/tmp/rfout_$$
+if [ $? -eq 0 ]
+then
+	grep "domain `dname -d`" /usr/tmp/rfout_$$ | /bin/sed "s/.*domain[ ]//g" | /usr/bin/tr -s '\040' '\011' | /usr/bin/cut -f3,5 >> /usr/tmp/nsrv_$$
+else
+	/bin/sed "s/rfadmin://" /usr/tmp/rferr_$$ >>/usr/tmp/nsrv_$$
+fi
+echo $$

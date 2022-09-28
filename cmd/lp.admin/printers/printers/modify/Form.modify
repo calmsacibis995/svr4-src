@@ -1,0 +1,59 @@
+#ident	"@(#)lp.admin:printers/printers/modify/Form.modify	1.2.3.1"
+
+form=Modify a Printer
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO 
+
+done=`indicator -w;
+	message -w "Collecting printer data, please wait.";
+  	set -e lp_printer=$F1;
+	if fmlgrep "Remote" /etc/lp/printers/$lp_printer/configuration > /dev/null;
+	then
+		set -e localc=false -e remc=true;
+	else
+		set -e localc=true -e remc=false;
+	fi;
+	cosend lpdata "get_printer/n$lp_printer" > /dev/null 2>/dev/null;
+	if [ -n "$TFADMIN" ]; then $TFADMIN lpstat -p $lp_printer -l > /usr/tmp/stat$$;
+	else lpstat -p $lp_printer -l > /tmp/stat$$; fi;
+    	cat /tmp/stat$$ | sed 's/: /=/gp' | 
+	sed 's/^	//gp' | sed 's/After fault/recover/gp' |
+	sed 's/Content types/content/gp'  >> $datafile;
+	rm -f /tmp/stat$$;
+	cat /etc/lp/printers/$lp_printer/configuration | 
+	sed 's/: /=/gp' >> $datafile;
+	set -e lp_prtype=${($datafile)prtype:-unknown};
+	if tput -T $lp_prtype daisy > /dev/null 2>/dev/null;
+	then
+		set -e has_chset=FALSE -e has_pw=TRUE;
+		set -e ina_chset=TRUE -e ina_pw=FALSE;
+	else
+		tput -T $lp_prtype csnm 0 | set -l tmp;
+		if [ -n "$tmp" ];
+		then
+			set -e has_chset=TRUE -e has_pw=FALSE;
+			set -e ina_chset=FALSE -e ina_pw=TRUE;
+		else
+			set -e has_chset=FALSE -e has_pw=FALSE;
+			set -e ina_chset=TRUE -e ina_pw=TRUE;
+		fi;
+	fi;
+        echo "OPEN MENU $OAMBASE/add-ons/lp/printers/printers/modify/Menu.modify"; 
+`
+close=`unset -e lp_printer -e lp_device -e localc -e remc`
+
+##F1
+name='Printer name:'
+lininfo="modify:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=15
+rows=1
+columns=14
+rmenu={ `ls /etc/lp/printers` }
+menuonly=true
+fieldmsg="Strike the CHOICES key to choose a valid printer."
+invalidmsg="Invalid entry: Strike the CHOICES key for valid printer selections."
+choicesmsg="Select a printer and then strike RETURN."
+

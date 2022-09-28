@@ -1,0 +1,11 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksched/display/Help	1.2.1.1"
+
+ABSTRACT: Display Backup Schedule
+	The "display" task lists the contents of the backup schedule.  The
+	listing includes a line number for each entry, the time at which
+	the backup will be invoked, the days and months in which the backup
+	will be run, the backup register table used, the mode for the
+	backup (either background or automated) and whether you will be
+	notified by mail when the backup job has completed.
+
+TITLE: Display Backup Schedule

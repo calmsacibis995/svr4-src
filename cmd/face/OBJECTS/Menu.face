@@ -1,0 +1,53 @@
+#ident	"@(#)face:OBJECTS/Menu.face	1.8"
+menu="AT&T FACE"
+
+help=OPEN TEXT OBJECTS/Text.h "AT&T FACE" T.hattface
+
+framemsg="Move to an item with arrow keys and press ENTER to select the item."
+
+name="Office of $LOGNAME"
+action=OPEN MENU OBJECTS/Menu.office
+
+name="Printer Operations"
+action=OPEN MENU OBJECTS/lp/Menu.lpops
+show=`test -d /etc/lp`
+
+name=Programs
+action=OPEN MENU OBJECTS/Menu.programs
+show=`set -l present=false;
+if [ -r $VMSYS/lib/services -a -f $VMSYS/lib/services
+  -a -s $VMSYS/lib/services ];
+then
+	if fmlgrep 'name=' $VMSYS/lib/services > /dev/null;
+	then
+		set -l present=true;
+	fi;
+fi;
+if [ "$present" = "false" -a -r $HOME/pref/services
+-a -f $HOME/pref/services -a -s $HOME/pref/services ];
+then
+	if fmlgrep 'name=' $HOME/pref/services > /dev/null;
+	then
+		set -l present=true;
+	fi;
+fi`${present}
+
+name=System Administration
+action=`run /usr/sbin/sysadm`nop
+show=`$VMSYS/bin/chkperm -t admin`
+
+name=UNIX System
+action=unix
+show=`$VMSYS/bin/chkperm -t unix`
+
+name="MS-DOS System"
+action=`run -n sh -c "/usr/vpix/vpix;tput init"`nop
+show=`test -f /usr/vpix/dosinst`
+
+name=Exit FACE
+action=`if $VMSYS/bin/chkperm -t exit;
+then
+	echo 'OPEN TEXT OBJECTS/Text.exit';
+else
+	echo 'exit_now';
+fi`

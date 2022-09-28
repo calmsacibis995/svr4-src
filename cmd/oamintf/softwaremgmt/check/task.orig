@@ -1,0 +1,58 @@
+#ident	"@(#)oamintf:softwaremgmt/check/task.orig	1.3"
+
+[ -n "$TRACE" ] && set -x
+
+pkginst=
+paths=
+opts=
+
+[ -n "$2" ] &&
+	pkginst="`echo $2 | sed 's/,/ /g'`"
+
+[ -n "$3" -a "$3" != all ] &&
+	paths="-p'`echo $3 | sed 's/ /,/g'` '"
+
+[ "$4" = yes ] &&
+	opts="${opts}a"
+[ "$5" = yes ] &&
+	opts="${opts}c"
+[ "$6" = yes ] &&
+	opts="${opts}x"
+[ "$7" = yes ] &&
+	opts="${opts}f"
+[ "$8" = no ] &&
+	opts="${opts}n"
+[ "$9" = yes ] &&
+	opts="${opts}v"
+[ -n "$opts" ] &&
+	opts="-$opts"
+
+pkgabrv=`eval echo $pkginst | sed 's/\.[^ ]*/\.*/'` || exit 1
+
+if [ -d $1 ]
+then
+	srcdir=$1
+	LIST=`pkginfo -L -d $srcdir $pkgabrv` || exit 1
+else
+	tmpdir=/tmp/$$pkgchk
+	mkdir $tmpdir || exit 1
+	pkgtrans -i $1 $tmpdir $pkgabrv || exit 1
+	srcdir=$tmpdir
+	LIST=`pkginfo -L -d $srcdir all` || exit 1
+fi
+
+for dpkginst in $LIST
+do
+	dpkgabrv=`expr $dpkginst : '\([^.]*\)'` || exit 1
+	for pkginst in `pkginfo -L ${dpkgabrv}`
+	do
+		pkgchk $opts $paths \
+			-m $srcdir/$dpkginst/pkgmap \
+			-e /var/sadm/pkg/$pkginst/pkginfo
+	done
+done
+
+if [ -n "$tmpdir" ]
+then
+	rm -rf $tmpdir
+fi

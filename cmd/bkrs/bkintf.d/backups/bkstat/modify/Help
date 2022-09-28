@@ -1,0 +1,37 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkstat/modify/Help	1.2.1.1"
+
+ABSTRACT: Modify Status of Backup Jobs
+	The "modify" task allows you to suspend, resume or cancel selected
+	backup jobs.
+	
+	This form allows you to specify the user name or the jobid of the
+	backup jobs whose status should be Modified.
+
+TITLE: Modify Status of Backup Jobs
+
+control:F1:
+	If "User:" selected, enter the login corresponding to the user
+	who started the backup job(s) you want to cancel, suspend or
+	resume.
+
+	If "Jobid:"  Enter the backup jobid of the job you are cancelling,
+	suspending or resuming.  The jobid is of the form "back-N", where N
+	is a number of digits.
+
+control:F2:
+	"Control by:"  Enter the way you want to specify which jobs are
+	to be suspended, canceled or resumed.  You may control job
+	selection by user or by backup jobid.  Enter "user" or "jobid"
+	in this field.  The [CHOICES] key will toggle between these two
+	choices.
+
+modify:F1:
+	"Operation:"  Enter "cancel", "suspend" or "resume".  The [CHOICES]
+	key will display these options.
+
+modify:F2:
+	"Control by:"  Enter the way you want to specify which jobs are
+	to be suspended, canceled or resumed.  You may control job
+	selection by user or by backup jobid.  Enter "user" or "jobid"
+	in this field.  The [CHOICES] key will toggle between these two
+	choices.

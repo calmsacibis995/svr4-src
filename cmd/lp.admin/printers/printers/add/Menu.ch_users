@@ -1,0 +1,31 @@
+#ident	"@(#)lp.admin:printers/printers/add/Menu.ch_users	1.3.3.1"
+
+menu=Choices
+lifeterm=shortterm
+multiselect=true
+framemsg="MARK any number of choices and press ENTER when finished."
+
+`set -l name_1="/tmp/users$VPID";
+	echo "$ARG1" | tr -s "," " " |  tr -s " " "\012" | /usr/bin/sort -u > $used;
+	cut -f1 -d:  /etc/passwd | /usr/bin/sort -u | /usr/bin/comm -23 - $used > $name_1;
+if [ "$ARG1" = "none" ];
+then
+	echo "all" >> $name_1;
+else
+	echo "none" >> $name_1;
+fi;
+if [ -s $name_1 ];
+then
+	:;	
+else
+	echo "init=false";
+	message -b "There are currently no user(s) defined.";
+	rm -f $name_1 $used;
+fi`
+
+close=`rm -f $name_1 $used;
+	unset -l $name_1`
+
+done=`getitems " "|set -l Form_Choice`close
+
+`/usr/bin/sort $name_1 | regex '^(.*)$0$' 'name=$m0'`

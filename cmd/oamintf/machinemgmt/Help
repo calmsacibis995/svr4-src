@@ -1,0 +1,6 @@
+#ident	"@(#)oamintf:machinemgmt/Help	1.1.1.1"
+ABSTRACT:
+	The items in the "machine" menu provide functions for machine
+	operations.  They include the ability to to shut down the
+	system, to reboot, and to display all users logged into the
+	system.

@@ -1,0 +1,26 @@
+#ident	"@(#)oamintf:edsysadm/Text.exit6	1.2"
+
+################################################################################
+#	Module Name:Text.exit6
+#	Date: August 1987
+################################################################################
+title="Package Error"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+text="
+   Cannot update prototype file in the current directory because
+   it was not created by edsysadm."
+
+rows=4
+columns=65
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

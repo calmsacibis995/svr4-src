@@ -1,0 +1,33 @@
+#ident	"@(#)nadmin.dfs:Help	1.1"
+ABSTRACT:
+	The remote_files menu alows you to control the 
+	availability of you own system's resources to users
+	of remote systems.  It also allows you to control
+	the availability of remote systems' resources to
+	the users of your local system.
+
+local:F1:Local Resource Sharing Management
+	The local_resources menu allows you to control the
+	availability of local resources to remote systems.
+	You can specify which local resources are to be available currently
+	via a particular distributed file system.  Your can also
+	specify which local resources are to be made available
+	automatically when a distributed file system begins
+	operation.
+	
+remote:F2:Remote Resource Sharing Management
+	The remote_resources menu allows you to control the
+	availability of remote resources to users of your local
+	system.  You can specify which remote resources are to be
+	available currently on your local system via a particular
+	distributed file system.  You can also specify which remote 
+	resources are to be made available automatically when a
+	distributed file system begins operation.
+	
+setup:F3:Initial Distributed File System Setup
+	The setup menu allows you to perform the initial setup
+	of distributed file systems.
+	
+ops:F4:Operations for Specific Distributed File Systems
+	The specific_ops menu allows you to perform operations
+	that pertain to particular distributed file systems.

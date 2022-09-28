@@ -1,0 +1,115 @@
+#ident	"@(#)oamintf:usermgmt/Form.modgrp2	1.2.3.1"
+
+################################################################################
+#	Module Name:  Form.modgrp2
+################################################################################
+form="Modify a Group Definition"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+`set -l LIFE=longterm`
+lifetime=$LIFE
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+wrap=false
+
+close=`rm -f $GMODERR`
+
+done=`message -w "Modifying group $GNAM.";
+
+   set -l GMODERR=/tmp/$VPID.mge;
+
+   rm -f /tmp/ln;
+
+   modgrp "$GNAM" "$F1" "$F2" "$F3" "$F4" > $GMODERR 2>\&1;
+   if [ $RET -eq 0 ];
+   then
+      set -l LIFE=shortterm;
+      set -l CMD="OPEN TEXT $OBJ_DIR/Text.mgrpok $GNAM $ARG2";
+   else
+      set -l CMD="OPEN TEXT $OBJ_DIR/Text.mgrpnok $GNAM $ARG2";
+   fi`$CMD
+
+#  $F1
+name=Group name:
+lininfo=Form.modgrp2:grpname
+nrow=1
+ncol=3
+frow=1
+fcol=15
+rows=1
+columns=8
+
+# Since this form is called only after the group name or ID is validated,
+#   we can grep for the argument (ARG1) without having to worry if its
+#   at the beginning of the line.  This is necessary since GIDs are not at
+#   the beginning.  However, we can invoke this form with either a group
+#   name or ID.
+`fmlgrep "$ARG1:" /etc/group | fmlcut -d: -f1 | set -l GNAM`
+value=const $GNAM
+valid=`valstr -r '^[ -9;-z]\{1,8\}$' "$F1" && uniq_gnam "$F1" "$GNAM"`
+invalidmsg=`if [ $RET -eq 1 ];
+	    then
+		echo "ERROR: Enter a character string 1-8 characters, cannot include a (:) and must be unique.";
+	    fi`
+
+#  $F2
+name=Group ID:
+lininfo=Form.modgrp2:grpid
+nrow=2
+ncol=3
+frow=2
+fcol=13
+rows=1
+columns=5
+
+`fmlgrep "^$GNAM:" /etc/group | fmlcut -d: -f3 | set -l GID`
+value=const $GID
+`set -l MAXID=60000`
+valid=`valrange -l100 -u$MAXID $F2 && uniq_gid $F2 $GID`
+invalidmsg=`if [ $RET -eq  1 ];
+	    then
+		echo "ERROR: Group ID must be unique.";
+	    else
+		errange -l100 -u$MAXID;
+	    fi`
+
+#  $F3
+name=Primary member(s):
+lininfo=Form.modgrp2:primem
+nrow=3
+ncol=3
+frow=3
+fcol=22
+rows=1
+columns=55
+scroll=true
+
+`getprimary "$GNAM" | set -l PGRP`
+value=const $PGRP
+rmenu=OPEN MENU $OBJ_DIR/Menu.mlogins
+valid=`chk_logins $F3`
+
+invalidmsg="ERROR: `readfile /tmp/ln` does not exist."
+
+#  $F4
+name=Supplementary member(s):
+lininfo=Form.modgrp2:supmem
+nrow=4
+ncol=3
+frow=4
+fcol=28
+rows=1
+columns=49
+scroll=true
+
+value=const `fmlgrep "^$GNAM:" /etc/group | fmlcut -d: -f4`
+rmenu=OPEN MENU $OBJ_DIR/Menu.mlogins
+valid=`chk_logins $F4`
+
+invalidmsg="ERROR: `readfile /tmp/ln` does not exist"
+
+name=RESET
+button=8
+action=RESET

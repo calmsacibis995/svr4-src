@@ -1,0 +1,113 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksched/add/Form.add	1.8.3.1"
+form="Add Entries to the Backup Schedule"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+`set -l CMD=""`
+
+done=`message -w;
+	set -l ERR=/tmp/$VPID.bea;
+	message -w "Trying to add entry.";
+	bksadd "$F1" "$F2" "$F3" "$F4" "$F5" "$F6" >$ERR 2>$ERR;
+	if [ $RET -eq 0 ] ;
+	then
+		getfrm | set -l FNUM;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.addok $FNUM";
+	else
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.addnok";
+	fi`$!CMD
+
+begrow=any
+begcol=any
+
+# Time field - F1
+name=Time:
+lininfo=F1
+nrow=2
+ncol=2
+
+value=17:00
+
+frow=2
+fcol=9
+rows=1
+columns=5
+
+choicemsg="Enter a time string hh:mm, where hh is 00-23, mm is 00-59."
+valid=`valtime "$F1"`
+invalidmsg="Error - enter a time hh:mm, where hh is 00-23, mm is 00-59."
+
+# Days of week field - F2
+name=Day(s):
+lininfo=F2
+nrow=4
+ncol=2
+
+frow=4
+fcol=10
+rows=1
+columns=53
+
+value=1-5
+choicemsg="Enter a list of weekdays (0=Sun to 6=Sat) on which to run this backup or 'all'."
+valid=`valdays "$F2" all`
+invalidmsg=`errdays all`
+
+# Months field - F3
+name=Month(s):
+lininfo=F3
+nrow=6
+ncol=2
+
+frow=6
+fcol=12
+rows=1
+columns=59
+
+value=all
+
+choicemsg="Enter a list of months (1-12) in which to run this backup or 'all'."
+
+valid=`valmonths "$F3"`
+
+invalidmsg="Error - enter a list of months (1-12) or 'all'."
+
+# Table field - F4
+name=Table:
+lininfo=F4
+nrow=8
+ncol=2
+
+frow=8
+fcol=10
+rows=1
+columns=60
+scroll=true
+
+value=`brfindtab bkreg`
+
+choicemsg="Enter the path to the backup register table for this backup."
+
+valid=`valpath -gor "$F4"`
+
+invalidmsg=`errpath -gor`
+
+
+# Notify field - F5
+name=Notify:
+lininfo=F5
+nrow=10
+ncol=2
+
+frow=10
+fcol=10
+rows=1
+columns=3
+
+value=yes
+choicemsg="Enter 'yes' to get mail when backup job has completed."
+invalidmsg="You must enter 'yes' or 'no'."
+rmenu={ yes no }
+menuonly

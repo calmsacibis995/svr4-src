@@ -1,0 +1,19 @@
+#ident	"@(#)oamintf:interface/Text.oamhelp	1.5.2.1"
+#
+#  This is the text object used for help within the OAM Interface.
+#  It is modeled after the text object used for help within the
+#  ViewMaster Interface.
+#
+
+title=HELP on $ARG2
+#help=OPEN TEXT OBJECTS/Text.help T.h1.help 'help facility overview'
+framemsg=`readfile $INTFBASE/display.msg`
+
+begrow=distinct
+begcol=distinct
+
+rows="`$OAMBASE/bin/itemhelp -g "$ARG3" "$ARG1/Help" "$ARG4/Help"`"
+columns=76
+
+lifetime=longterm
+text="`$OAMBASE/bin/itemhelp -a "$ARG3" "$ARG1/Help" "$ARG4/Help"`"

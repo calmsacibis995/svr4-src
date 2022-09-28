@@ -1,0 +1,11 @@
+#ident	"@(#)cmd-inet:etc/networks	1.1"
+
+#
+# Internet networks
+#
+loopback	127
+
+#
+# Internet networks
+#
+arpanet		10		arpa

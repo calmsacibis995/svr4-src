@@ -1,0 +1,27 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/Text.lshost	1.4"
+###############################################################################
+#    Module Name:  Text.listhost
+#    Description:  
+#     Lists RFS Domain Name Servers
+#
+###############################################################################
+title="Lists Systems in the Current Domain Password File"
+#help=OPEN TEXT $INTFBASE/Text.oamhelp "$OBJ_DIR/other/rfs/system/HELP/$LININFO" 'Lists Systems in the Current Domain Password File'
+
+close=unset -l DOM -l PID
+
+`readfile $INTFBASE/display.msg | message -p`
+
+`/usr/bin/dname -d | set -e DOM;
+shell "if [ -s "/etc/rfs/auth.info/$DOM/passwd" ]
+then
+	echo  >/var/tmp/dsystem_\$\$
+	/bin/sed "s/:.*//g" "/etc/rfs/auth.info/$DOM/passwd" >>/var/tmp/dsystem_\$\$
+else
+	echo "There are no systems in the current domain password file.">/var/tmp/dsystem_\$\$
+fi
+echo \$\$" | set -l PID`
+
+columns=40
+text="Members of current RFS Domain:
+`readfile /var/tmp/dsystem_$PID`"

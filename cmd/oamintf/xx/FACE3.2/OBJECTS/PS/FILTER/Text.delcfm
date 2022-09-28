@@ -1,0 +1,50 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FILTER/Text.delcfm	1.1"
+title="Confirmation"
+lifetime=shortterm
+altslks
+
+begrow=any
+begcol=any
+
+`message "Strike the CONT function key to continue."`
+
+text="
+  If you confirm, the following filter(s) will no longer
+  be available for use on your system:
+  "$ARG1""
+
+rows=5
+columns=60
+
+name=CANCEL
+button=14
+action=close $VMSYS/OBJECTS/PS/FILTER/Menu.del $VMSYS/OBJECTS/PS/FILTER/Text.delcfm
+
+name=CONT
+button=11
+action=`$VMSYS/admin/.chkuser -c "/usr/vmsys/admin/PS/FILTER/delete :$ARG1:"`close $VMSYS/OBJECTS/PS/FILTER/Menu.del $VMSYS/OBJECTS/PS/FILTER/Text.delcfm
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=""
+button=10
+action=nop
+
+name=""
+button=9
+action=nop
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=return cancel
+`indicator -w`

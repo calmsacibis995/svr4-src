@@ -1,0 +1,27 @@
+#ident	"@(#)oamintf:usermgmt/Text.musrok	1.4.3.1"
+################################################################################
+#	Module Name: Text.musrok
+################################################################################
+title="Modifying a User Definition"
+`readfile $INTFBASE/trept.msg | message -t`
+lifetime=shortterm
+
+#framemsg=`readfile $INTFBASE/trept.msg`
+
+close=`rm -f $UMODERR`
+
+rows=3
+columns=50
+
+text="
+User $ARG1 was modified as requested."
+
+altslks
+
+name=CONT
+button=11
+action=update $OBJ_DIR/Form.modusr1 true
+
+name=CANCEL
+button=14
+action=CLEANUP

@@ -1,0 +1,11 @@
+#ident	"@(#)lp.admin:printers/operations/operations.men	1.1"
+#menu#Perform Daily Printer Service Operations
+#help#oper.help^Perform Daily Printer Service Operations
+accept^Allow Class(es) and/or Printer(s) to Accept Print Requests^Form.accept^Help.accept
+control^Start or Stop the Print Service^Form.control^Help.control
+disable^Disable Printer from Printing^Form.disable^Help.disable
+enable^Enable Printer for Printing^Form.enable^Help.enable
+mount^Mount a Form or Font On a Printer^Form.mount^Help.mount
+reject^Stop Printer From Accepting Print Requests^Form.reject^Help.reject
+set default^Set Default Print Destination^Form.default^Help.set default
+unmount^Unmount a Form or Printwheel From a Printer^Form.unmount^Help.unmount

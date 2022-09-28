@@ -1,0 +1,47 @@
+#ident	"@(#)oamintf:syssetup/Text.datenok	1.3"
+################################################################################
+#	Module Name: Text.datenok
+#	Calling Sequence: Form.datetime calls dateset and then uses
+#			  both Text.dateok and Text.datenok
+#	Functional Description: This Text object displays a screen when the user
+#				is unable to (re)set the Date and Time.
+#	Inputs:
+#		ARG1 - Month 	ARG2 - Day 	ARG3 - Year
+#		ARG4 - Hour 	ARG5 - Minute 	ARG6 - am/pm
+#		ARG7 - Timezone 
+#	Functions Called:
+#	Issues:
+################################################################################
+
+Title=Unable to Set System Date and Time Information
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+#begrow=1
+#begcol=1
+rows=12
+columns=72
+
+close=`rmfile 'gettz';
+	rmfile 'admerr'`
+
+text="
+The system was unable to change the date and time as you
+requested.  Verify that the system date and time are legitimate.
+To see the current date and time, run the "date(1)" command.
+
+Errors:
+
+   `readfile /tmp/admerr`
+"
+
+#	(This is for confirmation, warning and repetition text screens
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

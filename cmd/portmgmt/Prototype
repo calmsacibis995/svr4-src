@@ -1,0 +1,140 @@
+#ident	"@(#)portmgmt:Prototype	1.1.1.1"
+
+!MENU=usr/sadm/sysadm/menu
+!INTFBIN=usr/sadm/sysadm/bin
+
+## Files from local prototype: component=portmgmt
+
+# foundation set (predecessor) directories
+
+d foundation usr 0755 root sys
+d foundation usr/sadm 0755 bin bin
+d foundation usr/sadm/sysadm 0755 bin bin
+d foundation $INTFBIN 0755 bin bin
+d foundation $MENU 0755 bin bin
+
+# basic and extended OAM directories
+
+d OAM_basic $MENU/ports 0755 bin bin
+d OAM_basic $MENU/ports/port_quick 0755 bin bin
+d OAM_basic $MENU/ports/port_monitors 0755 bin bin
+d OAM_basic $MENU/ports/port_monitors/add 0755 bin bin
+d OAM_basic $MENU/ports/port_monitors/disable 0755 bin bin
+d OAM_basic $MENU/ports/port_monitors/enable 0755 bin bin
+d OAM_basic $MENU/ports/port_monitors/list 0755 bin bin
+d OAM_basic $MENU/ports/port_monitors/modify 0755 bin bin
+d OAM_basic $MENU/ports/port_monitors/remove 0755 bin bin
+d OAM_basic $MENU/ports/port_monitors/start 0755 bin bin
+d OAM_basic $MENU/ports/port_monitors/stop 0755 bin bin
+d OAM_basic $MENU/ports/port_services 0755 bin bin
+d OAM_basic $MENU/ports/port_services/add 0755 bin bin
+d OAM_basic $MENU/ports/port_services/disable 0755 bin bin
+d OAM_basic $MENU/ports/port_services/enable 0755 bin bin
+d OAM_basic $MENU/ports/port_services/list 0755 bin bin
+d OAM_basic $MENU/ports/port_services/modify 0755 bin bin
+d OAM_basic $MENU/ports/port_services/remove 0755 bin bin
+d OAM_basic $MENU/ports/tty_settings 0755 bin bin
+d OAM_basic $MENU/ports/tty_settings/add 0755 bin bin
+d OAM_basic $MENU/ports/tty_settings/list 0755 bin bin
+d OAM_basic $MENU/ports/tty_settings/remove 0755 bin bin
+
+# basic and extended interface
+
+f OAM_basic $INTFBIN/isastream 0755 bin bin
+f OAM_basic $INTFBIN/q-add 0755 bin bin
+f OAM_basic $INTFBIN/q-rm 0755 bin bin
+f OAM_basic $INTFBIN/ckbaud 0755 bin bin
+f OAM_basic $INTFBIN/ckfile 0755 bin bin
+f OAM_basic $INTFBIN/ckwcount 0755 bin bin
+f OAM_basic $INTFBIN/findpmtype 0755 bin bin
+f OAM_basic $INTFBIN/lsopts 0755 bin bin
+f OAM_basic $INTFBIN/modifypm 0755 bin bin
+f OAM_basic $INTFBIN/pmadmopts 0755 bin bin
+f OAM_basic $INTFBIN/pmckmod 0755 bin bin
+f OAM_basic $INTFBIN/pmgetpid 0755 bin bin
+f OAM_basic $INTFBIN/psmod 0755 bin bin
+f OAM_basic $INTFBIN/pstest 0755 bin bin
+f OAM_basic $INTFBIN/sacopts 0755 bin bin
+f OAM_basic $INTFBIN/settinglist 0755 bin bin
+f OAM_basic $INTFBIN/tmopts 0755 bin bin
+f OAM_basic $INTFBIN/ttylist 0755 bin bin
+f OAM_basic $INTFBIN/uniq_label 0755 bin bin
+f OAM_basic $INTFBIN/uniq_pmtag 0755 bin bin
+f OAM_basic $INTFBIN/uniq_svctag 0755 bin bin
+f OAM_bhelp $MENU/ports/Help 0644 bin bin
+f OAM_bhelp $MENU/ports/port_monitors/Help 0644 bin bin
+f OAM_bhelp $MENU/ports/port_quick/Help 0644 bin bin
+f OAM_basic $MENU/ports/port_monitors/add/Form.pm_add 0644 bin bin
+l OAM_bhelp $MENU/ports/port_monitors/add/Help=/usr/sadm/sysadm/menu/ports/port_monitors/Help
+l OAM_bhelp $MENU/ports/port_monitors/disable/Help=/usr/sadm/sysadm/menu/ports/port_monitors/Help
+f OAM_basic $MENU/ports/port_monitors/disable/Menu.pm_disabl 0644 bin bin
+l OAM_bhelp $MENU/ports/port_monitors/enable/Help=/usr/sadm/sysadm/menu/ports/port_monitors/Help
+f OAM_basic $MENU/ports/port_monitors/enable/Menu.pm_enable 0644 bin bin
+l OAM_bhelp $MENU/ports/port_monitors/list/Help=/usr/sadm/sysadm/menu/ports/port_monitors/Help
+f OAM_basic $MENU/ports/port_monitors/list/Menu.pm_list 0644 bin bin
+f OAM_basic $MENU/ports/port_monitors/list/Menu.pm_lstag 0644 bin bin
+f OAM_basic $MENU/ports/port_monitors/list/Menu.pm_lstype 0644 bin bin
+f OAM_basic $MENU/ports/port_monitors/list/Text.pm_list 0644 bin bin
+f OAM_basic $MENU/ports/port_monitors/list/Text.pm_lsall 0644 bin bin
+f OAM_basic $MENU/ports/port_monitors/modify/Form.pm_modify 0644 bin bin
+l OAM_bhelp $MENU/ports/port_monitors/modify/Help=/usr/sadm/sysadm/menu/ports/port_monitors/Help
+f OAM_basic $MENU/ports/port_monitors/modify/Menu.pm_modify 0644 bin bin
+f OAM_basic $MENU/ports/port_monitors/pm.menu 0644 bin bin
+l OAM_bhelp $MENU/ports/port_monitors/remove/Help=/usr/sadm/sysadm/menu/ports/port_monitors/Help
+f OAM_basic $MENU/ports/port_monitors/remove/Menu.pm_remove 0644 bin bin
+l OAM_bhelp $MENU/ports/port_monitors/start/Help=/usr/sadm/sysadm/menu/ports/port_monitors/Help
+f OAM_basic $MENU/ports/port_monitors/start/Menu.pm_start 0644 bin bin
+l OAM_bhelp $MENU/ports/port_monitors/stop/Help=/usr/sadm/sysadm/menu/ports/port_monitors/Help
+f OAM_basic $MENU/ports/port_monitors/stop/Menu.pm_stop 0644 bin bin
+f OAM_bhelp $MENU/ports/port_services/Help 0644 bin bin
+f OAM_basic $MENU/ports/port_services/Menu.c_labels 0644 bin bin
+f OAM_basic $MENU/ports/port_services/add/Form.ps_add 0644 bin bin
+f OAM_basic $MENU/ports/port_services/add/Form.ps_addls 0644 bin bin
+f OAM_basic $MENU/ports/port_services/add/Form.ps_addtm 0644 bin bin
+f OAM_basic $MENU/ports/port_services/add/Text.ps_msg 0644 bin bin
+f OAM_basic $MENU/ports/port_services/add/Form.ps_adduk 0644 bin bin
+l OAM_bhelp $MENU/ports/port_services/add/Help=/usr/sadm/sysadm/menu/ports/port_services/Help
+f OAM_basic $MENU/ports/port_services/add/Menu.ps_add 0644 bin bin
+f OAM_basic $MENU/ports/port_services/add/Menu.ps_atag 0644 bin bin
+f OAM_basic $MENU/ports/port_services/add/Menu.ps_atype 0644 bin bin
+l OAM_bhelp $MENU/ports/port_services/disable/Help=/usr/sadm/sysadm/menu/ports/port_services/Help
+f OAM_basic $MENU/ports/port_services/disable/Menu.ps_disabl 0644 bin bin
+l OAM_bhelp $MENU/ports/port_services/enable/Help=/usr/sadm/sysadm/menu/ports/port_services/Help
+f OAM_basic $MENU/ports/port_services/enable/Menu.ps_enable 0644 bin bin
+l OAM_bhelp $MENU/ports/port_services/list/Help=/usr/sadm/sysadm/menu/ports/port_services/Help
+f OAM_basic $MENU/ports/port_services/list/Menu.ps_list 0644 bin bin
+f OAM_basic $MENU/ports/port_services/list/Menu.ps_lstag 0644 bin bin
+f OAM_basic $MENU/ports/port_services/list/Menu.ps_lstype 0644 bin bin
+f OAM_basic $MENU/ports/port_services/list/Text.ps_list 0644 bin bin
+f OAM_basic $MENU/ports/port_services/list/Text.ps_lsall 0644 bin bin
+f OAM_basic $MENU/ports/port_services/modify/Form.ps_modls 0644 bin bin
+f OAM_basic $MENU/ports/port_services/modify/Form.ps_modtm 0644 bin bin
+l OAM_bhelp $MENU/ports/port_services/modify/Help=/usr/sadm/sysadm/menu/ports/port_services/Help
+f OAM_basic $MENU/ports/port_services/modify/Menu.ps_modify 0644 bin bin
+f OAM_basic $MENU/ports/port_services/ps.menu 0644 bin bin
+l OAM_bhelp $MENU/ports/port_services/remove/Help=/usr/sadm/sysadm/menu/ports/port_services/Help
+f OAM_basic $MENU/ports/port_services/remove/Menu.ps_remove 0644 bin bin
+f OAM_basic $MENU/ports/ports.menu 0644 bin bin
+f OAM_bhelp $MENU/ports/tty_settings/Help 0644 bin bin
+f OAM_basic $MENU/ports/tty_settings/add/Form.tty_add 0644 bin bin
+l OAM_bhelp $MENU/ports/tty_settings/add/Help=/usr/sadm/sysadm/menu/ports/tty_settings/Help
+f OAM_basic $MENU/ports/tty_settings/add/Menu.c_labels 0644 bin bin
+f OAM_basic $MENU/ports/tty_settings/add/Menu.tty_baud 0644 bin bin
+f OAM_basic $MENU/ports/tty_settings/add/Text.tty_add 0644 bin bin
+l OAM_bhelp $MENU/ports/tty_settings/list/Help=/usr/sadm/sysadm/menu/ports/tty_settings/Help
+f OAM_basic $MENU/ports/tty_settings/list/Menu.tty_list 0644 bin bin
+f OAM_basic $MENU/ports/tty_settings/list/Text.tty_list 0644 bin bin
+f OAM_bhelp $MENU/ports/tty_settings/remove/Help 0644 bin bin
+f OAM_basic $MENU/ports/tty_settings/remove/Menu.tty_rm 0644 bin bin
+f OAM_basic $MENU/ports/tty_settings/tty.menu 0644 bin bin
+f OAM_basic $MENU/ports/tty_settings/ttyvalues 0644 bin bin
+
+f OAM_basic $MENU/ports/port_quick/Form.add 0644 bin bin
+f OAM_basic $MENU/ports/port_quick/Form.rm 0644 bin bin
+f OAM_basic $MENU/ports/port_quick/Menu.ap 0644 bin bin
+f OAM_basic $MENU/ports/port_quick/Menu.rp 0644 bin bin
+f OAM_basic $MENU/ports/port_quick/Text.cfa 0644 bin bin
+f OAM_basic $MENU/ports/port_quick/Text.cfr 0644 bin bin
+f OAM_basic $MENU/ports/port_quick/Text.priv 0644 bin bin
+f OAM_basic $MENU/ports/port_quick/quick.menu 0644 bin bin
+

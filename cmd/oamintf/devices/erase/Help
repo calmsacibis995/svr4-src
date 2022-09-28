@@ -1,0 +1,35 @@
+#ident	"@(#)oamintf:devices/erase/Help	1.3.2.1"
+ABSTRACT:
+	The "erase" task erases a removable volume.  Its main purpose is
+	to remove data so that it is no longer readable by anyone.
+	Once performed, it is irreversible.  A volume cannot be erased if
+	it is currently mounted or otherwise busy.
+
+Menu.erase:Devices Available
+	The devices available menu contains an entry for each type
+	of device which supports the erase operation.
+	Select the desired device type from the menu.  You will then
+	be prompted for a device group and/or a specific device.
+
+devgrp:Device Group
+	Enter the device group you will be working with.
+	Press CHOICES to see the available device groups.
+
+devdr:Device Drive
+	Enter the device drive that will hold the volume to be erased.
+	Press CHOICES to see available choices for this prompt.
+
+Text.diskette:ABSTRACT
+	At this time, insert the volume you wish to erase into the drive
+	you indicated in the previous frame.  After you press CONT, the
+	task will erase the volume.
+
+Text.erase2:ABSTRACT
+	The volume has been erased.  This completes the "erase" task.  If
+	you would like to erase another volume, insert it into the drive
+	and press CONT.
+
+Text.eraserr:ABSTRACT
+	An error occurred while attempting to erase the volume.  Make sure
+	the volume is inserted into the drive properly.  To try again, press
+	CONT.  To leave the "erase" task, press CANCEL.

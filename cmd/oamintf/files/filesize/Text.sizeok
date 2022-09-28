@@ -1,0 +1,19 @@
+#ident	"@(#)filemgmt:filesize/Text.sizeok	1.1.2.1"
+title="List Largest File(s) in a Given Directory"
+
+`readfile $INTFBASE/display.msg | message`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp sizeokhelp 
+
+close=`$OAMBASE/bin/rmfile 'file.size'`
+
+begrow=distinct
+begcol=distinct
+rows=19
+columns=75
+
+text="`readfile /tmp/file.size`"
+
+name=CONT
+button=11
+action=`$OAMBASE/bin/rmfile 'file.size'`CLOSE $OBJ_DIR/Text.sizeok

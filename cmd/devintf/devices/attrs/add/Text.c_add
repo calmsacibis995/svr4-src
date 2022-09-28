@@ -1,0 +1,21 @@
+#ident	"@(#)devintf:devices/attrs/add/Text.c_add	1.3"
+
+title="Completion Message"
+begrow=any
+begcol=any
+columns=60
+rows=4
+altslks=TRUE
+framemsg=`readfile $INTFBASE/trept.msg`
+lifetime=shortterm
+
+text="
+$ARG1"
+
+name="CONT"
+button=11
+action=update $FRAMENUM true
+
+name="CANCEL"
+button=14
+action=cleanup

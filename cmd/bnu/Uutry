@@ -1,0 +1,82 @@
+#!/usr/bin/sh
+#ident	"@(#)bnu:Uutry	2.6.2.1"
+
+export IFS PATH
+IFS=" 	
+"
+PATH="/usr/bin"
+
+#	This shell will start a uucico for the system given.
+#	Options:
+#	  -xN the debugging level for uucico (-x5 default)
+#	  -r  force the removal of the status file
+#	The output is put in /tmp/Name where Name is the name
+#	of the system name.  A tail -f is performed after uucico is started.
+
+STATUS=/var/uucp/.Status
+
+UUCICO=/usr/lib/uucp/uucico
+tty -s
+if [ "`pwd`" != "/usr/lib/uucp" -a "$?" = 0 -a -x "./uucico" ]; then
+	echo "OK to execute uucico from current directory (`pwd`)? y or n? \c"
+	read ans
+	if [ "$ans" = "y" ]
+	    then
+		UUCICO=./uucico
+	fi
+fi
+
+REMOVE=""
+X="-x5"
+SYS=
+while [ $# -gt 0 ]
+do
+	case $1 in
+	-c)  shift; CLASS="-c$1"; shift;;
+	-c*) CLASS="$1"; shift;;
+	-x)  shift; X="-x$1"; shift;;
+	-x*) X=$1; shift;;
+	-r) REMOVE="-f"; shift;;
+	-?) echo "$0: unrecognized flag $1\nUSAGE: $0 [-r] [-xdebug_level] system";exit 1;;
+	*) SYS="$1"; shift;;
+	esac
+done
+
+if [ -z "$SYS" ]
+then
+	echo "$0:  system name required"
+	exit 1
+fi
+
+#  check for existence in Systems file
+#  only accept match of full name
+#  (important because some names may be prefixes of others!)
+XX=
+XX=`uuname | grep "^${SYS}$" `
+if [ -z "$XX" ]
+then
+	echo "Invalid system name \"$SYS\""
+	exit
+fi
+
+STMP=/tmp/$SYS
+rm -f $STMP
+> $STMP
+chmod 622 $STMP
+#  remove old status file (can't actually remove, since $STATUS isn't
+#  publicly writable, but zero-ing it out works fine)
+if [ -n "$REMOVE" ]; then
+    cp /dev/null $STATUS/${SYS} 
+fi
+
+echo "$UUCICO -r1 -s$SYS $CLASS $REMOVE $X >$STMP 2>&1&"
+$UUCICO  -r1 -s$SYS $CLASS $REMOVE $X >$STMP 2>&1&
+
+echo "tmp=$STMP"
+#	on heavily loaded systems, may take a moment for uucico
+#	to create debug file.
+if [ ! -f $STMP ]
+then
+	sleep 5
+fi
+tail -f $STMP

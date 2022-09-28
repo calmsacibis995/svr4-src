@@ -1,0 +1,60 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/rotation/Form.values	1.5"
+form="Current Rotation Period and Week"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+`set -l CMD=""`
+
+done=`message -w "Trying to change rotation period.";
+	set -l ERR=/tmp/$VPID.bea;
+	bkreg -t $ARG1 -p "$F1" -w "$F2" 2>$ERR;
+	if [ $RET -eq 0 ] ;
+	then
+		getfrm | set -l FNUM;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.rotok $F1 $FNUM";
+	else
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.rotnok $F1";
+	fi`$!CMD
+
+begrow=any
+begcol=any
+
+# Rotation Period field
+name=Rotation period:
+lininfo=values:F1
+nrow=2
+ncol=2
+
+value=`echo $PDCW | fmlcut -f1 -d: | sed -e "s/Period=//"`
+
+frow=2
+fcol=19
+rows=1
+columns=2
+
+choicemsg=`helprange -h "~Enter the number of weeks in the rotation period (1 to 52)." -l 1 -u 52`
+
+valid=`valrange -l 1 -u 52 "$F1"`
+
+invalidmsg=`errange -l 1 -u 52`
+
+# Week of the rotation field
+name=Current week:
+lininfo=values:F2
+nrow=4
+ncol=2
+
+value=`echo $PDCW | fmlcut -f2 -d: | sed -e "s/Cweek=//"`
+
+frow=4
+fcol=16
+rows=1
+columns=2
+
+choicemsg=`helprange -h "~Enter the current week of the rotation period (1 to $F1)." -l 1 -u "$F1"`
+
+valid=`valrange -l 1 -u "$F1" $F2`
+
+invalidmsg=`errange -l 1 -u "$F1"`

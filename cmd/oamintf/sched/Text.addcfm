@@ -1,0 +1,59 @@
+#ident	"@(#)oamintf:sched/Text.addcfm	1.1"
+
+title=Confirmation
+altslks
+
+close=`rm -f /tmp/task.$VPID`
+
+begrow=center
+begcol=center
+rows=11
+columns=70
+
+`message "Strike the CONT function key to confirm, or strike CANCEL to cancel."`
+
+text=" The following task will be scheduled:
+
+     Task: `cat /tmp/task.$VPID`
+     Month(s): $ARG1
+     Date(s): $ARG2
+     Weekday(s): $ARG3
+     Hour(s): $ARG4
+     Minute(s): $ARG5
+
+ Strike CONT to confirm. If you strike CANCEL, the task will
+ not be scheduled."
+
+name=""
+button=9
+action=nop
+
+name=""
+button=10
+action=nop
+
+name=CONT
+button=11
+action=`indicator -w; add_cron "/tmp/task.$VPID" "$ARG1" "$ARG2" "$ARG6" "$ARG4" "$ARG5"`close $OBJ_DIR/Text.addcfm $OBJ_DIR/Form.add
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=CANCEL
+button=14
+action=close $OBJ_DIR/Text.addcfm $OBJ_DIR/Form.add
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=nop
+
+`indicator -w`

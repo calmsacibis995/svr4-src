@@ -1,0 +1,8 @@
+#ident	"@(#)login:login.dfl	1.1.10.1"
+#TIMEZONE=EST5EDT
+HZ=100
+ULIMIT=4096
+CONSOLE=/dev/console
+PASSREQ=YES
+ALTSHELL=YES
+PATH=/usr/bin

@@ -1,0 +1,86 @@
+#ident	"@(#)lp.admin:printers/printers/add/Text.confirm	1.2.1.2"
+
+title="Printer $lp_printer: Successfully Added."
+altslks=true
+
+init=`
+	if [ -n "$TFADMIN" ]; then $TFADMIN lpstat -p $lp_printer -l > /tmp/lpstat$VPID;
+	else lpstat -p $lp_printer -l > /tmp/lpstat$VPID; fi`
+	
+
+row=15
+columns=55
+
+begrow=distinct
+begcol=distinct
+
+text="
+    Press CANCEL to Continue. 
+
+   Information on $lp_printer:
+`readfile /tmp/lpstat$VPID`
+
+"
+
+name=HELP
+button=9
+action=help
+
+name=PREVPAGE
+button=10
+action=prevpage
+
+name=NEXTPAGE
+button=11
+action=nextpage
+
+name=PREV-FRM
+button=12
+action=prev-frm
+
+name=NEXT-FRM
+button=13
+action=next-frm
+
+name=CANCEL
+button=14
+action=`
+	set -e toclose="$toclose $OAMBASE/add-ons/lp/printers/printers/add/Text.confirm";
+	if [ "$use_stdcon" = "no" ];
+	then
+		if [ "$has_pw" = "TRUE" ];
+		then
+			message -w "Going to next subtask, please wait.";
+			rm -f lpstat$VPID;
+		 	echo "OPEN FORM $OAMBASE/add-ons/lp/printers/printers/add/Form.pwheel";
+		elif [ "$has_chset" = "TRUE" ];
+		then
+			set -e saveinit=/tmp/init$VPID;
+			rm -f lpstat$VPID;
+			message -w "Gathering character set data, please wait.";
+		 	echo "OPEN FORM $OAMBASE/add-ons/lp/printers/printers/add/Form.charset";
+		else
+			rm -f lpstat$VPID;
+			message -w "Going to next subtask, please wait.";
+			echo "OPEN FORM $OAMBASE/add-ons/lp/printers/printers/add/Form.access";
+		fi;
+	else
+		if [ "$use_stdprt" = "no" -a "$lp_fldsys" = "$lp_system" ];
+		then
+			rm -f lpstat$VPID;
+			message -w "Going to next subtask, please wait.";
+			echo "OPEN FORM $OAMBASE/add-ons/lp/printers/printers/add/Form.comm.lcl";
+		else
+			message -w "End of successful printer add.";
+			sleep 2;
+			rm -f $datafile $error;
+			rm -f lpstat$VPID;
+			echo "close $toclose";
+			unset -e toclose;
+		fi;
+	fi;
+`
+
+name=CMD-MENU
+button=15
+action=cmd-menu

@@ -1,0 +1,15 @@
+#ident	"@(#)bkrs:rbasic.d/Menu.restore	1.1.1.1"
+menu="Restore from Removable Media"
+help=open text /usr/vmsys/OBJECTS/Text.h "Restore" restore/T.hrestore
+
+`message "Move to an item with the arrow keys and strike the ENTER key to select"`
+
+name=Personal Restore
+action=open menu $OBJ_DIR/private/Menu.private 
+
+name=System Restore
+action=open menu $OBJ_DIR/system/Menu.system
+
+name=""
+button=16
+

@@ -1,0 +1,13 @@
+%ident	"@(#)lp:filter/postscript/font/devpostaps/charlib/043	1.1.2.1"
+% Build file for # (ASCII code 043).
+
+/build_043 {
+	pop
+	gsave
+	font /Courier eq {
+		/Courier-Oblique findfont size scalefont setfont
+		(\043) stringwidth pop .075 mul neg 0 rmoveto
+	} if
+	(\043) show
+	grestore
+} bind def

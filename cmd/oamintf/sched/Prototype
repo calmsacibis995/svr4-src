@@ -1,0 +1,24 @@
+#ident	"@(#)oamintf:sched/Prototype	1.1"
+!MENU=/usr/sadm/sysadm/menu
+!INTFBIN=/usr/sadm/sysadm/bin
+
+d intf $MENU/sched 0755 bin bin
+f intf $MENU/sched/Form.add 0644 bin bin
+f intf $MENU/sched/Form.chg 0644 bin bin
+f intf $MENU/sched/Menu.chg 0644 bin bin
+f intf $MENU/sched/Menu.day 0644 bin bin
+f intf $MENU/sched/Menu.del 0644 bin bin
+f intf $MENU/sched/Menu.hour 0644 bin bin
+f intf $MENU/sched/Menu.minute 0644 bin bin
+f intf $MENU/sched/Menu.month 0644 bin bin
+f intf $MENU/sched/Menu.sched 0644 bin bin
+f intf $MENU/sched/Menu.week 0644 bin bin
+f intf $MENU/sched/Text.addcfm 0644 bin bin
+f intf $MENU/sched/Text.chgcfm 0644 bin bin
+f intf $MENU/sched/Text.delcfm 0644 bin bin
+f intf $MENU/sched/Text.display 0644 bin bin
+f intf $MENU/sched/Text.noaces 0644 bin bin
+f intf $MENU/sched/Text.nocron 0644 bin bin
+f intf $MENU/sched/Text.nodel 0644 bin bin
+f intf $MENU/sched/Text.notask 0644 bin bin
+f intf $MENU/sched/Help 0644 bin bin

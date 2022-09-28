@@ -1,0 +1,127 @@
+#ident	"@(#)nadmin.nfs:remote/nfs/Form.modify	1.1"
+form="Modifies Automatic-Current Mounting of Remote Resources via NFS"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`set -l OBJ_DIR="$INTFBASE/netservices/remote_files/remote/nfs"`
+`readfile "$INTFBASE/form.msg" | message -p`
+
+done=`indicator -w;
+	set -l IMM="$F2" -el MNT="$F1";
+	unset -l KEYCMD;
+	if [ "$F3" = "yes" ];
+	then
+		"$INTFBASE/netservices/remote_files/remote/nfs/bin/auto_attr" | set -l PID;
+		if [ -s "/var/tmp/attr_$PID" ];
+		then
+			/usr/bin/cut -d" " -f1 "/var/tmp/attr_$PID" | set -el SRV;
+			/usr/bin/cut -d" " -f2 "/var/tmp/attr_$PID" | set -el RPATH;
+			/usr/bin/cut -d" " -f3 "/var/tmp/attr_$PID" | set -el AMNT;
+			/usr/bin/cut -d" " -f4 "/var/tmp/attr_$PID" | set -el ACC;
+			/usr/bin/cut -d" " -f5 "/var/tmp/attr_$PID" | set -el SUID;
+			/usr/bin/cut -d" " -f6 "/var/tmp/attr_$PID" | set -el RMNT;
+			/usr/bin/cut -d" " -f7 "/var/tmp/attr_$PID" | set -el RTRY;
+			/usr/bin/cut -d" " -f8 "/var/tmp/attr_$PID" | set -el MTRIES;
+			/usr/bin/cut -d" " -f9 "/var/tmp/attr_$PID" | set -el TIMEO;
+			if [ "$TIMEO" = "0" ];
+			then
+				set -el TIMEO="";
+			fi;
+			/usr/bin/cut -d" " -f10 "/var/tmp/attr_$PID" | set -el SEC;
+	 		set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/remote/nfs/Form.modify2";
+			rm "/var/tmp/attr_$PID" 2>/dev/null;
+		else
+			message "\"$MNT\" is not mounted automatically.";
+		fi;
+	fi;
+	if [ ! "$KEYCMD" ];
+	then
+		if [ "$F2" = "yes" ];
+		then
+			"$INTFBASE/netservices/remote_files/remote/nfs/bin/curr_attr" | set -l PID;
+			if [ -s "/var/tmp/attr_$PID" ];
+			then
+				/usr/bin/cut -d" " -f1 "/var/tmp/attr_$PID" | set -el SRV;
+				/usr/bin/cut -d" " -f2 "/var/tmp/attr_$PID" | set -el RPATH;
+				/usr/bin/cut -d" " -f3 "/var/tmp/attr_$PID" | set -el MNT;
+				/usr/bin/cut -d" " -f4 "/var/tmp/attr_$PID" | set -el ACC;
+				/usr/bin/cut -d" " -f5 "/var/tmp/attr_$PID" | set -el SUID;
+				/usr/bin/cut -d" " -f6 "/var/tmp/attr_$PID" | set -el RMNT;
+				/usr/bin/cut -d" " -f7 "/var/tmp/attr_$PID" | set -el RTRY;
+				/usr/bin/cut -d" " -f8 "/var/tmp/attr_$PID" | set -el MTRIES;
+				/usr/bin/cut -d" " -f9 "/var/tmp/attr_$PID" | set -el TIMEO;
+				if [ "$TIMEO" = "0" ];
+				then
+					set -el TIMEO="";
+				fi;
+				/usr/bin/cut -d" " -f10 "/var/tmp/attr_$PID" | set -el SEC;
+	 			set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/remote/nfs/Form.modify3 $FRM";
+			else
+				message "\"$SRV:$RPATH\" is not currently mounted via NFS.";
+				set -l KEYCMD="CLOSE $FRM";
+			fi;
+     		else
+				message "Current mounting of \"$SRV:$RPATH\" will not be modified.";
+				set -l KEYCMD="CLOSE $FRM";
+      		fi;
+	fi;
+	`$KEYCMD
+
+`set -l OBJ_DIR="$INTFBASE/netservices/remote_files/remote/nfs"`
+
+#F1
+name="Mountpoint or Server/Pathname:"
+nrow=2
+ncol=1
+frow=2
+fcol=32
+rows=1
+columns=20
+lininfo=modify:mountpt
+rmenu=`indicator -w;
+"$INTFBASE/netservices/remote_files/remote/nfs/bin/ls_resource" | set -l PID;
+	cat "/var/tmp/mnt$PID"`
+menuonly=true
+invalidmsg="Press CHOICES to select valid response."
+
+#F2
+name="Modify how a resource is mounted currently?"
+nrow=3
+ncol=1
+frow=3
+fcol=45
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+lininfo=modify:curr
+invalidmsg="Press CHOICES to select valid response."
+
+#F3
+name="Modify how a resource is mounted automatically?"
+nrow=4
+ncol=1
+frow=4
+fcol=49
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+invalidmsg="Press CHOICES to select valid response."
+lininfo=modify:auto
+
+name="CONTINUE"
+button=11
+action=`set -l CURR="$F4" -l AUTO="$F5" -el RES="$F1";
+	if [ $CURR = "yes" ];
+	then
+		set -l KEYCMD="OPEN FORM Form.modify2";
+	else
+		if
+		[ $AUTO = "yes" ];
+		then
+			set -l KEYCMD="OPEN FORM Form.modify3";
+		fi;
+	fi;
+	`$KEYCMD

@@ -1,0 +1,67 @@
+#ident	"@(#)filemgmt:make/Form.ufs	1.1.2.1"
+Form="Create A File System (make)"
+lifetime=shortterm
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+done=`indicator -w;
+	set -l BLOCKS=$F1 -l BSIZE=$F2 -l FSIZE=$F3;
+	$OAMBASE/bin/ifdiskette $DEVICE | set -l RVAL;
+	if [ "$RVAL" = "true" ];
+	then
+		set -l CMD="OPEN FORM $OBJ_DIR/Form.ufsins";
+	else
+		message -f "Creating a ufs file system. Please Wait...";
+       		$OAMBASE/bin/mkfs_ufs NULL $DEVICE $BLOCKS 9 2 $BSIZE $FSIZE $LABEL $MNTPT;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.make";
+	fi;
+	`$CMD
+
+
+name="Number of Blocks in the File System:" 
+lininfo=Form.ufs2:F1
+nrow=1
+ncol=1
+frow=1
+fcol=39
+rows=1
+columns=10
+value=`if [ "$DEVICE" ];
+	then
+		$OAMBASE/bin/numblocks "$DEVICE";
+	fi;`
+invalidmsg="Error - invalid number of blocks."
+
+name="Block Size in Bytes:"
+lininfo=Form.ufs2:F2
+nrow=2
+ncol=1
+frow=2
+fcol=22
+rows=1
+columns=10
+rmenu={ 4096 8192 }
+menuonly=true
+value=8192
+invalidmsg="Press CHOICES to select valid response."
+
+
+name="Fragment Size in bytes:"
+lininfo=Form.ufs2:F3
+nrow=3
+ncol=1
+frow=3
+fcol=25
+rows=1
+columns=4
+value=1024
+menuonly=true
+rmenu=vary `unset -l X;
+	if [ "$F2" = "8192" ];
+	then
+		set -l X=8192;
+	else
+		set -l X=512;
+	fi;
+	echo "{ $X 1024 2048 4096 } "`

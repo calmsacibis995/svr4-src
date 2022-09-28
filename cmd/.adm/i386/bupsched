@@ -1,0 +1,25 @@
+#ident	"@(#)adm:i386/bupsched	1.1"
+#
+#	Format of lines:
+#time	day	month	list
+#
+#	time  - time(s) of day (24hr clock)
+#	day   - day(s) of week (0 through 6, 0=Sunday)
+#		day(s) of month (1, 2, ..., 31)
+#	month - month(s) of the year (1, 2, ..., 12)
+#	list  - list of filesystems to be backed up
+#
+#	Example:
+#16:00-18:00	mon	*	/usr
+#	If ckbupscd is invoked between 4:00 and 6:00 in the
+#	evening on mondays during any month of the year,
+#	display /usr as the name of a file system that needs
+#	to be backed up.
+#
+#===================================================================
+#
+#	Default backup schedule calls for daily backups of /usr
+#	  and monthly backups of root (/) on the 15th of each month.
+#
+0:00-8:00,16:00-23:59	mon,tue,wed,thu,fri	*	/usr
+16:00-23:00	15	*	/ 

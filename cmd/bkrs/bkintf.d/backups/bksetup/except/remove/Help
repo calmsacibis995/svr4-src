@@ -1,0 +1,19 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/except/remove/Help	1.2.1.1"
+
+ABSTRACT: Remove Entries in Backup Exception List
+	The "remove" task allows you to remove entries from the exception
+	list.  Note that the patterns you specify must match an exception
+	list entry exactly in order to remove it from the list.  For
+	example, if you want to remove the pattern "/tmp/*" from the
+	exception list, you must specify "/tmp/*" as the pattern.
+
+TITLE: Remove Entries in Backup Exception List
+
+F1:
+	"File Name:" Enter the exception list file name.
+
+F2:
+	"Patterns:"  Enter a list of patterns to be removed from the
+	exception list.  The list items may be separated by commas or by
+	blanks.  Patterns that are removed will be printed at your terminal
+	as verification.

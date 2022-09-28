@@ -1,0 +1,25 @@
+#ident	"@(#)bkrs:rsintf.d/restores/rsstat/modify/Text.modok	1.2"
+################################################################################
+#	Module Name: Text.modok
+################################################################################
+title="Modifying Restore Table Entry"
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+lifetime=shortterm
+
+rows=4
+columns=60
+
+text="
+Successfully modified entry."
+
+altslks
+
+name=CONT
+button=11
+action=update $ARG1 true
+
+name=CANCEL
+button=14
+action=CLEANUP

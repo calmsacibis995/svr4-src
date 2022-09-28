@@ -1,0 +1,19 @@
+#ident	"@(#)face:src/oam/programs/Text.dmail	1.6"
+
+title="Removal of Mail Services"
+
+init=false
+
+`indicator -w;
+fmlgrep '^vmsys:' /etc/passwd | fmlcut -f6 -d: |set -e VMSYS;
+if fmlgrep 'name="Mail Services"' $VMSYS/lib/services > /dev/null;
+then
+	if $VMSYS/bin/delmenu "Mail Services" > /dev/null;
+	then
+		message "Mail Services have been removed.";
+	else
+		message "Mail Services have not been removed.";
+	fi;
+else
+	message "Mail Services are not in the Programs Menu.";
+fi`

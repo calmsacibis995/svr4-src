@@ -1,0 +1,45 @@
+#ident	"@(#)netsel.adm:Help	1.1"
+
+ABSTRACT:
+	The subcommands in the "selection" menu provide functions
+	to support the administration of the Network Selection 
+	Configuration. 
+	It includes such subtasks as displaying and modifying the
+	Network Selection Configuration.
+
+display:ABSTRACT:
+	The "display" task displays the Network Selection 
+	Configuration information.
+
+modify:ABSTRACT:
+	The "modify" task modifies the Network Selection
+	Configuration information. 
+
+mod_nid:Network Identifier
+	The network identifier is a uniq identifier used to identify
+	the network. It is a string up to 14 characters.
+	It cannot contain space or colon.
+
+mod_dfl:Default Network
+	A default network means the network will be tried by network
+	selection when $NETPATH is not set.
+
+display:Display Network Selection Configuration
+	This table displays network selection configuration. 
+	The fields displayed are 
+	
+	Network Identifier 
+		- a uniq identifier that identifies a network
+	Network Device   
+		- the complete pathname of the network device
+	Semantic         
+		- Following categories of semantic are defined:
+		   1. tpi_cots (connection oriented transport service)
+		   2. tpi_clts (connectionless transport service)
+		   3. tpi_cots_ord (connection oriented and support
+		      orderly release)
+	Visible            
+		- if the environment variable "NETPATH" is not set,
+		  all visible networks will be tried.
+	ProtoFamily
+		- protocol family

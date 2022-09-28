@@ -1,0 +1,82 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/Menu.system	1.5"
+###############################################################################
+#    Module Name:  Menu.system
+#    Description:  
+#     Cooperating Systems Management - allows administrator to manage
+#      how system relates to remote systems in distributed file system
+#      operation
+###############################################################################
+menu=Cooperating Systems Management
+close=unset -l PID -l KEYCMD -l LINES
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/ssmenu.msg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/rfs/system`
+
+name=add_host
+description=Adds Systems to the Domain Password File
+action=`indicator -w;
+	"$INTFBASE/netservices/remote_files/other/rfs/system/bin/ck_primary" | set -l PID;
+	if [ -s "/var/tmp/noadd_$PID" ];
+	then
+		set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/other/rfs/system/Text.generic 'Adds Systems to the Domain Password File' /var/tmp/noadd_$PID";
+	else
+		set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/system/Form.p_add";
+	fi;
+	`$!KEYCMD
+lininfo=system:add_host
+
+name=add_nameserver
+description=Adds Domain Name Servers
+action=OPEN FORM "$INTFBASE/netservices/remote_files/other/rfs/system/Form.rf_add"
+lininfo=system:add_nameserver
+
+name=display_domain
+description=Displays the RFS Domain of the Local System
+action=OPEN TEXT $INTFBASE/netservices/remote_files/other/rfs/system/Text.display
+lininfo=system:display
+
+name=list_active_nsvr
+description=Lists the Active RFS Domain Name Servers
+action=OPEN TEXT $INTFBASE/netservices/remote_files/other/rfs/system/Text.lssrvr
+lininfo=system:list_act_ns
+
+name=list_hosts
+description=Lists Systems in the Domain
+action=OPEN TEXT $INTFBASE/netservices/remote_files/other/rfs/system/Text.lshost
+lininfo=system:list_hosts
+
+name=list_nameservers
+description=Lists RFS Name Servers
+action=OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/system/Form.lsname
+lininfo=system:list_nameservers
+
+name=remove_host
+description=Removes Systems from the Domain Password File
+lininfo=system:remove_host
+action=`indicator -w;
+	"$INTFBASE/netservices/remote_files/other/rfs/system/bin/ck_primary" | set -l PID;
+	if [ -s "/var/tmp/noadd_$PID" ];
+	then
+		set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/other/rfs/system/Text.generic 'Removes Systems from the Domain Password File' /var/tmp/noadd_$PID";
+	else
+		"$INTFBASE/netservices/remote_files/other/rfs/system/bin/get_passwd" | set -l PID;
+		if [ -s "/var/tmp/passwd_$PID" ];
+		then
+			set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/system/Form.p_rem";
+			cat "/var/tmp/passwd_$PID" | wc -l |set -l LINES;
+		else
+			set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/other/rfs/system/Text.generic 'Removes Systems from the Domain Password File' /var/tmp/nodel_$PID";
+		fi;
+	fi;
+	`$!KEYCMD
+
+name=remove_namesvr 
+description=Removes Domain Name Servers
+action=OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/system/Form.rf_rem
+lininfo=system:remove_nameserver
+
+name=set_domain
+description=Sets the RFS Domain of the Local System
+action=OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/system/Form.set
+lininfo=system:set_domain

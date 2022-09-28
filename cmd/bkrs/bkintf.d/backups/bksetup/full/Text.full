@@ -1,0 +1,29 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/full/Text.full	1.4"
+
+title="Full Display of Backup Table"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp "ABSTRACT"
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+lifetime=shortterm
+
+begrow=any
+begcol=any
+rows=18
+columns=77
+
+wrap=FALSE
+text="`readfile "$ARG1"`"
+
+close=`rm -f $ARG1`
+
+altslks
+
+name=CONT
+button=11
+action=update $ARG2 true
+
+name=CANCEL
+button=14
+action=CLEANUP

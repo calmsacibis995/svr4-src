@@ -1,0 +1,27 @@
+#ident	"@(#)bkrs:bkintf.d/backups/backup/Text.bkpok	1.2"
+################################################################################
+#	Module Name: Text.bkpok
+################################################################################
+title="Starting a Backup Job"
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+lifetime=shortterm
+
+close=`rm -f $ERR`
+
+rows=4
+columns=60
+
+text="
+Successfully started backup job."
+
+altslks
+
+name=CONT
+button=11
+action=update $ARG1 true
+
+name=CANCEL
+button=14
+action=CLEANUP

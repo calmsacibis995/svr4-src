@@ -1,0 +1,42 @@
+#ident	"@(#)nadmin.rfs:local/rfs/bin/imm_mod	1.3"
+rm /usr/tmp/sh_msg
+
+/usr/sbin/unshare -F rfs $RES
+
+if [ "$DESC" ]
+then
+	CMD1="/usr/sbin/share -F rfs -d \"$DESC\" "
+else
+	CMD1="/usr/sbin/share -F rfs "
+fi
+
+if [ "$ACC" = "read-only" ]
+then
+	NACC="ro"
+else
+	NACC="rw"
+fi
+
+# if the CLIENT is equal to unrestricted or its null, then there is no client
+# list
+
+echo "$CLIENT" | /bin/grep "unrestricted"
+GRET=`echo $?`
+if [  ! "$CLIENT"  -o  $GRET -eq 0 ]
+then
+	CMD2="-o $NACC $DIR $NRES"
+else
+	CLIST=`echo "$CLIENT" | /usr/bin/tr -s '\012' ':'`
+	CMD2="-o $NACC=$CLIST $DIR $NRES"
+fi
+
+
+eval `echo "$CMD1" "$CMD2"` 2>/usr/tmp/sh_err$$
+if [ $? -eq 0 ]
+then
+	echo "\nThe local directory $DIR is being shared with remote systems as $NRES via RFS." > /usr/tmp/sh_msg
+else
+	echo "ERROR:  $DIR cannot be shared immediately as $NRES via RFS." >/usr/tmp/sh_msg
+	echo "$CMD1" "$CMD2" >> /usr/tmp/sh_msg
+	cat /usr/tmp/sh_err$$>> /usr/tmp/sh_msg
+fi

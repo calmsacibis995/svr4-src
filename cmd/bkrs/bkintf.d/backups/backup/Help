@@ -1,0 +1,79 @@
+#ident	"@(#)bkrs:bkintf.d/backups/backup/Help	1.3.3.1"
+
+ABSTRACT: Backup
+	The "backup" task allows you to start a backup job based on a
+	particular backup register table.  The backup normally performs all
+	backup operations for the current week and day in the rotation
+	period.  You can, however, modify this behavior by specifying other
+	week/day combinations for which this backup will be run.  The
+	week/day combinations select which backup register entries the
+	backup will execute.  You may also change other characteristics of
+	the backup job by filling in the other fields on the backup task
+	form.
+	
+	NOTE: If you choose to run the backup in interactive mode, the
+	screen will clear and you will be put into scrolling mode in order
+	to respond to the prompts from the backup command.  When the
+	backups have completed you will be prompted to press <RETURN> to
+	return to the screen-based mode.
+
+TITLE: Backup
+
+F1:
+	"Table:"  Enter the name of an existing backup register table.  The
+	backup job started will execute backup operations specified in this
+	table.
+
+F2:
+	"Type:"  Enter the type of backup you want to execute: background
+	(default mode), or interactive. Background mode backups execute
+	in the background and send mail to you when a backup operation
+	requires operator intervention (such as mounting a volume on a
+	device).  Interactive mode assumes that an operator is sitting
+	at this terminal waiting for messages indicating that some backup
+	operation needs operator intervention.  This mode will tie up your
+	terminal until the backup job has completed.   If you choose to run
+	the backup in interactive mode, the screen will clear and you will be
+	put into scrolling mode in order to respond to the prompts from the
+	backup command.  When the backups have completed, you will be
+	prompted to press <RETURN> to return to the screen-based mode.
+
+F3:
+	"Object name:"  Enter the name of the object you want to back up or
+	the keyword "all" to have all objects which are scheduled backed up.
+	An object is a file system mount point or device special file.
+
+F4:
+	"Week(s):"  Enter a list of week ranges specifying for which weeks in
+	the rotation period this backup job will be performed or enter the
+	keyword "demand" to perform all backup operations in the register
+	that are demand backups or enter "current week" to do the backups for
+	this week.
+
+F5:
+	"Day(s):"  Enter a list of day ranges specifying for which days in
+	the week this backup job will be performed or enter the keyword
+	"today" to do backups scheduled for today.
+
+F6:
+	"Notify:"  Enter "yes" if you want to be notified by mail when this
+	backup job completes.  Enter "no" if you prefer not to be notified.
+
+F7:
+	"Display:"  Enter "yes" if you want to display the backup operations
+	that would be executed but you do NOT want them to execute at this
+	time.  This option is useful to verify that a new or modified backup
+	register table is valid or to verify that the operations you think
+	will be executed are the same ones that the backup job will execute.
+
+F8:
+	"Estimate volumes:"  Enter "yes" if you want this backup job to
+	estimate the number of volumes that will be required to contain the
+	archive for each backup operation that will be performed.
+
+F9:
+	"Trace mode:"  This field only appears for interactive mode backups.
+	Enter "yes" if you want the names of files to be printed at the
+	terminal as they are backed up.  This option only applies to
+	file-oriented backup methods (not to data partition, image or full
+	disk backups).

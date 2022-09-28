@@ -1,0 +1,19 @@
+#ident	"@(#)bkrs:rbasic.d/private/Menu.select	1.1.1.1"
+Menu="Contents of Removable Media"
+help=open text /usr/vmsys/OBJECTS/Text.h "Contents of Removable Media" restore/T.hselect
+multiselect
+done=`run sh -c '/usr/sadm/sysadm/bin/runstore2 $ARG1 "/usr/tmp/markfls.$VPID" "$ARG2" "$ARG3" "$ARG4" "$ARG5"'`close $OBJ_DIR/private/Menu.select $OBJ_DIR/private/Form.overwr2 $OBJ_DIR/private/Menu.private
+
+`message "MARK items to restore and strike ENTER."`
+
+`cat $ARG1 | cut -f2 | regex '^(.*)$0' '
+name=$m0
+action=`getitems " " > /usr/tmp/markfls.$VPID`
+'`
+
+name="MARK"
+action=return 364`message "MARK items to restore and strike ENTER"`
+button=2
+
+name=""
+button=16

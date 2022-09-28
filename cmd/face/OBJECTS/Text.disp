@@ -1,0 +1,33 @@
+#ident	"@(#)face:OBJECTS/Text.disp	1.6"
+
+title="$ARG2 - $ARG3"
+
+lifetime=longterm
+
+framemsg="Press the CANCEL function key to cancel."
+
+`if [ ! -f ${ARG1} ];
+then
+	message "${ARG2} does not exist.";
+	echo "init=false";
+elif [ ! -r ${ARG1} ];
+then
+	message "${ARG2} is not readable.";
+	echo "init=false";
+fi`
+
+
+help=OPEN TEXT OBJECTS/Text.mfhelp display display
+rows=8
+text="`readfile $ARG1`"
+columns=`longline | set -l LL;
+if [ "${LL}" -gt "72" ];
+then
+	echo 72;
+else
+	echo ${LL};
+fi`
+
+name=
+button=8
+action=nop

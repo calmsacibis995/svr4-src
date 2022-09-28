@@ -1,0 +1,42 @@
+#ident	"@(#)nadmin.nfs:local/nfs/bin/auto_attr	1.2"
+
+/bin/sed "s/^#.*//g" /etc/dfs/dfstab | /usr/bin/tr -s '\011' '\040' | /usr/bin/egrep -e"-F nfs.*[ ]$DIR$" >/var/tmp/temp_$$
+
+if [ ! -s "/var/tmp/temp_$$" ]
+then
+	echo "This directory is not shared automatically via NFS." >/var/tmp/amsg_$$
+else
+	TMP=`cat /var/tmp/temp_$$`
+	echo $TMP |/usr/bin/grep "secure" >/dev/null
+	if [ $? -eq 0 ]
+	then
+		MODE="secure"
+	else
+		MODE="default"
+	fi
+	ID=`/bin/sed "s/^.*anon=//" /var/tmp/temp_$$ | /usr/bin/tr '\040' '\054' | /usr/bin/cut -d"," -f1`
+	echo $TMP |/usr/bin/grep "rw=" >/dev/null
+	if [ $? -eq 0 ]
+	then
+		RWCLIENT=`echo $TMP | /bin/sed -e "s/^.*rw=//" -e "s/[, ]/ /" |/usr/bin/cut -d" " -f1`
+	else
+		RWCLIENT="all"
+	fi
+	echo $TMP |/usr/bin/grep "ro=" >/dev/null
+	if [ $? -eq 0 ]
+	then
+		ROCLIENT=`echo $TMP | /bin/sed -e "s/^.*ro=//" -e "s/[, ]/ /" |/usr/bin/cut -d" " -f1`
+	else
+		ROCLIENT="all"
+	fi
+	echo $TMP |/usr/bin/grep "root=" >/dev/null
+	if [ $? -eq 0 ]
+	then
+		ROOTCLIENT=`echo $TMP | /bin/sed -e "s/^.*root=//" -e "s/[, ]/ /" |/usr/bin/cut -d" " -f1`
+	else
+		ROOTCLIENT="all"
+	fi
+	echo "$ID" "$MODE" "$RWCLIENT" "$ROCLIENT" "$ROOTCLIENT"  > /var/tmp/a_attr$$ 
+
+fi
+echo $$

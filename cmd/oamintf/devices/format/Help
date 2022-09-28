@@ -1,0 +1,36 @@
+#ident	"@(#)oamintf:devices/format/Help	1.4.2.1"
+ABSTRACT:
+	The "format" task prepares a new volume for use.  Once a volume
+	is formatted, programs and data may be written onto it.
+	WARNING: formatting removes all existing data from the volume,
+	effectively erasing it.
+
+Menu.format:Devices Available
+	The devices available menu contains an entry for each type
+	of device which supports the format operation.
+	Select the desired device type from the menu.  You will then
+	be prompted for a device group and/or a specific device.
+
+devgrp:Device Group
+	Enter the device group you will be working with.
+	Press CHOICES to see the available device groups.
+
+devdrive:Device Drive
+	Enter the device drive that will contain the volume to
+	be formatted. Press CHOICES to see available choices.
+
+Text.format:ABSTRACT
+	At this time, insert the volume you wish to format into the
+	drive you indicated in the previous frame.  After you press CONT,
+	the system will format the volume.
+
+Text.fmtok:ABSTRACT
+	The volume has been formatted.  This completes the
+	"format" task.  If you would like to format another
+	volume, insert it into the drive and press CONT.
+	
+Text.fmterr:ABSTRACT
+	An error occurred while attempting to format the volume.
+	Make sure the volume is inserted into the drive properly.
+	To try again, press CONT.  To leave the "format" task,
+	press CANCEL.

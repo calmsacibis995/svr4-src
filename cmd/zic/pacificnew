@@ -1,0 +1,36 @@
+#ident	"@(#)zic:pacificnew	1.1"
+
+
+#		PROPRIETARY NOTICE (Combined)
+#
+#This source code is unpublished proprietary information
+#constituting, or derived under license from AT&T's UNIX(r) System V.
+#In addition, portions of such source code were derived from Berkeley
+#4.3 BSD under license from the Regents of the University of
+#California.
+#
+#
+#
+#		Copyright Notice 
+#
+#Notice of copyright on this source code product does not indicate 
+#publication.
+#
+#	(c) 1986,1987,1988,1989  Sun Microsystems, Inc
+#	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+#	          All rights reserved.
+
+# The U.S. House of Representatives passed a bill (H.R. 435) establishing
+# "Pacific Presidential Election Time" on November 10, 1987;
+# it has not yet (as of January 2, 1988) been approved by the U.S. Senate
+# or signed into law by the U.S. President.
+
+# Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+Rule	Twilite	1987	max	-	Apr	Sun>=1	2:00	1:00	D
+Rule	Twilite	1987	max	uspres	Oct	lastSun	2:00	1:00	PE
+Rule	Twilite	1987	max	uspres	Nov	Sun>=7	2:00	0	S
+Rule	Twilite	1987	max	nonpres	Oct	lastSun	2:00	0	S
+
+# Zone	NAME		GMTOFF	RULES/SAVE	FORMAT	[UNTIL]
+Zone	US/Pacific-New	-8:00	US		P%sT	1987
+			-8:00	Twilite		P%sT

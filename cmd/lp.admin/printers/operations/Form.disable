@@ -1,0 +1,120 @@
+#ident	"@(#)lp.admin:printers/operations/Form.disable	1.4"
+
+#######################################################
+#
+#       Module Name: printer_service/printers/operations/Form.disable
+#
+#######################################################
+
+form=Disable Printer(s) from Printing
+
+help=open TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`indicator -w; set -l name_2="/tmp/lp.n2$VPID";
+cosend lpdata "list_printers/e" > $name_2;
+if [ -s "$name_2" ];
+then
+	echo "init=true";
+else
+	echo "init=false";
+	message -b "All defined printers are already disabled.";
+fi`
+
+
+close=`/usr/bin/rm -f $name_2;
+	unset -l do_all -l name_2 -l name_valid -l bad_one`
+
+done=`message -w "Disabling printers, please wait...";
+	echo "$F1" | tr ',' ' ' | set -l NF1;
+	if [ "$F2" = "wait" ];
+	then
+		set -l d_opt='-W';
+	elif [ "$F2" = "cancel" ];
+	then
+		set -l d_opt='-c';
+	else
+		unset -l d_opt;
+	fi;
+	set -l do_all=false;
+	echo "$NF1" | regex '^all$' 'true' '^all ' 'true' ' all$' 'true' ' all ' 'true' | set -l do_all;
+	if [ "$do_all" = "true" ];
+	then
+		cosend lpdata "list_printers/e" > $name_2;
+		if [ -s $name_2 ];
+		then
+		    shell "/usr/bin/disable $d_opt -r\"$F3\" \`cat $name_2\` > /dev/null 2>&1";
+		    echo "close";
+		    message " ";
+		else
+		    message -b "All defined printers are already disabled.";
+		    echo "close";
+		fi;
+	else
+		shell "/usr/bin/disable $d_opt -r\"$F3\" $NF1 > /dev/null 2>&1";
+		message "Enter new values and press SAVE to repeat or CANCEL to quit.";
+		echo "update $OBJ_DIR/Form.disable true";
+	fi`
+
+name="Printer(s):"
+lininfo="disable:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=13
+rows=1
+columns=57
+fieldmsg="Enter printers to disable and press SAVE when finished."
+scroll=true
+value=" "
+rmenu=OPEN MENU $OBJ_DIR/Menu.cdisable
+valid=`indicator -w;
+	unset -l bad_one;
+	cosend lpdata "list_printers/e" > $name_2;
+	echo "all" >> $name_2;
+	if [ -z "$F1" ];
+	then
+		set -l no_value=true -l name_valid=false;
+	else
+		set -l no_value=false -l name_valid=true;
+	fi;
+	echo "$F1" | tr " ," "[\012*]" | regex -e '^(.*)$0$'
+	'`fmlgrep "^$m0\$" $name_2 || set -l bad_one="$m0" -l name_valid=false`' > /dev/null`$name_valid
+invalidmsg=`if [ "$no_value" = "true" ];
+	then
+		echo "You must enter a value for this field.";
+	else
+		echo "$bad_one is not a printer currently enabled.";
+	fi`
+
+name=What should happen to any requests currently printing?:
+lininfo="disable:F2"
+nrow=2
+ncol=1
+frow=2
+fcol=57
+rows=1
+columns=7
+fieldmsg="Press CHOICES to select and press SAVE when finished."
+value=restart
+rmenu={ cancel restart wait }
+menuonly=true
+invalidmsg="The only valid entries are cancel, restart or wait."
+
+name="Reason for disabling:"
+lininfo="disable:F3"
+nrow=3
+ncol=1
+frow=3
+fcol=23
+rows=1
+columns=47
+fieldmsg="Enter the reason for rejection and press SAVE when finished."
+scroll=true
+valid=`fmlexpr "$F3" : '.*' | set -l F3_len;
+	if [ $F3_len -lt 1024 ];
+	then
+		echo true;
+	else
+		echo false;
+	fi`
+invalidmsg="The reason entered here must be less than 1024 characters long."

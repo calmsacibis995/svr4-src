@@ -1,0 +1,31 @@
+#ident	"@(#)nadmin.rfs:remote/rfs/bin/ls_resource	1.2"
+#
+#Get RFS name of remote resources currently mounted
+#
+rm /usr/tmp/mnt
+
+/etc/mount  -v |  /usr/bin/egrep "type[ 	]+rfs[ 	]+"  >/usr/tmp/c_mnt$$
+if [ $? -eq 0 ]
+then
+	/usr/bin/cut -d" " -f1,3 </usr/tmp/c_mnt$$  | /usr/bin/tr -s '\040' '\012' >/usr/tmp/cmnt$$
+fi
+	
+#
+#If list automaticaly advertised resources
+#
+
+/bin/sed "s/^#.*//g" /etc/vfstab | /usr/bin/egrep "[ 	]+rfs[ 	]+"   > /usr/tmp/a_mnt$$
+if [ $? -eq 0 ]
+then
+	/usr/bin/tr -s '\011' '\040' < /usr/tmp/a_mnt$$ | /usr/bin/cut -d" " -f1,3 | /usr/bin/tr '\040' '\012' >/usr/tmp/amnt$$ 2>/dev/null
+fi
+
+if [ "(" -s /usr/tmp/cmnt$$ ")" -o "(" -s /usr/tmp/amnt$$ ")" ]
+then
+	echo "{ " > /usr/tmp/mnt$$
+	/bin/fgrep -v -f /usr/tmp/cmnt$$ /usr/tmp/amnt$$ >>/usr/tmp/mnt$$
+	cat /usr/tmp/cmnt$$  >>/usr/tmp/mnt$$ 2>/dev/null
+	echo "} " >> /usr/tmp/mnt$$
+#	rm /usr/tmp/cmnt$$ /usr/tmp/amnt$$ 2>/dev/null
+fi
+echo $$

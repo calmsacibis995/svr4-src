@@ -1,0 +1,25 @@
+#ident	"@(#)oamintf:usermgmt/Text.mgrpok	1.4.2.1"
+################################################################################
+#	Module Name: Text.mgrpok
+################################################################################
+title="Modify a Group Definition"
+`readfile $INTFBASE/trept.msg | message -t`
+lifetime=shortterm
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+rows=3
+columns=50
+
+text="
+Group $ARG1 was modified as requested."
+
+altslks
+
+name=CONT
+button=11
+action=update $ARG2 true
+
+name=CANCEL
+button=14
+action=CLEANUP

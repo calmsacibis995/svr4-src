@@ -1,0 +1,35 @@
+#ident	"@(#)nadmin.rfs:local/rfs/bin/auto_mod	1.3"
+if [ "$DESC" ]
+then
+	CMD1="/usr/sbin/share -F rfs -d \"$DESC\" "
+else
+	CMD1="/usr/sbin/share -F rfs "
+fi
+
+if [ "$ACC" = "read-only" ]
+then
+	NACC="ro"
+else
+	NACC="rw"
+fi
+
+
+# if the CLIENT is equal to unrestricted or its null, then there is no client
+# list
+
+if [   ! "$CLIENT"  -o \( "$CLIENT" = "unrestricted" \) ]
+then
+	CMD2="-o $NACC $NDIR $NRES"
+else
+	CLIST=`echo "$CLIENT" | /usr/bin/tr -s '\012' ':'`
+	CMD2="-o $NACC=$CLIST $NDIR $NRES"
+fi
+
+cp /etc/dfs/dfstab /etc/dfs/o.dfstab
+/usr/bin/egrep -v ".*[	 ]+$DIR[ 	]+$RES$" /etc/dfs/dfstab >/usr/tmp/dfstab$$
+
+echo "$CMD1" "$CMD2" >>/usr/tmp/dfstab$$
+cp /usr/tmp/dfstab$$ /etc/dfs/dfstab
+chmod 644 /etc/dfs/dfstab
+chown root /etc/dfs/dfstab
+

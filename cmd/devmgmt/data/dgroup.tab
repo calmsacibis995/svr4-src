@@ -1,0 +1,10 @@
+#ident	"@(#)devmgmt:data/dgroup.tab	1.2.2.1"
+#
+#	Device group table.
+#
+#  Format:  colon-list
+#  name:members
+#	name		Name of the device group (max len 14 chars)
+#	members		Comma-list of members in the group.  A member is the
+#			device alias of the device that belongs in the group
+#

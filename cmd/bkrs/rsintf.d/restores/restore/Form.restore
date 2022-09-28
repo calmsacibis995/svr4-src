@@ -1,0 +1,157 @@
+#ident	"@(#)bkrs:rsintf.d/restores/restore/Form.restore	1.12.3.1"
+form="Restore from Backup Archives"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+`set -l CMD=""`
+
+done=`message -w;
+	set -l ERR=/tmp/$VPID.bea;
+	run sh -c 'rest "$F1" "$F2" "$F3" "$F4" "$F5" "$F6" "$F7" "$ERR"';
+	if [ $RET -eq 0 ] ;
+	then
+		getfrm | set -l FNUM;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.rest $ERR $FNUM";
+	else
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.err $ERR";
+	fi`$!CMD
+
+begrow=any
+begcol=any
+
+# Type field - F1
+name=Type of restore:
+lininfo=F1
+nrow=2
+ncol=2
+
+frow=2
+fcol=20
+rows=1
+columns=15
+
+choicemsg="Enter the type of object to be restored."
+invalidmsg="You must enter one of the types listed in the CHOICES menu."
+value=file
+rmenu={ file directory "file system" "data partition" }
+menuonly
+
+# Names field - F2
+name=Name(s):
+lininfo=F2
+nrow=4
+ncol=2
+
+frow=4
+fcol=10
+rows=1
+columns=65
+scroll=true
+
+choicemsg="Enter the names of restore objects - one name for file systems or partitions."
+
+valid=`shell "if [ \"$F1\" = \"file\" -o \"$F1\" = \"directory\" ]
+		then
+			valpaths -a \"$F2\" ""
+		else
+			valpaths -a \"$F2\" 1
+		fi
+		exit \$?"`
+
+invalidmsg=`regex -e -v "$F1" '^file$' 'Error - Enter a list of valid absolute pathnames.'
+	'^directory$' 'Error - Enter a list of valid absolute pathnames.'
+	'^..*$' 'Error - Enter a valid absolute pathname.' `
+
+# Target field - F3
+name=Target:
+lininfo=F3
+nrow=6
+ncol=2
+
+frow=6
+fcol=10
+rows=1
+columns=65
+scroll=true
+
+value=`pwd`
+
+choicemsg="Enter the file or directory to which the object should be restored."
+
+#valid=`regex -e -v "$F3" '^ *$' 'TRUE' '^..*$' '`valpath -aw "$F3"`'`
+valid=`valrpath "$F1" "$F3"`
+
+#invalidmsg=`errpath -aw`
+invalidmsg="You must enter a writable directory or file (or default to original name)."
+
+#Date field - F4
+name=Date:
+lininfo=F4
+nrow=8
+ncol=2
+
+frow=8
+fcol=9
+rows=1
+columns=30
+
+value=`date "+%D %H:%M"`
+choicemsg="Enter the archive date to restore from (mm/dd/yy hh:mm), at least mm/dd." 
+
+valid=`validdate "$F4"`
+
+invalidmsg="Error - invalid date.  Date form is mm/dd/yy hh:mm.  Enter at least mm/dd."
+
+# Display field - F5
+name=Display mode:
+lininfo=F5
+nrow=10
+ncol=2
+
+frow=10
+fcol=17
+rows=1
+columns=3
+
+choicemsg="Enter 'yes' to display history log information instead of restoring object."
+invalidmsg="Error - Enter either 'yes' or 'no'."
+value=no
+rmenu={ yes no }
+menuonly
+
+# Notify field - F6
+name=Notify:
+lininfo=F6
+nrow=11
+ncol=2
+
+frow=11
+fcol=11
+rows=1
+columns=3
+
+choicemsg="Do you want to be notified by mail when this restore completes?"
+invalidmsg="Error - Enter either 'yes' or 'no'."
+
+value=yes
+rmenu={ yes no }
+menuonly
+
+# Trace mode field - F7
+name=Trace mode:
+lininfo=F7
+nrow=12
+ncol=2
+
+frow=12
+fcol=15
+rows=1
+columns=3
+
+choicemsg="Enter 'yes' to display the file name as it is restored (online archives only.)"
+invalidmsg="Error - Enter either 'yes' or 'no'."
+value=no
+rmenu={ yes no }
+menuonly

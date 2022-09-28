@@ -1,0 +1,62 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/Menu.admin	1.1"
+menu="System Administration"
+
+#help=open text $VMSYS/OBJECTS/Text.h "System Administration" T.hadmin
+
+`set -l VMSYS=/usr/vmsys`
+
+name=Backup to Removable Media
+action=nop
+show=false
+
+name=Change Password
+action=nop
+show=false
+
+name=Date and Time
+action=nop
+show=false
+
+name=Disk Operations
+action=nop
+show=false
+
+name=File System Operations
+action=nop
+show=false
+
+name=Mail Setup
+action=nop
+show=false
+
+name=Peripherals Setup
+action=nop
+show=false
+
+name=Restore from Removable Media
+action=nop
+show=false
+
+name=Schedule Automatic Task
+action=nop
+show=false
+
+name=Shutdown
+action=nop
+show=false
+
+name=Software Setup
+action=nop
+show=false
+
+name=System Information
+action=nop
+show=false
+
+name=User Logins
+action=nop
+show=false
+
+name=""
+button=8
+action=nop

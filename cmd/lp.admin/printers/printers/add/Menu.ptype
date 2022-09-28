@@ -1,0 +1,15 @@
+#ident	"@(#)lp.admin:printers/printers/add/Menu.ptype	1.1"
+
+################################################################################
+#
+#	Module Name:Menu.ptype
+#
+#	Functional Description: This menu is a popup menu for print type selection.
+################################################################################
+menu="Print types"
+
+`readfile $INTFBASE/ssmenu.msg | message -s`
+
+`q-add COLLECT; cat /usr/sadm/sysadm/add-ons/lp/printers/printers/terminfo/printype | regex '^(.*)$0'  
+'name="$m0"
+action=`set -l "Form_Choice=$m0"`CLOSE'`

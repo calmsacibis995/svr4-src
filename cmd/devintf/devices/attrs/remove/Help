@@ -1,0 +1,23 @@
+#ident	"@(#)devintf:devices/attrs/remove/Help	1.2.2.2"
+
+remove:ABSTRACT:
+	The "remove" task removes an attribute definition from a device
+	description.  You will be asked to supply the device alias and the name
+	of the attribute to remove.
+
+Form.remove:Alias:the Alias field
+	This field names the alias of the device entry that is to be modified.
+	
+	The value must be a valid alias (i.e. containing only alphanumeric
+	characters, '.', '-', '_', and '$', and no more than 14 characters in
+	length) and must already be defined in the device tables.  This field
+	may not be blank.
+
+Form.remove:Attribute:the Attribute field
+	This field names the attribute to be removed.
+	
+	The value must be a attribute name (i.e. containing only
+	alphanumeric characters), '.', '-', '_', and '$', and no
+	more than 14 characters in length.  The attribute must
+	already be defined in the device tables.  This field may
+	not be blank.

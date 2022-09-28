@@ -1,0 +1,19 @@
+#ident	"@(#)lp.admin:printers/printers/Text.list	1.1"
+
+title="List Printers"
+
+close=`rm -f /tmp/list$VPID`
+
+row=15
+columns=55
+
+begrow=distinct
+begcol=distinct
+cancel=`rm -f /tmp/list$VPID`close
+
+text="
+    Press CANCEL to return to the menu.
+
+`readfile /tmp/list$VPID`
+
+"

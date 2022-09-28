@@ -1,0 +1,9 @@
+#ident	"@(#)mail:smtp/scripts/cron.scr	1.3"
+# "@(#)cron.scr	1.3 'attmail mail(1) command'"
+#
+# SMTP - Run smtpsched once per hour at 25 minutes after the hour.
+#	 Clean up queues and send warnings at 1:55 AM
+#
+# Uncomment the following two lines to enable smtpsched.
+#25	*	*	*	*	LIBDIR/smtpsched
+#55      1	*	*	*	LIBDIR/smtpsched -c -w 1 -r 7

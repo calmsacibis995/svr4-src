@@ -1,0 +1,70 @@
+#ident	"@(#)lp.admin:printers/priorities/Form.remove	1.1.1.1"
+
+#######################################################
+#
+#       Module Name: printer_service/priorities/Form.remove
+#
+#######################################################
+
+form=Remove User(s) Priority Limit
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`set -e remove_1="/tmp/lp.n1$VPID";
+if [ -s /etc/lp/users ];
+then
+	fmlcut -f2 -d"	" /etc/lp/users | sed -e /0/d > $remove_1;
+	if [ -s $remove_1 ];
+	then
+		:;
+	else
+		echo "init=false";
+		message -b "There are currently no users with priority limits.";
+		rm -f $remove_1;
+	fi;
+else
+	echo "init=false";
+	message -b "There are currently no users with priority limits.";
+	rm -f $remove_1;
+fi`
+
+done=`message -w "Removing User(s) Priority Limit, please wait...";
+if regex -v "$F1" '^all$' '' '^all[ ,]' '' '[ ,]all$' '' '[ ,]all[ ,]' '' > /dev/null;
+then
+	fmlcut -f1 -d: /etc/passwd | /usr/bin/xargs | /usr/bin/tr ' ' ',' | set -l NF1;
+else
+	echo "$F1" | /usr/bin/tr " " "," | set -l NF1;
+fi;
+shell "$TFADMIN lpusers -u $NF1 > /dev/null 2>&1";
+message "Enter new values and press SAVE to repeat or CANCEL to quit."`update $OBJ_DIR/Form.remove true
+
+
+name=User list:
+lininfo="remove:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=12
+rows=1
+columns=58
+value=" "
+rmenu=OPEN MENU $OBJ_DIR/Menu.cusers removep
+fieldmsg="Enter users to remove system priority limit, press SAVE when finished."
+valid=`indicator -w;
+	unset -l bad_one;
+	if [ -z "$F1" ];
+	then
+		set -l no_value=true -l name_valid=false;
+	else
+		set -l no_value=false -l name_valid=true;
+	fi;
+	echo "$F1" | /usr/bin/tr " ," "[\012*]" | regex -e
+'^all$' 'set -l name_valid=true'
+'^(.*)$0$'
+'`fmlgrep "^$m0:" /etc/passwd || set -l bad_one="$m0" -l name_valid=false`' > /dev/null`$name_valid
+invalidmsg=`if [ "$no_value" = "true" ];
+	then
+		echo "You must enter a value for this field.";
+	else
+		echo "$bad_one is not a valid user name.";
+	fi`

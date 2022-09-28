@@ -1,0 +1,9 @@
+#ident	"@(#)oamintf:softwaremgmt/defaults/defaults.menu	1.1"
+#menu#Installation Defaults
+#help#soft.help^Installation Defaults Choices
+
+add^Adds an Installation Defaults File^Form.sd_add
+list^Displays an Installation Defaults File^Form.sd_list
+modify^Changes an Installation Defaults File^Form.sd_mod
+remove^Removes an Installation Defaults File^Form.sd_remove
+

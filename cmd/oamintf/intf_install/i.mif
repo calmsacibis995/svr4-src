@@ -1,0 +1,19 @@
+#ident	"@(#)oamintf:intf_install/i.mif	1.1"
+
+# Class action script for sysadm installation package
+
+while read SRC DEST
+do
+	if [ $SRC = /dev/null ]
+	then
+		echo "$DEST"
+	else
+		cp $SRC $DEST
+		echo "$DEST"
+	fi
+done
+
+[ "$1" = "ENDOFCLASS" ] && /usr/lbin/intf_inst || exit $?
+
+exit 0
+

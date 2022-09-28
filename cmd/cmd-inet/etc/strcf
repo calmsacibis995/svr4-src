@@ -1,0 +1,198 @@
+#ident	"@(#)cmd-inet:etc/strcf	1.3.3.3"
+
+#
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# 		PROPRIETARY NOTICE (Combined)
+# 
+# This source code is unpublished proprietary information
+# constituting, or derived under license from AT&T's UNIX(r) System V.
+# In addition, portions of such source code were derived from Berkeley
+# 4.3 BSD under license from the Regents of the University of
+# California.
+# 
+# 
+# 
+# 		Copyright Notice 
+# 
+# Notice of copyright on this source code product does not indicate 
+# publication.
+# 
+# 	(c) 1986,1987,1988.1989  Sun Microsystems, Inc
+# 	(c) 1983,1984,1985,1986,1987,1988,1989  AT&T.
+# 	          All rights reserved.
+#  
+#
+
+#
+#	Copyright 1987, 1988 Lachman Associates, Incorporated (LAI)
+#	All Rights Reserved.
+#
+#	The copyright above and this notice must be preserved in all
+#	copies of this source code.  The copyright above does not
+#	evidence any actual or intended publication of this source
+#	code.
+#
+#	This is unpublished proprietary trade secret source code of
+#	Lachman Associates.  This source code may not be copied,
+#	disclosed, distributed, demonstrated or licensed except as
+#	expressly authorized by Lachman Associates.
+#
+#	System V STREAMS TCP was jointly developed by Lachman
+#	Associates and Convergent Technologies.
+#
+#
+# tp - configure transport provider (i.e. tcp, udp, icmp)
+# usage: tp devname
+#
+tp {
+	p = open $1
+	ip = open /dev/ip
+	link p ip
+}
+
+#
+# linkint - link interface to ip or arp
+# usage: linkint top bottom ifname
+#
+linkint {
+	x = link $1 $2
+	sifname $1 x $3
+}
+
+#
+# aplinkint - like linkint, but app is pushed on dev
+# usage: aplinkint top bottom ifname
+#
+aplinkint {
+	push $2 app
+	linkint $1 $2 $3
+}
+
+#
+# uenet - configure ethernet-type interface for cloning driver using
+#         unit select
+# usage: uenet ip-fd devname ifprefix unit
+#
+uenet {
+	ifname = strcat $3 $4
+	dev = open $2
+	unitsel dev $4
+	aplinkint $1 dev ifname
+	dev = open $2
+	unitsel dev $4
+	arp = open /dev/arp
+	linkint arp dev ifname
+}
+
+#
+# denet - configure ethernet-type interface for cloning driver using
+#         DL_ATTACH
+# usage: denet ip-fd devname ifprefix unit
+#
+denet {
+	ifname = strcat $3 $4
+	dev = open $2
+	dlattach dev $4
+	aplinkint $1 dev ifname
+	dev = open $2
+	dlattach dev $4
+	arp = open /dev/arp
+	linkint arp dev ifname
+}
+
+#
+# cenet - configure ethernet-type interface for cloning driver with
+#         one major per interface
+# usage: cenet ip-fd devprefix ifprefix unit
+#
+cenet {
+	devname = strcat $2 $4
+	ifname = strcat $3 $4
+	dev = open devname
+	aplinkint $1 dev ifname
+	dev = open devname
+	arp = open /dev/arp
+	linkint arp dev ifname
+}
+
+#
+# senet - configure ethernet-type interface for non-cloning driver
+# usage: senet ip-fd ipdevname arpdevname ifname
+#
+senet {
+	dev = open $2
+	aplinkint $1 dev $4
+	dev = open $3
+	arp = open /dev/arp
+	linkint arp dev $4
+}
+
+#
+# senetc - configure ethernet-type interface for non-cloning driver
+#         using convergence module
+# usage: senetc ip-fd convergence ipdevname arpdevname ifname
+#
+senetc {
+	dev = open $3
+	push dev $2
+	aplinkint $1 dev $5
+	dev = open $4
+	push dev $2
+	arp = open /dev/arp
+	linkint arp dev $5
+}
+
+#
+# loopback - configure loopback device
+# usage: loopback ip-fd
+#
+loopback {
+	dev = open /dev/loop
+	linkint $1 dev lo0
+}
+
+#
+# slip - configure slip interface
+# usage: slip unit
+#
+slip {
+	ip = open /dev/ip
+	s = open /dev/slip
+	ifname = strcat sl $1
+	unitsel s $1
+	linkint ip s ifname
+}
+
+#
+# boot - boot time configuration
+#
+boot {
+	#
+	# queue params
+	#
+#	initqp /dev/udp rq 8192 40960
+#	initqp /dev/ip muxrq 8192 40960 rq 8192 40960
+	#
+	# transport
+	#
+	tp /dev/tcp
+	tp /dev/udp
+	tp /dev/icmp
+	tp /dev/rawip
+	#
+	# interfaces
+	#
+	ip = open /dev/ip
+
+#	cenet ip /dev/ni/clone emd 0		# 3b2/NI(10base5)
+#	cenet ip /dev/pc586_ emd 0		# i386/pc586
+#	cenet ip /dev/wd emd 0			# i386/wd8003
+#	cenet ip /dev/edlina emd 0		# i386/EDL interface to iNA
+#	senetc ip eli /dev/emd0 /dev/emd1 emd0
+#	cenet ip /dev/ni emd 0			# i386/NI
+#	uenet ip /dev/abc emd 0
+#	denet ip /dev/def emd 0			# uses dlpi
+#	senet ip /dev/ghi0 /dev/ghi1 emd0
+#	cenet ip /dev/emd emd 0			# 3b2/EMD (dlpi)
+	loopback ip
+}

@@ -1,0 +1,71 @@
+#ident	"@(#)nadmin.nfs:local/nfs/bin/ls_resource	1.2"
+# List the local resources that are shared automatically - etc/dfs/dfstab
+
+
+if [ "$CURRENT" = "yes" ]
+then
+	/usr/sbin/share -F nfs | /usr/bin/tr -s '\011' '\040' > /var/tmp/cshare_$$
+	if [ -s /var/tmp/cshare_$$ ]
+	then
+# get resource and directory
+		/usr/bin/cut -d" " -f2 </var/tmp/cshare_$$ >/var/tmp/dir_$$
+#The next line has wrong field now.  Replace it with lines following it...
+		/usr/bin/cut -d" " -f3 </var/tmp/cshare_$$ >/var/tmp/acc_$$
+#get description
+		/usr/bin/cut -d" " -f4 </var/tmp/cshare_$$>/var/tmp/desc_$$
+# clients
+		echo "Currently Shared Resources, displayed in the following order:\nPathname,Description,Options\n"> /var/tmp/cshare_$$
+#		/usr/bin/paste -d"\"\" "  /var/tmp/dir_$$ /var/tmp/desc_$$ /var/tmp/acc_$$ | /bin/sed -e "s/\"/ \"/1" -e "s/\"/\" /2" >>/var/tmp/cshare_$$
+		/usr/bin/paste -d" "  /var/tmp/dir_$$ /var/tmp/desc_$$ /var/tmp/acc_$$ >>/var/tmp/cshare_$$
+		/bin/rm /var/tmp/dir_$$  /var/tmp/desc_$$ /var/tmp/acc_$$ /var/tmp/cli_$$ 2>/dev/null
+	else
+		echo "There are no local resources currently shared\n">/var/tmp/cshare_$$
+	fi
+fi
+
+if [ "$AUTO" = "yes" ]
+then
+	/bin/sed "s/^#.*//g" /etc/dfs/dfstab | /bin/grep "share[ 	]*-F[ 	]*nfs" >/var/tmp/auto_$$
+
+	/bin/nl /etc/dfs/fstypes | grep '1	nfs' >/dev/null
+	if [ $? -eq 0 ]
+	then
+		/bin/sed -e "s/^#.*//g" -e "/^$/d" /etc/dfs/dfstab | /bin/grep -v "[ 	]*-F[ 	]*" >>/var/tmp/auto_$$
+	fi
+
+	if [ ! -s /var/tmp/auto_$$ ]
+	then
+		echo "There are no automatically advertised resources" >>/var/tmp/ashare_$$
+	else
+	echo "\nAutomatically Shared Resources, displayed in the following order:\nPathname,Description,Options\n"> /var/tmp/ashare_$$
+	/usr/bin/tr -s '\011' '\040' </var/tmp/auto_$$ | /bin/sed -e "s/-d[ ]*/-d/gp" -e "s/-o[ ]*r/-or/gp" -e "s/[/usr/sbin/]*share -F nfs//gp" -e "s/[/usr/sbin/]*share //gp" >/var/tmp/s$$
+
+# get lines without descriptions, substitute -d"" for no desc
+	/usr/bin/egrep -v -e "-d" </var/tmp/s$$ | /bin/sed "s/.*/\"\" &/gp" >/var/tmp/des_$$
+
+# lines with descriptions, append to other file
+	/usr/bin/egrep -e "-d" </var/tmp/s$$ | /bin/sed -e "s/^[ ]//gp" -e "s/-d//gp" >> /var/tmp/des_$$ 
+
+	/bin/sed -e "s/ro=/read-only=/gp" -e "s/rw=/read\/write=/gp" /var/tmp/des_$$ >> /var/tmp/x$$
+ 	/usr/bin/nawk '{  
+		{ for (i = NF; i > NF -1; --i) printf "%s ", $i  }
+			 	opt=""
+				desc=""
+			 	for (i = 1; i < NF ; i++) {
+				{ if  ( substr($i,1,2) == "-o" ) {
+					opt=substr($i,3)
+					}
+				else 
+				 if  ( substr($i,1,2) == "-d" ) {
+					desc=substr($i,3)
+					}
+				else printf "%s ", $i }
+				}
+	
+		if ( i = NF ) printf "%s %s \n", desc, opt }' /var/tmp/x$$ >>/var/tmp/ashare_$$
+	fi
+fi
+cat /var/tmp/cshare_$$ /var/tmp/ashare_$$ > /var/tmp/share_$$
+
+echo $$
+

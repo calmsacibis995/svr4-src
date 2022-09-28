@@ -1,0 +1,27 @@
+#ident	"@(#)face:OBJECTS/pref/Menu.pref	1.4"
+
+menu=Preferences
+
+help=open text OBJECTS/Text.h "Preferences" pref/T.hpref
+
+framemsg="Move to an item with arrow keys and press ENTER to select the item."
+
+name=Change Password
+action=`run sh -c 'echo To return to FACE without changing your password, press BREAK or DEL; exec passwd "$LOGNAME"'`nop
+
+name=Color Attributes
+action=OPEN FORM OBJECTS/pref/Form.color
+show=${HAS_COLORS}
+
+name=Display Frames
+action=OPEN FORM OBJECTS/pref/Form.display
+
+name=File Permissions
+action=OPEN FORM OBJECTS/pref/Form.perm
+
+name=Office Functions
+action=OPEN FORM OBJECTS/pref/Form.func
+
+name=""
+button=8
+action=nop

@@ -1,0 +1,115 @@
+#ident	"@(#)oamintf:usermgmt/Form.defaults	1.2.7.1"
+################################################################################
+#	Module Name:  Form.default
+################################################################################
+Form=Define Defaults for Adding Users
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`message -w "Redefining - Please Wait";
+
+      redeflt $F1 $F2 $F3 $F4 $F5 $F6;
+
+      if [ $RET -eq 0 ];
+      then
+	  set -l CMD="OPEN TEXT $OBJ_DIR/Text.dfltok";
+      else
+	  set -l CMD="OPEN TEXT $OBJ_DIR/Text.dfltnok";
+      fi`$CMD `getfrm`
+
+# F1
+name="Primary group membership:"
+lininfo=Form.defaults:pgrpmem
+nrow=1
+ncol=3
+frow=1
+fcol=29
+rows=1
+columns=20
+
+value=`getusrdefs -g | sed -n -e "s/.*group=\([^ ]*\).*/\1/p" | fmlcut -d, -f1`
+rmenu=OPEN MENU $OBJ_DIR/Menu.pgrp
+valid=`/usr/sadm/sysadm/bin/grpchk $F1`
+
+invalidmsg=const 'ERROR: Must be an existing user group'
+
+# F2
+name="Base home directory:"
+lininfo=Form.defaults:homdir
+nrow=2
+ncol=3
+frow=2
+fcol=29
+rows=1
+columns=48
+scroll=true
+value=`getusrdefs -b | sed -n -e "s/.*basedir=\([^ ]*\).*/\1/p"`
+valid=`valpath -ao $F2`
+invalidmsg=const 'ERROR: Path name must exist and be absolute.'
+
+# F3
+name="Skeletal home directory:"
+lininfo=Form.defaults:skeldir
+nrow=3
+ncol=3
+frow=3
+fcol=29
+rows=1
+columns=48
+scroll=true
+value=`getusrdefs -k | sed -n -e "s/.*skel=\([^ ]*\).*/\1/p"`
+valid=`valpath -ao $F3`
+invalidmsg=const 'ERROR: It must be a directory that already exists.'
+
+# F4
+name="Shell:"
+lininfo=Form.defaults:shell
+nrow=4
+ncol=3
+frow=4
+fcol=29
+rows=1
+columns=48
+scroll=true
+
+value=`getusrdefs -s | sed -n -e "s/.*shell=\([^ ]*\).*/\1/p"`
+valid=`valpath -axo $F4`
+
+invalidmsg=const 'ERROR: Shell must exist and be executable.'
+
+#  $F5
+name=Login Inactivity:
+lininfo=Form.defaults:inact
+nrow=5
+ncol=3
+frow=5
+fcol=29
+rows=1
+columns=8
+
+value=`getusrdefs -f | sed -n -e "s/.*inactive=\([^ ]*\).*/\1/p"`
+valid=`valint $F5`
+
+invalidmsg=const `errint $F5`
+
+#  $F6
+name=Login expiration date:
+lininfo=Form.defaults:expire
+nrow=6
+ncol=3
+frow=6
+fcol=29
+rows=1
+columns=18
+
+value=const `getusrdefs -e | sed -n -e "s/.*expire=\([^ ]*\).*/\1/p"`
+
+# Must be a future date
+valid=`expdate $F6 || [ ! $F6 ]`
+invalidmsg="Must be a future date."
+
+name=RESET
+button=8
+action=RESET

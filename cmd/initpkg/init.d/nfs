@@ -1,0 +1,108 @@
+#ident	"@(#)initpkg:init.d/nfs	1.1.16.1"
+
+if [ ! -d /usr/bin ]
+then			# /usr not mounted
+	exit
+fi
+case "$1" in
+'start')
+	if [ -x /usr/lib/nfs/nfsd ]
+	then
+		/usr/lib/nfs/nfsd -a 4 > /dev/console 2>&1
+	fi
+	if [ -x /usr/lib/nfs/biod ]
+	then
+		/usr/lib/nfs/biod 4 > /dev/console 2>&1
+	fi
+	if [ -x /usr/lib/nfs/mountd ]
+	then
+		/usr/lib/nfs/mountd > /dev/console 2>&1
+	fi
+	if [ -x /usr/lib/nfs/statd -a -x /usr/lib/nfs/lockd ]
+	then
+		/usr/lib/nfs/statd > /dev/console 2>&1
+		/usr/lib/nfs/lockd > /dev/console 2>&1
+	fi
+	if [ -x /usr/lib/nfs/bootparamd ]
+	then
+		/usr/lib/nfs/bootparamd > /dev/console 2>&1
+	fi
+	if [ -x /usr/lib/nfs/pcnfsd ]
+	then
+		/usr/lib/nfs/pcnfsd > /dev/console 2>&1
+	fi
+
+	# Clean up /etc/dfs/sharetab - remove all nfs entries
+	# (there may be a race here, since rfs initializes asynchronously)
+	if [ -f /etc/dfs/sharetab ]
+	then
+		/usr/bin/touch /tmp/newsharetab
+		while read path res fstype access descr
+		do
+			if [ "$fstype" != "nfs" ]
+			then
+				echo "$path\t$res\t$fstype\t$access\t$descr" >> /tmp/newsharetab
+			fi
+		done < /etc/dfs/sharetab
+		if [ -f /tmp/newsharetab ]
+		then
+			/usr/bin/rm /etc/dfs/sharetab
+			/usr/bin/mv /tmp/newsharetab /etc/dfs/sharetab
+			chmod 644 /etc/dfs/sharetab
+		fi
+	fi
+
+	if [ -f /etc/dfs/dfstab ]
+	then
+		/usr/sbin/shareall -F nfs
+	fi
+
+	/sbin/mountall -F nfs
+	;;
+'stop')
+	if [ -f /etc/dfs/sharetab ]
+	then
+		/usr/sbin/unshareall -F nfs
+	fi
+	/sbin/umountall -F nfs
+	#stop all the daemons (nfsd, biod, mountd, lockd, statd, bootparamd)
+	pid=`/usr/bin/ps -e | /usr/bin/grep nfsd | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+	if [ "${pid}" != "" ]
+	then
+		/usr/bin/kill ${pid}
+	fi
+	pid=`/usr/bin/ps -e | /usr/bin/grep biod | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+	if [ "${pid}" != "" ]
+	then
+		/usr/bin/kill ${pid}
+	fi
+	pid=`/usr/bin/ps -e | /usr/bin/grep mountd | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+	if [ "${pid}" != "" ]
+	then
+		/usr/bin/kill ${pid}
+	fi
+	pid=`/usr/bin/ps -e | /usr/bin/grep lockd | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+	if [ "${pid}" != "" ]
+	then
+		/usr/bin/kill ${pid}
+	fi
+	pid=`/usr/bin/ps -e | /usr/bin/grep statd | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+	if [ "${pid}" != "" ]
+	then
+		/usr/bin/kill ${pid}
+	fi
+	pid=`/usr/bin/ps -e | /usr/bin/grep bootpara | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+	if [ "${pid}" != "" ]
+	then
+		/usr/bin/kill ${pid}
+	fi
+	pid=`/usr/bin/ps -e | /usr/bin/grep pcnfsd | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+	if [ "${pid}" != "" ]
+	then
+		/usr/bin/kill ${pid}
+	fi
+	;;
+*)
+	echo "Usage: /etc/init.d/nfs { start | stop }"
+	;;
+esac

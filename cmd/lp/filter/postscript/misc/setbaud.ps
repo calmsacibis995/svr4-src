@@ -1,0 +1,10 @@
+%ident	"@(#)lp:filter/postscript/misc/setbaud.ps	1.1.2.1"
+%
+% Sets baud rate to 9600, options to 0 assuming the password is 0.
+%
+
+serverdict begin
+	0 exitserver
+	statusdict begin
+		25 9600 0 setsccbatch
+	end

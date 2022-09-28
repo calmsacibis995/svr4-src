@@ -1,0 +1,5 @@
+#ident	"@(#)oamintf:applications/Help	1.2.2.1"
+ABSTRACT:
+	The items in the "applications" menu are
+	menus and tasks supplied by add-on packages
+	for the administration of their respective features.

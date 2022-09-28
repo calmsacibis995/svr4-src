@@ -1,0 +1,11 @@
+#ident	"@(#)terminfo:ckout	1.6"
+echo "`2>/dev/null cat errs|wc -l` entries have been compiled"
+echo
+2>/dev/null cat errs|grep -iv "^mkdir"|grep -iv "^create"|grep -iv "^link"|grep -vi terminfo.src|grep -vi touch|grep -vi "working"
+if [ $? -ne 0 ] ;
+	then
+		echo "\tNo Errors"
+	else
+		echo "\tErrors can be found in /tmp/terminfo.errs"
+		cp errs /tmp/terminfo.errs
+fi

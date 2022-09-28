@@ -1,0 +1,51 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksched/remove/Form.remove	1.9"
+form="Remove Entries from the Backup Schedule"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+init=`crontab -l | fmlgrep \#bksched\# >/tmp/bkstmp1; cat /tmp/bkstmp1 | wc -l | sed -e "s/ *//" | set -l NLINES; echo TRUE`
+
+`set -l CMD=""`
+
+done=`message -w;
+	set -l ERR=/tmp/$VPID.bea;
+	message -w "Trying to remove entries.";
+	delscd /tmp/bkstmp1 bksched "$F1" >$ERR 2>$ERR;
+	if [ $RET -eq 0 ] ;
+	then
+		getfrm | set -l FNUM;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.remok $FNUM";
+	else
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.remnok";
+	fi`$!CMD
+
+close=`rm -f /tmp/bkstmp1`
+
+begrow=any
+begcol=any
+
+# Line numbers field - F1
+name=Line number(s):
+lininfo=F1
+nrow=2
+ncol=2
+
+frow=2
+fcol=18
+rows=1
+columns=5
+scroll=true
+
+valid=`shell "for i in \`echo \"$F1\" | sed -e \"s/,/ /g\"\`
+	do
+		valrange -l 1 -u $NLINES \$i
+		if [ \$? -ne 0 ]
+		then
+			exit 1
+		fi
+	done
+	exit 0;"`
+invalidmsg=`errange -l 1 -u $NLINES -e "~You must enter numbers between 1 and $NLINES."`
+rmenu=OPEN TEXT $OBJ_DIR/Text.remove /tmp/bkstmp1

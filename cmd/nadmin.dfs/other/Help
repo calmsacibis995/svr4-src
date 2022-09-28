@@ -1,0 +1,6 @@
+#ident	"@(#)nadmin.dfs:other/Help	1.1"
+
+	The listed distributed file systems support some
+	operations that are not on the main Distributed File System
+	Management menu.  Choose the type for which you wish to
+	perform such operations.

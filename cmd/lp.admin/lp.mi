@@ -1,0 +1,3 @@
+#ident	"@(#)lp.admin:lp.mi	1.4"
+#status#new
+main:printers^Printer Configuration and Services^printers/Menu.lp

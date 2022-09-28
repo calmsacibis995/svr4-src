@@ -1,0 +1,6 @@
+#ident	"@(#)oamintf:syssetup/datetime.menu	1.1"
+#menu#Display and Set System Date and Time 
+#life#permanent
+
+display^Display System Date and Time^Text.datedisp
+set^Set System Date and Time^Form.dateset

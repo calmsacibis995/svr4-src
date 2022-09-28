@@ -1,0 +1,22 @@
+#ident	"@(#)lp.admin:printers/printers/modify/Text.charset	1.1"
+
+title="Error: Save Character Set Subtask"
+
+close=`rm -f $error`
+
+row=15
+columns=55
+
+begrow=distinct
+begcol=distinct
+
+text="
+    Press CANCEL to return to the form.
+
+    While saving character information,
+    the following error(s) occurred:
+
+`readfile $error`
+
+"
+

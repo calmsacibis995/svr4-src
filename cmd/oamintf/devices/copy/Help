@@ -1,0 +1,45 @@
+#ident	"@(#)oamintf:devices/copy/Help	1.2"
+ABSTRACT:
+	This task allows you to make duplicate copies of the contents
+	of removable volumes.  
+
+devgrp:Device Group
+	Enter the device group you will be working with.
+
+devdr1:Source Device Drive
+	Enter the source device drive.  Press CHOICES to see the
+	available choices.  The volume in the source drive should be
+	write-protected so that it is not accidentally overwritten.
+
+devdr2:Target Device Drive
+	Enter the target device drive on which the copy will be made.
+	Press CHOICES to see the available choices.  The volume in the
+	target drive must be formatted and it must be have a capacity at
+	least as large as the volume in the source drive.
+
+Text.copy1:ABSTRACT
+	At this time, insert the volume you wish to have copied into the
+	source drive you indicated in the previous frame.  After you
+	press CONT, the system will copy the contents of the volume and
+	save them for subsequent copy to the target volume.
+
+Text.copy2:ABSTRACT
+	At this point you may remove the source volume from the drive.
+	The system has saved a copy of its contents.  Insert the target
+	volume into the drive.  After you press CONT, the system will
+	copy the saved copy of source to the target.
+
+Text.copy3:ABSTRACT
+	At this time, insert the volume you wish to have copied into
+	the source drive you indicated in the previous frame.  Then
+	insert the volume to which the source will be copied into the
+	target drive you indicated in the previous frame.  After you
+	press CONT, the system will copy the contents of the source
+	volume to the target volume.
+
+Text.cperr:ABSTRACT
+	An error occurred while attempting to make the copy you
+	requested.  Examine the message in the error display for
+	things you may do to correct the situation.  You may attempt
+	to repeat the task or you may press CANCEL to back out of the
+	"copy" task.

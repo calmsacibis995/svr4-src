@@ -1,0 +1,219 @@
+#ident	"@(#)portmgmt:port_services/Help	1.3.2.1"
+
+ABSTRACT:
+	The subcommands in the "port_services" menu provide functions
+	for managing port services provided by port monitors.
+	It includes such subtasks as adding, disabling, enabling,
+	listing, modifying, and removing port services.
+
++----------------------------------+
+|  Common port service information  |
++----------------------------------+
+
+pssvctag:Service Tag
+	Service tag is a unique tag that identifies the service.
+	The tag may consist of up to 14 alphanumeric characters,
+	and must be unique within the port monitor.
+
+psstate:Port/Service State
+	The service can be in either ENABLED or DISABLED state.
+	The default state is ENABLED.
+
+psutmp:Creating utmp
+	Create utmp?
+	If "Yes" is selected, a utmp entry will be created for the
+	service when invoked. The default is "No".
+
+psid:Identity
+	The identity field represents the identity under which the
+	service should be started. It must be in the form of a 
+	login name as it appears in /etc/passwd (e.g. root).
+
+psversion:Version
+	Version number refers to the version number of the port 
+	monitor's database file.
+
+psscript:Configuration Script
+	This is the full path name of the file that contains the
+	per-service configuration script. The content of this file
+	will be copied to the service configuration script file.
+	Later changes to the named file have no effect.
+
+pscomments:Comments
+	This is used to specify comments that should be associated with
+	the service entry. This comment will be displayed when 
+	information about the port service is requested. It is not used
+	by the system.
+
+psmodules:Modules
+	The modules field is a list of pushable 
+	module names separated by commas.
+	After popping all modules already on the stream, 
+	the modules are pushed in the order they are specified.
+
++-------------------------------+
+|  ttymon specific information  |
++-------------------------------+
+
+tmdevice:TTY Device
+	TTY device field is used to specify the TTY device associated
+	with the service. Full path name must be entered.
+
+tmlabel:Ttylabel
+	Ttylabel field specifies which ttylabel in the /etc/ttydefs
+	file to use for setting the initial termio settings.
+
+tmcmd:Service Command
+	The service command field specifies the full command line of
+	the service to be invoked when the connection is successful.
+
+tmhflag:Hangup Flag
+	If hangup is selected, a hangup on the line will be forced
+	by setting the speed to zero before initializing the line.
+
+tmcflag:Connect-on-carrier Flag
+	If connect-on-carrier flag is set, the ttymon will immediately
+	invoke the service when a carrier-indication has been received.
+	This flag should only be set if the baud rate is known and 
+	no prompting is necessary.
+
+tmbflag:Bidirectional Flag
+	If bidirectional flag is set, outgoing calls are allowed on
+	this port in addition to incoming calls. Also if this flag
+	is set, by default the wait-read flag is also set and the
+	wait-read count is set to 0.
+
+tmrflag:Wait-read Flag
+	If wait-read flag is set, ttymon will wait until N newlines
+	have been received, where N is the wait-read count. If 
+	N is zero, ttymon will wait for any character before sending
+	out the prompt message.
+
+tmwread:Wait-read Count
+	Wait read count is the number of newlines ttymon will wait
+	before sending out the prompt. If it is zero, ttymon will
+	wait for any character. This field is only meaningful if
+	the wait read flag is set.
+
+tmtimeout:Timeout
+	Timeout is the time interval in seconds for the port to be 
+	open and inactive. If nothing is typed for the time period
+	after the prompt is sent, the line will be hung up. If timeout
+	specified is zero, no timeout will occur.
+
+tmprompt:Prompt Message
+	The prompt message is the message that will be displayed, 
+	"as is" when a connection is made and the port is in ENABLED
+	state. "\\" needs to be escaped, e.g. type "\\\\n" for "\\n".
+
+tmdmsg:Disabled Message
+	The disabled-message field specifies the message that will be
+	printed when the port/service is disabled. "\\" needs to be 
+	escaped, e.g. type "\\\\n" for "\\n".
+
++---------------------------------+
+|  Listener specific information  |
++---------------------------------+
+
+lssvctype:Service Type
+	The listener provides two types of services, spawn a service 
+	and passing file descriptor to a standing server.
+	If "Spawn a service" is specified, the listener will invoke 
+	the service specified in the next field. Otherwise, the file
+	descriptor established for the connection will be passed through
+	the pipe specified in the next field to a standing server.
+
+lscmd:Service Command or STREAMS Pipe
+	If the service type specified in the previous field is
+	"Spawn a service", a full command line for the service to be
+	invoked should be entered here. Otherwise, the full name of
+	the pipe for passing file descriptors should be entered.
+
+lsaddr:Server\'s Private Address
+	Server's private address is the address that the listener will
+	monitor on behalf of the service. The listener will dispatch
+	all calls on this address directly to the designated service.
+	The address must be valid and not used already.
+
++-------------------------------------+
+|  Port monitor specific information  |
++-------------------------------------+
+
+pspmspec:Port Monitor Specific Information
+	This field should contain the full command that will printout
+	the port monitor specific information on stdout.
+
+pmtag:Port Monitor Tag
+	Port monitor tag is a unique tag that identifies a particular
+	port monitor. The tag may consist of up to 14 alphanumeric
+	characters.
+
+pmtype:Port Monitor Type
+	Port monitor type identifies the type of a port monitor
+	(e.g. ttymon, listen, etc.). It may consist of up to 14
+	alphanumeric characters.
+
+pmcmd:Command
+	The command should be a string representing the command that
+	will start the port monitor. Full path name must be specified.
+
+pmcount:Restart Count
+	Restart count is the number of times that the port monitor
+	will be restarted if it fails before being placed in a failed
+	state.
+
+pmstate:Start State
+	Start state is the state the port monitor will be placed into
+	when it is started. The two valid states are ENABLED and 
+	DISABLED. The default state is ENABLED.
+
+pmxflag:Start Immediately?
+	Start port monitor immediately?
+	If "Yes" is selected, the port monitor will be started 
+	automatically. Otherwise, the port monitor will not be started
+	and the administrator have to use the "start" task or command
+	to start it.
+
+add:ABSTRACT:
+	The "add" task adds port services to the system.
+
+disable:ABSTRACT:
+	The "disable" task disables port services on the system.
+	Connection requests on a disabled port will be denied,
+	and the service associated with the port will not be invoked.
+	If a disabled message is configured for a port that is
+	disabled, the message will be sent out when a connection
+	request is received.
+
+enable:ABSTRACT:
+	The "enable" task enables port services on the system.
+	When a connection request is received, the service associated 
+	with the enabled port will be invoked if the port monitor 
+	that monitors the port is also enabled.
+
+list:ABSTRACT:
+	The "list" task lists port service configuration and status
+	information.
+
+modify:ABSTRACT:
+	The "modify" task modifies port services on the system.
+
+remove:ABSTRACT:
+	The "remove" task removes port services on the system.
+	When a port service is removed from a port monitor, 
+	it means that the port is no longer monitored by the 
+	port monitor and the associated service is no longer 
+	available through that port monitor.
+
+psadd_one:Add a Service to a Particular Port Monitor
+	This task allows you to add a service to a particular
+	port monitor.
+
+psadd_many:Add a Service to All Port Monitors of a Particular Type
+	This task allows you to add a service to a particular
+	type of port monitor.
+
+	For example, a service can be added to the listeners on
+	different network providers using this task.
+	This task should NOT be used with port monitor type "ttymon"
+	because a port should only be monitored by one ttymon.

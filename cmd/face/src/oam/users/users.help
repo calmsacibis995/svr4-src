@@ -1,0 +1,5 @@
+ABSTRACT:
+	This task allows the administrator of a system to manage the
+	FACE environment for users on the system.  This includes adding
+	a FACE environment for a user, modifying the FACE environment
+	for a user and removing the FACE environment for a user.

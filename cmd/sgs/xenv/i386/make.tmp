@@ -1,0 +1,22 @@
+#ident	"@(#)xenv:i386/make-i386	1.1.1.9"
+#
+#	Front end script to "make" for use in cross compilation of
+#	iAPX386.
+#
+
+MAKECMD=/langint/i386sgs/5.0/i15/usr/ccs/bin/i386make
+
+MAKEOPTS="MAKE=make AS=i386as CC=i386cc LD=i386ld TESTDIR=. \
+	OL=$ROOT/ SL=$ROOT/usr/src/cmd \
+	ROOT=$ROOT INCSYS=$INCSYS INC=$INC \
+	SIZE=i386size LORDER=i386lorder STRIP=i386strip PFX=i386 \
+	LST=i386list DIS=i386dis NM=i386nm CONV=i386conv \
+	AR=i386ar TSORT=i386tsort"
+
+echo i386-make
+if [ $# = 0 ]
+then
+	exec $MAKECMD $MAKEOPTS YACC="i386yacc -p/langint/i386sgs/5.0/i15/usr/ccs/lib/yaccpar" LEX="i386lex -l/langint/i386sgs/5.0/i15/usr/ccs/lib/lex/ncform"
+else
+	exec $MAKECMD "$@" $MAKEOPTS YACC="i386yacc -p/langint/i386sgs/5.0/i15/usr/ccs/lib/yaccpar" LEX="i386lex -l/langint/i386sgs/5.0/i15/usr/ccs/lib/lex/ncform" 
+fi

@@ -1,0 +1,11 @@
+Strike CHOICES to toggle between Yes and No.
+
+The default is No.  
+
+If you choose Yes, all files on the floppy disk or tape will be
+transferred to your file system overwriting any files with the same
+name regardless of whether the file on the hard disk is newer than
+the one on the removable media. If you choose No, files on the hard
+disk that are newer (i.e., modified after the backup was done) will
+not be overwritten.
+

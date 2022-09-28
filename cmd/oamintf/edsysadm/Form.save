@@ -1,0 +1,111 @@
+#ident	"@(#)oamintf:edsysadm/Form.save	1.6.1.1"
+
+################################################################################
+#	Module Name: Form.save
+#	Date: March 1988
+#
+#	ARGS PASSED IN:
+#			ARG1 -> menu/task flag
+#			ARG2 -> package description file name
+#			ARG3 -> menu/task name
+#			ARG4 -> menu/task description
+#			ARG5 -> menu/task location
+#			ARG6 -> menu/task help
+#			ARG7 -> task action file (TASK ONLY)
+#			ARG8 -> comma separated task files (TASK ONLY)
+#			ARG9 -> original location (LOCATION:NAME)
+#
+#	ARGS PASSED OUT:
+#			ARG1 -> menu/task flag
+#			ARG2 -> package description file name
+#			ARG3 -> menu/task name
+#			ARG4 -> menu/task description
+#			ARG5 -> menu/task location
+#			ARG6 -> menu/task help
+#			ARG7 -> task action file (TASK ONLY)
+#			ARG8 -> comma separated task files (TASK ONLY)
+#			ARG9 -> original location (LOCATION:NAME)
+#			RET  -> error return code (Install choice ONLY)
+################################################################################
+form="Save Changes"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`unset -l MSG`
+ 
+done=`unset -l ONLINE;
+      if [ "$F3" = "install" ];
+      then 
+      	  message "Please Wait - Installing online changes in the Interface";
+	  mkchgs $ARG1 $ARG3 $ARG4 $ARG5 $ARG6 $ARG7 $ARG8 >/dev/null;
+	  if [ $RET = 0 ];
+	  then set -l KEYCMD="OPEN TEXT $EDSYSADM/Text.success \"$ARG1\"
+		      \"$ARG3\" \"$ARG4\" \"$ARG5\" \"$ARG6\" \"$ARG7\" \"$ARG8\"";
+	  else if [ $RET = 1 ];
+	        then 
+			set -l KEYCMD="OPEN FORM $EDSYSADM/Form.collision 
+                               \"$ARG1\" \"$ARG3\" \"$ARG4\" \"$ARG5\" \"$ARG6\" \"$ARG7\" \"$ARG8\"";
+	  	else set -l KEYCMD="OPEN TEXT $EDSYSADM/Text.mkchgerr \"$RET\"";
+		fi;
+	  fi;
+      else if [ "$F3" = "save" ];
+      	   then
+		 set -l KEYCMD="OPEN FORM $EDSYSADM/Form.savepkg \"$ARG1\" \"$ARG2\"
+			       \"$ARG3\" \"$ARG4\" \"$ARG5\" \"$ARG6\" \"$ARG7\" \"$ARG8\" \"$ARG9\"";
+	   fi;
+      fi`$!KEYCMD
+
+name=""
+nrow=1
+ncol=3
+frow=1
+fcol=3
+rows=1
+columns=60
+value=const "Do you want to install this menu or task into the interface"
+inactive=true
+
+name=""
+nrow=2
+ncol=3
+frow=2
+fcol=3
+rows=1
+columns=60
+value=const "or do you want to save it for packaging?"
+inactive=true
+
+name=""
+lininfo=Form.save:save
+nrow=4
+ncol=1
+frow=4
+fcol=25
+rows=1
+columns=7
+
+rmenu={ install save }
+menuonly=true
+valid=`unset -l MSG;
+       if [ $ONLINE = true -a $F3 = save ];
+       then
+		set -l MSG="Error: Cannot save changes for packaging made to an on-line menu or task.";
+		echo false;
+       else
+		if [ $F3 = save -o $F3 = install ];
+		then
+			echo true;
+		else
+			set -l MSG="Error: choices are install or save.";
+			echo false;
+		fi;
+	fi`
+
+invalidmsg="$MSG"
+choicemsg=const "Enter install (install on-line) or save (save for packaging)."
+
+name=RESET
+button=8
+action=reset

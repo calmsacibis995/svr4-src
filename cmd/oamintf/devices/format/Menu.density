@@ -1,0 +1,16 @@
+#ident	"@(#)oamintf:devices/format/Menu.density	1.1"
+
+# The 386 disk driver does not support FORMAT of 3b2 style 720K format.
+# You can however read and write a floppy at that density. Eliminate
+# MEDIUM density as a choice from this menu.
+
+menu=Available Format densities for `devattr $ARG1 desc`
+help=OPEN TEXT $INTFBASE/Text.oamhelp $OBJ_DIR/HELP/fmt.help "Devices Format Choices"
+framemsg="`readfile $INTFBASE/ssmenu.msg`"
+
+`shell "for i in \`devattr $ARG1 mdenslist | tr ',' ' ' | sed -e 's/mdens.MED //'\`
+do
+	echo name=\`devattr \$i desc\`;
+	echo action=OPEN TEXT $OBJ_DIR/Text.format \$i $ARG1;
+done"`
+

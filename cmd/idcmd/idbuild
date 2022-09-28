@@ -1,0 +1,100 @@
+#!/sbin/sh
+
+#ident	"@(#)idcmd:idbuild	1.1.2.2"
+#
+# This script will build a UNIX Kernel using ID native mode.
+# It is called by ID Install scripts that add device drivers
+# to the UNIX Kernel.
+#
+# This script calls /etc/conf/bin/idconfig and /etc/conf/bin/idmkunix
+#
+
+if [ ! "$ROOT" ]
+then ROOT=/
+fi
+echo "\n\tThe UNIX Operating System will now be rebuilt."
+echo "\tThis will take some time.  Please wait.\n"
+
+if [ "$ROOT" != "/" ]
+then
+	echo "\tRoot for this system build is ${ROOT:=/}"
+fi
+
+ID=$ROOT/etc/conf
+IDBLD="config.h vector.c fsconf.c conf.c direct ifile"
+IDLCK="$ROOT/etc/.unix_reconf $ROOT/etc/.last_dev_add $ROOT/etc/.last_dev_del"
+
+set +e
+
+>$ROOT/etc/.unix_reconf
+PATH=/bin:/sbin:/usr/bin:/usr/sbin sync
+ 
+cd $ID/cf.d
+rm -f unix
+cat ../sdevice.d/* > sdevice.new
+cat ../sfsys.d/* > sfsys 2>/dev/null
+cat ../mfsys.d/* > mfsys 2>/dev/null
+
+$ID/bin/idconfig -d sdevice.new -r $ID
+if [ $? != 0 ]
+then
+	rm -rf $IDBLD $IDLCK
+	exit 1
+fi
+
+$ID/bin/idmkunix -r $ROOT "$@"
+if [ $? != 0 ]
+then
+
+	rm -rf $IDBLD $IDLCK
+	rm -f fsconf.o conf.o vector.o
+	rm -f $ID/pack.d/*/space.o
+	rm -f $ID/pack.d/*/stubs.o
+	exit 1
+fi
+
+rm -rf $IDBLD
+rm -f fsconf.o conf.o vector.o
+rm -f $ID/pack.d/*/space.o
+rm -f $ID/pack.d/*/stubs.o
+ 
+mv sdevice.new sdevice
+
+# If possible, set up symbol info for kernel debuggers
+if [ -x $ROOT/bin/unixsyms ]
+then
+	$ROOT/bin/unixsyms -i $ROOT/etc/conf/cf.d/kdb.rc unix 2>/dev/null
+	case $? in
+	0)	;;
+	1)	;;	# No symtable; therefore no debugger
+	2)	echo \
+"\nWARNING: The debugger symbol table for the newly-built kernel exceeds"
+		echo \
+"the size for which the kernel debugger is configured.  To correct this,"
+		echo \
+"use the \"idtune\" command to increase the value of KDBSYMSIZE as follows:\n"
+		echo \
+"/etc/conf/bin/idtune KDBSYMSIZE <value>\n"
+		echo \
+"Then, use /etc/conf/bin/idbuild to reconfigure the kernel, and"
+		echo \
+"reboot your system.\n";;
+	*)	echo \
+"\nWARNING: The kernel debugger symbol table was not loaded due to an error"
+		echo \
+"running unixsyms.\n";;
+	esac
+fi
+
+chmod 744 unix
+chgrp other unix
+
+# link of unix to $ROOT/unix done at shutdown in /etc/rc0
+>$ROOT/etc/.new_unix
+>$ROOT/etc/.copy_unix
+rm -rf $IDLCK
+PATH=/bin:/sbin:/usr/bin:/usr/sbin sync
+PATH=/bin:/sbin:/usr/bin:/usr/sbin sync
+
+echo "\n\tThe UNIX Kernel has been rebuilt.\n"
+exit 0

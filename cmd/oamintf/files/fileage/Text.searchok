@@ -1,0 +1,19 @@
+#ident	"@(#)filemgmt:fileage/Text.searchok	1.1.2.1"
+Title="Lists Files Older than a Particular Date"
+
+framemsg=`readfile $INTFBASE/display.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp schokhelp 
+
+close=`$OAMBASE/bin/rmfile 'search.text'`
+
+begrow=distinct
+begcol=distinct
+rows=18
+columns=75
+
+text="`readfile /tmp/search.text`"
+
+name=CONT
+button=11
+action=`$OAMBASE/bin/rmfile 'search.text'`CLOSE $OBJ_DIR/Text.searchok

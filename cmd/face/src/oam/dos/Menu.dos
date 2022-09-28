@@ -1,0 +1,35 @@
+#ident	"@(#)face:src/oam/dos/Menu.dos	1.2"
+
+menu=Global MS-DOS Program Administration
+
+framemsg="Move the cursor to the item you want and press ENTER to select it."
+
+help=OPEN TEXT $INTFBASE/Text.oamhelp $!LININFO 
+
+lifetime=permanent
+
+
+
+name=add
+description=Add Global MS-DOS Programs
+lininfo="/usr/sadm/sysadm/add-ons/face/applmgmt/FACE/dos_programs/add \"Add Global MS-DOS Programs\"" add
+action=OPEN FORM $INTFBASE/Form.interface /usr/sadm/sysadm/add-ons/face/applmgmt/FACE/dos_programs/add Form.add
+
+
+name=list
+description=List Global MS-DOS Programs
+lininfo="/usr/sadm/sysadm/add-ons/face/applmgmt/FACE/dos_programs/list \"List Global MS-DOS Programs\"" list
+action=OPEN MENU $INTFBASE/Menu.interface /usr/sadm/sysadm/add-ons/face/applmgmt/FACE/dos_programs/list Menu.list
+
+
+name=modify
+description=Modify Global MS-DOS Programs
+lininfo="/usr/sadm/sysadm/add-ons/face/applmgmt/FACE/dos_programs/modify \"Modify Global MS-DOS Programs\"" modify
+action=OPEN MENU $INTFBASE/Menu.interface /usr/sadm/sysadm/add-ons/face/applmgmt/FACE/dos_programs/modify Menu.mod
+
+
+name=remove
+description=Remove Global MS-DOS Programs
+lininfo="/usr/sadm/sysadm/add-ons/face/applmgmt/FACE/dos_programs/remove \"Remove Global MS-DOS Programs\"" remove
+action=OPEN MENU $INTFBASE/Menu.interface /usr/sadm/sysadm/add-ons/face/applmgmt/FACE/dos_programs/remove Menu.del
+

@@ -1,0 +1,10 @@
+#ident	"@(#)oamintf:usermgmt/user.menu	1.4"
+#menu#User Login and Group Administration
+#life#permanent
+
+add^Add Users or Groups^add/Form.add
+defaults^Define Defaults for Adding Users^defaults/Form.defaults
+list^List Users or Groups^list/Form.list
+modify^Modify Attributes of Users or Groups^modify/Form.modify
+password^(Re-)define User Password Information^password/Form.password
+remove^Remove Users or Groups^remove/Form.remove

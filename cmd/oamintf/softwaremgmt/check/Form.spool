@@ -1,0 +1,148 @@
+#ident	"@(#)oamintf:softwaremgmt/check/Form.spool	1.2.2.3"
+
+form="Check Spooled Software"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+framemsg="`readfile $INTFBASE/form.msg`"
+
+`readfile $INTFBASE/frept.msg | set -l MSG2`
+`set -l PKGBIN=/usr/sadm/install/bin`
+
+done=`
+	message -w;
+	run sh -c "$OBJ_DIR/task.spool \"$F1\" \"$F2\" \"$F3\" \"$F4\"";
+	message -f $MSG2;
+	echo FALSE
+`
+
+name=Location of the spooled software:
+lininfo=locspool
+scroll=TRUE
+nrow=1
+ncol=2
+frow=1
+fcol=37
+rows=1
+columns=23
+value=spool
+rmenu={ `getdev 'mountpt:*' 'norewind:*' 'pathname:*'` }
+choicemsg=Select location of original package and press ENTER.
+# can't use devattr to check pathnames since it always
+# returns a zero for a pathname attribute request
+valid=`
+	message -w;
+	if [ -z $F1 ] ;
+	then
+		set -l DEVTYPE="" ;
+		echo FALSE ;
+	elif [ $F1 = spool ] || valpath -aoy $F1 ;
+	then
+		set -l DEVTYPE="online" ;
+	elif devattr $F1 mountpt || devattr $F1 norewind ;
+	then
+		set -l DEVTYPE="offline" ;
+	else
+		set -l DEVTYPE="" ;
+		echo FALSE ;
+	fi
+`
+invalidmsg=Error - must be an absolute directory/device pathname, or valid device alias.
+
+name=Package identifier(s) to check:
+lininfo=pkgid
+scroll=TRUE
+multiselect=TRUE
+nrow=2
+ncol=2
+frow=2
+fcol=35
+rows=1
+columns=25
+value=all
+rmenu=vary ` 
+	if [ $DEVTYPE = online ] ;
+	then
+		set -l CMD="OPEN MENU $OBJ_DIR/../Menu.pkg -d$F1" ;
+	else
+		set -l CMD="" ;
+	fi`$CMD
+choicemsg=vary `
+	message -w ;
+	if [ $DEVTYPE = offline ] ;
+	then
+		echo "No choices available for off-line devices" ;
+	else
+		if [ $DEVTYPE = online ] ;
+		then
+			$OBJ_DIR/../pkg $F1 ;
+			if [ $RET = 1 ];
+			then
+				echo "MARK the items you want and press ENTER to select them." ;
+			else
+				echo "No choices available" ;
+			fi ;
+		else
+			echo "No choices available" ;
+		fi ;
+	fi ;
+`
+valid=`
+	message -w;
+	if [ -z $F2 ] ;
+	then
+		echo FALSE ;
+	else 
+		shell "	
+			for arg in \`echo \"$F2\" | sed 's/,/ /g'\`
+			do
+				$OBJ_DIR/../pkg $F1 \"\$arg\" >/dev/null 2>&1 
+				if [ \"\$?\" -eq 0 ]
+				then
+					exit 1
+				fi
+			done
+			exit 0
+		" ;
+	fi
+`
+invalidmsg=Error - invalid package instance identifier.
+
+name=Pathname(s) to check:
+lininfo=pathnm
+scroll=TRUE
+nrow=3
+ncol=2
+frow=3
+fcol=25
+rows=1
+columns=35
+value=all
+choicemsg=Enter specific pathname(s) to check (if desired) or keyword \"all\".
+valid=`
+	message -w;
+	shell "	
+		[ -z \"$F3\" ] && exit 1
+		[ "$F3" = all ] && exit 0
+		for arg in \`echo \"$F3\" | sed 's/,/ /g'\`
+		do
+			valpath -a \"\$arg\" && continue
+			exit 1
+		done
+	"
+`
+invalidmsg=Error - input must be a list of absolute pathnames.
+
+name=Display each pathname as it is verified?
+lininfo=verbose
+nrow=5
+ncol=10
+frow=5
+fcol=2
+rows=1
+columns=3
+value=yes
+rmenu={ yes no }
+menuonly=TRUE
+
+name=RESET
+button=8
+action=reset

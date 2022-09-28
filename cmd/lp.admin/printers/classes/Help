@@ -1,0 +1,99 @@
+#ident	"@(#)lp.admin:printers/classes/Help	1.2.3.1"
+ABSTRACT:Manage Classes of Related Printers
+	The classes menu gives you several tasks for:  adding new classes;
+	displaying the classes currently defined; modifying the list of
+	associated printers in a class; and removing classes from the
+	system.
+	
+	Classes allow printers with similar capabilities or physical
+	locations to be grouped together.  A request for printing may be
+	submitted to a class, in which case the request will be printed
+	on the first available printer in that class.  The definitions of
+	classes are numerous, including, but not limited to:  all printers
+	on this floor, all of a certain type of laser printer, all
+	non-impact printers, or all printers that may support a certain
+	form.  Naturally, a printer may appear in more than one class.
+	
+	Classes may also be placed in a reject or accept state like
+	printers, but the enabling and disabling of classes is not
+	possible.
+
+menu:L1:Add a New Class
+	You use the add task to create new classes and to add printers to
+	existing classes.  When you first create a class it will be
+	necessary to use the accept task to allow it to accept print
+	requests.
+	
+	The order in which you add printers to a class is significant.
+	When the Line Printer Service processes a print request queued for
+	a class, it will be printed on the first available printer in that
+	class.  What this means is that the first printer added to a class
+	will take the brunt of the work.  For this reason it may be
+	desirable to periodically use the remove task to remove the first
+	printer in a class then put it back with the add task.  This will
+	tend to distribute the wear over all the printers in the class.
+	However, if your printers are usually busy this probably will not
+	be a problem.
+
+menu:L2:List Printers in Classes
+	You use the list task to examine the configuration of one or more
+	classes.  You may want to do this, for instance, if you suspect a
+	configuration mistake is causing a problem.
+	
+	This task will show you the class requested and the printers that
+	make up that class.
+
+menu:L3:Modify the Membership of a Class
+	You use the modify task to change the printers in a class.  After
+	specifying a class, you may add printers to it or remove printers
+	from it.
+
+menu:L4:Remove Classes
+	You use the remove task to remove a class from the Line Printer
+	Service.  You may want to do this if a class is being broken up
+	into smaller groups of printers.
+
+add:F1:New class
+	You are expected to enter the name of the class you want to create.
+	A class name may consist of letters, digits and underscores.
+
+add:F2:Printers
+	You are expected to enter the name(s) of a printer to be added to
+	this class.  Separate multiple names with a comma.
+	
+	You may add all of the printers to this class by entering all.
+
+list:F1:Classes
+	You are expected to enter the name of the class you would like to
+	know about.  Separate multiple names with a comma.
+	
+	Enter all to get information about all of the classes.
+
+modify:F1:Class Name
+	You are expected to enter the name of the class you want to modify.
+	A class name may consist of letters, digits and underscores.
+
+modify:F2:Add or remove printers
+	Press CHOICES and select add to add printers to the specified class 
+	or select remove to remove printers from the specified class.
+	
+	Another form will be displayed to allow you to enter the names of
+	the printers that you want to add or remove.
+
+modify:add:Printers
+	You are expected to enter the name(s) of a printer to be added to this
+	class.  Separate multiple names with a comma.
+	
+	You may add all of the printers to this class by entering all.
+
+modify:remove:Printers
+	You are expected to enter the name(s) of a printer to be removed from
+	this class.  Separate multiple names with a comma.
+	
+	You may remove all of the printers from this class by entering all.
+
+remove:F1:Remove Classes
+	You are expected to enter the name of the class you want to remove.
+	Separate multiple names with a comma.
+	
+	You may remove all of the classes by entering all.

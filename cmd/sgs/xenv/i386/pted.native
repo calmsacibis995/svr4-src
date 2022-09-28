@@ -1,0 +1,231 @@
+#ident	"@(#)xenv:i386/pted.native	1.1.1.17"
+#
+#	iAPX386 native pathedit
+#
+#
+#	This script is called by master pathedit when building native
+#	iAPX386 SGS. The format of the call is
+#		pted.native <machine>
+#	where machine is i386.
+#
+
+# 
+# Function mkadir: attempts to make the directory structure specified
+# in $1.  Since the -p flag to make is not present on older systems,
+# it may be necessary to create intermediate directories.  The
+# function creates the directories by tricking the shell into using
+# recursion.
+#
+
+mkadir() {
+	dir=`dirname $1`
+	if [ ! -d $dir ] 
+	then
+		(mkadir $dir) 
+		mkdir $1
+	elif [ ! -d $1 ]
+	then
+		mkdir $1
+	fi
+}
+
+__MACH=$1
+
+BASE=`cd ../../../../../..; pwd`
+
+cont="T"
+echo "Do you want the SGS built with the default parameters? (y or n): \c"
+while [ "$cont" = "T" ]
+do
+	x=`line`
+	if [ "$x" = "y" ]
+	then
+		stdparam="T"
+		cont="F"
+	elif [ "$x" = "n" ]
+	then
+		stdparam="F"
+		cont="F"
+	else
+		echo "Please type 'y' or 'n': \c"
+	
+	fi
+done
+
+if [ "$stdparam" = "T" ]
+then
+	__CBIN=/usr/ccs/bin
+	__CLIB=/usr/ccs/lib
+	__USRLIB=/usr/lib
+	__INC=/usr/include
+	__ETC=/etc
+	__LPASS=.
+	__MAC=
+	__PREFIX=
+	__OWN=bin
+	__GRP=bin
+else
+
+	echo "Enter absolute directory for run-time binaries:  \c"
+	x=`line`
+	__CBIN=${x:=/usr/ccs/bin}
+
+	echo "Enter absolute directory for run-time libraries:  \c"
+	x=`line`
+	__CLIB=${x:=/usr/ccs/lib}
+
+	echo "Enter absolute directory for run-time usr libraries:  \c"
+	x=`line`
+	__USRLIB=${x:=/usr/lib}
+
+	echo "Enter absolute directory for header files:  \c"
+	x=`line`
+	__INC=${x:=/usr/include}
+
+	echo "Enter absolute directory for etc files:  \c"
+	x=`line`
+	__ETC=${x:=/etc}
+
+	echo "Enter location of cross lint1, lint2:  \c"
+	x=`line`
+	__LPASS=${x:=/usr/ccs/lib}
+
+	echo "Enter generic prefix for names:  \c"
+	__PREFIX=`line`
+
+	echo "Enter owner of executables:  \c"
+	x=`line`
+	__OWN=${x:=bin}
+
+	echo "Enter group of executables:  \c"
+	x=`line`
+	__GRP=${x:=bin}
+fi
+
+
+__PROOT=""
+__INCDIR=/tmp
+__TMPDIR=/var/tmp
+__DBO=RBO
+__ARCH=AR32WR
+__CPP=$__LIBDIR/cpp
+
+(mkadir $BASE/$__CBIN)
+(mkadir $BASE/$__CLIB)
+(mkadir $BASE/$__USRLIB)
+(mkadir $BASE/$__CLIB/libp)
+(mkadir $BASE/$__INC)
+(mkadir $BASE/$__INC/sys)
+(mkadir $BASE/$__ETC)
+
+echo "\n These parameters are used for your SGS:"
+echo "CCSBIN:		$__CBIN"
+echo "CCSLIB:		$__CLIB"
+echo "USRLIB:		$__USRLIB"
+echo "INC:		$__INC"
+echo "ETC:		$__ETC"
+echo "LPASS:		$__LPASS"
+echo "PREFIX:		$__PREFIX"
+echo "OWN:		$__OWN"
+echo "GRP:		$__GRP"
+
+echo "Do you want the SGS built with these parameters (y or n):"
+x=`line`
+if [ "$x" != "y" ]
+then
+	echo "run pathedit again."
+	exit
+fi
+
+cp paths.h ../../inc/i386/paths.h
+cp sgs.h ../../inc/i386/sgs.h
+chmod 0644 ../../inc/i386/paths.h ../../inc/i386/sgs.h
+echo "\n ******** Making paths.h ********"
+ed ../../inc/i386/paths.h <<!
+1,\$s|SGS|$__PREFIX|g
+1,\$s|I386BINDIR|$__CBIN|
+1,\$s|I386LIBDIR|$__CLIB|
+1,\$s|I386LIBPATH|$__CLIB:$__USRLIB|
+1,\$s|I386ABILIBDIR|$__CLIB/minabi|
+1,\$s|I386INCDIR|$__INCDIR|
+1,\$s|I386TMPDIR|$__TMPDIR|
+1,\$s|I386CPP|$__CPP|
+w
+q
+!
+echo "\n ******** Making sgs.h ********"
+
+ed ../../inc/i386/sgs.h <<Y
+g|SGS|s|".*"|"$__PREFIX"|
+w
+q
+Y
+
+
+if [ -s ../../sgs.mk ]
+then
+	chmod 0644 ../../sgs.mk
+fi
+echo "\n ******** Making global makefile ********"
+ed ../../sgs.mk.i386 <<X
+1,\$s|lib; .*make|lib; make|
+1,\$s|-f \"\$(CCSBIN).*|true ] ; \\\|
+1,\$s|^CCSLIB.*|CCSLIB=$__CLIB|
+1,\$s|^MAC=.*|MAC=$__MAC|
+1,\$s|$(CCSBIN)/$(SGS)env||
+1,\$s|xenv/i386; make install|xenv/i386; make CCSBIN=\$(ROOT)$__CBIN CCSLIB=\$(ROOT)$__CLIB install|
+w ../../sgs.mk
+q
+X
+echo "\n ******** Making SGS makefile ********"
+ed template.mk <<X
+1,\$s|^CCSBIN.*|CCSBIN=$__CBIN|
+1,\$s|^CCSLIB.*|CCSLIB=$__CLIB|
+1,\$s|^INC=.*|INC=$__INC|
+1,\$s|^INCSYS=.*|INCSYS=$__INC|
+1,\$s|^DFLTINC.*|DFLTINC=$__INC|
+1,\$s|^ETC.*|ETC=$__ETC|
+1,\$s|^LPASS.*|LPASS=$__LPASS|
+1,\$s|^SGS=.*|SGS=$__PREFIX|
+1,\$s|^ARCH.*|ARCH=$__ARCH|
+1,\$s|^DBO.*|DBO=$__DBO|
+1,\$s|^ROOT.*|ROOT=$__PROOT|
+1,\$s|^NATIVE.*|NATIVE=yes|
+1,\$s|^MAKE.*|MAKE=make|
+1,\$s|^OWN.*|OWN=$__OWN|
+1,\$s|^GRP.*|GRP=$__GRP|
+g|make.mk|d
+g|	cp |d
+w makefile
+q
+X
+chmod 0644 makefile
+#
+chmod 0644 ../../../../lib/.libmk.temp
+echo "\n ******** Making library makefile ********"
+ed ../../../../lib/.libmk.temp <<X
+1,\$s|^CCSLIB=.*|CCSLIB=$(ROOT)$__CLIB|
+1,\$s|^CCSBIN=.*|CCSBIN=$(ROOT)$__CBIN|
+1,\$s|^LIBP=.*|LIBP=$(ROOT)$__CLIB/libp|
+1,\$s|^MACH=.*|MACH=i386|
+1,\$s|^SGS.*|SGS=$__PREFIX|
+1,\$s|^OWN.*|OWN=$__OWN|
+1,\$s|^GRP.*|GRP=$__GRP|
+w ../../../../lib/.lib.mk
+q
+X
+chmod 0644 ../../../../lib/.lib.mk
+#
+#
+echo "\n ******** Setting proper version of elftypes.h *******"
+rm -f ../../inc/common/sys/elftypes.h
+ln ../../inc/common/sys/etype_I386.h ../../inc/common/sys/elftypes.h
+#
+#
+echo "\n ******** Modifying optimizer makefile ********"
+echo "Your optimizer will be optimized \n"
+ed ../../optim/i386/makefile <<W
+1,\$s|^CFLAGS=.*|CFLAGS=-c -O|
+w
+q
+W

@@ -1,0 +1,30 @@
+#ident	"@(#)face:src/xx/initial.txt	1.3"
+
+banner="AT&T FACE - `date '+%h %d, 19%y'`"
+bancol=center
+title=AT&T FACE
+text=" "
+rows=0
+columns=15
+
+use_incorrect_pre4.0_behavior=true
+
+#
+# colors 
+#
+screen=black
+highlight_bar_text=white
+slk_text=black
+
+`readfile $HOME/pref/.colorpref`
+
+working="working ..."
+
+slk_layout=`/usr/bin/i386 && echo "4-4" || echo "3-2-3"`
+
+`if $VMSYS/bin/chkperm -t unix;
+then
+	echo nobang=false;
+else
+	echo nobang=true;
+fi`

@@ -1,0 +1,27 @@
+#ident	"@(#)oamintf:files/unmount/Help	1.1.1.1"
+ABSTRACT:
+	The unmount task helps in unmounting file systems.
+	The file system must have been previously mounted
+	for it to be unmounted via this task.
+TITLE:
+Form.umountfs:TITLE:
+Form.umountfs:F1:Unmount a file System
+Form.unmount:TITLE:
+Form.unmount:F1:Device containing file system to be unmounted:
+	Devices that contain file systems are usually partitions on
+	the hard disk. For example the partition /dev/dsk/1s3 is
+	the fourth partition on the second (numbering from zero) hard
+	disk.  Among other devices which can contain file systems,
+	floppy diskette drives are the most common. 
+	
+	Devices can be accessed via either of block or character
+	interfaces. The block interface to the device causes data
+	on the device to be accessed in a buffered manner. The 
+	character interface provides character input/output to the 
+	device. For example buffered I/O can be performed on a floppy 
+	device by specifying the block interface "/dev/dsk/f0t"
+	and character I/O can be performed by specifying "/dev/rdsk/f0t"
+	which is the character interface to this device.
+
+unmounttask:Unmount a File System
+	This is a confirmation frame. Respond 'yes' or 'no'.

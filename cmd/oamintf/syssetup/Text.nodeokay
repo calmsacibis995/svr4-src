@@ -1,0 +1,49 @@
+#ident	"@(#)oamintf:syssetup/Text.nodeokay	1.3.1.1"
+################################################################################
+#	Module Name: Text.nodeokay
+#	Calling Sequence:
+#	Functional Description: This Text object displays a screen
+#				when the user sets the Node Name.
+#	How:
+#	Inputs:
+#	Functions Called: uname
+#	Issues:
+################################################################################
+
+Title=Set System Name and Network Node Name
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+#begrow=1
+#begcol=1
+rows=12
+columns=75
+
+`uname -s | set -l SYSNM ;
+ uname -n | set -l NODENM`
+
+text="                                                                 
+The system name and node name for your machine have been set as you 
+requested.  If the node name was set for the first time, simply 
+provide it to others in your network that need to communicate with
+your machine.  Otherwise, if the node name was reset, make sure
+any references to the old node name within the network are changed 
+as well.
+
+   System name :       $SYSNM
+
+   Network node name : $NODENM
+   "
+
+# for a CONF test object
+#	(This is for confirmation, warning and repetition text screens
+
+altslks
+
+name=CONT
+button=11
+action=`rmfile 'node.set'`CLOSE
+
+name=CANCEL
+button=14
+action=`rmfile 'node.set'`CLEANUP

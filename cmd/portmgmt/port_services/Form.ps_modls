@@ -1,0 +1,212 @@
+#ident	"@(#)portmgmt:port_services/Form.ps_modls	1.6.3.1"
+
+`pmgetpid | set -l PID`
+`pmadm -L -p "$ARG2" -s "$ARG1" | sed 's/#.*//' | sed 's/\\\\/~/' |
+regex -e '[^:][^:]*:[^:][^:]*:[^:][^:]*:([^:]*)$0:([^:][^:]*)$1:[^:]*:[^:]*:[^:]*:([^:]*)$2:([^:]*)$3:([^:][^:]*)$4:([^:]*)$5:([^:][^:]*)$6$' 
+'`set -l FLAGS="$m0" -l ID="$m1" -l ADDR="$m2" -l RPC="$m3" -l TYPE="$m4" -l MODULES="$m5" -l CMD="$m6" `'`
+
+`pmadm -L -p "$ARG2" -s "$ARG1" | sed 's/.*#//' | set -l COMMENTS `
+
+`nlsadmin -V | set -l VERSION`
+
+form= Modify Port Services
+lifetime=shorterm
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=`rm /var/tmp/cmd$PID /var/tmp/err$PID;
+       unset -l PID -l FLAGS -l ID -l ADDR -l TYPE -l MODULES -l CMD -l COMMENTS -l VERSION -l stype -l RPC`
+done=`message -w "Modifying service <$ARG1>.";
+	echo pmadm -r -p "$ARG2" -s "$ARG1" > /var/tmp/cmd$PID;
+	echo pmadm -a -p "$ARG2" -s "$ARG1" -i "$F6" -v "$VERSION" \\ >>/var/tmp/cmd$PID;
+	pmadmopts "$F4" "$F5" "" "$F11" >>/var/tmp/cmd$PID;
+	lsopts "$F7" "$F8" "$F9" "$F10" "$RPC" >>/var/tmp/cmd$PID;
+	psmod $ARG2 $ARG1 $PID;
+   	regex -e -v "$RET"
+		'^0$'  '`message "Service <$ARG1> is modified successfully."`'
+		'^4$'  '`message "Service <$ARG1> is modified successfully."`'
+		'^.*$' '`message "Service <$ARG1> is not modified.";`'`RESET
+
+# $F1
+name=Service tag:
+nrow=0
+ncol=2
+frow=0
+fcol=21
+rows=1
+columns=14
+value=$ARG1
+inactive=true
+
+# $F2
+name=Port monitor tag:
+nrow=1
+ncol=2
+frow=1
+fcol=21
+rows=1
+columns=14
+value=$ARG2
+inactive=true
+
+# $F3
+name=Type:
+nrow=1
+ncol=46
+frow=1
+fcol=53
+rows=1
+columns=7
+value=$ARG3
+inactive=true
+
+# $F4
+name=Port/service state:
+nrow=3
+ncol=2
+frow=3
+fcol=23
+rows=1
+columns=8
+lininfo=psstate
+value=`regex -v "$FLAGS"
+		'^.*x.*$' 'DISABLED'
+		'.*'	  'ENABLED'`
+rmenu={ DISABLED ENABLED }
+menuonly=true
+choicemsg=Select ENABLED/DISABLED
+fieldmsg=Select state of the port service.
+invalidmsg=Invalid input - select ENABLED/DISABLED only.
+
+# $F5
+name=Create "utmp"?
+nrow=3
+ncol=35
+frow=3
+fcol=50
+rows=1
+columns=3
+lininfo=psutmp
+value=`regex -v "$FLAGS"
+		'^.*u.*$' 'Yes'
+		'.*'	  'No'`
+rmenu={ Yes No }
+menuonly=true
+choicemsg=Select Yes/No
+fieldmsg=const "Select Yes/No."
+invalidmsg=const "Invalid input - select Yes/No only."
+
+# $F6
+name=Service invocation identity:
+nrow=4
+ncol=2
+frow=4
+fcol=32
+rows=1
+columns=14
+lininfo=psid
+value="$ID"
+valid=`grep "^$F6:" /etc/passwd`
+choicemsg=const "Enter the login ID the service will run as, e.g. root."
+fieldmsg=const "Enter the login ID the service will run as, e.g. root."
+invalidmsg=const "Error - login ID does not exist."
+
+# $F7
+name=Service type:
+nrow=5
+ncol=2
+frow=5
+fcol=17
+rows=1
+columns=19
+lininfo=lssvctype
+value=`regex -v "$TYPE"
+		'^c$' 'Spawn a service'
+		'.*'  'Pass fd to a server'`
+rmenu={ "Spawn a service" "Pass fd to a server" }
+menuonly=true
+choicemsg=const "Press CHOICES to toggle through the choices."
+fieldmsg=const "Select type of service. Press CHOICES for valid choices."
+invalidmsg=const "Error - invalid input, select from choice menu only"
+
+# $F8
+name=Full service command line OR name of a STREAMS pipe:
+nrow=6
+ncol=2
+frow=7
+fcol=5
+rows=1
+columns=54
+lininfo=lscmd
+value="$CMD"
+valid=`regex -e -v "$F7"
+		'^Spawn.*$' '`set -l stype=command`'
+		'^.*$' '`set -l stype=pipe`' ;
+	ckfile "$stype" "$F8"`
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - enter full path name of command or pipe.'
+		'^2$'	'Error - must specify full pathname.'
+		'^3$'	'Error - file does not exist.'
+		'^4$'	'Error - command is not executable.'
+		'^7$'	'Error - file is not a pipe.'
+		'.*'	'Error - invalid file name'`
+choicemsg=const "Enter full service command line OR full path name of the STREAMS pipe."
+fieldmsg=const "Enter full service command line OR full path name of the STREAMS pipe."
+scroll=TRUE
+
+# $F9
+name=Modules to be pushed:
+nrow=8
+ncol=2
+frow=8
+fcol=25
+rows=1
+columns=34
+lininfo=psmodules
+value="$MODULES"
+valid=`pmckmod "$F9"`
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - invalid module list.'
+		'^2$'	'Error - too many modules listed.'
+		'^3$'	'Error - cannot open /dev/sad/user.'
+		'^4$'	'Error - SAD_VML ioctl failed.'
+		'.*'	'Error - invalid module list.'`
+fieldmsg=const "Enter a list of modules seperated by commas. e.g. mtty,tirdwr,ldterm."
+choicemsg=const "Enter a list of modules seperated by commas. e.g. mtty,tirdwr,ldterm."
+
+# $F10
+name=Server\'s private address:
+nrow=9
+ncol=2
+frow=9
+fcol=29
+rows=1
+columns=30
+lininfo=lsaddr
+value=`echo "$ADDR" | sed 's/~/\\\\\\\\\\\\\\\\/'`
+choicemsg=const "Enter the private address of the server."
+fieldmsg=const "Enter the private address of the server.(need to escape \\\\)"
+scroll=TRUE
+
+# $F11
+name=Comments:
+nrow=10
+ncol=2
+frow=10
+fcol=13
+rows=1
+columns=46
+lininfo=pscomments
+value="$COMMENTS"
+fieldmsg=Enter comments
+choicemsg=Enter comments
+scroll=true
+
+name=Modify the fields you want to change and press SAVE.
+nrow=12
+ncol=4
+inactive=TRUE
+
+name=" "
+nrow=13
+ncol=2
+inactive=TRUE
+show=FALSE

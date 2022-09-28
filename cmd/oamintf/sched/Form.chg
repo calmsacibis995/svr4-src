@@ -1,0 +1,140 @@
+#ident	"@(#)oamintf:sched/Form.chg	1.1.1.1"
+
+form="Change Automatic Task Information"
+altslks
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+done=open $OBJ_DIR/Text.chgcfm "$Month" "$Day" "$WeekN" "$Hour" "$Minute" "$WeekD" "$ARG2"
+
+close=`rm -f /tmp/trtask.$VPID`
+
+`indicator -w; /usr/sadm/sysadm/bin/getchg "$ARG1" /tmp/trtask.$VPID "$ARG2" /tmp/task1.$VPID | regex -e '^Month(.*)$0 Day(.*)$1 WeekN(.*)$2 Hour(.*)$3 Min(.*)$4 WeekD(.*)$5$' '`set -l Month="$m0" -l Day="$m1" -l WeekN="$m2" -l Hour="$m3" -l Minute="$m4" -l WeekD="$m5"`'`
+
+name=Month(s) of the Year:
+lininfo=Form.chg:month
+nrow=1
+ncol=2
+rows=1
+columns=26
+frow=1
+fcol=24
+value=const ${(/tmp/trtask.$VPID)Month}
+rmenu=open menu $OBJ_DIR/Menu.month
+valid=`ts_valid 1 12 "$F1" | set -l Month; regex -v "$Month" '^[^ENR].*$'`
+invalidmsg=`regex -v "$Month" 
+		'^E(.*)$0$' '"$m0" is not a valid month. Strike CHOICES for valid choices.'
+		'^R(.*)$0$' '"$m0" is a redundant input.'
+		'^Nul$' '"Month of the Year" is a mandatory field. Strike CHOICES for choices.'`
+fieldmsg=`set -l TITLE="Month(s) of the Year" -l ITEM=1`"Strike the CHOICES function key. Strike SAVE when you complete the form."
+
+name=Day(s) of the Month:
+lininfo=Form.chg:daym
+nrow=3
+ncol=2
+rows=3
+columns=27
+frow=3
+fcol=23
+wrap=true
+value=const ${(/tmp/trtask.$VPID)Day}
+rmenu=open menu $OBJ_DIR/Menu.day
+valid=`ts_valid 1 31 "$F2" | set -l Day; regex -v "$Day" '^[^ER].*$'`
+invalidmsg=`regex -v "$Day" 
+		'^R(.*)$0$' '"$m0" is a redundant input.'
+		'^E(.*)$0$' '"$m0" is not a valid day of the month. Strike CHOICES for valid choices.'`
+fieldmsg=`set -l TITLE="Day(s) of the Month" -l ITEM=2`"Strike the CHOICES function key. Strike SAVE when you complete the form."
+
+name=Day(s) of the Week:
+lininfo=Form.chg:dayw
+nrow=7
+ncol=2
+rows=1
+columns=28
+frow=7
+fcol=22
+value=const ${(/tmp/trtask.$VPID)Week}
+rmenu=open menu $OBJ_DIR/Menu.week
+valid=`ts_valid 0 6 "$F3" | set -l WEEK; regex -e -v "$WEEK"
+		'^N(.*)$0 D(.*)$1$' '`set -l WeekN=$m0 -l WeekD=$m1`'
+		'^all$' '`set -l WeekN=all -l WeekD=\*`'`
+invalidmsg=`regex -v "$WEEK" 
+		'^R(.*)$0$' '"$m0" is a redundant input.'
+		'^E(.*)$0$' '"$m0" is not a valid day of the week. Strike CHOICES for valid choices.'`
+fieldmsg=`set -l TITLE="Day(s) of the Week" -l ITEM=3`"Strike the CHOICES function key. Strike SAVE when you complete the form."
+
+name=Hour(s) of the Day:
+lininfo=Form.chg:hour
+nrow=9
+ncol=2
+rows=1
+columns=28
+frow=9
+fcol=22
+value=const ${(/tmp/trtask.$VPID)Hour}
+rmenu=open menu $OBJ_DIR/Menu.hour
+fieldmsg=`set -l TITLE="Hour(s) of the Day" -l ITEM=4`"Strike the CHOICES function key. Strike SAVE when you complete the form."
+valid=`ts_valid 0 23 "$F4" | set -l Hour; regex -v "$Hour" '^[^ER].*$'`
+invalidmsg=`regex -v "$Hour" 
+		'^R(.*)$0$' '"$m0" is a redundant input.'
+		'^E(.*)$0$' '"$m0" is not a valid choice. Strike CHOICES for valid choices.'`
+
+name=Minute(s) past the Hour:
+lininfo=Form.chg:minute
+nrow=11
+ncol=2
+rows=1
+columns=23
+frow=11
+fcol=27
+value=const ${(/tmp/trtask.$VPID)Minute}
+rmenu=open menu $OBJ_DIR/Menu.minute
+fieldmsg=`set -l TITLE="Minute(s) past the Hour" -l ITEM=5`"Strike the CHOICES function key. Strike SAVE when you complete the form."
+valid=`ts_valid 0 59 "$F5" | set -l Minute; regex -v "$Minute" '^[^ER].*$'`
+invalidmsg=`regex -v "$Minute" 
+		'^R(.*)$0$' '"$m0" is a redundant input.'
+		'^E(.*)$0$' '"$m0" is not a valid choice. Strike CHOICES for valid choices.'`
+
+name=Task:
+lininfo=Form.chg:task
+nrow=13
+ncol=2
+rows=3
+columns=42
+frow=13
+fcol=8
+value=const "`cat /tmp/task1.$VPID | /usr/sadm/sysadm/bin/slash`"
+inactive=true
+
+name=HELP
+button=9
+action=help
+
+name=CHOICES
+button=10
+action=choices
+
+name=SAVE
+button=11
+action=done
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=CANCEL
+button=14
+action=close $OBJ_DIR/Form.chg $OBJ_DIR/Menu.chg
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=nop
+
+`indicator -w`

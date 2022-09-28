@@ -1,0 +1,12 @@
+
+#ident	"@(#)rpcsvc:net_files/masters	1.2"
+
+#----------------------------------------------------------------------#
+# This file contains the list of all the Secure RPC masters that this  #
+# master wish to acquire keys from.                                     #
+# If a master is using NFS to share the /domainkeys  directory then    #
+# the entry for that master is the 'uname' of that master.             #
+# If a master is using RFS then the entry must be 'RFS_domain.uname'.  #
+# If the other master is in the same RFS domain as the this master     #
+# then the entry may or may not contain the RFS domain.                #
+#----------------------------------------------------------------------#

@@ -1,0 +1,237 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FORM/Form.display	1.1"
+
+form="Display a Form"
+lifetime=longterm
+
+altslks=true
+
+`message  Strike the CONT function key to continue.`
+
+`/usr/vmsys/admin/PS/FORM/cspwls.sh`
+
+`regex -e -v "${(/usr/tmp/form.$VPID)fault}" 'mail' 
+			'`set -l FD="send mail to ${(/usr/tmp/form.$VPID)login}"`'
+			'.*' '`set -l FD="${(/usr/tmp/form.$VPID)fault}"`'`
+
+
+done=close /usr/vmsys/OBJECTS/PS/FORM/Form.display
+
+close=`/usr/vmsys/admin/.chkuser -c "/bin/rm :-rf: :/usr/tmp/pwlist.$VPID: :/usr/tmp/allform.$VPID: :/usr/tmp/form.$VPID: :/usr/tmp/err.$VPID:"`
+
+
+
+name=""
+nrow=1
+ncol=1
+rows=1
+columns=1
+frow=1
+fcol=1
+noecho=true
+
+
+
+name=Form name:
+nrow=1
+ncol=2
+rows=1
+columns=14
+frow=1
+fcol=13
+value=$ARG1
+inactive=true
+
+
+name=Description of form: 
+nrow=2
+ncol=2
+rows=1
+columns=40
+frow=2
+fcol=23
+value=${(/usr/tmp/form.$VPID)comment}
+inactive=true
+
+
+name=Page length in lines:
+nrow=5
+ncol=2
+rows=1
+columns=3
+frow=5
+fcol=24
+value=${(/usr/tmp/form.$VPID)length}
+inactive=true
+
+name=Page width in characters:
+nrow=6
+ncol=2
+rows=1
+columns=3
+frow=6
+fcol=28
+value=${(/usr/tmp/form.$VPID)width}
+inactive=true
+
+name=Lines per inch:
+nrow=4
+ncol=2
+rows=1
+columns=2
+frow=4
+fcol=18
+value=${(/usr/tmp/form.$VPID)lpi}
+inactive=true
+
+name=Characters per inch:
+nrow=3
+ncol=2
+rows=1
+columns=2
+frow=3
+fcol=23
+value=${(/usr/tmp/form.$VPID)cpi}
+inactive=true
+
+
+name=Number of pages in the form:
+nrow=7
+ncol=2
+rows=1
+columns=4
+frow=7
+fcol=31
+value=${(/usr/tmp/form.$VPID)np}
+inactive=true
+
+name=Character set or printwheel to use with form:
+nrow=8
+ncol=2
+rows=1
+columns=14
+frow=8
+fcol=48
+value=${(/usr/tmp/form.$VPID)cs}
+inactive=true
+
+
+name=Character set or printwheel mandatory:
+nrow=9
+ncol=2
+rows=1
+columns=3
+frow=9
+fcol=42
+value=${(/usr/tmp/form.$VPID)mandatory}
+inactive=true
+
+name=Ribbon color:
+nrow=10
+ncol=2
+rows=1
+columns=10
+frow=10
+fcol=16
+value=${(/usr/tmp/form.$VPID)rcolor}
+inactive=true
+
+
+name=Alignment pattern file:
+nrow=11
+ncol=2
+rows=1
+columns=40
+frow=11
+fcol=26
+value=${(/usr/tmp/form.$VPID)pattern}
+inactive=true
+
+name=Content type of alignment pattern file:
+nrow=12
+ncol=2
+rows=1
+columns=14
+frow=12
+fcol=42
+value=${(/usr/tmp/form.$VPID)contype}
+inactive=true
+
+name=Mount form alert action:
+nrow=13
+ncol=2
+rows=1
+columns=40
+frow=13
+fcol=27
+#value=${(/usr/tmp/form.$VPID)fault}
+value=$FD
+inactive=true
+
+name=Frequency of alert in minutes:
+nrow=14
+ncol=2
+rows=1
+columns=4
+frow=14
+fcol=33
+value=${(/usr/tmp/form.$VPID)freq}
+inactive=true
+
+
+name=Number of print requests to wait before alert:
+nrow=15
+ncol=2
+rows=1
+columns=2
+frow=15
+fcol=49
+value=${(/usr/tmp/form.$VPID)request}
+inactive=true
+
+
+name=Permitted users:
+Number of print requests to wait before alert:
+nrow=16
+ncol=2
+rows=2
+columns=70
+frow=17
+fcol=5
+value=${(/usr/tmp/form.$VPID)users}
+inactive=true
+
+
+name=CANCEL
+button=14
+action=close /usr/vmsys/OBJECTS/PS/FORM/Form.display /usr/vmsys/OBJECTS/PS/FORM/Form.dsel 
+
+name=""
+button=10
+action=nop
+
+name=CONT
+button=11
+action=close /usr/vmsys/OBJECTS/PS/FORM/Form.display /usr/vmsys/OBJECTS/PS/FORM/Form.dsel 
+
+name=PREV-FRM
+button=12
+action=prev-frm 
+
+name=NEXT-FRM
+button=13
+action=next-frm 
+
+name=""
+button=9
+action=nop
+
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=nop
+
+

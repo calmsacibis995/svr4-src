@@ -1,0 +1,73 @@
+#ident	"@(#)oamintf:devices/remove/Form.remove	1.1.1.1"
+
+################################################################################
+#	Module Name: Form.remove
+################################################################################
+form="Remove Device from the System"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`set -l ERR=/tmp/$VPID.err;
+
+	devreserv $VPID $F2 > /dev/null 2> $ERR;
+
+	if [ "$RET" -eq 0 ];
+	then
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.remove $F2";
+	else
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.rmnok $F2";
+	fi`$CMD
+
+name=Device group:
+lininfo=devgrp
+nrow=1
+ncol=3
+frow=1
+fcol=17
+rows=1
+columns=18
+show=`showgrp $ARG1;
+	if [ "$RET" -eq 0 ];
+	then
+	  echo true;
+	else
+	  echo false;
+	fi`
+
+rmenu={ `getdgrp type=$ARG1 removecmd:* | sort` }
+valid=`getdgrp type=$ARG1 removecmd:* $F1 | grep $F1 > /dev/null;
+	if [ "$RET" -eq 0 ];
+	then
+	  echo true;
+	else
+	  echo false;
+	fi`
+invalidmsg=const "ERROR: invalid device group entered."
+
+name=Device drive:
+lininfo=devdr
+devdr
+nrow=2
+ncol=3
+frow=2
+fcol=17
+rows=1
+columns=18
+
+rmenu=`getdevice $ARG1 > /dev/null;
+	if [ "$RET" -eq 0 ];
+	then
+		set -l CMD="OPEN MENU $OBJ_DIR/../Menu.device $ARG1";
+	else
+		set -l CMD="OPEN TEXT $OBJ_DIR/../Text.nodev";
+	fi`$CMD
+
+valid=`valdevice $F1 $F2 $ARG1`
+
+invalidmsg=const "ERROR: device unknown or contains mounted file systems"
+
+name=RESET
+button=8
+action=RESET

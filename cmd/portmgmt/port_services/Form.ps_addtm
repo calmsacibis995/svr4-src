@@ -1,0 +1,249 @@
+#ident	"@(#)portmgmt:port_services/Form.ps_addtm	1.6.3.1"
+
+`set -l LIFE=longterm`
+form= Add Port Services for ttymon
+lifetime=$LIFE
+close=`unset -l LIFE`
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+done=`message -w "Adding service <$ARG1> to the system.";
+	tmopts "$F4" "$F5" "$F6" "$F7" "$F8" "$F9" "$F10" "$F11" "$F12" >>/var/tmp/cmd$PID;
+	echo -d "$F1" -l "$F2" -s \\\""$F3"\\\" \`\" >>/var/tmp/cmd$PID;
+	set -l LIFE=shortterm;
+	sh /var/tmp/cmd$PID >/var/tmp/err$PID 2>/var/tmp/err$PID;
+	`OPEN TEXT $OBJ_DIR/Text.ps_msg $RET $ARG1 "Adding" "added" $ARG2 `getfrm`
+
+# $F1
+name=Name of TTY device:
+nrow=1
+ncol=2
+frow=1
+fcol=22
+rows=1
+columns=40
+lininfo=tmdevice
+valid=`ckfile device "$F1"`
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - enter full pathname of the command'
+		'^2$'	'Error - must specify full pathname.'
+		'^3$'	'Error - file does not exist.'
+		'^5$'	'Error - file is not a character special device.'
+		'.*'	'Error - invalid command'`
+choicemsg=const "Enter the full path name of the TTY device, e.g. /dev/term/11."
+fieldmsg=const "Enter the full path name of the TTY device, e.g. /dev/term/11."
+scroll=TRUE
+
+# $F2
+name=ttylabel:
+nrow=2
+ncol=2
+frow=2
+fcol=13
+rows=1
+columns=15
+lininfo=tmlabel
+value=9600
+rmenu=OPEN MENU $OBJ_DIR/../Menu.c_labels
+valid=`grep "^$F2[ ]*:" /etc/ttydefs`
+choicemsg=const "Move the cursor to the desired ttylabel and press ENTER."
+fieldmsg=const "Enter the ttylabel in /etc/ttydefs. Press CHOICES for a list of ttylabels."
+invalidmsg=const "Error - ttylabel does not exist."
+
+# $F3
+name=Service command:
+nrow=3
+ncol=2
+frow=3
+fcol=20
+rows=1
+columns=40
+lininfo=tmcmd
+value=/usr/bin/login
+valid=`ckfile command "$F3"`
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - enter full pathname of the command'
+		'^2$'	'Error - must specify full pathname.'
+		'^3$'	'Error - command does not exist.'
+		'^4$'	'Error - command is not executable.'
+		'.*'	'Error - invalid command'`
+choicemsg=const "Enter full command line for the service to be invoked."
+fieldmsg=const "Enter full command line for the service to be invoked."
+scroll=TRUE
+
+# $F4
+name=Hangup:
+nrow=5
+ncol=5
+frow=5
+fcol=21
+rows=1
+columns=3
+lininfo=tmhflag
+value=Yes
+rmenu={ Yes No }
+menuonly=true
+choicemsg=const ""
+fieldmsg=const ""
+invalidmsg=const "Invalid input - select Yes/No only"
+
+# $F5
+name=Connect-on-carrier:
+nrow=5
+ncol=28
+frow=5
+fcol=49
+rows=1
+columns=3
+lininfo=tmcflag
+value=No
+rmenu={ Yes No }
+menuonly=true
+choicemsg=const ""
+fieldmsg=const ""
+invalidmsg=const "Invalid input - select Yes/No only"
+
+# $F6
+name=Bidirectional:
+nrow=6
+ncol=5
+frow=6
+fcol=21
+rows=1
+columns=3
+lininfo=tmbflag
+value=No
+rmenu={ Yes No }
+menuonly=true
+choicemsg=const ""
+fieldmsg=const ""
+invalidmsg=const "Invalid input - select Yes/No only"
+
+# $F7
+name=Wait-read:
+nrow=6
+ncol=28
+frow=6
+fcol=40
+rows=1
+columns=3
+lininfo=tmrflag
+value=`regex -v "$F6"
+		'Yes' 'Yes'
+		'No' 'No'`
+rmenu={ Yes No }
+menuonly=true
+choicemsg=const "Select Yes or No"
+fieldmsg=const "Select Yes or No"
+invalidmsg=const "Invalid input - select Yes/No only"
+
+# $F8
+name=(Wait-read count:
+nrow=6
+ncol=45
+frow=6
+fcol=63
+rows=1
+columns=4
+lininfo=tmwread
+value=`regex -v "$F7"
+		'Yes' '0'
+		'No' ' '`
+valid=`ckwcount $F7 $F8`
+choicemsg=const "Enter a positive number or zero (if wait-read is NOT set, skip this field)"
+fieldmsg=const "Enter a positive number or zero (if wait-read is NOT set, skip this field)"
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - enter a positive number or zero.'
+		'^2$'	'Error - must be empty if wait read is not set.'
+		'^3$'	'Error - enter a positive number or zero.'
+		'.*'	'Error - invalid input'`
+
+# $F9
+name=Timeout:
+nrow=7
+ncol=2
+frow=7
+fcol=12
+rows=1
+columns=4
+lininfo=tmtimeout
+value=0
+valid=`regex -v "$F9" '^[0-9]+$'`
+fieldmsg=const "Enter timeout period."
+choicemsg=const "Enter timeout period."
+invalidmsg=const "Invalid input - enter a positive number or zero."
+
+# $F10
+name=Prompt message:
+nrow=8
+ncol=2
+frow=8
+fcol=19
+rows=1
+columns=50
+lininfo=tmprompt
+value="login: "
+fieldmsg=const "Enter the prompt message. Type \\\\\\\\ for each \\\\."
+choicemsg=const "Enter the prompt message. Type \\\\\\\\ for each \\\\."
+scroll=TRUE
+
+# $F11
+name=Modules to be pushed:
+nrow=10
+ncol=5
+frow=10
+fcol=28
+rows=1
+columns=40
+lininfo=psmodules
+valid=`pmckmod "$F11"`
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - invalid module list.'
+		'^2$'	'Error - too many modules listed.'
+		'^3$'	'Error - cannot open /dev/sad/user.'
+		'^4$'	'Error - SAD_VML ioctl failed.'
+		'.*'	'Error - invalid module list.'`
+fieldmsg=const "Enter a list of modules seperated by commas. e.g. mtty,ldterm."
+choicemsg=const "Enter a list of modules seperated by commas. e.g. mtty,ldterm."
+
+# $F12
+name=Disabled response message:
+nrow=11
+ncol=5
+frow=12
+fcol=7
+rows=1
+columns=60
+lininfo=tmdmsg
+fieldmsg=const "Enter the disabled response message. Type \\\\\\\\ for each \\\\."
+choicemsg=const "Enter the disabled response message. Type \\\\\\\\ for each \\\\."
+scroll=TRUE
+
+name=TTY line options:
+nrow=4
+ncol=2
+inactive=TRUE
+
+name=)
+nrow=6
+ncol=67
+inactive=TRUE
+
+name=(Optional fields)
+nrow=9
+ncol=2
+inactive=TRUE
+
+name=Fill in the form and then press [SAVE].
+nrow=14
+ncol=4
+inactive=TRUE
+
+name=" "
+nrow=15
+ncol=2
+inactive=TRUE
+show=FALSE
+
+name=Page 2 of 2
+nrow=0
+ncol=55
+inactive=TRUE

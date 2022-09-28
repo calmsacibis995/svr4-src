@@ -1,0 +1,56 @@
+#ident	"@(#)initpkg:init.d/RMTMPFILES	1.1.8.1"
+#	Clean up temporary files.
+
+set `/sbin/who -r`
+if [ $9 != "S" -a $9 != "1" ]
+then
+	exit
+fi
+
+#  clean up /tmp 
+#  if /tmp or any of its subdirectories are mount points do not remove /tmp
+
+if i386
+then
+	M=`/sbin/mount | /usr/bin/egrep '^/tmp' | /usr/bin/wc -l`
+else
+	M=`/sbin/mount | /usr/bin/egrep '^/tmp(/| )' | /usr/bin/wc -l`
+fi
+
+if [ $M -eq 0 ]
+then
+	# just remove files under directory if symbolic link
+	if [ -h /tmp ]
+	then
+		/usr/bin/rm -rf /tmp/*
+	else
+		/usr/bin/rm -rf /tmp
+		/usr/bin/mkdir /tmp
+		/usr/bin/chmod 1777 /tmp
+		/usr/bin/chgrp sys /tmp
+		/usr/bin/chown sys /tmp
+	fi
+fi
+#  clean up /var/tmp
+if [ -d /var/tmp  -o  -d /usr/bin ]
+then	#	Conditional, so we won't make /var/tmp if /usr file system
+	#	did not mount successfully.  We check for /usr/bin in case
+	#	/var/tmp disappeared unexpectedly.
+	# 	if /var/tmp or any of its subdirectories
+	# 	is a mount point do not remove it.
+	M=`/sbin/mount | /usr/bin/egrep '^/var/tmp(/| )' | /usr/bin/wc -l`
+	if [ $M -eq 0 ]
+	then
+		# just remove files under directory if symbolic link
+		if [ -h /var/tmp ]
+		then
+			/usr/bin/rm -rf /var/tmp/*
+		else
+			/usr/bin/rm -rf /var/tmp
+			/usr/bin/mkdir /var/tmp
+			/usr/bin/chmod 1777 /var/tmp
+			/usr/bin/chgrp sys /var/tmp
+			/usr/bin/chown sys /var/tmp
+		fi
+	fi
+fi

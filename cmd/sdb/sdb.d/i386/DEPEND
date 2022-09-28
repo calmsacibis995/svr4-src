@@ -1,0 +1,35 @@
+CCmain.o:	../common/CCmain.C
+	$(CPLUS_CMD) -c ../common/CCmain.C
+
+do_assoc.o:	../common/do_assoc.C
+	$(CPLUS_CMD) -c ../common/do_assoc.C
+
+parser.o:	../common/parser.Y
+	$(YACC) $(YFLAGS) ../common/parser.Y
+	$(CPLUS_CMD) -c y.tab.c
+	mv y.tab.o parser.o
+	if cmp -s y.tab.h scanner.h ; \
+	then \
+		rm y.tab.h ; \
+	else \
+		rm -f scanner.h ; mv y.tab.h scanner.h ; \
+	fi 
+
+srclines.o:	../common/srclines.C
+	$(CPLUS_CMD) -c ../common/srclines.C
+
+main.o:	../common/main.c
+	$(CC_CMD) -c ../common/main.c
+
+scanner.o:	../common/scanner.l
+	$(LEX) ../common/scanner.l
+	$(CC_CMD) -c lex.yy.c
+	mv lex.yy.o scanner.o
+
+OBJECTS	=  \
+	CCmain.o \
+	do_assoc.o \
+	parser.o \
+	srclines.o \
+	main.o \
+	scanner.o

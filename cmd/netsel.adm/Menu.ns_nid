@@ -1,0 +1,13 @@
+#ident	"@(#)netsel.adm:Menu.ns_nid	1.1"
+
+menu="Existing Network Identifiers"
+close=`message " "`
+
+cat /etc/netconfig | 
+`cat /etc/netconfig | grep -v "^#" | tr -s '\11' ' ' | 
+regex '([^ ][^ ]*)$0 ([^ ][^ ]*)$1 ([^ ][^ ]*)$2 ([^ ][^ ]*)$3 ([^ ][^ ]*)$4 ([^ ][^ ]*)$5 ([^ #][^ #]*)$6.*$' 
+ 'name="$m0"
+  description="$m5"
+  action=OPEN FORM $OBJ_DIR/Form.ns_modify $m0'`
+
+`message -p "Move cursor to the item you want to modify and press <RETURN>."`

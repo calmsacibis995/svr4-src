@@ -1,0 +1,35 @@
+#ident	"@(#)pcintf:support/sys5/pcistop	1.1"
+#! /bin/sh
+# @(#)pcistop	1.2	Changed   2	11:36:35	
+
+# Shut down PC Interface
+
+# File names
+tmpPrefix=/tmp/PCI
+psOut=${tmpPrefix}psOut
+
+# Get list of executing PC-Interface processes
+ps -e | grep 'pci' > $psOut
+
+conSvrPs=`grep pciconsv $psOut`
+conSvrPs=`expr "${conSvrPs}" : ' *\([0-9][0-9]*\)'`
+if [ "$conSvrPs" != "" ]; then
+	kill $conSvrPs
+else
+	echo "PC-Interface Connection server (pciconsvr.eth) is not running"
+fi
+
+mapSvrPs=`grep pcimapsv $psOut`
+mapSvrPs=`expr "${mapSvrPs}" : ' *\([0-9][0-9]*\)'`
+if [ "$mapSvrPs" != "" ]; then
+	kill $mapSvrPs
+else
+	echo "PC-Interface Map server (pcimapsvr.eth) is not running"
+fi
+
+# Clean up temp files
+rm -f ${tmpPrefix}*
+
+# Notify user that PC-Interface is stopped
+echo
+echo "PC-Interface service stopped."

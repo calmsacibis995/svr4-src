@@ -1,0 +1,260 @@
+#ident	"@(#)oamintf:files/defaults/Help	1.1"
+ABSTRACT:
+	These menus allow you to add, display, modify or remove
+	entries in the defaults table (/etc/vfstab). These 
+	defaults may subsequently be used by file system 
+	checking and mounting operations at the boot time and
+	other file system related administrative tasks.
+add:ABSTRACT:
+	This task adds defaults for a file system. Those defaults
+	may subsequently be used by other tasks requiring such 
+	information and check and mount operations at boot time.
+display:ABSTRACT:
+	This task displays defaults for a file system. Those 
+	defaults may subsequently be used by check and mount
+	operations at boot time.
+modify:ABSTRACT:
+	This task modifies defaults for a file system. Those
+	defaults may subsequently be used by check and mount 
+	operations at boot.
+remove:ABSTRACT:
+	This task removes defaults for a file system from the 
+	default table. Once removed such file systems will no
+	longer be automatically checked and mounted at boot.
+
+TITLE:
+Form.add:TITLE:Add Defaults for File Systems
+Form.add:F1:Device that contains the file system:
+	Devices that contain file systems are usually partitions on
+	the hard disk. For example the partition /dev/dsk/1s3 is
+	the fourth partition on the second (numbering from zero) hard
+	disk.  Among other devices which can contain file systems floppy
+	diskette drives are the most common. 
+	
+	Devices can be accessed via either of block or character
+	interfaces. The block interface to the device causes data
+	on the device to be accessed in a buffered manner. The 
+	character interface provides character input/output to the 
+	device. For example buffered I/O can be performed on a floppy 
+	device by specifying the block interface "/dev/dsk/f0t"
+	and character I/O can be performed by specifying "/dev/rdsk/f0t"
+	which is the character interface to this device.
+
+Form.add:F2:File system name when mounted:
+	The Unix system provides the capability to add or remove 
+	file systems which are stored on hardware devices such as
+	hard disks and diskettes via the processes of mounting and 
+	unmounting. File systems are added by mounting the device
+	that contains the file system at a leaf directory on the 
+	system. This leaf directory is known as the mount point for 
+	file system and becomes the root of the newly mounted 
+	file system when the mount is successful. 
+
+	For example if the diskette (/dev/dsk/f0t) is mounted on
+	the mount-point "/mnt" then the file system name of the 
+	newly added file system is "/mnt".
+Form.add2:TITLE:Add Defaults for File Systems
+Form.add2:F1:Should the file system be automatically mounted at boot:
+	A "yes" reply to this prompt will set up your system in
+	such a way that this file system will automatically be
+	checked and made available each time you reboot the 
+	system.  Type a "no" reply at this prompt if you intend to  
+	manually check and mount the file system each time the 
+	system is rebooted.
+
+Form.add2:F2:File System type:
+	The Unix system provides file systems of different types.
+	Different file system types provide different functionalities
+	for different applications. Your system may have file systems 
+	of one or more types. For a listing of file system types 
+	available on your system use the "Display" task.
+
+	It is very important for you to specify the correct file system
+	type while performing these operations. Specifying the wrong 
+	type may cause the corruption of the file system.
+Form.add2:F3:Mount Options:
+	File systems can be mounted in different ways depending
+	on the options provided while mounting them. All file 
+	systems allow you to mount them "read only" or "read/write".
+	By mounting a file system "read only" you can prevent users
+	from writing to the file system. Other options include the
+	ability to allow and disallow "setuid" permissions on the 
+	file system. 
+
+	The following prompts will prompt you for the various 
+	mount options allowed by the file system in question. 
+Form.add2:F4:Read and write privileges:
+	You must specify the Read and Write privileges which will
+	be allowed for this file system. If the file system 
+	contains sensitive data which should not be modified by
+	other users the privilege used should be "read only".
+	In other cases you may grant "read/write" privileges for
+	this file system.
+Form.add2:F5:Should setuid programs be allowed:
+	By entering 'yes', 'no' or 'na' at this prompt you can 
+	specify whether setuid privileges will be allowed, will
+	not be allowed, or are not applicable for 
+	this file system. The default is yes.
+Form.display:TITLE:Display Defaults for File Systems
+Form.display:F1:Device that contains the file system:
+	Devices that contain file systems are usually partitions on
+	the hard disk. For example the partition /dev/dsk/1s3 is
+	the fourth partition on the second (numbering from zero) hard
+	disk.  Among other devices which can contain file systems floppy
+	diskette drives are the most common. 
+	
+	Devices can be accessed via either of block or character
+	interfaces. The block interface to the device causes data
+	on the device to be accessed in a buffered manner. The 
+	character interface provides character input/output to the 
+	device. For example buffered I/O can be performed on a floppy 
+	device by specifying the block interface "/dev/dsk/f0t"
+	and character I/O can be performed by specifying "/dev/rdsk/f0t"
+	which is the character interface to this device.
+
+Form.display:F2:File system name when mounted:
+	The Unix system provides the capability to add or remove 
+	file systems which are stored on hardware devices such as
+	hard disks and diskettes via the processes of mounting and 
+	unmounting. File systems are added by mounting the device
+	that contains the file system at a leaf directory on the 
+	system. This leaf directory is known as the mount point for 
+	file system and becomes the root of the newly mounted 
+	file system when the mount is successful. 
+
+	For example if the diskette (/dev/dsk/f0t) is mounted on
+	the mount-point "/mnt" then the file system name of the 
+	newly added file system is "/mnt".
+Form.modify:TITLE:Modify Defaults for File Systems
+Form.modify:F1:Device that contains the file system:
+	Devices that contain file systems are usually partitions on
+	the hard disk. For example the partition /dev/dsk/1s3 is
+	the fourth partition on the second (numbering from zero) hard
+	disk.  Among other devices which can contain file systems floppy
+	diskette drives are the most common. 
+	
+	Devices can be accessed via either of block or character
+	interfaces. The block interface to the device causes data
+	on the device to be accessed in a buffered manner. The 
+	character interface provides character input/output to the 
+	device. For example buffered I/O can be performed on a floppy 
+	device by specifying the block interface "/dev/dsk/f0t"
+	and character I/O can be performed by specifying "/dev/rdsk/f0t"
+	which is the character interface to this device.
+
+Form.modify:F2:File system name when mounted:
+	The Unix system provides the capability to add or remove 
+	file systems which are stored on hardware devices such as
+	hard disks and diskettes via the processes of mounting and 
+	unmounting. File systems are added by mounting the device
+	that contains the file system at a leaf directory on the 
+	system. This leaf directory is known as the mount point for 
+	file system and becomes the root of the newly mounted 
+	file system when the mount is successful. 
+
+	For example if the diskette (/dev/dsk/f0t) is mounted on
+	the mount-point "/mnt" then the file system name of the 
+	newly added file system is "/mnt".
+Form.modify2:TITLE:Modify Defaults for File Systems
+Form.modify2:F1:Device that contains the file system:
+	Devices that contain file systems are usually partitions on
+	the hard disk. For example the partition /dev/dsk/1s3 is
+	the fourth partition on the second (numbering from zero) hard
+	disk.  Among other devices which can contain file systems floppy
+	diskette drives are the most common. 
+	
+	Devices can be accessed via either of block or character
+	interfaces. The block interface to the device causes data
+	on the device to be accessed in a buffered manner. The 
+	character interface provides character input/output to the 
+	device. For example buffered I/O can be performed on a floppy 
+	device by specifying the block interface "/dev/dsk/f0t"
+	and character I/O can be performed by specifying "/dev/rdsk/f0t"
+	which is the character interface to this device.
+
+Form.modify2:F2:File system name when mounted:
+	The Unix system provides the capability to add or remove 
+	file systems which are stored on hardware devices such as
+	hard disks and diskettes via the processes of mounting and 
+	unmounting. File systems are added by mounting the device
+	that contains the file system at a leaf directory on the 
+	system. This leaf directory is known as the mount point for 
+	file system and becomes the root of the newly mounted 
+	file system when the mount is successful. 
+
+	For example if the diskette (/dev/dsk/f0t) is mounted on
+	the mount-point "/mnt" then the file system name of the 
+	newly added file system is "/mnt".
+Form.modify2:F3:File System type:
+	The Unix system provides file systems of different types.
+	Different file system types provide different functionalities
+	for different applications. Your system may have file systems 
+	of one or more types. For a listing of file system types 
+	available on your system use the "Display" task.
+
+	It is very important for you to specify the correct file system
+	type while performing these operations. Specifying the wrong 
+	type may cause the corruption of the file system.
+Form.modify2:F4:Should the file system be automatically mounted at boot:
+	A "yes" reply to this prompt will set up your system in
+	such a way that this file system will automatically be
+	checked and made available each time you reboot the 
+	system.  Type a "no" reply at this prompt if you intend to  
+	manually check and mount the file system each time the 
+	system is rebooted.
+
+Form.modify2:F5:Mount Options:
+	File systems can be mounted in different ways depending
+	on the options provided while mounting them. All file 
+	systems allow you to mount them "read only" or "read/write".
+	By mounting a file system "read only" you can prevent users
+	from writing to the file system. Other options include the
+	ability to allow and disallow "setuid" permissions on the 
+	file system. 
+
+	The following prompts will prompt you for the various 
+	mount options allowed by the file system in question. 
+Form.modify2:F6:Read and write privileges:
+	You must specify the Read and Write privileges which will
+	be allowed for this file system. If the file system 
+	contains sensitive data which should not be modified by
+	other users the privilege used should be "read only".
+	In other cases you may grant "read/write" privileges for
+	this file system.
+Form.modify2:F7:Should setuid programs be allowed:
+	By entering yes or no at this prompt you can 
+	specify whether setuid privileges will be allowed
+	on this file system. The default is yes.
+Form.remove:TITLE:Remove Defaults for File Systems
+Form.remove:F1:Device name that contains the file system:
+	Devices that contain file systems are usually partitions on
+	the hard disk. For example the partition /dev/dsk/1s3 is
+	the fourth partition on the second (numbering from zero) hard
+	disk.  Among other devices which can contain file systems floppy
+	diskette drives are the most common. 
+	
+	Devices can be accessed via either of block or character
+	interfaces. The block interface to the device causes data
+	on the device to be accessed in a buffered manner. The 
+	character interface provides character input/output to the 
+	device. For example buffered I/O can be performed on a floppy 
+	device by specifying the block interface "/dev/dsk/f0t"
+	and character I/O can be performed by specifying "/dev/rdsk/f0t"
+	which is the character interface to this device.
+
+Form.remove:F2:File system name when mounted:
+	The Unix system provides the capability to add or remove 
+	file systems which are stored on hardware devices such as
+	hard disks and diskettes via the processes of mounting and 
+	unmounting. File systems are added by mounting the device
+	that contains the file system at a leaf directory on the 
+	system. This leaf directory is known as the mount point for 
+	file system and becomes the root of the newly mounted 
+	file system when the mount is successful. 
+
+	For example if the diskette (/dev/dsk/f0t) is mounted on
+	the mount-point "/mnt" then the file system name of the 
+	newly added file system is "/mnt".
+adddeftask:
+dispdeftask: Display Defaults for File Systems
+	You are currently displaying the defaults for (a) file system(s).

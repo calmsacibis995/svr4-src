@@ -1,0 +1,40 @@
+The System Backup Menu enables you to backup all system and user files
+that have been modified or created since your system was installed. 
+You must have system administration privileges to do this.
+
+           ***********************************************       
+                              WARNING
+
+            The System Backup function does not back up a
+            complete image of your entire file system.
+            Only the system and user files that have been
+            modified or created since the system was last
+            installed are backed up.
+
+           ***********************************************
+
+
+The items on the System Backup Menu are:
+
+      Backup Users:  Backs up user files to the removable media.
+      You have the option of backing up all users' files or back 
+      up one or more selected user's files.
+
+      Backup System:  Backs up all system and user files
+      that have been modified or created since the system was 
+      installed. The installation date is the date of the last 
+      file that was installed.  The search for files to back up 
+      starts from "/" (root file system) and includes all
+      mounted file systems.
+
+      Incremental System Backup:  Backs up all files in all mounted
+      file systems that have been modified or created since the last
+      system or incremental backup.  You must have system
+      administration privileges to do this. If you try an incremental
+      backup when no previous systems backup has been done, you will
+      be warned.
+
+      Selective System Backup:   Backs up regular files or the
+      contents of directories. The pathname specified may be
+      anywhere on a mounted file system.
+

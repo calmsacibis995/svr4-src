@@ -1,0 +1,97 @@
+#ident	"@(#)mail:mailsurr	1.5.2.4"
+# @(#)mailsurr	2.10 'attmail mail(1) command'
+#
+# /etc/mail/mailsurr MUST exist in order to send remote mail.
+#
+# Entries are of the form:
+# 'Originator RE' 'Recipient RE' 'Command Field'
+# See mailsurr(4) for details.
+##################################################################
+
+####
+#### Part 1
+####
+#### Accepts and Denies should go here
+####
+
+# Prevent all shell meta-characters
+#
+'.+'	'.*[`;&|^<>()].*'	'Deny'
+'.+'	'!*#.*'			'Deny'
+
+####
+#### Part 2
+####
+#### Address translations should go here.
+#### Do the appropriate mapping between various addressing schemes.
+#### All remote mail should leave this section preceded with a 
+#### single "!". (Addresses coming directly from mail are
+#### guaranteed not to have leading !'s.)
+####
+
+# Map domain-routed domain addresses. That is, map all names of
+# the form @domain1[,@domain2]*:user@domain3 -> domain1!...
+#
+'.+'	'@([^:,]+)[:,](.+)'	'Translate R=!\\1!\\2'
+
+# Map all names of the form user@host -> host!user
+# The default is to give @ precedence over anything else.
+# If you choose to give ! precedence over @, swap the next two lines.
+#
+'.+'	'([^!].*)@(.+)'		'Translate R=!\\2!\\1'
+'.+'	'([^!].*)!(.+)'		'Translate R=!%n'
+
+# Map all names of the form user%host (without any other ! or @) -> host!user
+#
+'.+'	'([^!].*)%%(.+)'	'Translate R=!\\2!\\1'
+
+# Run all (apparently) local names through the mail alias processor.
+#
+'.+'	'[^!].+'		'Translate R=|/usr/bin/mailalias %n'
+
+# Map all names of the form local-machine!user -> user
+# Map all names of the form uname!user -> user
+# Then loop back through from the top.
+#
+'.+'	'!%L!(.+)'		'Translate R=\\1'
+'.+'	'!%U!(.+)'		'Translate R=\\1'
+
+####
+#### Part 3
+####
+#### Delivery commands should go here. All addresses going
+#### remote should begin with a single "!".
+####
+
+# Map all names of the form host.uucp!user -> host!user
+# Map all names of the form host.local-domain!user -> host!user
+#	(host must not have a . in it)
+# Comment out if you do not want these translations.
+#
+'.+'	'!([^!]+)\\.uucp!(.+)'	'Translate R=!\\1!\\2'
+'.+'	'!([^!.]+)%D!(.+)'	'Translate R=!\\1!\\2'
+
+# Check for binary mail. Uncomment this if you want to use it.
+#
+#'.+'	'!([^!]+)!.+'
+#		'< F=*;C=0; /usr/lib/mail/surrcmd/ckbinarsys -t %C -s \\1'
+
+# For remote mail via uucp and smtp. Uucp is first because
+# it is more universal and handles binary mail properly.
+# If using smtp, un-comment the second line.
+# If running DNS name server, delete the "-N" option to smtpqer
+# (it disables MX queries).
+'.+'	'!([^!]+)!(.+)'		'< /usr/bin/uux -a%R - \\1!rmail (\\2)'
+#'.+'	'!([^!]+)!(.+)'		'< /usr/lib/mail/surrcmd/smtpqer -N %R \\1 \\2'
+
+# If none of the above work, then ship remote mail off to a smarter host.
+# Make certain that SMARTERHOST= is defined within /etc/mail/mailcnfg.
+# If there is no smarter host, then routed mail fails here.
+#
+#'.+'	'!(.+[!@%].+)'		'Translate R=!%X!\\1'
+
+####
+#### Part 4
+####
+#### Postprocessing commands should go here.
+####

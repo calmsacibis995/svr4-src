@@ -1,0 +1,246 @@
+#!/sbin/sh
+
+
+#ident	"@(#)rpcsvc:keyprop	1.3.1.1"
+
+#**************************************************************************
+# This script propagates Secure RPC keys to masters and slaves and should
+# be executed via a cron job.
+#
+# This script will accomplish the following:
+#    1. Distribute the local keys (keys in /etc/publickey file under the 
+#       rpcdomain of this machine) to all the slaves listed in /etc/slaves
+#       file. 
+#
+#    2. Distribute the local keys to all the masters listed in /etc/masters
+#       file.
+#
+# To accomplish the above the following will be assumed:
+#
+#     Using NFS:
+#       1. the files /etc/slaves and /etc/masters will contain the 'uname'
+#          of the slaves and masters, respectively.
+#       2. slaves will share their /etc directory with ROOT permissions
+#          to their MASTER.
+#       3. masters will share their /domainkeys directory with ROOT 
+#          permissions to the other masters they wish to acquire keys from.
+#       
+#     Using RFS:
+#       1. the files /etc/slaves and /etc/masters will contain the 
+#          'RFS_domain.uname' of the slaves and masters, respectively.
+#       2. the slaves will share their /etc directory with WRITE 
+#          permissions and the resource name set to '<slave>ETC' where 
+#          <slave> is the uname of the slave.
+#       3. the masters will share their /domainkeys directory with WRITE 
+#          permissions and resource name set to '<master>keys' where <master>
+#          is the uname of the master.
+#          from, 
+#**************************************************************************
+
+#--------------------------------------------------------------------------
+# Check to see if RFS and/or NFS is running on this machine
+#--------------------------------------------------------------------------
+
+RFS=0
+NFS=0
+
+if [ -f /usr/options/nfs.name ]
+then
+        NFS=1
+fi
+
+dfshares -F rfs 1>/dev/null 2>/dev/null
+if [ $? = 0 ]
+then
+        RFS=1
+fi
+
+if [ ${RFS} = 0 ] && [ ${NFS} = 0 ] 
+then
+        echo "Neither NFS(rpcbind) nor RFS is running on this machine."
+        echo "Please start or install the appropriate one(s) and execute"
+        echo "this script again."
+        exit 1
+fi
+
+#--------------------------------------------------------------------------
+# Check to see if /mnt is currently being used 
+#--------------------------------------------------------------------------
+ 
+if `/sbin/mount 2>/dev/null|grep "^/mnt[ \      ]" 2>/dev/null 1>/dev/null`
+then
+        echo "Your have a resource mounted on /mnt. "
+        echo "Please 'umount' it and execute this script again."
+        exit 1 
+fi
+
+mounted=0       #flag to indicate if mounted successfully or not
+
+mydomain=`domainname`   #what is my rpcdomain
+if [ x${mydomain} = x ]
+then
+        echo
+        echo "ERROR: Your rpc-domain is not set."
+        echo "       You may set it using 'domainname' and "
+        echo "       execute this script again."
+        exit 1
+fi
+
+#--------------------------------------------------------------------------
+#extract local keys from /etc/publickey
+#--------------------------------------------------------------------------
+
+if [ -s /etc/publickey ]
+then
+        cat /etc/publickey|grep "@${mydomain}[ \        ]" >/tmp/KEYS${mydomain}
+
+#--------------------------------------------------------------------------
+#save /etc/publickey as /etc/Opublickey
+#--------------------------------------------------------------------------
+ 
+        cp /etc/publickey /etc/Opublickey
+
+#--------------------------------------------------------------------------
+#copy local public keys to all the other masters I know of
+#--------------------------------------------------------------------------
+ 
+        if [ -f /etc/masters ] && [ -s /tmp/KEYS${mydomain} ]
+        then
+                for amaster in `grep -v "^#"  /etc/masters`
+                do
+                        arfsdomain=`echo $amaster|grep "\."|cut -d"." -f1`
+                        if [ "x${arfsdomain}" != "x" ]
+                        then
+                                ahost=`echo $amaster|cut -d"." -f2`
+                        else
+                                ahost=${amaster}
+                        fi
+
+                        if [ ${NFS} = 1 ] && `/usr/sbin/dfshares -F nfs ${amaster} 2>/dev/null|grep ${amaster}:/domainkeys 1>/dev/null 2>/dev/null`
+                        then
+                                /sbin/mount -F nfs -orw ${amaster}:/domainkeys /mnt 2>/dev/null
+                                if [ $? != 0 ]
+                                then
+                                        echo "Could not mount /domainkeys for the "
+                                        echo "master=${amaster} using NFS."
+                                else 
+                                        mounted=1
+                                fi
+                        fi
+
+                        if [ ${RFS} = 1 ] && [ "${mounted}" = 0 ] && `/usr/sbin/dfshares -F rfs ${amaster} 2>/dev/null|grep "${ahost}[ \        ]"|grep ${ahost}keys 1>/dev/null 2>/dev/null`
+                        then
+                                /sbin/mount -F rfs -orw ${arfsdomain}.${ahost}keys /mnt 2>/dev/null
+                                if [ $? != 0 ]
+                                then
+                                        echo "Could not mount /domainkeys for the "
+                                        echo "master=${amaster} using RFS."
+                                else
+                                        mounted=1
+                                fi
+                        fi
+
+                        if [ "${mounted}" = 1 ]
+                        then
+                                cp /tmp/KEYS${mydomain} /mnt/${mydomain}
+                                if [ $? != 0 ]
+                                then
+                                        echo "Could not copy the local keys to the"
+                                        echo "master=${amaster}."
+                                fi
+                                /sbin/umount /mnt
+                        else
+                                echo "The 'domainkeys' directory is not shared"
+                                echo "by the master=${amaster}."
+                        fi
+                done
+        else
+                echo "The /etc/publickey does not contain any entries for "
+                echo "the local rpcdomain=${mydomain} or /etc/masters file "
+                echo "does not exist. No attempt will be made to delegate "
+                echo "keys to masters."
+        fi
+else
+        echo "The /etc/publickey file does not exist or it is empty."
+        echo "No attempt will be made to delegate keys to masters."
+fi
+
+#--------------------------------------------------------------------------
+#now combine all the masters keys with local keys to form /etc/publickey
+#--------------------------------------------------------------------------
+
+for anotherdom in `ls /domainkeys`
+do
+        if [ ${anotherdom} = ${mydomain} ]
+        then
+                rm -f /domainkeys/${anotherdom}
+        else
+                grep "@${anotherdom}[ \ ]" /domainkeys/${anotherdom} >/tmp/${anotherdom}
+                cp /tmp/${anotherdom} /domainkeys/${anotherdom}
+        fi
+done
+
+cat /domainkeys/* /tmp/KEYS${mydomain} 2>/dev/null| sort -u 2>/dev/null 1>/etc/publickey
+
+#--------------------------------------------------------------------------
+#copy the global public keys to all of my slaves
+#--------------------------------------------------------------------------
+ 
+mounted=0
+if [ -s /etc/publickey ] 
+then
+        for aslave in `grep -v "^#" /etc/slaves`
+        do
+                arfsdomain=`echo $aslave|grep "\."|cut -d"." -f1`
+                if [ "x${arfsdomain}" != "x" ]
+                then
+                        ahost=`echo $aslave|cut -d"." -f2`
+                else
+                        ahost=${aslave}
+                fi
+
+                if [ ${NFS} = 1 ] && `/usr/sbin/dfshares -F nfs ${aslave} 2>/dev/null|grep ${aslave}:/etc 2>/dev/null 1>/dev/null`
+                then
+                        /sbin/mount -F nfs -orw ${aslave}:/etc /mnt 2>/dev/null
+                        if [ $? != 0 ]
+                        then
+                                echo "Could not mount /etc of the "
+                                echo "slave=${aslave} using NFS."
+                        else
+                                mounted=1
+                        fi
+                fi
+
+                if [ ${RFS} = 1 ] && [ "${mounted}" = 0 ] && `/usr/sbin/dfshares -F rfs ${aslave} 2>/dev/null|grep "${ahost}[ \ ]"|grep ${ahost}ETC 2>/dev/null 1>/dev/null`
+                then
+                        /sbin/mount -F rfs -orw ${slavedom}.${ahost}ETC /mnt 2>/dev/null
+                        if [ $? != 0 ]
+                        then
+                                echo "Could not mount /etc of the slave=${aslave}"
+                                echo "using RFS."
+                        else
+                                mounted=1
+                        fi
+                fi
+
+                if [ "${mounted}" = 1 ]
+                then
+                        cp /etc/publickey /mnt/publickey
+                        if [ $? != 0 ]
+                        then
+                                echo "Could not copy /etc/publickey to the slave=${aslave}."
+                        fi
+                        /sbin/umount /mnt
+                else
+                        echo "The 'etc' directory is not shared"
+                        echo "by the slave=${aslave}."
+                fi
+        done
+fi
+
+#--------------------------------------------------------------------------
+# remove the /tmp file(s)
+#--------------------------------------------------------------------------
+ 
+rm -f /tmp/KEYS${mydomain}
+

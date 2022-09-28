@@ -1,0 +1,533 @@
+#ident	"@(#)devintf:groups/add/Form.add	1.4.1.1"
+
+form="Add a Device Group"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+lifetime=longterm
+begrow=any
+begcol=any
+framemsg=`readfile $INTFBASE/form.msg`
+
+done=`
+    indicator -w "" ;
+    getfrm | set -l FRAMENUM ;
+    putdgrp $F1 $F2 $F3 $F4 $F5 $F6 $F7 $F8 $F9 $F10 ;
+    if [ $RET -eq 0 ] ;
+    then set -l ENDMSG="The device group \"$F1\" was successfully added." ;
+    else set -l ENDMSG="Internal error $RET" ;
+    fi ;
+    indicator "" ;
+`OPEN TEXT $OBJ_DIR/Text.c_add "$ENDMSG"
+
+name="Device Group Name: "
+lininfo="Form.add:Name"
+nrow=1
+ncol=1
+frow=1
+fcol=20
+rows=1
+columns=14
+invalidmsg=$INVMSG
+valid=`
+    indicator -w "" ;
+    if [ "$F1" ] ;
+    then
+	regex -v "$F1" '^[-._$a-z0-9A-Z]+$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+	if [ "$VALID" = "TRUE" ] ;
+	then
+	    listdgrp $F1 >/dev/null ;
+	    if [ "$RET" -ne 3 ] ;
+	    then
+		if [ "$RET" -eq 0 ] ;
+		then set -l INVMSG="The device group \"$F1\" is already defined." ;
+		else set -l INVMSG="Internal error $RET" ;
+		fi ;
+		set -l VALID="FALSE" ;
+	    fi ;
+	else set -l INVMSG="The value \"$F1\" is not a valid device group name." ;
+	fi ;
+    else
+	set -l INVMSG="This field may not be blank." ;
+	set -l VALID="FALSE" ;
+    fi;
+    indicator "" ;
+`$VALID
+
+name="Devices to include in this group:"
+lininfo="Form.add:Member"
+nrow=2
+ncol=1
+frow=3
+fcol=1
+rows=1
+columns=14
+scroll=TRUE
+invalidmsg=$INVMSG
+valid=`
+    indicator -w "" ;
+    if [ "$F2" ] ;
+    then
+	regex -v "$F2" '^[-_.$a-zA-Z0-9]+$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+	if [ "$VALID" = "TRUE" ] ;
+	then
+	    devattr "$F2" alias >/dev/null ;
+	    if [ $RET -eq 0 ] ;
+	    then set -l VALID="TRUE" ;
+	    else
+		if [ $RET -eq 3 ] ;
+		then message "WARNING:  The device alias \"$F2\" is not defined." ;
+		else message "Internal error $RET" ;
+		fi ;
+		set -l VALID="TRUE" ;
+	    fi ;
+	else
+            regex -v "$F2" '^/[^ :]*$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+            if [ $VALID = "TRUE" ] ;
+            then
+		devattr $F2 alias >/dev/null ;
+		if [ $RET -eq 3 ] ;
+		then
+		    message "WARNING:  The device \"$F2\" is not defined." ;
+		elif [ $RET -ne 0 ] ;
+		then
+		    set -l VALID=FALSE ;
+		    set -l INVMSG="Internal error $RET" ;
+		fi ;
+            else set -l INVMSG="The value \"$F2\" is not a valid device alias or pathname." ;
+            fi ;
+	fi ;
+    else set -l VALID="TRUE" ;
+    fi ;
+    indicator "" ;
+`$VALID
+rmenu={ `
+    indicator -w "" ;
+    getdev ;
+    indicator "" ;
+` }
+
+name=""
+lininfo="Form.add:Member"
+nrow=3
+ncol=17
+frow=3
+fcol=17
+rows=1
+columns=14
+scroll=TRUE
+invalidmsg=$INVMSG
+valid=`
+    indicator -w "" ;
+    if [ "$F3" ] ;
+    then
+	regex -v "$F3" '^[-_.$a-zA-Z0-9]+$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+	if [ "$VALID" = "TRUE" ] ;
+	then
+	    devattr "$F3" alias >/dev/null ;
+	    if [ $RET -eq 0 ] ;
+	    then set -l VALID="TRUE" ;
+	    else
+		if [ $RET -eq 3 ] ;
+		then message "WARNING:  The device alias \"$F3\" is not defined." ;
+		else message "Internal error $RET" ;
+		fi ;
+		set -l VALID="TRUE" ;
+	    fi ;
+        else
+            regex -v "$F3" '^/[^ :]*$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+            if [ $VALID = "TRUE" ] ;
+            then
+		devattr $F3 alias >/dev/null ;
+		if [ $RET -eq 3 ] ;
+		then
+		    message "WARNING:  The device \"$F3\" is not defined." ;
+		elif [ $RET -ne 0 ] ;
+		then
+		    set -l VALID=FALSE ;
+		    set -l INVMSG="Internal error $RET" ;
+		fi ;
+            else set -l INVMSG="The value \"$F3\" is not a valid device alias or pathname." ;
+            fi ;
+	fi ;
+    else set -l VALID="TRUE" ;
+    fi ;
+    indicator "" ;
+`$VALID
+rmenu={ `
+    indicator -w "" ;
+    getdev ;
+    indicator "" ;
+` }
+
+name=""
+lininfo="Form.add:Member"
+nrow=3
+ncol=33
+frow=3
+fcol=33
+rows=1
+columns=14
+scroll=TRUE
+invalidmsg=$INVMSG
+valid=`
+    indicator -w "" ;
+    if [ "$F4" ] ;
+    then
+	regex -v "$F4" '^[-_.$a-zA-Z0-9]+$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+	if [ "$VALID" = "TRUE" ] ;
+	then
+	    devattr "$F4" alias >/dev/null ;
+	    if [ $RET -eq 0 ] ;
+	    then set -l VALID="TRUE" ;
+	    else
+		if [ $RET -eq 3 ] ;
+		then message "WARNING:  The device alias \"$F4\" is not defined." ;
+		else message "Internal error $RET" ;
+		fi ;
+		set -l VALID="TRUE" ;
+	    fi ;
+	else
+            regex -v "$F4" '^/[^ :]*$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+            if [ $VALID = "TRUE" ] ;
+            then
+		devattr $F4 alias >/dev/null ;
+		if [ $RET -eq 3 ] ;
+		then
+		    message "WARNING:  The device \"$F4\" is not defined." ;
+		elif [ $RET -ne 0 ] ;
+		then
+		    set -l VALID=FALSE ;
+		    set -l INVMSG="Internal error $RET" ;
+		fi ;
+            else set -l INVMSG="The value \"$F4\" is not a valid device alias or pathname." ;
+            fi ;
+	fi ;
+    else set -l VALID="TRUE" ;
+    fi ;
+    indicator "" ;
+`$VALID
+rmenu={ `
+    indicator -w "" ;
+    getdev ;
+    indicator "" ;
+` }
+
+name=""
+lininfo="Form.add:Member"
+nrow=4
+ncol=1
+frow=4
+fcol=1
+rows=1
+columns=14
+scroll=TRUE
+invalidmsg=$INVMSG
+valid=`
+    indicator -w "" ;
+    if [ "$F5" ] ;
+    then
+	regex -v "$F5" '^[-_.$a-zA-Z0-9]+$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+	if [ "$VALID" = "TRUE" ] ;
+	then
+	    devattr "$F5" alias >/dev/null ;
+	    if [ $RET -eq 0 ] ;
+	    then set -l VALID="TRUE" ;
+	    else
+		if [ $RET -eq 3 ] ;
+		then message "WARNING:  The device alias \"$F5\" is not defined." ;
+		else message "Internal error $RET" ;
+		fi ;
+		set -l VALID="TRUE" ;
+	    fi ;
+	else
+            regex -v "$F5" '^/[^ :]*$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+            if [ $VALID = "TRUE" ] ;
+            then
+		devattr $F5 alias >/dev/null ;
+		if [ $RET -eq 3 ] ;
+		then
+		    message "WARNING:  The device \"$F5\" is not defined." ;
+		elif [ $RET -ne 0 ] ;
+		then
+		    set -l VALID=FALSE ;
+		    set -l INVMSG="Internal error $RET" ;
+		fi ;
+            else set -l INVMSG="The value \"$F5\" is not a valid device alias or pathname." ;
+            fi ;
+	fi ;
+    else set -l VALID="TRUE" ;
+    fi ;
+    indicator "" ;
+`$VALID
+rmenu={ `
+    indicator -w "" ;
+    getdev ;
+    indicator "" ;
+` }
+
+name=""
+lininfo="Form.add:Member"
+nrow=4
+ncol=17
+frow=4
+fcol=17
+rows=1
+columns=14
+scroll=TRUE
+invalidmsg=$INVMSG
+valid=`
+    indicator -w "" ;
+    if [ "$F6" ] ;
+    then
+	regex -v "$F6" '^[-_.$a-zA-Z0-9]+$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+	if [ "$VALID" = "TRUE" ] ;
+	then
+	    devattr "$F6" alias >/dev/null ;
+	    if [ $RET -eq 0 ] ;
+	    then set -l VALID="TRUE" ;
+	    else
+		if [ $RET -eq 3 ] ;
+		then message "WARNING:  The device alias \"$F6\" is not defined." ;
+		else message "Internal error $RET" ;
+		fi ;
+		set -l VALID="TRUE" ;
+	    fi ;
+	else
+            regex -v "$F6" '^/[^ :]*$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+            if [ $VALID = "TRUE" ] ;
+            then
+		devattr $F6 alias >/dev/null ;
+		if [ $RET -eq 3 ] ;
+		then
+		    message "WARNING:  The device \"$F6\" is not defined." ;
+		elif [ $RET -ne 0 ] ;
+		then
+		    set -l VALID=FALSE ;
+		    set -l INVMSG="Internal error $RET" ;
+		fi ;
+            else set -l INVMSG="The value \"$F6\" is not a valid device alias or pathname." ;
+            fi ;
+	fi ;
+    else set -l VALID="TRUE" ;
+    fi ;
+    indicator "" ;
+`$VALID
+rmenu={ `
+    indicator -w "" ;
+    getdev ;
+    indicator "" ;
+` }
+
+name=""
+lininfo="Form.add:Member"
+nrow=4
+ncol=33
+frow=4
+fcol=33
+rows=1
+columns=14
+scroll=TRUE
+invalidmsg=$INVMSG
+valid=`
+    indicator -w "" ;
+    if [ "$F7" ] ;
+    then
+	regex -v "$F7" '^[-_.$a-zA-Z0-9]+$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+	if [ "$VALID" = "TRUE" ] ;
+	then
+	    devattr "$F7" alias >/dev/null ;
+	    if [ $RET -eq 0 ] ;
+	    then set -l VALID="TRUE" ;
+	    else
+		if [ $RET -eq 3 ] ;
+		then message "WARNING:  The device alias \"$F7\" is not defined." ;
+		else message "Internal error $RET" ;
+		fi ;
+		set -l VALID="TRUE" ;
+	    fi ;
+	else
+            regex -v "$F7" '^/[^ :]*$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+            if [ $VALID = "TRUE" ] ;
+            then
+		devattr $F7 alias >/dev/null ;
+		if [ $RET -eq 3 ] ;
+		then
+		    message "WARNING:  The device \"$F7\" is not defined." ;
+		elif [ $RET -ne 0 ] ;
+		then
+		    set -l VALID=FALSE ;
+		    set -l INVMSG="Internal error $RET" ;
+		fi ;
+            else set -l INVMSG="The value \"$F7\" is not a valid device alias or pathname." ;
+            fi ;
+	fi ;
+    else set -l VALID="TRUE" ;
+    fi ;
+    indicator "" ;
+`$VALID
+rmenu={ `
+    indicator -w "" ;
+    getdev ;
+    indicator "" ;
+` }
+
+name=""
+lininfo="Form.add:Member"
+nrow=5
+ncol=1
+frow=5
+fcol=1
+rows=1
+columns=14
+scroll=TRUE
+invalidmsg=$INVMSG
+valid=`
+    indicator -w "" ;
+    if [ "$F8" ] ;
+    then
+	regex -v "$F8" '^[-_.$a-zA-Z0-9]+$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+	if [ "$VALID" = "TRUE" ] ;
+	then
+	    devattr "$F8" alias >/dev/null ;
+	    if [ $RET -eq 0 ] ;
+	    then set -l VALID="TRUE" ;
+	    else
+		if [ $RET -eq 3 ] ;
+		then message "WARNING:  The device alias \"$F8\" is not defined." ;
+		else message "Internal error $RET" ;
+		fi ;
+		set -l VALID="TRUE" ;
+	    fi ;
+	else
+            regex -v "$F8" '^/[^ :]*$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+            if [ $VALID = "TRUE" ] ;
+            then
+		devattr $F8 alias >/dev/null ;
+		if [ $RET -eq 3 ] ;
+		then
+		    message "WARNING:  The device \"$F8\" is not defined." ;
+		elif [ $RET -ne 0 ] ;
+		then
+		    set -l VALID=FALSE ;
+		    set -l INVMSG="Internal error $RET" ;
+		fi ;
+            else set -l INVMSG="The value \"$F8\" is not a valid device alias or pathname." ;
+            fi ;
+	fi ;
+    else set -l VALID="TRUE" ;
+    fi ;
+    indicator "" ;
+`$VALID
+rmenu={ `
+    indicator -w "" ;
+    getdev ;
+    indicator "" ;
+` }
+
+name=""
+lininfo="Form.add:Member"
+nrow=5
+ncol=17
+frow=5
+fcol=17
+rows=1
+columns=14
+scroll=TRUE
+invalidmsg=$INVMSG
+valid=`
+    indicator -w "" ;
+    if [ "$F9" ] ;
+    then
+	regex -v "$F9" '^[-_.$a-zA-Z0-9]+$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+	if [ "$VALID" = "TRUE" ] ;
+	then
+	    devattr "$F9" alias >/dev/null ;
+	    if [ $RET -eq 0 ] ;
+	    then set -l VALID="TRUE" ;
+	    else
+		if [ $RET -eq 3 ] ;
+		then message "WARNING:  The device alias \"$F9\" is not defined." ;
+		else message "Internal error $RET" ;
+		fi ;
+		set -l VALID="TRUE" ;
+	    fi ;
+	else
+            regex -v "$F9" '^/[^ :]*$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+            if [ $VALID = "TRUE" ] ;
+            then
+		devattr $F9 alias >/dev/null ;
+		if [ $RET -eq 3 ] ;
+		then
+		    message "WARNING:  The device \"$F9\" is not defined." ;
+		elif [ $RET -ne 0 ] ;
+		then
+		    set -l VALID=FALSE ;
+		    set -l INVMSG="Internal error $RET" ;
+		fi ;
+            else set -l INVMSG="The value \"$F9\" is not a valid device alias or pathname." ;
+            fi ;
+	fi ;
+    else set -l VALID="TRUE" ;
+    fi ;
+    indicator "" ;
+`$VALID
+rmenu={ `
+    indicator -w "" ;
+    getdev ;
+    indicator "" ;
+` }
+
+name=""
+lininfo="Form.add:Member"
+nrow=5
+ncol=33
+frow=5
+fcol=33
+rows=1
+columns=14
+scroll=TRUE
+invalidmsg=$INVMSG
+valid=`
+    if [ "$F10" ] ;
+    then
+	regex -v "$F10" '^[-_.$a-zA-Z0-9]+$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+	if [ "$VALID" = "TRUE" ] ;
+	then
+	    devattr "$F10" alias >/dev/null ;
+	    if [ $RET -eq 0 ] ;
+	    then set -l VALID="TRUE" ;
+	    else
+		if [ $RET -eq 3 ] ;
+		then message "WARNING:  The device alias \"$F10\" is not defined." ;
+		else message "Internal error $RET" ;
+		fi ;
+		set -l VALID="TRUE" ;
+	    fi ;
+	else
+            regex -v "$F10" '^/[^ :]*$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+            if [ $VALID = "TRUE" ] ;
+            then
+		devattr $F10 alias >/dev/null ;
+		if [ $RET -eq 3 ] ;
+		then
+		    message "WARNING:  The device \"$F10\" is not defined." ;
+		elif [ $RET -ne 0 ] ;
+		then
+		    set -l VALID=FALSE ;
+		    set -l INVMSG="Internal error $RET" ;
+		fi ;
+            else set -l INVMSG="The value \"$F10\" is not a valid device alias or pathname." ;
+            fi ;
+	fi ;
+    else set -l VALID="TRUE" ;
+    fi ;
+    indicator "" ;
+`$VALID
+rmenu={ `
+    indicator -w "" ;
+    getdev ;
+    indicator "" ;
+` }
+
+name=RESET
+button=8
+action=reset

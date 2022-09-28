@@ -1,0 +1,66 @@
+#ident	"@(#)lp.admin:printers/forms/Form.add	1.7.3.2"
+
+#######################################################
+#
+#       Module Name: Form.add
+#
+#######################################################
+
+form=Add a New Form
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO 
+
+init=`indicator -w`
+
+done=`set -e closeit=$OAMBASE/add-ons/lp/printers/forms/Form.add`OPEN FORM /usr/sadm/sysadm/add-ons/lp/printers/forms/Form.mod2 $F2 $F1
+
+
+name=New Form:
+lininfo="add:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=15
+rows=1
+columns=14
+fieldmsg="Enter the name of the new form"
+
+valid=`
+	regex -v "$F1"
+	    '^[Aa][Ll][Ll]$'		'"all" is a reserved word'
+	    '^[Aa][Nn][Yy]$'		'"any" is a reserved word'
+	    '^[Nn][Oo][Nn][Ee]$'	'"none" is a reserved word'
+	    '^[Dd][Ee][Ff][Aa][Uu][Ll][Tt][_][Ff][Oo][Rr][Mm]$'	'"default_form" is reserved'
+	    '^([_A-Za-z0-9]){1,14}$'	'ok'
+	    '.*'  'Form name must consist of 1-14 letters, digits, and "_"'
+	| set -l badval;
+	if [ "$badval" != "ok" ];
+	then
+	    false;
+	fi;
+	if [ "$badval" = 'ok' -a  -d /etc/lp/forms/$F1 ];
+	then
+	    set -l badval="$F1 already exists";
+	    false;
+	fi;
+	if [ "$badval" = 'ok' -a  ! -d /etc/lp/forms/$F1 ];
+	then
+	    true;
+	fi;
+`
+invalidmsg="Invalid form - $badval"
+
+name=Model Form:
+lininfo="add:F2"
+nrow=2
+ncol=1
+frow=2
+fcol=15
+rows=1
+columns=14
+value="default_form"
+menuonly=true
+rmenu={ "default_form" `ls /etc/lp/forms` }
+choicemsg="Choose form then press ENTER"
+invalidmsg="$F2 Invalid form - press [CHOICES] for selection"
+fieldmsg="Enter an existing form to be used as a model"

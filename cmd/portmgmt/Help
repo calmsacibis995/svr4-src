@@ -1,0 +1,7 @@
+#ident	"@(#)portmgmt:Help	1.1.1.1"
+
+ABSTRACT:
+	The submenus in the "ports" menu provide functions for
+	managing service access to the system. They include 
+	submenus for the management of port monitors, port services,
+	quick terminal setup and tty_settings.

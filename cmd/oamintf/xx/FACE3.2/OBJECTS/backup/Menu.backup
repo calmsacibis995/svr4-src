@@ -1,0 +1,24 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/backup/Menu.backup	1.1"
+
+menu="Backup to Removable Media"
+#help=open text $VMSYS/OBJECTS/Text.h "Backup to Removable Media" backup/T.hbackup
+
+name=Backup History
+action=nop
+show=false
+
+name=Personal Backup
+action=nop
+show=false
+
+name=Schedule Backup to Tape
+action=nop
+show=false
+
+name=System Backup
+action=nop
+show=false
+
+name=""
+button=8
+action=nop

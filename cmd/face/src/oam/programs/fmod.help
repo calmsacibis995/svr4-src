@@ -1,0 +1,52 @@
+ABSTRACT:
+	This task allows the administrator of a system to modify any
+	installed applications in the set of Global Programs.
+
+menu:F1:Modify Global Programs
+	The Modify Global Programs menu allows you to select a program to
+	modify from the set of global programs that you have added to the
+	Programs Menu.
+	
+	Move to the program that you wish to modify and press ENTER to
+	select it.
+
+form:F1:Terminal Type
+	Enter the terminal type to be used when the application is invoked.
+	If the application doesn't recognize your default terminal type,
+	enter the appropriate value for the application.  You must check
+	the manual pages of the application to determine the correct
+	terminal type.
+	
+	The default terminal type is your current terminal type.
+
+form:F2:Programs Menu Entry
+	Enter the new string that should appear in the Programs menu for
+	this application.
+	
+	The default for this field is the current value.
+
+form:F3:Pathname of Command
+	Enter the name of the program to execute when this menu item
+	is selected from the Programs menu.  You may only enter the
+	full pathname of a command. Pathnames relative to your
+	working directory are not allowed.  A check is made to warn
+	you if you are not allowed to execute the program you have
+	named or it cannot be found.
+	
+	The default for this field is the current value.
+
+form:F4:Working Directory
+	Enter the pathname of the file folder to change to when this
+	program is invoked.  For some applications, you may want all
+	of the files to be created in one file folder.  You must
+	specify a value for this field.
+	
+	The default for this field is the current value.
+
+form:F5:Prompt for Arguments
+	Enter yes here if you want the user to be prompted for parameters
+	which will be passed to the command when it is executed. These
+	parameters will be supplied on the command line when the command
+	is run.
+	
+	The default for this field is the current value.

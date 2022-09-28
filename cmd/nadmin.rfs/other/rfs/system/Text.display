@@ -1,0 +1,9 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/Text.display	1.2"
+title="Displays the Current RFS Domain of the Local System"
+
+`readfile $INTFBASE/display.msg | message -p`
+
+`/usr/bin/dname -d | set -l DOMAIN`
+
+text="The Current RFS Domain Is: 
+${DOMAIN}"

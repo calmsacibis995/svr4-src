@@ -1,0 +1,90 @@
+#ident	"@(#)nadmin.nfs:remote/nfs/bin/auto_attr	1.1"
+# If RESDIR is the res name, then it is the first field of the vfstab entry
+rm /var/tmp/attr_$$ 2>/dev/null
+#set -x
+echo $MNT | /bin/grep ":" 1>/dev/null 
+if [ $? -eq 0 ]
+then
+	/usr/bin/egrep "^$MNT[ 	]+.*[ 	]+nfs" /etc/vfstab >/var/tmp/auto$$
+	SRVTMP=$MNT
+	MNT=""
+else
+	/usr/bin/egrep "$MNT[ 	]+nfs" /etc/vfstab >/var/tmp/auto$$
+fi
+	if [ -s "/var/tmp/auto$$" ]
+	then
+		/usr/bin/tr -s '\011' '\040' </var/tmp/auto$$ | /bin/sed -e "s/ro[, ]*/read-only,/" -e "s/rw[, ]*/read-write,/" >/var/tmp/attr_$$
+		AUTO=`/usr/bin/tr -s '\011' '\040' </var/tmp/auto$$ | /bin/sed -e "s/ro[, ]*/read-only,/" -e "s/rw[, ]*/read-write,/"`
+		if [ "$MNT" ]
+		then
+			SRV=`echo $AUTO |/usr/bin/cut -d":" -f1`
+			RPATH=`echo $AUTO | /usr/bin/cut -d" " -f1 | /bin/sed "s/^.*://"`
+		else
+			MNT=`echo $AUTO | /usr/bin/cut -d" " -f3`
+			SRV=`echo $SRVTMP | /usr/bin/cut -d":" -f1`
+			RPATH=`echo $SRVTMP | /usr/bin/cut -d":" -f2`
+		fi
+		echo $AUTO | /usr/bin/grep "read-only" 1>/dev/null
+		if [ $? -eq 0 ]
+		then
+			ACC="read-only"
+		else
+			ACC="read-write"
+		fi
+		TMP=`echo $AUTO | /usr/bin/cut -d" " -f7 | /usr/bin/grep "nosuid"`
+		echo $TMP |/usr/bin/grep "nosuid" 1>/dev/null
+		if [ $? -eq 0 ]
+		then
+			SUID="no"
+		else
+			echo $TMP |/usr/bin/grep "suid" 1>/dev/null
+			if [ $? -eq 0 ]
+			then
+				SUID="yes"
+			else
+				SUID="no"
+			fi
+		fi
+		OPTIONS=`echo $AUTO | /usr/bin/cut -d" " -f7`
+		echo $OPTIONS | /usr/bin/grep "remount" 1>/dev/null
+		if [ $? -eq 0 ]
+		then
+			RMNT="yes"
+		else
+			RMNT="no"
+		fi
+		echo $OPTIONS |/usr/bin/grep "bg," 1>/dev/null
+		if [ $? -eq 0 ]
+		then
+			RTRY="background"
+		else
+			RTRY="foreground"
+		fi
+
+		TMP=`echo $OPTIONS | /usr/bin/grep "retry="`
+		if [ $? -eq 0 ]
+		then
+			MTRIES=`echo $TMP | /bin/sed -e "s/.*retry=//" -e "s/[ ,$].*$//"` 
+
+		else
+			MTRIES="10000"
+		fi
+
+		TMP=`echo $OPTIONS | /usr/bin/grep "timeo="`
+		if [ $? -eq 0 ]
+		then
+			TIMEO=`echo $TMP | /bin/sed -e "s/^.*timeo=//" -e "s/[ ,$].*$//"` 
+		else
+			TIMEO="0"
+		fi
+		echo $OPTIONS | /usr/bin/grep "secure" 1>/dev/null
+		if [ $? -eq 0 ]
+		then
+			SEC="yes"
+		else
+			SEC="no"
+		fi
+		echo $SRV $RPATH $MNT $ACC $SUID $RMNT $RTRY $MTRIES $TIMEO $SEC >/var/tmp/attr_$$
+			
+	fi
+echo $$

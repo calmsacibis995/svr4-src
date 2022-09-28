@@ -1,0 +1,30 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/Menu.prset	1.1"
+menu="Printer Setup"
+
+#help=open text $VMSYS/OBJECTS/Text.h "Printer Setup Menu" "PS/T.hprset"
+
+`message "Move to an item with the arrow keys and strike ENTER key to select."`
+
+name=Configure A Printer
+action=nop
+show=false
+
+name=Filters, Forms, and Printwheels
+action=nop
+show=false
+
+name=Parallel Printer Port Setup
+action=nop
+show=false
+
+name=Serial Printer Port Setup
+action=nop
+show=false
+
+name=CMD-MENU
+button=7
+action=cmd-menu
+
+name=""
+button=8
+action=nop

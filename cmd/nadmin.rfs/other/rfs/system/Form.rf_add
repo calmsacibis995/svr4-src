@@ -1,0 +1,77 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/Form.rf_add	1.6"
+form="Specify Transport Provider and Name Server Role"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=unset -l LINES -el TRANS
+
+`readfile $INTFBASE/form.msg | message -p;
+set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/rfs/system;
+"$INTFBASE/netservices/remote_files/other/rfs/system/bin/get_tps" | set -el TRANS;
+echo "{" "$TRANS" "}" >/var/tmp/tr;
+/usr/sbin/dname -d | set -el DOM`
+
+done=`indicator -w;
+
+set -el TRANS="$F1";
+set -el HOST="$F3";
+rm /var/tmp/tr 2>/dev/null;
+if [ "$F2" = "primary" ];
+then
+	set -el ROLE_X="P";
+else
+	if [ "$F2" = "secondary" ];
+	then
+		set -el ROLE_X="S";
+	fi;
+fi;
+if [ "$F2" = "primary" ];
+then
+	"$INTFBASE/netservices/remote_files/other/rfs/system/bin/primary" | set -l PID;
+	if [ -s "/var/tmp/noadd_$PID" ];
+	then
+		set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/other/rfs/system/Text.generic 'Adds Members to the Rfmaster File' /var/tmp/noadd_$PID";
+	else
+		$INTFBASE/netservices/remote_files/other/rfs/system/bin/call_addr $TRANS $HOST $DOM $ROLE_X;
+		set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/other/rfs/system/Text.generic 'Add A Name Server and Its Address' /var/tmp/add_err";
+	fi;
+else
+		$INTFBASE/netservices/remote_files/other/rfs/system/bin/call_addr $TRANS $HOST $DOM $ROLE_X;
+		set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/other/rfs/system/Text.generic 'Add A Name Server and Its Address' /var/tmp/add_err";
+fi;
+set -l SET_SEQ=4;
+`$!KEYCMD
+
+name="Transport Provider:"
+nrow=1
+ncol=1
+frow=1
+fcol=21
+rows=1
+columns=14
+rmenu=`cat /var/tmp/tr`
+menuonly=true
+lininfo=rf_add:tp
+invalidmsg="Press CHOICES to select valid response."
+
+name="Role:"
+nrow=2
+ncol=1
+frow=2
+fcol=7
+rows=1
+columns=9
+rmenu={ primary secondary }
+menuonly=true
+lininfo=rf_add:role
+invalidmsg="Press CHOICES to select valid response."
+
+
+name="System:"
+nrow=3
+ncol=1
+frow=3
+fcol=9
+rows=1
+columns=14
+lininfo=rf_add:system
+valid=`[ "$F3" ]`
+invalidmsg="Enter the name of the name server you wish to add."

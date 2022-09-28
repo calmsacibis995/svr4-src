@@ -1,0 +1,13 @@
+#ident	"@(#)fmli:install/Remove	1.3"
+
+if [ 0 -ne `ps -e | cut -c 22-25 | grep "fmli" | wc -l` ]
+then
+ 	message -d "AT&T FMLI is currently in use. You may not
+remove it while it is being used. Please try
+again later."
+	exit 1
+else
+	rm /usr/bin/fmli
+	rm /usr/bin/vsig
+	exit 0
+fi

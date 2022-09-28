@@ -1,0 +1,56 @@
+#ident	"@(#)bkrs:basic.d/sched/Text.already	1.1"
+
+title=Warning
+lifetime=shortterm
+altslks
+
+close=`rm -f $File`
+`set -l File=$ARG1`
+
+begrow=center
+begcol=center
+rows=8
+columns=72
+
+`message "Strike the CONT function key to continue or strike CANCEL to cancel."`
+
+text=" The following complete and/or incremental backups are currently 
+ scheduled. Make sure not to schedule a backup to the same device 
+ on the same date and time as the ones listed below.
+
+`readfile $File`
+"
+
+name=""
+button=9
+action=nop
+
+name=CONT
+button=11
+action=open form $OBJ_DIR/sched/Form.add
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=CANCEL
+button=14
+action=return cancel
+
+name=""
+button=10
+action=nop
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=nop
+
+`indicator -w`

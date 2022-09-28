@@ -1,0 +1,11 @@
+
+Miscellaneous programs that you may find useful, or at least interesting - all
+are unsupported.
+
+  grabit.ps		Formats and returns PostScript objects - eg. dictionaries
+  ibmfont.c		IBM PC to Unix font conversion program
+  laserbar.c		Barcode filter - Jan Wolitzky
+  lp.model		Example lp interface - Maryann Csaszar
+  macfont.c		Macintosh to Unix font conversion program
+  setbaud.ps		Example of how to change the printer's baudrate
+

@@ -1,0 +1,52 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/WHEEL/Text.cdel	1.1"
+title=Confirmation
+lifetime=shortterm
+altslks=true
+
+rows=6
+columns=54
+
+`message  Strike CONT to confirm, or strike CANCEL to cancel the delete.`
+
+
+text="
+If you confirm, the following printwheel(s) will no
+longer be recognized on your system:
+
+`echo $ARG1 | /usr/bin/tr ',' '\012'`
+"
+
+
+
+
+name=CANCEL
+button=14
+action=close /usr/vmsys/OBJECTS/PS/WHEEL/Text.cdel /usr/vmsys/OBJECTS/PS/WHEEL/Menu.wdelete
+
+name=CONT
+button=11
+action=`/usr/vmsys/admin/.chkuser -c "/usr/vmsys/admin/PS/WHEEL/rmwheel.sh :$ARG1: " `close /usr/vmsys/OBJECTS/PS/WHEEL/Text.cdel /usr/vmsys/OBJECTS/PS/WHEEL/Menu.wdelete
+
+name=PREV-FRM
+action=return prev-frm
+button=12
+
+name=NEXT-FRM
+action=return next-frm
+button=13
+
+name=""
+button=10
+action=nop
+
+name=""
+button=9
+action=nop
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+`indicator -w`

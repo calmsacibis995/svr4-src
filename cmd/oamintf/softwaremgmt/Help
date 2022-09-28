@@ -1,0 +1,7 @@
+#ident	"@(#)oamintf:softwaremgmt/Help	1.1"
+
+ABSTRACT:
+	These subcommands permit you to install new software, remove software,
+	and run software directly from the removable disk it is delivered on.
+	The "remove" and "run" capabilities depend upon the particular software
+	packages.  Refer to the instructions delivered with each package.

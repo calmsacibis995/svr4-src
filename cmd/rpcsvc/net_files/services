@@ -1,0 +1,4 @@
+#ident	"@(#)rpcsvc:net_files/services	1.2"
+# RPC services
+rpcbind	rpc
+keyserv	keyserv

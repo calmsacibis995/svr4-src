@@ -1,0 +1,16 @@
+#ident	"@(#)oamintf:machinemgmt/Text.whoson	1.4"
+
+################################################################################
+#	Module Name: Text.whoson
+################################################################################
+title="Users Currently On the System"
+
+framemsg=`readfile $INTFBASE/display.msg`
+
+text="
+ID    Terminal Number  Sign-on Date and Time
+
+`who`"
+
+rows=10
+columns=60

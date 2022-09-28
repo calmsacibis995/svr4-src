@@ -1,0 +1,19 @@
+#ident	"@(#)xenv:i386/pathedit	1.1.1.2"
+#
+#	Master Pathedit for iAPX386 SGS
+#
+#
+
+chmod 0755 ../../optim/i386/makefile ../../inc/i386 ../../xenv/i386
+chmod 0755 ../../xenv/i386/pted.unx ../../xenv/i386/pted.native ../../xenv/i386/pted.nonx
+
+mach=i386
+
+echo "Are you building native SGS (y or n):	\c"
+x=`line`
+if [ "$x" = "y" ]
+then
+	exec ../../xenv/i386/pted.native $mach
+else
+	exec ../../xenv/i386/pted.unx $mach
+fi

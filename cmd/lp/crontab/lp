@@ -1,0 +1,14 @@
+#ident	"@(#)lp:crontab/lp	1.2"
+#
+# This entry will age the request log, removing logs older
+# than two days (-c2). Change the number 2 after the -c option to
+# another integer to change the duration that old logs will
+# be kept. Note that the ; before the > is intended.
+#
+13 3 * * * cd /var/lp/logs; if [ -f requests ]; then /bin/mv requests xyzzy; /bin/cp xyzzy requests; >xyzzy; /usr/lbin/agefile -c2 requests; /bin/mv xyzzy requests; fi
+#
+# This entry ages the print service log, removing logs older
+# than four weeks (-c4). Change the number 4 after the -c option to
+# another integer to change the number of weeks to keep old logs.
+#
+15 3 * * 0 /usr/lbin/agefile -c4 /var/lp/logs/lpsched

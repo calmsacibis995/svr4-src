@@ -1,0 +1,44 @@
+#ident	"@(#)oamintf:devices/copy/Text.cperr2	1.1.4.1"
+
+################################################################################
+#	Module Name: Text.cperr2
+################################################################################
+title="Copy Error"
+
+`message "Press CONT to continue or CANCEL to return to the menu."`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp Text.cperr:ABSTRACT
+
+lifetime=shortterm
+
+`devattr $ARG1 desc | set -l DESC`
+
+text="
+The copy operation failed.  The volume in $DESC
+may be unformatted, write-protected, or damaged, or the
+drive heads may be dirty and need cleaning.  Remove the
+volume from $DESC and inspect it for write protection,
+creases, scratches, dirt or other problems.  
+
+NOTE:	A damaged or dirty volume should not be used
+	since it can damage the heads in the drive.
+	We recommend that you throw it away.
+
+Another possibility is that the destination diskette
+has less capacity than the source diskette.  Make sure
+that the capacity of the destination diskette is greater
+than or equal to the source diskette."
+
+rows=17
+columns=70
+
+altslks
+
+name=CONT
+button=11
+action=`set -l A=a;
+	set -l CMD="OPEN TEXT $OBJ_DIR/Text.copy2 $CPFILE $ARG1 $A"`$CMD
+
+name=CANCEL
+button=14
+action=CLEANUP

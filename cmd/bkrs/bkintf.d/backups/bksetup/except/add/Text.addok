@@ -1,0 +1,25 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/except/add/Text.addok	1.2"
+################################################################################
+#	Module Name: Text.addok
+################################################################################
+title="Add an Exception List"
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+lifetime=shortterm
+
+rows=4
+columns=60
+
+text="
+Exception list entries added to $ARG1 successfully."
+
+altslks
+
+name=CONT
+button=11
+action=update $ARG2 true
+
+name=CANCEL
+button=14
+action=CLEANUP

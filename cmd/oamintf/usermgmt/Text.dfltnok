@@ -1,0 +1,27 @@
+#ident	"@(#)oamintf:usermgmt/Text.dfltnok	1.3.3.1"
+################################################################################
+#	Module Name: Text.dfltnok
+################################################################################
+Title="Errors Defining Defaults for Adding User Logins"
+`readfile $INTFBASE/conf.msg | message -t`
+#framemsg=`readfile $INTFBASE/conf.msg`
+
+close=`rm /tmp/dflterr`
+
+rows=6
+columns=75
+
+text="	
+An error occured attempting to define defaults:
+
+   `readfile /tmp/dflterr`"
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

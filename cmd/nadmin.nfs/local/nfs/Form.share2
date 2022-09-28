@@ -1,0 +1,54 @@
+#ident	"@(#)nadmin.nfs:local/nfs/Form.share2	1.1"
+form="Shares a Local Resource Automatically-Immediately via NFS"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=unset -e DIR -e ID -e AUTH -e RWCLIENT -e ROCLIENT -e ROOTCLIENT -e AUTO -e IMM -l PID;
+
+`readfile "$INTFBASE/form.msg" | message -p`
+
+done=`indicator -w;
+	set -e RWCLIENT="$F1";
+	set -e ROCLIENT="$F2";
+	set -e ROOTCLIENT="$F3";
+	getfrm | set -l FRM2;
+	"$INTFBASE/netservices/remote_files/local/nfs/bin/nf_share" | set -l PID;
+	set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/local/nfs/Text.shmsg 'Shares a Local Resource Automatically-Immediately via NFS' /var/tmp/sh_msg$PID";
+	`$!KEYCMD
+
+`set -l OBJ_DIR="$INTFBASE/netservices/remote_files/local/nfs`
+
+#F1
+name="Read-Write Clients:"
+nrow=1
+ncol=1
+frow=1
+fcol=21
+rows=5
+columns=14
+scroll=true
+lininfo=share2:rwclient
+valid=`set -el RW_CLIENTS="$F1" -el RO_CLIENTS="$F2";
+"$INTFBASE/netservices/remote_files/local/nfs/bin/valid_client" | set -l V_RET;
+echo $V_RET`
+
+#F2
+name="Read-Only Clients:"
+nrow=7
+ncol=1
+frow=7
+fcol=21
+rows=5
+columns=14
+scroll=true
+lininfo=share2:roclient
+
+#F3
+name="Root Access Clients:"
+nrow=13
+ncol=1
+frow=13
+fcol=21
+rows=5
+columns=14
+scroll=true
+lininfo=share2:rootclient
+

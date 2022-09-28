@@ -1,0 +1,18 @@
+#ident	"@(#)filemgmt:make/Menu.mklst	1.2"
+
+################################################################################
+#	Module Name: Menu.mklst
+#	Author: Mike Coufal - modified by Pati Porter
+#	Date: April 1988
+################################################################################
+menu="Device Drive Choices"
+
+close=`rm /tmp/${VPID}mklst`
+
+
+`$OAMBASE/bin/devlst "$ARG1" "$ARG2" >/tmp/${VPID}mklst`
+
+`sort /tmp/${VPID}mklst | regex '^([^:][^:]*)$0:([^:][^:]*)$1' 'name="$m0"
+description="$m1"
+action=`set -l "Form_Choice=$m0"`CLOSE'`
+

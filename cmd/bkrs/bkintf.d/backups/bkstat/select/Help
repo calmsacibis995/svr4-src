@@ -1,0 +1,32 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkstat/select/Help	1.2.1.1"
+
+ABSTRACT: Selective Display of Backup Status Log
+	The "selective" task allows you to display selected information
+	from the backup status log.  You may select log entries based on
+	backup jobid, job status and user.
+
+TITLE: Selective Display of Backup Status Log
+
+SELECT:
+	The display includes the following information:  backup jobid, backup
+	operation tag, login of the user who started the backup, originating
+	object name, originating device name, start time (or - if the
+	operation has not yet started), destination device type and status.
+
+F1:State(s) Field
+	"State(s):"  Enter a list of states.  Press the [CHOICES] key for a
+	complete list of possible states.  The display will list only those
+	jobs in the states you specify here.
+
+F2:Job_id(s) Field
+	"Job_id(s):"  Enter a list of backup jobids whose status you want
+	displayed.  The display will only include information about the
+	jobs you specify.  You may enter the keyword "all" to display
+	information about any backup jobs in the status log.
+
+F3:User(s) Field
+	"User(s):"  Enter a list of logins for the users who started the
+	backup jobs you want to see.  The display will only include
+	information about jobs started by the users you specify.  You may
+	enter the keyword "all" to display information about backup jobs
+	started by any users.

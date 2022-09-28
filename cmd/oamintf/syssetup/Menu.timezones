@@ -1,0 +1,47 @@
+#ident	"@(#)oamintf:syssetup/Menu.timezones	1.2"
+menu=Available Timezones
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp "Form.dateset:timezone"
+
+framemsg=`readfile $INTFBASE/ssmenu.msg`
+
+name="Greenwich (GMT)"
+action=close`set -l "Form_Choice=Greenwich"`
+linfo="GMT0"
+
+name="Atlantic  (AST & ADT)"
+action=close`set -l "Form_Choice=Atlantic"`
+linfo="AST4"
+
+name="Eastern   (EST & EDT)"
+action=close`set -l "Form_Choice=Eastern"`
+linfo="EST5"
+
+name="Central   (CST & CDT)"
+action=close`set -l "Form_Choice=Central"`
+linfo="CST6"
+
+name="Mountain  (MST & MDT)"
+action=close`set -l "Form_Choice=Mountain"`
+linfo="MST7"
+
+name="Pacific   (PST & PDT)"
+action=close`set -l "Form_Choice=Pacific"`
+linfo="PST8"
+
+name="Yukon     (YST & YDT)"
+action=close`set -l "Form_Choice=Yukon"`
+linfo="YST8"
+
+name="Alaska    (AST & ADT)"
+action=close`set -l "Form_Choice=Alaska"`
+linfo="AST10"
+
+name="Bering    (BST & BDT)"
+action=close`set -l "Form_Choice=Bering"`
+linfo="BST11"
+
+name="Hawaii    (HST)"
+action=close`set -l "Form_Choice=Hawaii"`
+linfo="HST10"
+

@@ -1,0 +1,13 @@
+The  Personal Backup Menu enables you to back up all files or selected
+files in your HOME directory.
+
+The items on the Personal Backup Menu are:
+
+      Backup Files under <home directory>:  Copy all files in your HOME
+      directory tree to the removable media.
+
+      Selective Backup of Files under <home directory>:  You can specify 
+      file names (directories or regular files) in your HOME directory 
+      to back up. YOU CANNOT BACK UP FILES OUTSIDE OF YOUR HOME DIRECTORY 
+      USING THIS FUNCTION.
+

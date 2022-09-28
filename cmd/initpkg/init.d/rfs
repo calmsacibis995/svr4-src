@@ -1,0 +1,144 @@
+#ident	"@(#)initpkg:init.d/rfs	1.18.10.1"
+
+USAGE="Usage: /etc/init.d/rfs {start | stop | rfstart}"
+
+if [ ! -d /usr/bin ]
+then			# /usr not mounted ??
+	exit 
+fi
+case "$1" in
+'start')
+
+	/usr/bin/rm -f /etc/rfs/rmnttab
+	if [ ! -r /etc/rfs/domain ]
+	then
+		echo $0: /etc/rfs/domain not initialized >/dev/console
+		exit 1
+	fi
+
+	net=`/usr/sbin/dname -n | /usr/bin/sed 's/,/ /g'`
+	set -- ${net}
+	for i in $*
+	do
+		if [ ! -r /etc/rfs/$1/rfmaster ]
+		then 	
+			echo $0: /etc/rfs/$1/rfmaster not initialized >/dev/console
+			exit 1
+		fi
+		if [ ! -r /etc/rfs/$1/loc.passwd ]
+		then
+			echo  "$0: /etc/rfs/$1/loc.passwd is not initialized;
+execute rfstart to initialize /etc/rfs/$1/loc.passwd.">/dev/console
+			exit 1
+		fi
+		shift
+	done
+
+	if [ -d /var/adm/log ]
+	then
+		LOG=/var/adm/log/rfuadmin.log
+	else
+		LOG=/var/adm/rfuadmin.log
+	fi
+	if [ -f ${LOG} ]
+	then
+		trap '/usr/bin/rm -f /var/tmp/rfu$$log;exit' 0 1 2 3 15
+		/usr/bin/tail -50 ${LOG} >/var/tmp/rfu$$log
+		/usr/bin/cp /var/tmp/rfu$$log ${LOG}
+	fi
+	if [ -x /usr/sbin/rfstart ]
+	then
+		if [ -x /usr/bin/setpgrp ]
+		then
+			/usr/bin/setpgrp /sbin/sh /etc/init.d/rfs rfstart&
+		else
+			/usr/lbin/setpgrp /sbin/sh /etc/init.d/rfs rfstart&
+		fi
+	else
+		echo $0: /usr/sbin/rfstart not found >/dev/console
+		exit 1
+	fi
+	;;
+
+'rfstart')
+	trap '/usr/bin/rm -f /var/tmp/rfs$$;exit' 0 1 2 3 15
+	net=`/usr/sbin/dname -n | /usr/bin/sed 's/,/ /g'`
+	set -- ${net}
+	while [ $# -gt 0 ]
+	do
+		/usr/sbin/nlsadmin $1 > /dev/null
+		listener=$?
+		case ${listener} in
+		1)
+			#listener not active, wait 1 min. then try again
+			sleep 60;;
+		*)
+			shift;;
+		esac
+	done
+
+	stat=1
+	retries=0
+	while [ ${stat} -eq 1 ]
+	do
+		/usr/sbin/rfstart </dev/console >/dev/console 2>/usr/tmp/rfs$$
+		stat=$?
+		case ${stat} in
+		0)
+			/sbin/sh /etc/init.d/adv start
+			/usr/sbin/rmountall /etc/vfstab
+			echo "\n*** RFS initialized"  >/dev/console
+			exit 0
+			;;
+		1)
+			# can't contact primary; wait for it
+			if [ ${retries} -eq 0 ]
+			then
+				/sbin/sh -c "echo '\n*** RFS not initialized: \c'"  >/dev/console
+				/sbin/sh -c "echo Waiting for Primary Name Server"  >/dev/console
+			fi
+			retries=`/usr/bin/expr ${retries} + 1`
+			/usr/bin/sleep 60
+			;;
+		*)
+			/sbin/sh -c "/usr/bin/cat /var/tmp/rfs$$ >/dev/console"
+			exit 1
+			;;
+		esac
+	done
+	;;
+
+'stop')
+ #	kill the rfs start daemon if it is still running
+ 	pid=`/usr/bin/ps -ef 2>/dev/null | /usr/bin/grep rfstart | /usr/bin/grep -v grep \
+ 			| /usr/bin/sed -e 's/  *[a-z0-9]*  *//' -e 's/ .*//'`
+ 	if [ "${pid}" != "" ]
+ 	then
+ 		/usr/bin/kill ${pid}
+		exit
+ 	fi
+
+ 	pid=`/usr/bin/ps -ef 2>/dev/null | /usr/bin/grep rfudaemon | /usr/bin/grep -v grep \
+ 			| /usr/bin/sed -e 's/  *[a-z0-9]*  *//' -e 's/ .*//'`
+	if [ "${pid}" = "" ]
+	then
+		exit
+	fi
+
+	/usr/bin/rm -f /etc/rfs/rmnttab
+	if [ -x /usr/sbin/rfstop ]
+	then
+		/usr/sbin/rfstop
+		if [ $? -ne 0 ]
+		then
+			echo $0: Unable to terminate rfs >/dev/console
+		fi
+	else
+		echo $0: /usr/sbin/rfstop not found >/dev/console
+	fi
+	;;
+*)
+	echo ${USAGE}
+	exit 1
+	;;
+esac

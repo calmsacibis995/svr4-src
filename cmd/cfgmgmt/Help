@@ -1,0 +1,5 @@
+#ident	"@(#)cfgmgmt:Help	1.1"
+
+ABSTRACT:
+	The "configuration" menu provides access to tasks that display the
+	system's configuration.

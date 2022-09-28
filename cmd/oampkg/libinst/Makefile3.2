@@ -1,0 +1,37 @@
+#ident	"@(#)oampkg:libinst/Makefile3.2	1.1"
+
+AR=ar
+CC=cc
+INC=$(ROOT)/usr/include
+USRLIB=$(ROOT)/usr/lib
+LIBINST=libinst3.2.a
+
+HDROPTS=-I ../hdrs -I $(INC)
+CFLAGS=-O -I /usr/include $(HDROPTS) -D PRESVR4 -D _STYPES -U __STDC__
+
+LIBFILES= \
+	$(LIBINST)(finalck.o) $(LIBINST)(pkgdbmerg.o) $(LIBINST)(pathdup.o) \
+	$(LIBINST)(ptext.o) $(LIBINST)(qreason.o) \
+	$(LIBINST)(dockdeps.o) $(LIBINST)(eptstat.o) $(LIBINST)(setlist.o)\
+	$(LIBINST)(putparam.o) $(LIBINST)(stub.o) $(LIBINST)(setadmin.o) \
+	$(LIBINST)(psvr4ck.o) $(LIBINST)(copyf.o) $(LIBINST)(procmap.o) \
+	$(LIBINST)(echo.o) $(LIBINST)(ocfile.o) $(LIBINST)(lockinst.o) \
+	$(LIBINST)(srcpath.o) $(LIBINST)(qstrdup.o)
+
+all:	$(LIBINST)
+
+.PRECIOUS: $(LIBINST)
+
+$(LIBINST): $(LIBFILES) 
+
+clean:
+
+clobber: clean
+	rm -f $(LIBINST)
+
+strip:
+
+install: all
+	: do nothing
+
+lintit:

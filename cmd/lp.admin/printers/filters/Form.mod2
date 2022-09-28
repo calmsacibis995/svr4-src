@@ -1,0 +1,271 @@
+#ident	"@(#)lp.admin:printers/filters/Form.mod2	1.6.3.2"
+form=Add/Modify Filter $ARG2
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`indicator -w;
+	set -l name_px="/tmp/lp.rpx$VPID";
+	ls /etc/lp/printers > $name_px;
+	echo "any" >> $name_px;
+	echo "all" >> $name_px;
+	echo "" >> $name_px;
+	set -e basicdata="/tmp/lp.flm$VPID";
+	`
+
+`if [ $ARG1 = "default_filter" ];
+	then
+	message "loading default filter";
+	set -l input="simple";
+	set -l output="simple";
+	set -l printer_types="any";
+	set -l printers="any";
+	set -l filter_type="slow";
+	else
+	message "loading filter";
+	fmlgrep ":$ARG1:" /etc/lp/filter.table | set -l line;
+	echo "$line" | fmlcut -d: -f4 - |
+	set -l input;
+	echo "$line" | fmlcut -d: -f6 - |
+	set -l output;
+	echo "$line" | fmlcut -d: -f2 - |
+	set -l printer_types;
+	echo "$line" | fmlcut -d: -f3 - |
+	set -l printers;
+	echo "$line" | fmlcut -d: -f7 - |
+	set -l filter_type;
+	echo "$line" | fmlcut -d: -f8 - |
+	set -l command;
+	echo "$line" | fmlcut -d: -f9 - |
+	set -e options;
+	fi;
+	`
+done=`
+	echo 'Input Types: '$F1 > $basicdata;
+	echo 'Output Types: '$F2 >> $basicdata;
+	if [ -n $F3 ];
+	then
+	echo 'Printer Types: '$F3 >> $basicdata;
+	fi;
+	if [ -n $F4 ];
+	then
+	echo 'Printers: '$F4 >> $basicdata;
+	fi;
+	echo 'Filter Type: '$F5 >> $basicdata;
+	echo 'Command: '$F6 >> $basicdata;
+	if [ -n $F7 ];
+	then
+	echo 'Options: '$F7 >> $basicdata;
+	fi;
+	if [ $F8 = "yes" ];
+	then
+		if [ $ARG1 != $ARG2 ];
+		then
+			set -l CMD="OPEN FORM /usr/sadm/sysadm/add-ons/lp/printers/filters/Form.options $ARG2 add";
+		else
+			set -l CMD="OPEN FORM /usr/sadm/sysadm/add-ons/lp/printers/filters/Form.options $ARG2 modify";
+		fi;
+	else
+		if [ $ARG1 != $ARG2 ];
+			then message -w "Adding $ARG2 to the filter table ";
+		        set -l CMD="close /usr/sadm/sysadm/add-ons/lp/printers/filters/Form.mod2 /usr/sadm/sysadm/add-ons/lp/printers/filters/Form.add";
+		else 
+			message -w "Updating $ARG2 in the filter table ";
+		        set -l CMD="close /usr/sadm/sysadm/add-ons/lp/printers/filters/Form.mod2 /usr/sadm/sysadm/add-ons/lp/printers/filters/Form.modify";
+		fi;
+		if [ -n "$TFADMIN" ]; then $TFADMIN lpfilter -f $ARG2 -F $basicdata;
+		else lpfilter -f $ARG2 -F $basicdata; fi;
+		sleep 2;
+		message " ";
+	fi;
+	`$CMD
+
+close=`
+	/usr/bin/rm $basicdata;
+	unset	-e basicdata;
+	unset	-l input;
+	unset	-l output;
+	unset	-l printers;
+	unset	-l printer_types;
+	unset	-l filter_type;
+	unset	-l command;
+	unset	-e options;
+	unset	-l line;
+	`
+
+name=Input types: 
+lininfo="mod2:F1"
+nrow=2
+ncol=1
+frow=2
+fcol=20
+rows=1
+columns=24
+scroll=yes
+value=$input
+valid=`indicator -w;
+	echo "$F1" | tr " " "," | sed 's/,,/,/gp' | set -l intypes;
+    regex -v "$intypes"
+	'^[Aa][Ll][Ll]$'		'true'
+	'^[_a-zA-Z0-9]{1,14}$' 			   'true'
+	'^[_a-zA-Z0-9]{1,14}(,[_a-zA-Z0-9]{1,14})*$' 'true'
+	'^.*$'			'false'`
+invalidmsg="Invalid Entry: Input types are limited to 14 letters, numbers and underscores."
+fieldmsg='Enter the content types this filter can accept'
+
+name=Output types:
+lininfo="mod2:F2"
+nrow=3
+ncol=1
+frow=3
+fcol=20
+rows=1
+columns=24
+scroll=yes
+value=$output
+valid=`indicator -w;
+	echo "$F2" | tr " " "," | sed 's/,,/,/gp' | set -l outtypes;
+    regex -v "$outtypes"
+	'^[Aa][Ll][Ll]$'		'true'
+	'^[_a-zA-Z0-9]{1,14}$' 			   'true'
+	'^[_a-zA-Z0-9]{1,14}(,[_a-zA-Z0-9]{1,14})*$' 'true'
+	'^.*$'			'false'`
+invalidmsg="Invalid Entry: Output types are limited to 14 letters, numbers and underscores."
+
+name=Printer types: 
+lininfo="mod2:F3"
+nrow=4
+ncol=1
+frow=4
+fcol=20
+rows=1
+columns=24
+scroll=yes
+value=$printer_types
+valid=`
+	indicator -w;
+	rm -f /tmp/valid;
+	echo "$F3" | tr "," " " | set -e prtypes;
+	echo "$F3" | tr " " "," | sed 's/,,/,/gp' | set -e prlist;
+    	regex -v "$prlist"
+	'^[_a-zA-Z0-9]{1,14}$' 			   'okay'
+	'^[_a-zA-Z0-9]{1,14}(,[_a-zA-Z0-9]{1,14})*$' 'okay'
+	'^.*$'			'unk' | set -l lookat;
+	if [ "$lookat" = "okay" ];
+	then
+		set -l msg="Invalid Entry: Printer types must be known to terminfo.";
+		shell "
+		for i in $prtypes
+		do
+			if tput -T \$i longname 2> /dev/null
+			then
+				echo "true" >> /tmp/valid
+			else
+				echo "false" > /tmp/valid
+			fi
+		done
+		";
+	else
+		echo false > /tmp/valid;
+		set -l msg="Invalid Entry: Printer types are limited to 14 letters, numbers and underscores.";
+	fi;
+	if fmlgrep false /tmp/valid > /dev/null;
+	then
+		echo false;
+	else
+		echo true;
+	fi;
+`
+fieldmsg='Enter the types of printers with which this filter may be used'
+invalidmsg=$msg
+
+name=Printers: 
+lininfo="mod2:F4"
+nrow=5
+ncol=1
+frow=5
+fcol=20
+rows=1
+columns=24
+scroll=yes
+value=$printers
+rmenu=OPEN MENU $OBJ_DIR/Menu.pr.ch
+fieldmsg='Enter the printers on which the filter may be used'
+choicemsg='MARK printer choices then press [ENTER]'
+valid=`indicator -w;
+	unset -l bad_one;
+	set -l name_valid=true;
+	echo "$F4" | tr " ," "[\012*]" | regex -e '^(.*)$0$'
+	'`fmlgrep "^$m0\$" $name_px || set -l bad_one="$m0" -l name_valid=false`' > /dev/null`$name_valid
+invalidmsg="$bad_one invalid printer - press [CHOICES] for selection"
+
+
+
+name=Fast or slow filter:
+lininfo="mod2:F5"
+nrow=6
+ncol=1
+frow=6
+fcol=21
+rows=1
+columns=4
+value=$filter_type
+rmenu={ slow fast }
+menuonly=true
+fieldmsg='Enter "fast" if the filter expects to directly control a printer'
+invalidmsg='Filter type must be either "fast" or "slow".'
+
+name=Filter command:
+value=$command
+lininfo="mod2:F6"
+nrow=1
+ncol=1
+frow=1
+fcol=17
+rows=1
+columns=30
+scroll=true
+fieldmsg='Enter the full pathname of the command with fixed options'
+valid=`indicator -w;
+	if [ -z "$F6" ];
+	then
+		set -l badval="Invalid Entry: The filter command is mandatory";
+		echo false;
+	else
+		echo "$F6" | fmlcut -d' ' -f1 | set -l filtercmd;
+		if shell type "$filtercmd" | fmlgrep "not found" > /dev/null; 
+		then
+			set -l badval="$filtercmd is not a pathname to an executable command";
+			echo false;
+		else
+			echo true;
+		fi;
+	fi`
+invalidmsg="$badval"
+
+name=Existing option templates:
+lininfo="mod2:F7"
+nrow=8
+ncol=1
+frow=9
+fcol=1
+rows=1
+columns=44
+scroll=true
+show=`test -n "$options"`
+rmenu=OPEN MENU $OBJ_DIR/Menu.template $ARG1 
+fieldmsg="Press CHOICES to select existing templates to keep"
+choicemsg="MARK templates to keep then press ENTER"
+
+name=New filter options?
+lininfo="mod2:F8"
+nrow=11
+ncol=1
+frow=11
+fcol=22
+rows=1
+columns=4
+value=yes
+menuonly=true
+rmenu={ yes no }
+fieldmsg='New filter option templates?'
+invalidmsg="The only valid responses are yes and no."

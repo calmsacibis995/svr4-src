@@ -1,0 +1,24 @@
+#!/sbin/sh
+
+#ident	"@(#)idcmd:idreboot	1.1.1.1"
+#
+# Reboot script for installable drivers. Forces the user to
+# reboot in a consistent manner.
+#
+
+sync
+message -cu "To complete \
+the install/remove process a shutdown is now being initiated automatically.\n
+Make sure your floppy drive is empty.  If you are installing or removing \
+controller boards, you may power down the system after the shutdown \
+has completed."
+if  [ "$?" = "0" ]
+then
+	cd /
+	/etc/shutdown -g0 -y
+	exec sleep 100
+else
+	message -d "The UNIX System has now been reconfigured, \
+but you have not initiated a system reboot.\
+  You should manually reboot as soon as possible."
+fi

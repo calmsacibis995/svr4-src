@@ -1,0 +1,68 @@
+#ident	"@(#)cmd-inet:etc/inet/rc.inet	1.3.4.3"
+
+# Inet startup script run from /etc/init.d/inetinit
+
+LOG=/tmp/inet.start
+exitcode=0
+
+# Label the error log
+echo "The following commands were run from /etc/inet/rc.inet" > $LOG
+
+# Enable software loopback driver.
+echo "/usr/sbin/ifconfig lo0 localhost up" >>$LOG
+      /usr/sbin/ifconfig lo0 localhost up  >>$LOG 2>>$LOG
+if [ $? -ne 0 ]
+then
+	exitcode=1
+fi
+
+# Default (single interface, not a gateway)
+EMDMAJOR=0
+echo "/usr/sbin/ifconfig emd${EMDMAJOR} `uname -n` up -trailers" >>$LOG
+      /usr/sbin/ifconfig emd${EMDMAJOR} `uname -n` up -trailers  >>$LOG 2>>$LOG
+if [ $? -ne 0 ]
+then
+	exitcode=1
+fi
+
+# Hosts acting as gateways
+# To bring up your system as a gateway, you must:
+#	set IPFORWARDING to 1 in /etc/master.d/ip, mkboot /boot/IP,
+#		and build a new /unix
+#	edit /etc/inet/networks: add network names and number
+#	edit /etc/inet/hosts: create unique host name for each interface
+#	edit /etc/inet/strcf: call cenet to link internet modules/drivers
+#		above each interface
+#	edit /etc/inet/rc.inet (this file):
+#		comment out the default ifconfig entry above
+#		un-comment the ifconfig entries below, changing X, Y to emd
+#		  device (slot) numbers and nameX, nameY to your host names 
+#		  for each interface.
+#		un-comment the line that starts in.routed
+# See 'Expanding Your Network' in the Internet Administrator's Guide for
+# more info
+#
+#echo "/usr/sbin/ifconfig emdX nameX up -trailers" >>$LOG
+#      /usr/sbin/ifconfig emdX nameX up -trailers  >>$LOG 2>>$LOG
+#if [ $? -ne 0 ]
+#then
+#	exitcode=1
+#fi
+#echo "/usr/sbin/ifconfig emdY nameY up -trailers" >>$LOG
+#      /usr/sbin/ifconfig emdY nameY up -trailers  >>$LOG 2>>$LOG
+#if [ $? -ne 0 ]
+#then
+#	exitcode=1
+#fi
+
+# Add lines here to set up routes to gateways, start other daemons, etc.
+#/usr/sbin/in.routed -q
+
+# return status to /etc/init.d/inetinit
+if [ $exitcode -eq 0 ]
+then
+	rm -f $LOG
+else
+	echo "\nERROR STARTING NETWORK:  Full error message in $LOG\n"
+fi
+exit $exitcode

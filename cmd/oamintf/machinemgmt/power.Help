@@ -1,0 +1,29 @@
+#ident	"@(#)oamintf:machinemgmt/power.Help	1.1.1.1"
+ABSTRACT:
+	The "shutdown" task will shut down your system.  It stops all
+	running programs, closes any open files, writes out information to
+	disk (such as directory information).
+	
+	The "shutdown" task displays all users currently logged into the
+	system before it asks you to specify a "grace period".  The grace
+	period is the amount of time (in seconds) the machine will wait
+	before it actually shuts down.  Users who are logged in will be
+	notified that they must log off within this period or the machine
+	will log them off automatically.
+	
+	NOTE: the visual interface is not available after you have powered
+	down the system.  After you bring the machine back to a multi-user
+	mode, you will need to reinvoke "sysadm" to use it again.
+
+Form.power:power:Number of Seconds Before Shutdown Starts
+	Enter the number of seconds to wait before shutting down the
+	machine.  Users will be warned to clean up and log off in the
+	amount of time you specify here.  You may specify any integer
+	between '0' and '9999'.
+	
+	Do not enter '0' unless absolutely necessary because it causes an
+	immediate shutdown.  It does not allow other users to clean up and
+	log off.
+	
+	WARNING:  Once you press SAVE, the shutdown task cannot be stopped
+	and your OA&M session will be terminated.

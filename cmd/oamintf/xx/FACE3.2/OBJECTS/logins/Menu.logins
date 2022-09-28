@@ -1,0 +1,21 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/logins/Menu.logins	1.1"
+
+menu=User Logins
+lifetime=longterm
+#help=open text $VMSYS/OBJECTS/Text.h "User Logins" logins/T.hlogins
+
+name=Add
+action=nop
+show=false
+
+name=Change
+action=nop
+show=false
+
+name=Delete
+action=nop
+show=false
+
+name=Display
+action=nop
+show=false

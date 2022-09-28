@@ -1,0 +1,11 @@
+#ident	"@(#)bkrs:rsintf.d/restores/Help	1.3"
+
+ABSTRACT: Restore Service
+	The subcommands in the "restore_service" menu provide functions for
+	managing the restore side of the backup and restore service.  The
+	functions provided allow you to request restores of files,
+	directories, partitions or file systems, to display the status of
+	pending restore requests and to manage operator interactions with
+	restore requests.
+
+TITLE: Restore Service

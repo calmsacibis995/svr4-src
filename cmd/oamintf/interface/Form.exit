@@ -1,0 +1,53 @@
+#ident	"@(#)oamintf:interface/Form.exit	1.1"
+
+################################################################################
+#
+#	Module Name: Form.exit
+#
+#	Author: Mike Coufal
+#
+#	Date: 10/87
+#
+#	Calling Sequence:
+#
+#	Functional Description:
+#
+#	How:
+#
+#	Functions Called:
+#
+#	Issues:
+#		1) Determine how to handle SLK's - whether they should be
+#		   defined in an initialization file or what?
+#
+#		2) Look closer at help files and have them edited by
+#	 	   documentation as well as error messages.  Determine
+#		   if there is more than 1 help screen per component.
+#
+#			   
+################################################################################
+
+Form="Exit OAM Interface"
+
+#help=OPEN TEXT $SYSDIR/Text.oamhelp 
+
+begrow=any
+begcol=any
+
+done=`regex -e -v "$F1"
+	 'yes' 'EXIT'
+	 'no'  'CLOSE'`
+
+name=Do you want to quit the interface?
+nrow=1
+ncol=2
+frow=1
+fcol=37
+rows=1
+columns=3
+value=yes
+rmenu={ yes no }
+menuonly=TRUE
+invalidmsg="Please enter yes or no and press [SAVE]."
+choicemsg="Please enter yes or no and press [SAVE]."
+fieldmsg="Please enter yes or no and press [SAVE]."

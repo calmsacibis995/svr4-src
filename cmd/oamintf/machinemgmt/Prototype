@@ -1,0 +1,32 @@
+#ident	"@(#)oamintf:machinemgmt/Prototype	1.2"
+!MENU=/usr/sadm/sysadm/menu
+!INTFBIN=/usr/sadm/sysadm/bin
+
+d intf $MENU/machinemgmt 0755 bin bin
+v intf $MENU/machinemgmt/machine.menu 0644 bin bin
+d intf $MENU/machinemgmt/boot 0755 bin bin
+f intf $MENU/machinemgmt/boot/Text.boot 0644 bin bin
+f intf $MENU/machinemgmt/boot/Text.booterr 0644 bin bin
+d intf $MENU/machinemgmt/firm 0755 bin bin
+f intf $MENU/machinemgmt/firm/Text.firm 0644 bin bin
+f intf $MENU/machinemgmt/firm/Form.firm 0644 bin bin
+d intf $MENU/machinemgmt/flpky 0755 bin bin
+f intf $MENU/machinemgmt/flpky/Form.flpky 0644 bin bin
+f intf $MENU/machinemgmt/flpky/Text.flpky1 0644 bin bin
+f intf $MENU/machinemgmt/flpky/Text.flpky2 0644 bin bin
+d intf $MENU/machinemgmt/power 0755 bin bin
+f intf $MENU/machinemgmt/power/Text.power 0644 bin bin
+f intf $MENU/machinemgmt/power/Form.power 0644 bin bin
+d intf $MENU/machinemgmt/reboot 0755 bin bin
+f intf $MENU/machinemgmt/reboot/Text.reboot 0644 bin bin
+f intf $MENU/machinemgmt/reboot/Form.reboot 0644 bin bin
+d intf $MENU/machinemgmt/whoson 0755 bin bin
+f intf $MENU/machinemgmt/whoson/Text.whoson 0644 bin bin
+f intf $INTFBIN/chgstate 0755 bin bin
+f intf $MENU/machinemgmt/Help 0644 bin bin
+f intf $MENU/machinemgmt/boot/Help 0644 bin bin
+f intf $MENU/machinemgmt/firm/Help 0644 bin bin
+f intf $MENU/machinemgmt/flpky/Help 0644 bin bin
+f intf $MENU/machinemgmt/power/Help 0644 bin bin
+f intf $MENU/machinemgmt/reboot/Help 0644 bin bin
+f intf $MENU/machinemgmt/whoson/Help 0644 bin bin

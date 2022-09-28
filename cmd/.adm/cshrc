@@ -1,0 +1,27 @@
+#	Copyright (c) 1987, 1988 Microsoft Corporation
+#	  All Rights Reserved
+
+#	This Module contains Proprietary Information of Microsoft
+#	Corporation and should be treated as Confidential.
+
+#ident	"@(#)adm:cshrc	1.1.1.1"
+
+umask 022	# set default file creation mask
+
+# calculate available disk space in root filesystem.
+	echo ""		# skip a line
+	/bin/sh /etc/dfspace
+
+# issue message of the day
+	echo ""		# skip a line
+	if ( -r /etc/motd ) cat /etc/motd
+
+# set default attributes for terminal
+	stty erase '^h' echoe
+
+	if ( $?LOGTTY == 0) set LOGTTY = `tty`
+
+# check mailbox and news bulletins
+	mail -e
+	if ( $status == 0 ) echo "\nyou have mail"
+	if ( $LOGNAME != root ) news -n

@@ -1,0 +1,110 @@
+#ident	"@(#)bkrs:basic.d/sched/Form.chg	1.1.2.1"
+
+form="Change Scheduled Backup Information"
+
+help=open text /usr/vmsys/OBJECTS/Text.h "$TITLE" backup/sched/T.hadd"$ITEM"
+
+done=`regex -v "$F6" '^$' "00" '(.*)$0' '$m0' | set -l Minute`open $OBJ_DIR/sched/Text.chgcfm "$F1" "$Month" "$Day" "$WeekN" "$F5" "$Minute" "$WeekD" "$ARG2"
+
+close=`rm -f /tmp/trsched.$VPID`
+
+`indicator -w; getchg "$ARG1" /tmp/trsched.$VPID "$ARG2" | regex -e '^Task(.*)$0 Month(.*)$1 Day(.*)$2 WeekN(.*)$3 Hour(.*)$4 Min(.*)$5 WeekD(.*)$6$' '`set -l Type="$m0" -l Month="$m1" -l Day="$m2" -l WeekN="$m3" -l Hour="$m4" -l Minute="$m5" -l WeekD="$m6"`'`
+
+name=Type of Backup:
+nrow=1
+ncol=2
+rows=1
+columns=26
+frow=1
+fcol=18
+value=const "$Type"
+rmenu={ "System Backup" "Incremental System Backup" }
+menuonly=true
+invalidmsg=\"$F1\" is not a valid choice. Strike CHOICES for valid choices.
+fieldmsg=`set -l TITLE="Type of Backup" -l ITEM=1`"Strike the CHOICES function key. Strike SAVE when you complete the form."
+
+name=Month(s) of the Year:
+nrow=3
+ncol=2
+rows=1
+columns=24
+frow=3
+fcol=24
+value=const ${(/tmp/trsched.$VPID)Month}
+rmenu=open menu $OBJ_DIR/sched/Menu.month
+valid=`ts_valid 1 12 "$F2" | set -l Month; regex -v "$Month" '^[^ENR].*$'`
+invalidmsg=`regex -v "$Month" 
+		'^E(.*)$0$' '"$m0" is not a valid month. Strike CHOICES for valid choices.'
+		'^R(.*)$0$' '"$m0" is a redundant input.'
+		'^Nul$' '"Month of the Year" is a mandatory field. Strike CHOICES for choices.'`
+fieldmsg=`set -l TITLE="Month(s) of the Year" -l ITEM=2`"Strike the CHOICES function key. Strike SAVE when you complete the form."
+
+name=Day(s) of the Month:
+nrow=5
+ncol=2
+rows=3
+columns=21
+frow=5
+fcol=23
+wrap=true
+value=const ${(/tmp/trsched.$VPID)Day}
+rmenu=open menu $OBJ_DIR/sched/Menu.day
+valid=`ts_valid 1 31 "$F3" | set -l Day; regex -v "$Day" '^[^ER].*$'`
+invalidmsg=`regex -v "$Day" 
+		'^R(.*)$0$' '"$m0" is a redundant input.'
+		'^E(.*)$0$' '"$m0" is not a valid day of the month. Strike CHOICES for valid choices.'`
+fieldmsg=`set -l TITLE="Day(s) of the Month" -l ITEM=3`"Strike the CHOICES function key. Strike SAVE when you complete the form."
+
+name=Day(s) of the Week:
+nrow=9
+ncol=2
+rows=1
+columns=15
+frow=9
+fcol=22
+value=const ${(/tmp/trsched.$VPID)Week}
+rmenu=open menu $OBJ_DIR/sched/Menu.week
+valid=`ts_valid 0 6 "$F4" | set -l WEEK; regex -e -v "$WEEK"
+		'^N(.*)$0 D(.*)$1$' '`set -l WeekN=$m0 -l WeekD=$m1`'
+		'^all$' '`set -l WeekN=all -l WeekD=\*`'`
+invalidmsg=`regex -v "$WEEK" 
+		'^R(.*)$0$' '"$m0" is a redundant input.'
+		'^E(.*)$0$' '"$m0" is not a valid day of the week. Strike CHOICES for valid choices.'`
+fieldmsg=`set -l TITLE="Day(s) of the Week" -l ITEM=4`"Strike the CHOICES function key. Strike SAVE when you complete the form."
+
+name=Time of the Day:
+nrow=11
+ncol=2
+rows=1
+columns=2
+frow=11
+fcol=19
+value=const "$Hour"
+rmenu={ 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 }
+choicemsg=const "Move to an item with the arrow keys and strike ENTER to select."
+menuonly=true
+invalidmsg=`regex -v "$F5" '^$' "\"Hour\" is a mandatory field. Strike CHOICES for choices."
+		'^.*$' "\"$F5\" is not a valid choice. Strike CHOICES for valid choices."`
+fieldmsg=`set -l TITLE="Time of the Day" -l ITEM=5`"Strike the CHOICES function key. Strike SAVE when you complete the form."
+
+name=":"
+nrow=11
+ncol=21
+rows=1
+columns=2
+frow=11
+fcol=22
+value=const "$Minute"
+rmenu={ 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 
+	20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 
+	40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 }
+choicemsg=const "Move to an item with the arrow keys and strike ENTER to select."
+valid=`regex -v "$F6" '^$' "00" '^([0-5][0-9])$0$' '$m0'`
+invalidmsg=\"$F6\" is not a valid choice. Strike CHOICES for valid choices.
+fieldmsg=`set -l TITLE="Time of the Day" -l ITEM=5`"Strike the CHOICES function key. Strike SAVE when you complete the form."
+
+name=""
+button=8
+action=nop
+
+`indicator -w`

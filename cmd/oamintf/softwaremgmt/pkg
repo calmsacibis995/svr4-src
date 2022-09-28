@@ -1,0 +1,15 @@
+#ident	"@(#)oamintf:softwaremgmt/pkg	1.2.1.1"
+
+if [ "$1" = "installed" ]
+then
+	dir=/var/sadm/pkg
+else
+	dir=$1
+fi
+pkgs=`echo go | pkginfo -L -d$dir $2`
+if [ "$pkgs" != "" -a $? -eq 0 ]
+then
+	exit 1
+else
+	exit 0
+fi

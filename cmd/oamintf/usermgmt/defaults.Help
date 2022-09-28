@@ -1,0 +1,57 @@
+#ident	"@(#)oamintf:usermgmt/defaults.Help	1.5.2.1"
+ABSTRACT:
+	The "defaults" task allows you to change some of the defaults
+	used when the "add user" subtask creates a new login.  Changing
+	the defaults does not affect any existing logins, only ones 
+	added from now on.  For each field, the current setting appears
+	as the default.  The following fields are displayed:
+
+	Primary  group membership:
+	Base home directory:
+	Skeletal home directory:
+	Shell:
+	Login Inactivity:
+	Login expiration date:
+	
+Form.defaults:pgrpmem:Primary Group Membership
+	Enter the group you would like to have as the default primary group
+	on all subsequent user login definitions.  You may enter the group
+	name or the numerical group id.  You must enter an existing group.
+	The default setting delivered with the system is "other,1".
+
+Form.defaults:homdir:Base Home Directory
+	Enter the base directory you would like to have used for all
+	subsequent user login definitions.  For all subsequent user login
+	definitions, the default home directory will be the result of
+	appending the login to the end of the base home directory value.
+	The directory name you enter must be an existing directory.  The
+	default setting delivered with the system is "/home".
+
+Form.defaults:skeldir:Skeletal Home Directory
+	Enter the name of skeletal directory.  The skeletal directory is a
+	directory that administrators can use with the "-k" option to the
+	"useradd" shell command as the skeletal directory for new logins.
+	It contains standard files to copy into newly-created home directory
+	(such as a standard ".profile").  The directory name you enter must
+	be an existing directory.  The default setting delivered with the
+	system is "/etc/skel".
+
+Form.defaults:shell:Shell
+	Enter the name of the default shell to be given to all subsequent
+	user login definitions.  The filename you enter must exist and it
+	must be executable.  The default setting delivered with the system
+	is "/sbin/sh".
+
+Form.defaults:inact:Login Inactivity
+	Enter the number of days of login activity after which user cannot
+	login.  A "0" means that you don't wish to a default.  The default
+	setting delivered with the system is "0".
+
+Form.defaults:expire:Login Expiration Date
+	Enter the date beyond which a user cannot log in.  A blank line
+	means that you don't wish to set a default.  This date must be a
+	future date and must be in the following format:
+
+		mm/dd/yy
+	      
+	The default setting delivered with the system is no expiration.

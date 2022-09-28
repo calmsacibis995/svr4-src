@@ -1,0 +1,34 @@
+#ident	"@(#)oamintf:devices/remove/Text.rmok	1.1.1.1"
+################################################################################
+#	Module Name: Text.rmok
+################################################################################
+Title="Remove Device"
+
+framemsg=`readfile $INTFBASE/nodev.msg`
+lifetime=shortterm
+
+`devfree $VPID $ARG1 2>/dev/null`
+
+rows=6
+columns=75
+
+text="	
+$ARG1 has been removed from the system as requested."
+
+altslks
+
+name=
+button=9
+action=nop
+
+name=
+button=10
+action=nop
+
+name=
+button=11
+action=nop
+
+name=CANCEL
+button=14
+action=CLEANUP

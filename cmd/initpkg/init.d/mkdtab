@@ -1,0 +1,11 @@
+#ident	"@(#)initpkg:init.d/mkdtab	1.1.3.1"
+
+#
+# Update device.tab and dgroup.tab files to reflect configuration.
+# Script runs at system installation time.
+#
+
+if [ -x /usr/sadm/sysadm/bin/mkdtab ]
+then
+	/usr/sadm/sysadm/bin/mkdtab >/dev/null 2>&1
+fi

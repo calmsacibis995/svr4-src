@@ -1,0 +1,18 @@
+ABSTRACT:
+	This task allows the administrator of a system to remove a FACE
+	environment for a FACE user on the system.
+	
+	NOTE: This involves modifying the .profile of the user.  A line 
+	      is removed from the end of the .profile.
+
+form:F1:User's Login ID
+	Enter the login ID of the user whose FACE environment you wish to
+	remove. This login must have already been given a FACE environment.
+	
+	This field has no default value.
+
+text:F1:Results of Removing the FACE Environment for a FACE User
+	This frame contains the results of the execution of the command that
+	was used to remove the FACE environment for the specified FACE user.
+	If any errors occurred, you will also see an explanatory message
+	describing the errors.

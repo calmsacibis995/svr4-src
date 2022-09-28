@@ -1,0 +1,51 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkrem/modify/Help	1.2.1.1"
+
+ABSTRACT: Modify Entries in Backup Reminder Schedule
+	The "modify" task allows you to select an entry in the backup
+	reminder schedule whose contents you want to modify.  Press
+	[CHOICES] to display the current backup reminder schedule and
+	to determine the number of the line you want to modify.  Press
+	[CANCEL] to return to the line number form.  Enter the number
+	of the line to be modified and then press [SAVE] to bring up
+	the form with the contents of that backup reminder schedule
+	entry.
+	
+TITLE: Modify Entries in Backup Reminder Schedule
+
+values:
+	This form lists the current values for the backup reminder schedule
+	line you selected and allows you to change any or all of them.  Make
+	the changes you want and then press [SAVE] to make the changes
+	permanent or press [CANCEL] to leave the entry as it is currently.
+
+modify:F1:
+	"Line number:"  Enter the number corresponding to the backup reminder
+	schedule line whose contents you want to modify.  Press [CHOICES] to
+	list the lines in the backup reminder schedule with their associated
+	line numbers.
+
+values:F1:
+	"Time:"  Enter the time of day at which the backup reminder should
+	appear.  The time is represented by a string of the form hh:mm, where
+	hh is 00-23 and mm is 00-59.  For example, for the backup reminder to
+	appear at 8:15pm, enter "20:15".
+
+values:F2:
+	"Days of week:"  Enter a list of weekdays on which the reminder is to
+	appear.  Days are represented by the digits 0 (=Sunday) to 6
+	(=Saturday).  You may enter the keyword "all" if the backup reminder
+	is to appear every day.
+
+values:F3:
+	"Months:"  Enter a list of months (1-12) in which the reminder is to
+	appear.  You may represent ranges of months by month numbers
+	separated by a "-".  For example, for the reminder to appear from
+	July through December, enter "7-12".  You may enter the keyword "all"
+	if the reminder is to appear every month.
+
+values:F4:
+	"Originating names:"  Enter the names of the originating objects
+	about whose backup you want to be reminded.  For example, if you want
+	to be reminded to back up the "/usr" file system, enter "/usr".  You
+	may enter the keyword "all" to be reminded to back up all file
+	systems and data partitions (if any).

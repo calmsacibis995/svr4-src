@@ -1,0 +1,9 @@
+#ident	"@(#)oamintf:files/Help	1.1"
+ABSTRACT:
+	The subcommands in the "files" menu provide functions for you
+	to manage file systems.  Using these commands you may check
+	for and repair errors on a specific file system, monitor
+	disk usage for all file systems, track files based on age
+	or size, list all file systems currently mounted on your
+	system, create a new file system, and mount or unmount a 
+	file system.

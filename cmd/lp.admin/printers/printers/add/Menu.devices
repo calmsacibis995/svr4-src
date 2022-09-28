@@ -1,0 +1,15 @@
+#ident	"@(#)lp.admin:printers/printers/add/Menu.devices	1.1"
+
+################################################################################
+#
+#	Module Name:Menu.devices
+#
+#	Functional Description: This menu is a popup menu for devices selection.
+################################################################################
+menu="Devices Selection"
+
+`readfile $INTFBASE/ssmenu.msg | message -s`
+
+`q-add COLLECT; cat /usr/tmp/devices | regex '^(.*)$0'  
+'name="$m0"
+action=`set -l "Form_Choice=$m0"`CLOSE'`

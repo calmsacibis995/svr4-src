@@ -1,0 +1,414 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FILTER/Form.add	1.1"
+form="Add a Filter"
+lifetime=longterm
+#help=open text $VMSYS/OBJECTS/Text.h "$T" "$F"
+done=`indicator -w;/usr/vmsys/admin/.chkuser -c "/usr/vmsys/admin/PS/FILTER/add :$ARG1: :$F2: :$F3: :$F4: :$F5: :$F6: :$F7: :$F9: :$F12: :$F15: :$F18: :$F21: :$F24: :$F27: :$F30: :$F33: :$F36: :$F39: :$F41: :$F42: :$F43: :$F44: :$F45: :$F46: :$F47: :$F48: :$F49: :$F50: :$F51: :$F52:" | regex -e 
+		1 '`message \"Program and options\" is a mandatory field. Provide a program for that field.`'
+		0 "open $VMSYS/OBJECTS/PS/FILTER/Text.addcfm "$ARG1""`
+
+`/usr/vmsys/admin/PS/FILTER/pname $VPID`
+
+name=Filter name:
+nrow=1
+ncol=2
+rows=1
+columns=14
+frow=1
+fcol=14
+value=$ARG1
+inactive
+
+name=Input content types:
+nrow=2
+ncol=2
+rows=2
+columns=45
+frow=2
+fcol=22
+rmenu=open menu $VMSYS/OBJECTS/PS/FILTER/Menu.input
+value=any
+fieldmsg=`set -l T="Input Type" -l F=PS/FILTER/T.hadd2`Strike the CHOICES function key. Strike SAVE when you complete the form.
+wrap=true
+
+name=Output content types:
+nrow=4
+ncol=2
+rows=2
+columns=45
+frow=4
+fcol=23
+value=any
+rmenu=open menu $VMSYS/OBJECTS/PS/FILTER/Menu.output
+fieldmsg=`set -l T="Output Type" -l F=PS/FILTER/T.hadd3`Strike the CHOICES function key. Strike SAVE when you complete the form.
+wrap=true
+
+name=Types of printers filter can be used with:
+nrow=6
+ncol=2
+rows=2
+columns=30
+frow=6
+fcol=44
+value=any
+rmenu=open menu /usr/vmsys/OBJECTS/PS/FILTER/Menu.ptype 
+valid=`/usr/vmsys/admin/PS/FILTER/mitem "$F4" type | set -l TYPE; regex -v "$TYPE" Y`
+fieldmsg=`set -l T="Printer Types" -l F=PS/FILTER/T.hadd4`Strike the CHOICES function key. Strike SAVE when you complete the form.
+invalidmsg=$TYPE is an invalid printer type. Strike CHOICES for valid choices.
+wrap=true
+
+name=Names of printers filter can be used with:
+nrow=8
+ncol=2
+rows=2
+columns=30
+frow=8
+fcol=44
+value=any
+rmenu=open menu /usr/vmsys/OBJECTS/PS/FILTER/Menu.pname /usr/tmp/pname.$VPID
+valid=`/usr/vmsys/admin/PS/FILTER/mitem "$F5" name $VPID | set -l NAME; regex -v "$NAME" Y`
+fieldmsg=`set -l T="Printer Names" -l F=PS/FILTER/T.hadd5`Strike the CHOICES function key. Strike SAVE when you complete the form.
+invalidmsg=$NAME is not a printer on your system. Strike CHOICES for valid choices.
+wrap=true
+
+name=Slow filter:
+nrow=10
+ncol=2
+rows=1
+columns=3
+frow=10
+fcol=14
+value=Yes
+rmenu={ Yes No }
+menuonly=true
+fieldmsg=`set -l T="Filter Types" -l F=PS/FILTER/T.hadd6`Strike the CHOICES function key. Strike SAVE when you complete the form.
+
+name=Program and options to invoke filter:
+nrow=11
+ncol=2
+rows=1
+columns=20
+frow=11
+fcol=39
+valid=`echo "$F7" | regex '^.'`
+fieldmsg=`set -l T="Program" -l F=PS/FILTER/T.hadd7`Type the name of the program and the options to run for the filter.
+invalidmsg=\"Program and options\" is a mandatory field. Type the name of a program.
+
+name=INPUT *
+nrow=12
+ncol=2
+
+name== -
+nrow=12
+ncol=10
+rows=1
+columns=1
+frow=12
+fcol=13
+fieldmsg=`set -l T=INPUT -l F=PS/FILTER/T.hadd8`Type a single letter option to associate with INPUT.
+
+name=*
+nrow=12
+ncol=14
+
+name=OUTPUT *
+nrow=12
+ncol=20
+
+name== -
+nrow=12
+ncol=29
+rows=1
+columns=1
+frow=12
+fcol=32
+fieldmsg=`set -l T=OUTPUT -l F=PS/FILTER/T.hadd9`Type a single letter option to associate with OUTPUT.
+
+name=*
+nrow=12
+ncol=33
+
+name=TERM *
+nrow=12
+ncol=39
+
+name== -
+nrow=12
+ncol=49
+rows=1
+columns=1
+frow=12
+fcol=52
+fieldmsg=`set -l T=TERM -l F=PS/FILTER/T.hadd10`Type a single letter option to associate with TERM.
+
+name=*
+nrow=12
+ncol=53
+
+name=CPI *
+nrow=13
+ncol=2
+
+name== -
+nrow=13
+ncol=10
+rows=1
+columns=1
+frow=13
+fcol=13
+fieldmsg=`set -l T=CPI -l F=PS/FILTER/T.hadd11`Type a single letter option to associate with CPI.
+
+name=*
+nrow=13
+ncol=14
+
+name=LPI *
+nrow=13
+ncol=20
+
+name== -
+nrow=13
+ncol=29
+rows=1
+columns=1
+frow=13
+fcol=32
+fieldmsg=`set -l T=LPI -l F=PS/FILTER/T.hadd12`Type a single letter option to associate with LPI.
+
+name=*
+nrow=13
+ncol=33
+
+name=LENGTH *
+nrow=13
+ncol=39
+
+name== -
+nrow=13
+ncol=49
+rows=1
+columns=1
+frow=13
+fcol=52
+fieldmsg=`set -l T=LENGTH -l F=PS/FILTER/T.hadd13`Type a single letter option to associate with LENGTH.
+
+name=*
+nrow=13
+ncol=53
+
+name=WIDTH *
+nrow=14
+ncol=2
+
+name== -
+nrow=14
+ncol=10
+rows=1
+columns=1
+frow=14
+fcol=13
+fieldmsg=`set -l T=WIDTH -l F=PS/FILTER/T.hadd14`Type a single letter option to associate with WIDTH.
+
+name=*
+nrow=14
+ncol=14
+
+name=PAGES *
+nrow=14
+ncol=20
+
+name== -
+nrow=14
+ncol=29
+rows=1
+columns=1
+frow=14
+fcol=32
+fieldmsg=`set -l T=PAGES -l F=PS/FILTER/T.hadd15`Type a single letter option to associate with PAGES.
+
+name=*
+nrow=14
+ncol=33
+
+name=CHARSET *
+nrow=14
+ncol=39
+
+name== -
+nrow=14
+ncol=49
+rows=1
+columns=1
+frow=14
+fcol=52
+fieldmsg=`set -l T=CHARSET -l F=PS/FILTER/T.hadd16`Type a single letter option to associate with CHARSET.
+
+name=*
+nrow=14
+ncol=53
+
+name=FORM *
+nrow=15
+ncol=2
+
+name== -
+nrow=15
+ncol=10
+rows=1
+columns=1
+frow=15
+fcol=13
+fieldmsg=`set -l T=FORM -l F=PS/FILTER/T.hadd17`Type a single letter option to associate with FORM.
+
+name=*
+nrow=15
+ncol=14
+
+name=COPIES *
+nrow=15
+ncol=20
+
+name== -
+nrow=15
+ncol=29
+rows=1
+columns=1
+frow=15
+fcol=32
+fieldmsg=`set -l T=COPIES -l F=PS/FILTER/T.hadd18`Type a single letter option to associate with COPIES.
+
+name=*
+nrow=15
+ncol=33
+
+name=MODES
+nrow=16
+ncol=2
+rows=1
+columns=14
+frow=16
+fcol=8
+fieldmsg=`set -l T=MODES -l F=PS/FILTER/T.hadd19`Type the print mode to associate with an option, e.g., landscape.
+
+name== -
+nrow=16
+ncol=23
+rows=1
+columns=1
+frow=16
+fcol=26
+valid=`/usr/vmsys/admin/PS/FILTER/chkmode "$F41" "$F42" | set -l M; regex -v $M 0`
+fieldmsg=`set -l T=option -l F=PS/FILTER/T.hadd20;regex -v "$F41" '^.' "Type a single letter option to associate with $F41."
+			  '.*' "Strike SAVE when you complete the form."`
+invalidmsg=`echo "$M" | regex 1 "Please provide the print mode to associate with this option."
+			      2 "Please type an option to associate with $F41."`
+
+name=MODES
+nrow=16
+ncol=30
+rows=1
+columns=14
+frow=16
+fcol=36
+fieldmsg=`set -l T=MODES -l F=PS/FILTER/T.hadd19`Type the print mode to associate with an option, e.g., landscape.
+
+name== -
+nrow=16
+ncol=51
+rows=1
+columns=1
+frow=16
+fcol=54
+valid=`/usr/vmsys/admin/PS/FILTER/chkmode "$F43" "$F44" | set -l M; regex -v $M 0`
+fieldmsg=`set -l T=option -l F=PS/FILTER/T.hadd20;regex -v "$F43" '^.' "Type a single letter option to associate with $F43."
+			  '.*' "Strike SAVE when you complete the form."`
+invalidmsg=`echo "$M" | regex 1 "Please provide the print mode to associate with this option."
+			      2 "Please type an option to associate with $F43."`
+
+name=MODES
+nrow=17
+ncol=2
+rows=1
+columns=14
+frow=17
+fcol=8
+fieldmsg=`set -l T=MODES -l F=PS/FILTER/T.hadd19`Type the print mode to associate with an option, e.g., landscape.
+
+name== -
+nrow=17
+ncol=23
+rows=1
+columns=1
+frow=17
+fcol=26
+valid=`/usr/vmsys/admin/PS/FILTER/chkmode "$F45" "$F46" | set -l M; regex -v $M 0`
+fieldmsg=`set -l T=option -l F=PS/FILTER/T.hadd20;regex -v "$F45" '^.' "Type a single letter option to associate with $F45."
+			  '.*' "Strike SAVE when you complete the form."`
+invalidmsg=`echo "$M" | regex 1 "Please provide the print mode to associate with this option."
+			      2 "Please type an option to associate with $F45."`
+
+name=MODES
+nrow=17
+ncol=30
+rows=1
+columns=14
+frow=17
+fcol=36
+fieldmsg=`set -l T=MODES -l F=PS/FILTER/T.hadd19`Type the print mode to associate with an option, e.g., landscape.
+
+name== -
+nrow=17
+ncol=51
+rows=1
+columns=1
+frow=17
+fcol=54
+valid=`/usr/vmsys/admin/PS/FILTER/chkmode "$F47" "$F48" | set -l M; regex -v $M 0`
+fieldmsg=`set -l T=option -l F=PS/FILTER/T.hadd20;regex -v "$F47" '^.' "Type a single letter option to associate with $F47."
+			  '.*' "Strike SAVE when you complete the form."`
+invalidmsg=`echo "$M" | regex 1 "Please provide the print mode to associate with this option."
+			      2 "Please type an option to associate with $F47."`
+
+name=MODES
+nrow=18
+ncol=2
+rows=1
+columns=14
+frow=18
+fcol=8
+fieldmsg=`set -l T=MODES -l F=PS/FILTER/T.hadd19`Type the print mode to associate with an option, e.g., landscape.
+
+name== -
+nrow=18
+ncol=23
+rows=1
+columns=1
+frow=18
+fcol=26
+valid=`/usr/vmsys/admin/PS/FILTER/chkmode "$F49" "$F50" | set -l M; regex -v $M 0`
+fieldmsg=`set -l T=option -l F=PS/FILTER/T.hadd20;regex -v "$F49" '^.' "Type a single letter option to associate with $F49."
+			  '.*' "Strike SAVE when you complete the form."`
+invalidmsg=`echo "$M" | regex 1 "Please provide the print mode to associate with this option."
+			      2 "Please type an option to associate with $F49."`
+
+name=MODES
+nrow=18
+ncol=30
+rows=1
+columns=14
+frow=18
+fcol=36
+fieldmsg=`set -l T=MODES -l F=PS/FILTER/T.hadd19`Type the print mode to associate with an option, e.g., landscape.
+
+name== -
+nrow=18
+ncol=51
+rows=1
+columns=1
+frow=18
+fcol=54
+valid=`/usr/vmsys/admin/PS/FILTER/chkmode "$F51" "$F52" | set -l M; regex -v $M 0`
+fieldmsg=`set -l T=option -l F=PS/FILTER/T.hadd20;regex -v "$F51" '^.' "Type a single letter option to associate with $F51."
+			  '.*' "Strike SAVE when you complete the form."`
+invalidmsg=`echo "$M" | regex 1 "Please provide the print mode to associate with this option."
+			      2 "Please type an option to associate with $F51."`
+`indicator -w`

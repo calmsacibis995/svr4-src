@@ -1,0 +1,19 @@
+#ident	"@(#)pcintf:support/sys5_4/S95pci	1.1"
+
+#	Copyright (c) 1990 Locus Computing Corporation.
+#	All rights reserved.
+#
+#	@(#)S95pci	1.1	modified 2/9/90 14:28:22
+
+case "$1" in
+
+'start')
+	[ -x /usr/pci/bin/pcistart ] && /usr/pci/bin/pcistart
+	;;
+
+'stop')
+	[ -x /usr/pci/bin/pcistop ] && /usr/pci/bin/pcistop
+	;;
+
+esac
+

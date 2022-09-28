@@ -1,0 +1,49 @@
+ABSTRACT:
+	This task allows the administrator of a system to modify the FACE
+	environment for a FACE user on this system.
+
+form:F1:User's Login ID
+	Enter the login ID of the user whose FACE environment you wish to
+	modify.  The ID must specify an existing FACE user.
+	
+	This field has no default value.
+
+form:F2:Invoke FACE at Login
+	When this user logs into this system, should FACE be started 
+	automatically?  If you answer yes here, FACE is run by being exec\'d
+	from the user\'s .profile, so that when the user exits FACE, they
+	will be logged off of the system.
+	
+	The user is allowed to change this behavior by setting a preference
+	from their Preferences Menu unless you set the value of the next
+	field to no.  In that case, the user is not allowed to change the
+	behavior that you set here.
+	
+	The default value for this field is the current value.
+
+form:F3:Provide UNIX System Access
+	Should this user have access to the UNIX System shell from within
+	FACE?  This access is provided from a menu entry in the initial
+	FACE menu.  If you answer yes here, this menu entry will appear in
+	the user\'s initial FACE menu.  If you answer no here and yes in the
+	previous field, the user can never access the UNIX System shell.
+	
+	The default value for this field is the current value.
+
+form:F4:Show System Administration in FACE menu
+	Should this user have an entry in their initial FACE menu that
+	provides access to the sysadm command?  If you answer yes here,
+	this menu entry will appear.
+	
+	NOTE: Even though you provide access to the sysadm command here,
+	      unless the sysadm command exists on the user\'s PATH, they 
+	      will not be able to run sysadm.  They would also still need
+	      to know the sysadm password, if it exists.
+	
+	The default value for this field is the current value.
+
+text:F1:Results of Modifying the FACE Environment for a FACE User
+	This frame contains the results of the execution of the command that
+	was used to modify the FACE environment for a FACE user.  If any
+	errors occurred, you will also see an explanatory message describing
+	the errors.

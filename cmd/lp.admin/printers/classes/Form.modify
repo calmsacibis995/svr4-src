@@ -1,0 +1,54 @@
+#ident	"@(#)lp.admin:printers/classes/Form.modify	1.4.3.2"
+form='Modify the Membership of a Class'
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+#    if [ -s "$error" -a $RET -ne 0 ];
+#    then
+#	echo "OPEN $INTFBASE/Text.interface $OBJ_DIR Text.add";
+#    else
+#	readfile $INTFBASE/conf.msg | message;
+#	echo "TOGSLK";
+#    fi
+
+done=`if [ "$F2" = "add" ];
+      then
+	set -l CMD="OPEN FORM $OBJ_DIR/Form.mod_addpr $F1";
+      else
+	set -l CMD="OPEN FORM $OBJ_DIR/Form.mod_rempr $F1";
+      fi`$CMD
+
+name='Class Name:'
+lininfo="modify:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=14
+rows=1
+columns=14
+fieldmsg='Enter class to be modified then press [ENTER]'
+rmenu={ `ls /etc/lp/classes | /usr/bin/sort` } 
+menuonly=true
+invalidmsg="Invalid Class - Press [CHOICES] to make selection"
+choicemsg="Select class then press [ENTER]"
+
+
+name=Add or remove printers:
+lininfo="modify:F2"
+nrow=2
+ncol=1
+frow=2
+fcol=24
+rows=1
+columns=6
+value=add
+
+rmenu={ add remove }
+menuonly=TRUE
+fieldmsg="Select add or remove then press [SAVE]"
+choicemsg=const "Select add or remove then press [SAVE]"
+invalidmsg=const "ERROR: Choices are add or remove."
+
+name=RESET
+button=8
+action=RESET

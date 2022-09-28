@@ -1,0 +1,84 @@
+.ident	"@(#)as:i386/cm4defs	1.4"
+define(_SCR1,eax)dnl
+define(_SCRW1,ax)dnl
+define(_SCRB1,al)dnl
+define(_SCR2,edx)dnl
+define(_SCRW2,dx)dnl
+define(_SCRB2,dl)dnl
+define(_SCR3,ecx)dnl
+define(_SCRW3,cx)dnl
+define(_SCRB3,cl)dnl
+define(_1STREG,edi)dnl
+define(_1STREGW,di)dnl
+define(_2NDREG,esi)dnl
+define(_2NDREGW,si)dnl
+define(_3RDREG,ebx)dnl
+define(_3RDREGW,bx)dnl
+define(_3RDREGB,bl)dnl
+define(_1STARG,8(%ebp))dnl
+define(_2NDARG,12(%ebp))dnl
+define(_3RDARG,16(%ebp))dnl
+define(_4THARG,20(%ap))dnl
+define(_5THARG,24(%ap))dnl
+define(C_PROLOGUE,`define(`_RET_NO',incr(_RET_NO))define(`_F_NAME',$1)dnl
+	.text;dnl
+	.align	4;dnl
+	.globl	$1;dnl
+        .type   _F_NAME, @function;dnl
+$1:	pushl	%ebp;dnl
+	movl	%esp,%ebp`'dnl
+ifelse($2,1,`;	pushl	%edi')`'dnl
+ifelse($2,2,`;	pushl	%edi;	pushl	%esi')`'dnl
+ifelse($2,3,`;	pushl	%edi;	pushl	%esi;	pushl	%ebx')`'dnl
+ifelse($2,,`;	pushl	%edi;	pushl	%esi;	pushl	%ebx')`'dnl
+')dnl
+define(PIC_PROLOGUE,`define(`_RET_NO',incr(_RET_NO))define(`_F_NAME',$1)define(`_TEMP_LABEL',.temp`'_RET_NO)dnl
+	.text;dnl
+	.align	4;dnl
+	.globl	$1;dnl
+        .type   _F_NAME, @function;dnl
+$1:	pushl	%ebp;dnl
+	movl	%esp,%ebp;
+	pushl	%ebx`'dnl
+ifelse($2,1,`;	pushl	%edi')`'dnl
+ifelse($2,2,`;	pushl	%edi;	pushl	%esi')`'dnl
+ifelse($2,,`;	pushl	%edi;	pushl	%esi');dnl
+	call _TEMP_LABEL;dnl
+_TEMP_LABEL:  popl %ebx;dnl
+	addl $_GLOBAL_OFFSET_TABLE_+[.-_TEMP_LABEL], %ebx`'dnl
+')dnl
+define(A_PROLOGUE,`define(`_RET_NO',incr(_RET_NO))define(`_F_NAME',$1)dnl
+	.text;dnl
+	.align	4;dnl
+	.globl	$1;dnl
+        .type   _F_NAME, @function;dnl
+$1:	pushl	%ebp;dnl
+	movl	%esp,%ebp`'dnl
+')dnl
+define(I_RETURN,`define(`_RET_LAB',.RET`'_RET_NO)	jmp	_RET_LAB;	.align	4')dnl
+define(C_RETURN,`ifelse(_RET_LAB,`_RET_LAB',,_RET_LAB:undefine(`_RET_LAB'))dnl
+ifelse($1,1,`	popl	%edi;')`'dnl
+ifelse($1,2,`	popl	%esi;	popl	%edi;')`'dnl
+ifelse($1,3,`	popl	%ebx;	popl	%esi;	popl	%edi;')`'dnl
+ifelse($1,,`	popl	%ebx;	popl	%esi;	popl	%edi;')`'dnl
+	leave;dnl
+	ret;dnl
+	.align	4;dnl
+        .size   _F_NAME, . - _F_NAME')dnl
+define(PIC_RETURN,`ifelse(_RET_LAB,`_RET_LAB',,_RET_LAB:undefine(`_RET_LAB'))dnl
+ifelse($1,1,`	popl	%edi;')`'dnl
+ifelse($1,2,`	popl	%esi;	popl	%edi;')`'dnl
+ifelse($1,,`	popl	%esi;	popl	%edi;')`'dnl
+	popl	%ebx
+	leave;dnl
+	ret;dnl
+	.align	4;dnl
+        .size   _F_NAME, . - _F_NAME')dnl
+define(A_EPILOGUE,`ifelse(_RET_LAB,`_RET_LAB',,_RET_LAB:undefine(`_RET_LAB'))dnl
+	leave;dnl
+	ret;dnl
+	.align	4;dnl
+        .size   _F_NAME, . - _F_NAME')dnl
+define(C_CALL,`ifelse($6,,,`	pushl	$6;')ifelse($5,,,`	pushl	$5;')ifelse($4,,,`	pushl	$4;')ifelse($3,,,`	pushl	$3;')ifelse($2,,,`	pushl	$2;')	call	$1')dnl
+define(A_CALL,`	call	$1')dnl
+define(_RESULT,eax)dnl

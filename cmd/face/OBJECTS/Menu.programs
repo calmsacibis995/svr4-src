@@ -1,0 +1,40 @@
+#ident	"@(#)face:OBJECTS/Menu.programs	1.5"
+
+menu=Programs
+help=OPEN TEXT OBJECTS/Text.h "Programs" T.hprog
+rows=18
+framemsg="Move to an item with arrow keys and press ENTER to select the item."
+
+name="   Global Programs:"
+action=nop
+inactive=true
+show=`set -l present=false;
+if [ -r $VMSYS/lib/services -a -f $VMSYS/lib/services
+  -a -s $VMSYS/lib/services ];
+then
+	if fmlgrep 'name=' $VMSYS/lib/services > /dev/null;
+	then
+		set -l present=true;
+	fi;
+fi`${present}
+
+`readfile $VMSYS/lib/services`
+
+name="   Personal Programs:"
+action=nop
+inactive=true
+show=`set -l present=false;
+if [ -r $HOME/pref/services -a -f $HOME/pref/services
+  -a -s $HOME/pref/services ];
+then
+	if fmlgrep 'name=' $HOME/pref/services > /dev/null;
+	then
+		set -l present=true;
+	fi;
+fi`${present}
+
+`readfile $HOME/pref/services`
+
+name=UPDATE
+button=8
+action=update

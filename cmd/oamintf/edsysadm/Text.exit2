@@ -1,0 +1,25 @@
+#ident	"@(#)oamintf:edsysadm/Text.exit2	1.2"
+
+################################################################################
+#	Module Name: Text.exit2
+#	Date: August 1987
+################################################################################
+title="Package Error"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+text="
+   A duplicate entry was found in the menu information file."
+
+rows=4
+columns=65
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

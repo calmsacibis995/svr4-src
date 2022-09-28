@@ -1,0 +1,5 @@
+#ident	"@(#)alint:lib/llib-lcrypt	1.1"
+/* LINTLIBRARY */
+/* PROTOLIB1 */
+
+#include <crypt.h>

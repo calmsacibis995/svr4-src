@@ -1,0 +1,159 @@
+#ident	"@(#)lp.admin:printers/systems/Help	1.2"
+ABSTRACT:Configure Connections to Remote Systems
+	This task allows you to maintain the connections through
+	which the local LP print service can exchange print requests
+	with remote systems.  Through it, you are allowed to add new
+	connections, list existing connections, modify existing
+	connections and remove existing connections.
+	
+	NOTE: The actual functioning of these remote connections is
+	handled by the Network Services installed on this machine.
+	These remote connections MUST also be defined through Network 
+	Services for this facility to function.
+
+menu:L1:Add a New System Connection
+	This task allows you to add a new remote system connection to
+	the LP print service on this machine.
+	
+	NOTE: The actual functioning of this remote connection is
+	handled by the Network Services installed on this machine.
+	This remote connection MUST also be defined through Network 
+	Services for this new connection to function.
+
+menu:L2:Display Available System Connections
+	This tasks allows you to display the system connections that 
+	have been added to this system. It also displays a summary
+	of the definition of each connection.
+
+menu:L3:Modify a System Connection
+	This task allows you to modify a connection that has already
+	been added.
+
+menu:L4:Remove a System Connection
+	This task allows you to remove an existing remote connection.
+
+add:F1:System name
+	You must enter the name of a remote system that you wish to
+	identify to the Print Service as an available remote system.
+	This will allow you to be able to send print jobs to that
+	system and receive print jobs from that system.
+	
+	This name should already be defined thru Network Services on
+	this machine but no validation of this occurs.  The name
+	entered must be less than 256 characters long.
+	
+	There is no default for this field.
+
+add:F2:Scheduler type
+	Select the type of LP scheduler that exists on the remote system.
+	The only two valid choices are s5 (System V) or bsd (SunOS).
+	
+	The default for this field is s5.
+
+add:F3:Connection timeout
+	Specify the time period in minutes that the print service should
+	allow a network connection to be idle.  That is, if the connection
+	to the remote system is idle (ie. there is no network traffic) for
+	this number of miuntes, then drop the connection.  When there is
+	more work the connection will be re-established.
+	
+	Legal entries here are n, 0 or any integer greater than 0.  The
+	value n means never timeout (ie. once established, the connection
+	is never dropped).  The value 0 means as soon as the connection is
+	idle, drop it.  Any other integer value is the time period in
+	minutes that the connection will be allowed to remain idle before
+	it is dropped.
+	
+	The default for this field is n.
+
+add:F4:Retry period
+	Specify the length of time, in minutes, to wait before trying to
+	reestablish a connection to the remote system when the connection
+	was dropped abnormally (ie. dropped through some error, not
+	because you terminated it).
+	
+	Legal entries here are n, 0 or any integer greater than 0.  The
+	value n means do not retry dropped connections until there is more
+	work.  The value 0 means as soon as the connection is dropped, try
+	to re-establish it.  Any other integer value is the time period in
+	minutes that will pass before the connnection is re-established.
+	
+	The default for this field is 10.
+
+add:F5:Comment
+	Enter a comment that will be displayed along with the system entry
+	when the list task is used.
+	
+	Any entry here must be less than 1024 characters long.
+	
+	There is no default for this field.
+
+display:F1:System(s)
+	You must enter the names of remote systems whose definitions
+	you wish to display.  These names must already be defined as
+	remote connections for the Printer Service.  If you can not
+	recall the correct name, press CHOICES to display a list of
+	defined systems that you may choose from.  You may also enter
+	the word all to display all defined systems.
+	
+	The default for this field is all.
+
+modify:F1:System name
+	You must enter the name of a remote system whose definition
+	you wish to modify.  This name should already be defined as
+	a remote connection for Printer Service.  If you can not
+	recall the correct name, press CHOICES to display a list of
+	defined systems that you may choose from.
+	
+	There is no default for this field.
+
+modify:F2:Scheduler type
+	Select the type of LP scheduler that exists on the remote system.
+	The only two valid choices are s5 (System V) or bsd (SunOS).
+	
+	The default for this field is the current value.
+
+modify:F3:Connection timeout
+	Specify the time period in minutes that the print service should
+	allow a network connection to be idle.  That is, if the connection
+	to the remote system is idle (ie. there is no network traffic) for
+	this number of miuntes, then drop the connection.  When there is
+	more work the connection will be re-established.
+	
+	Legal entries here are n, 0 or any integer greater than 0.  The
+	value n means never timeout (ie. once established, the connection
+	is never dropped).  The value 0 means as soon as the connection is
+	idle, drop it.  Any other integer value is the time period in
+	minutes that the connection will be allowed to remain idle before
+	it is dropped.
+	
+	The default for this field is the current value.
+
+modify:F4:Retry period
+	Specify the length of time, in minutes, to wait before trying to
+	reestablish a connection to the remote system when the connection
+	was dropped abnormally (ie. dropped through some error, not
+	because you terminated it).
+	
+	Legal entries here are n, 0 or any integer greater than 0.  The
+	value n means do not retry dropped connections until there is more
+	work.  The value 0 means as soon as the connection is dropped, try
+	to re-establish it.  Any other integer value is the time period in
+	minutes that will pass before the connnection is re-established.
+	
+	The default for this field is the current value.
+
+modify:F5:Comment
+	Enter a comment that will be displayed along with the system entry
+	when the list task is used.
+	
+	Any entry here must be less than 1024 characters long.
+	
+	The default for this field is the current value.
+
+remove:F1:System(s)
+	You must enter the names of remote systems whose definitions
+	you wish to remove.  These names must already be defined as
+	remote connections for the Printer Service.  If you can not
+	recall the correct name, press CHOICES to display a list of
+	defined systems that you may choose from.

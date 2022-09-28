@@ -1,0 +1,36 @@
+#ident	"@(#)face:OBJECTS/mail/Menu.mail	1.1"
+
+menu=Mail Services
+help=OPEN TEXT OBJECTS/Text.h 'Mail Services' mail/T.hmail
+framemsg="Move to an item with arrow keys and press ENTER to select the item."
+
+`set -l MNEWTMP=/usr/tmp/$VPID-nwmail -l MSAVETMP=/usr/tmp/$VPID-svmail;
+echo > ${MNEWTMP};
+echo > ${MSAVETMP}`
+
+close=`rm -f $MNEWTMP $MSAVETMP;
+unset -l MNEWTMP -l MSAVETMP -l MFIRST -l SFIRST`
+
+
+name="Read New Mail"
+action=`if mail -e > /dev/null 2>/dev/null;
+then
+	set -l MFIRST=true;
+	echo "OPEN MENU OBJECTS/mail/Menu.nlist New $MNEWTMP %";
+else
+	message -b 1 "No mail available for \"$LOGNAME\".";
+	echo nop;
+fi`
+
+name="Read Saved Mail"
+action=`if mail -f $HOME/mbox -e > /dev/null 2>/dev/null;
+then
+	set -l SFIRST=true;
+	echo "OPEN MENU OBJECTS/mail/Menu.slist Saved $MSAVETMP &";
+else
+	message -b 1 "No mail is currently saved for \"$LOGNAME\".";
+	echo nop;
+fi`
+
+name="Send Mail"
+action=OPEN FORM OBJECTS/mail/Form.send Send "" ""

@@ -1,0 +1,10 @@
+#ident	"@(#)nadmin.rfs:other/rfs/control/Text.check	1.2"
+title="Checks Whether Remote File Sharing is Running"
+columns=50
+close=`unset RFSTAT`
+
+`readfile $INTFBASE/display.msg | message -p`
+
+`/usr/bin/rfadmin -q | set -l RFSTAT`
+text="Checking whether Remote file Sharing is running...
+${RFSTAT} "

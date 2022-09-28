@@ -1,0 +1,213 @@
+#ident	"@(#)nadmin.nfs:local/nfs/Help	1.1"
+
+list:TITLE:Lists Local Resources Automatically-Currently Shared via NFS
+modify:TITLE:Modifies Automatic-Current Sharing of a Resource via NFS
+share:TITLE:Shares a Local Resource Automatically-Immediately via NFS
+unshare:TITLE:Terminates Automatic-Current Sharing of a Resource via NFS
+
+	Choose "read-only" if you want the resource to be
+	readable but not modifiable by NFS clients.
+
+	Choose "read/write" if you want the resource to be
+	readable and modifiable.
+
+modify:rootclients:
+	Adjust the list of clients that you
+	want to have root access to the
+	directory.
+	Each name must be one of the following:
+		system
+		system.domain
+		netgroup ( if Yellow Pages is installed)
+		"all"
+
+	If you do not specify any clients for read-only
+	or read-write access, then all clients that can
+	connect to your system will have read-write access
+	to the directory.  If you specify "all"
+	in this step, then all clients will have
+	root access.
+
+modify:roclients:
+	Adjust the list of clients that you
+	want to have read-only access to the
+	directory.
+	Each name must be one of the following:
+		system
+		system.domain
+		netgroup ( if Yellow Pages is installed)
+		"all"
+
+	If you do not specify any clients for read-only
+	or read-write access, then all clients that can
+	connect to your system will have read-write access
+	to the directory.  If you specify that "all"
+	clients that can connect to your system will
+	may have read-write access, then you may still
+	exclude particular clients by specifying them
+	as read-write access in the previous step.
+
+modify:rwclients:
+	Adjust the list of clients that you
+	want to have read-write access to the
+	directory.
+	Each name must be one of the following:
+		system
+		system.domain
+		netgroup ( if Yellow Pages is installed)
+		"all"
+
+	If you do not specify any clients for read-only
+	or read-write access, then all clients that can
+	connect to your system will have read-write access
+	to the directory.  If you specify that "all"
+	clients that can connect to your system will
+	may have read-write access, then you may still
+	exclude particular clients by specifying them
+	as read-only clients in the next step.
+
+share:auth:
+	Choose "secure" if you want NFS to user
+	a more secure mechanism for verifying the
+	identities of users of the resource.
+	
+list:auto:
+	Choose "yes" to see the local resources
+	that are shared automatically when the Network
+	File System server operations begin.
+
+modify:auto:
+	Choose "yes" to modify how the resource is shared automatically when
+	Network File System service begins.
+	
+share:auto:
+	Choose "yes" to share a local resource
+	automatically when Network File System
+		service begins.
+	
+share2:rootclient:
+	Enter the name of a client system that you
+	want to have root access to the directory.
+	This name must be one of the following:
+	
+		a system
+		a netgroup(if available via Yellow Pages)
+		"all"     (allows all systems to have read-only access)
+
+	If you do not specify any clients for
+	root access, then no client will have root access
+	to the directory.
+	If you specify "all" in this step, then all clients will have
+	root access.
+
+share2:roclient:
+	Enter the name of a client system that you
+	want to have read-only access to the directory.
+	This name must be one of the following:
+
+		a system
+		a netgroup(if available via Yellow Pages)
+		"all"     (allows all systems to have read-only access)
+
+	If you do not specify any clients for read-write or
+	read-only access, then all clients that can connect
+	to your system will have read/write access to the directory.
+	If you specify "all" in this step, then all clients will have
+	read-only access, except those explicitly given read/write
+	access in the previous step.
+
+share2:rwclient:
+	Enter the name of a client system that you
+	want to have read-write access to the directory.
+	This name must be one of the following:
+
+		a system
+		a netgroup(if available via Yellow Pages)
+		"all"     (allows all systems to have read/write access)
+
+	If you do not specify any clients for read/write or
+	read-only access, then all clients that can connect
+	to your system will have read/write access to the directory.
+	If you specify that "all" clients may have read/write 
+	access, then you may still exclude particular clients by
+	specifying them as read-only clients in the next step.
+
+list:curr:
+	Choose "yes" to see the local resources
+	that are currently shared.
+
+modify:curr:
+	Choose "yes" to modify immediately how
+	the local resource is currently shared.
+	
+modify:directory:
+	Enter the pathname of a directory on the
+	local system that is currently or
+	automatically shared via NFS.
+	
+share:directory:
+	Enter the full pathname of the local directory
+	that you want to share.
+	
+modify:id:
+	Enter the user ID number that you want to be
+	assigned to unknown users who attempt to use the
+	resource.  If you do not specify a number, then
+	the default value (-2) will be chosem.
+
+share:id:
+	Enter the numeric user id (uid) that you
+	want unknown users to run under on your
+	system.
+
+share:imm:
+	Choose "yes" to share a local resource
+	immediately.
+
+modify:auth:
+	Choose "secure" if you want NFS to use
+	a more secure mechanism for verifying the
+	identities of users of the resource.
+	
+unshare:directory:
+	Enter the pathname of a directory
+	on the local sysem that is currently shared
+	or in the automatic sharing list.
+
+unshare:imm:
+	Choose "yes" to unshare the resource immediately.
+
+unshare:auto:
+	Choose "yes" to terminate the automatic
+	sharing of the resource when Network File
+	System service begins.
+
+unshar2:ok:
+	Choose whether the resource displayed shall
+	no longer be shared automatically by the
+	Network File System.
+
+unshar3:ok:
+	choose "yes" to make the resource displayed
+	no longer available to remote systems by the
+	Network File System.
+
+modify:id:
+	Enter the user ID number that you want to be
+	assigned to unknown users who attempt to use the
+	resource.  If you do not specify a number, then
+	the default value (-2) will be chosen.
+
+modify:auth:
+	Choose "secure" if you want NFS to use
+	a more secure mechanism for verifying the
+	identities of users of the resource.
+
+
+modify3:ok:
+	Answer "yes" if you want to make the
+	changes you have just specified for how
+	remote systems can begin accessing this
+	directory via the Network File System.
+	Automatic sharing of the directory with
+	remote systems will not be affected.

@@ -1,0 +1,29 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/except/display/Text.errs	1.4"
+
+title="Errors in Displaying Exception List"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp "ABSTRACT"
+
+lifetime=shortterm
+
+begrow=any
+begcol=any
+rows=18
+columns=77
+
+close=`rm -f $ARG1`
+
+wrap=FALSE
+text="  The following errors occurred trying to display a backup exception list:
+
+`readfile $ARG1`"
+
+altslks
+
+name=CONT
+button=11
+action=update $ARG2 true
+
+name=CANCEL
+button=14
+action=CLEANUP

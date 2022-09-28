@@ -1,0 +1,29 @@
+#ident	"@(#)nadmin.rfs:other/rfs/net/Menu.set	1.5"
+###############################################################################
+#    Module Name:  Menu.set
+#    Date:    10/88
+#    Description:  
+#    
+###############################################################################
+menu="Sets Network Support for Remote File Sharing"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+multiselect=true
+close=unset -l PID -el NSPECS
+
+`readfile $INTFBASE/msmenu.msg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/rfs/net`
+
+done=`indicator -w;
+	set -l SET_SEQ=2;
+	getitems "," | set -el NSPECS;
+	if [ "$NSPECS" ];
+	then
+		"$INTFBASE/netservices/remote_files/other/rfs/net/bin/set_tp" | set -l PID;
+		set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/other/rfs/net/Text.msg /var/tmp/nspec$PID";
+	else
+		message "No transport providers selected.  Press CANCEL to return to the menu.";
+		set -l KEYCMD="NOP";
+	fi;
+	`$!KEYCMD
+
+`/bin/sed -e "s/^#.*//g" -e "/^\$/d" /etc/netconfig | /usr/bin/tr -s '\040' '\011' | /usr/bin/cut -d"	" -f1 | regex '^(.*)$0$' 'name="$m0"'`

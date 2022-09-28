@@ -1,0 +1,51 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/Text.datpriv	1.1"
+title="Warning"
+lifetime=shortterm
+altslks
+
+begrow=any
+begcol=any
+
+`message  "Strike the CONT function key to continue."`
+
+text="
+  You must have system administration privileges to 
+  use this feature. System administration privileges can 
+  be assigned to a user by a privileged user through
+  \"User Logins\" on the \"System Administration\" menu."
+
+rows=5
+columns=60
+
+name=CANCEL
+button=14
+action=return cancel
+
+name=CONT
+button=11
+action=return cancel 
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=""
+button=10
+action=nop
+
+name=""
+button=9
+action=nop
+
+name=""
+button=15
+action=nop
+
+name=""
+button=16
+action=return cancel
+`indicator -w`

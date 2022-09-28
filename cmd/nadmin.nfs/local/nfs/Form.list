@@ -1,0 +1,45 @@
+#ident	"@(#)nadmin.nfs:local/nfs/Form.list	1.1"
+form="Lists Local Resources Automatically-Currently Shared via NFS"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+`readfile $INTFBASE/form.msg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/local/nfs`
+
+#close=unset -l AUTO -l CURRENT -e PID;
+
+done=`indicator -w;
+	set -e CURRENT="$F1" -e AUTO="$F2";
+	if [ "$F1" = "yes" -o "$F2" = "yes" ];
+	then
+		"$INTFBASE/netservices/remote_files/local/nfs/bin/ls_resource" | set -l PID;
+		set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/local/nfs/Text.list /var/tmp/share_$PID";
+	else
+		message "No options selected.  Press CANCEL to return to the menu.";
+		set -l KEYCMD="NOP";
+	fi;
+       `$KEYCMD
+
+name="List resources shared currently?"
+nrow=1
+ncol=1
+frow=1
+fcol=34
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+lininfo=list:curr
+invalidmsg="Press CHOICES to select valid response."
+
+name="List resources shared automatically?"
+nrow=2
+ncol=1
+frow=2
+fcol=38
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+lininfo=list:auto
+invalidmsg="Press CHOICES to select valid response."

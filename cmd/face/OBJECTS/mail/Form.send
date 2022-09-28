@@ -1,0 +1,120 @@
+#ident	"@(#)face:OBJECTS/mail/Form.send	1.1"
+
+form="$ARG1 Mail"
+
+help=OPEN TEXT OBJECTS/Text.h "$T" "mail/T.hsend$F"
+
+framemsg="`message -o 'Press CHOICES to select, then press SAVE when you complete the form.'`"
+
+altslks=true
+
+`set -l EFRAME=false`
+
+close=`indicator -w; rm -f /tmp/f.mx.${VPID}`
+
+done=`message -w "Sending message. Please wait...";
+echo "${F3}
+~c ${F4}" | /usr/bin/mailx -s "${F2}" ${F1} 2>/tmp/f.mx.${VPID};
+if [ -s /tmp/f.mx.${VPID} ];
+then
+	message "An error has occured while sending your mail.";
+	if [ "${EFRAME}" = "false" ];
+	then
+		echo "OPEN TEXT OBJECTS/mail/Text.error";
+	else
+		echo "update OBJECTS/mail/Text.error true";
+	fi;
+else
+	message "Message successfully sent.";
+	if [ "${EFRAME}" = "false" ];
+	then
+		echo "close OBJECTS/mail/Form.send";
+	else
+		echo "close OBJECTS/mail/Text.error OBJECTS/mail/Form.send";
+	fi;
+fi`
+
+name=To:
+nrow=0
+ncol=1
+frow=0
+fcol=12
+rows=1
+columns=60
+lininfo=`set -l T="To" -l F=1`
+rmenu=const { `sort +0 -1 -t: /etc/passwd | regex "^$LOGNAME:" "" '^([^:][^:]*)$0:[^:]*:[0-9][0-9][0-9][0-9]*:.*$' '"$m0"'` }
+scroll=true
+valid=`regex -v "${F1}" '^.+$' true '.*' false`
+invalidmsg="This is a mandatory field."
+value="${ARG2}"
+
+
+name=Subject:
+nrow=2
+ncol=1
+frow=2
+fcol=12
+rows=1
+columns=60
+lininfo=`set -l T="Subject" -l F=2`
+scroll=true
+value="${ARG3}"
+
+name=Message:
+nrow=4
+ncol=1
+frow=4
+fcol=12
+wrap=true
+scroll=true
+rows=5
+columns=60
+lininfo=`set -l T="Message" -l F=3`
+
+name=Cc:
+nrow=10
+ncol=1
+frow=10
+fcol=12
+rows=1
+columns=60
+lininfo=`set -l T="Cc" -l F=4`
+rmenu=const { `sort +0 -1 -t: /etc/passwd | regex '^([^:][^:]*)$0:[^:]*:[0-9][0-9][0-9][0-9]*:.*$' '"$m0"'` }
+scroll=true
+
+name=HELP
+button=9
+action=help
+
+name=CHOICES
+button=10
+action=choices
+
+name=SAVE
+button=11
+action=done
+
+name=PREV-FRM
+button=12
+action=prev-frm
+
+name=NEXT-FRM
+button=13
+action=next-frm
+
+name=CANCEL
+button=14
+action=`if [ "${EFRAME}" = "false" ];
+	then
+		echo "close OBJECTS/mail/Form.send";
+	else
+		echo "close OBJECTS/mail/Text.error OBJECTS/mail/Form.send";
+	fi`
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=nop

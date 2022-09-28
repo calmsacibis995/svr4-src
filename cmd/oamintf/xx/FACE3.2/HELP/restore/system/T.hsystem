@@ -1,0 +1,10 @@
+The System Restore Menu enables you to restore all or selected files
+from a system or incremental backup.
+
+The items on the System Restore Menu are:
+
+      Restore System:  You can restore all files.
+
+      Selective Restore:  You can select specific system files
+      or other user files to be restored.
+

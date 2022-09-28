@@ -1,0 +1,47 @@
+#ident	"@(#)adm:profile	1.1.1.1"
+trap "" 1 2 3
+umask 022	# set default file creation mask
+. /etc/TIMEZONE
+
+case "$0" in
+-jsh | -ksh | -rsh | -sh)
+# issue message of the day
+	trap : 1 2 3
+	echo ""		# skip a line
+	if [ -s /etc/motd ] ; then cat /etc/motd; fi
+
+	trap "" 1 2 3
+# set default attributes for terminal
+	stty erase '^h' echoe
+
+	if [ x$TERM = x -o "$TERM" = 'unknown' ]; then
+		LOGTTY=${LOGTTY:=`tty`}
+
+		TERM=ansi
+		if [ `expr "$LOGTTY" : '.*/\(.*\)'` = "console" ]
+		then
+			/sbin/isat386
+			if [ $? = 0 ]
+			then TERM=AT386-M
+			fi
+		fi
+	fi
+	if [ "$TERMCAP" = "" ]
+	then TERMCAP=/etc/termcap
+	fi
+	export TERM TERMCAP
+
+# check mailbox and news bulletins
+	if mail -e
+	then echo "\nyou have mail"
+	fi
+	if [ $LOGNAME != root ]
+	then news -n
+	fi
+	;;
+-su)
+	:
+	;;
+esac
+export PATH;
+trap 1 2 3

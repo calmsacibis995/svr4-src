@@ -1,0 +1,60 @@
+#ident	"@(#)lp.admin:printers/filters/Form.1.modify	1.1"
+
+form=Modify a Filter
+lifetime=shortterm
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`
+    message "R=[$restore] && F=[$filter]";
+    if [ -z "$restore" ];
+    then
+	echo "OPEN FORM $OBJ_DIR/Form.modify.3";
+    else
+	echo "OPEN FORM $OBJ_DIR/Form.modify.2";
+    fi;
+`
+
+close=`
+	unset	-l restore
+		-e filter;
+`
+
+name=Filter name:
+nrow=1
+ncol=1
+page=1
+frow=1
+fcol=16
+rows=1
+columns=14
+rmenu=OPEN MENU $OBJ_DIR/filter.ch
+valid=`
+    regex -v "$F1"
+	'^([Aa][Ll][Ll])$0$'		'"$m0" is a reserved word'
+	'^([Aa][Nn][Yy])$0$'		'"$m0" is a reserved word'
+	'^([Nn][Oo][Nn][Ee])$0$'	'"$m0" is a reserved word'
+	'^[a-zA-Z0-9_]{1,14}$' 		'ok'
+	'^.*'				'it must be 1-14 letters, numbers and underscores.'
+    | set -l badval;
+
+    if [ "$badval" != 'ok' ];
+    then
+	false;
+    else
+	if fmlcut -d: -f5 /etc/lp/filter.table | fmlgrep "^$F1\$";
+	then
+	    set -l filter="$F1";
+	    if fmlcut -d: -f5 /etc/lp/filter.table.i | fmlgrep "^$F1\$";
+	    then
+		set -l restore=true;
+	    fi;
+	    true;
+	else
+	    set -l badval="\"$F1\" does not exist";
+	    false;
+	fi;
+    fi;
+`
+choicemsg='Select a filter and press ENTER.'
+invalidmsg="Invalid filter:  $badval."
+fieldmsg='Enter the filter to be modified.'

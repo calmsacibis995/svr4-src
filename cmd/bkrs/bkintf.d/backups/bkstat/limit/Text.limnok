@@ -1,0 +1,27 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkstat/limit/Text.limnok	1.1"
+################################################################################
+#	Module Name: Text.limnok
+################################################################################
+title="Errors Limitting Status Log Size"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+close=`rm -f $ERR`
+
+rows=6
+columns=75
+
+text="
+An error occurred attempting to limit status log size to $ARG1.
+
+   `readfile $ERR`"
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

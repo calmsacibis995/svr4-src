@@ -1,0 +1,5 @@
+#ident	"@(#)alint:lib/llib-lgen	1.1"
+/* LINTLIBRARY */
+#include <stdio.h>
+/* PROTOLIB1 */
+#include <libgen.h>

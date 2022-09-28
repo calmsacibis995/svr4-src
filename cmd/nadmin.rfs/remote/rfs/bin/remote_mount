@@ -1,0 +1,51 @@
+#ident	"@(#)nadmin.rfs:remote/rfs/bin/remote_mount	1.3"
+if [ "$SUID" = "no" ]
+then
+	NACC="$ACC,nosuid"
+else
+	NACC="$ACC"
+fi
+if [ "$CACHE" = "no" ]
+then
+	NACC="$NACC,nocaching"
+fi
+if [ ! -d "$MNT" ]
+then
+	/bin/mkdir -p $MNT 2>/dev/null
+	if [ ?$ -ne 0 ]
+	then
+		echo  "Mount of \"$RES\" failed - \"$MNT\" could not be created.\n" >/usr/tmp/rem_$$
+		echo $$
+		exit
+	fi
+fi
+
+# Mount resource immediately
+
+if [ "$IMM" = "yes" ]
+then
+	echo "Mount resource immediately:">/usr/tmp/rem_$$
+	/etc/mount -F rfs -o $NACC $RES $MNT 2>>/usr/tmp/rem_$$;
+	if [ $? -eq 0 ]
+	then
+		echo "The remote resource \"$RES\" is being made available on the local system as \"$MNT\" via RFS." >> /usr/tmp/rem_$$
+	fi
+fi
+
+# Mount resource automatically
+# check if mountpoint is already used
+
+if [ "$AUTO" = "yes" ]
+then
+	/usr/bin/egrep "[ 	]+$MNT[	 ]+" /etc/vfstab  1>/dev/null
+	if [ $? -eq 0 ]
+	then
+		echo "\nMount resource automatically:">>/usr/tmp/rem_$$
+		echo "\n\"$MNT\" is already used as a mountpoint.  Use the Modify Remote Resources Task to change." >>/usr/tmp/rem_$$
+	else
+		echo "$RES\t-\t\t$MNT\trfs\t-\tyes\t$NACC" >>/etc/vfstab;
+		echo "\n\"$RES\" will be mounted as $MNT automatically when Remote File Sharing begins operation." >>/usr/tmp/rem_$$
+	fi
+fi
+
+echo $$

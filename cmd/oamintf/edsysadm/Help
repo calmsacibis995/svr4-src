@@ -1,0 +1,127 @@
+#ident	"@(#)oamintf:edsysadm/Help	1.3.3.1"
+ABSTRACT:
+	Select \"menu\" or \"task\" to create or update a menu or task item
+	in sysadm.
+	
+Form.chgmenu:chgmenu:Changing a Menu
+	Select existing or packaged.  \"Existing\" will allow you to change
+	an existing menu. You may change the name, description, or help 
+	information for the selected menu. You cannot change the location.
+	To change the location, you must add the same menu under the new
+	location and delete the old location's entry.  \"Packaged\" will 
+	allow you to change a menu item that has been packaged.
+
+Form.chgtask:chgtask:Changing a Task
+	Select existing or packaged.  \"Existing\" will allow you to change
+	an existing task. You may change the name, description, or help 
+	information for the selected task. You cannot change the location.
+	To change the location, you must add the same task under the new
+	location and delete the old location's entry.  \"Packaged\" will 
+	allow you to change a task item that has been packaged.
+
+Form.collision:coll:Collisions
+	This form reports a collision on a menu or task that is being added 
+	or changed on-line.  The choices for action to be taken are :
+	do not install	- leaves the interface unchanged.
+	install		- will attempt to overwrite current information.
+	rename		- will present current information and allow you to
+			  rename the menu or task.
+	relocate	- will present current information and allow you to
+			  relocate the menu or task.
+
+fname:Package Name
+	Enter the name of the file which contains the package description
+	information.  This may be a relative or absolute path.
+
+mname:Menu Name
+	Name is the actual name of the menu item. This will be the
+	keyword for the menu item within it's parent menu. It must be
+	less than or equal to 16 lower-case characters and underscores.
+
+descrp:Description
+	Description field requires that the first letter of each word is
+	capitalized.
+
+loc:Location
+	Location field is the logical path of the item.  This consists
+	of menus separated by colons, with the main menu labeled main.
+
+		Example:  \"main:applications:devices\".
+	Start with 'main:', use a through z & underbars. Separate levels
+	with ':'." uses "a-zA-Z0-9_:", but can't end with ":", must start 
+	with "main" and can't have "::". 
+	(Although you may add a menu/task at the main interface menu by
+	 entering just "main", you are strongly advised against doing so.
+	 If you aren't sure where to add an item, please consult your 
+	 System Administrator or documentation.)
+Form.menu:name:Menu Name
+	Name is the actual name of the menu item. This will be the
+	keyword for the menu item within it's parent menu.
+
+help:Help
+	The Help may be a file with a relative or absolute path or left blank.
+	If this item is left blank, the user is placed in the default editor 
+	to create a help message. This file will be called "Help".
+
+Form.overwrite:owrite:Overwriting
+	This form reports a collision on the package description file.
+	The choices for action to be taken are :
+	add			- the information will be added to the 
+				  already existing file.
+	do not overwrite	- leaves the current file untouched and 
+				  prompts for a new file name.
+	overwrite		- overwrites all the information in the
+				  existing file.
+	
+
+Form.save:save:Saving New or Modified Information
+	Select install to install the information by on-line modification.
+	Select save to create a package for use with package installation
+	procedures.
+
+
+Form.task:name:Task Name
+	Name is the actual name of the task item. This will be the
+	keyword for the task item within it's parent menu.
+
+Form.task:action:Task Action File
+	Action is the FMLI form or executable program that is the first
+	thing done when the task is selected.
+
+Form.task:tfiles:Task Files
+	Files may list all files additionally needed to accomplish
+	the task. (You do not need to list the task action file
+	here.)  The files may be relative or absolute paths to files
+	and/or directories.  If a directory is given, all files within
+	this directory will be considered part of the task.
+
+Form.test:test: Menu Testing
+	Select yes to test your menu addition/change on-line. 
+	Select no to skip to the next form.
+	Testing requires some build-up time, please be patient.
+	The actual changes are not made until either the package is installed
+	or the on-line modifications are completed.
+
+Menu.menu:add:Adding a Menu
+	Select add to add a menu item. You will be given a series of 
+	prompts to create this menu.
+
+Menu.menu:chg:Changing a Menu
+	Select change to change a menu item. You will be be given a filled-in
+	form with the selected menu information to modify. 
+
+Menu.pkg:menu:Menu
+	Select menu to add or change a menu within the interface, by either
+	creating a package or by on-line modifications.
+
+Menu.pkg:task:Task
+	Select task to add or change a task within the interface, by either
+	creating a package or by on-line modifications.
+
+Menu.task:add:Adding a Task
+	Select add to add a task item. You will be given a series of 
+	prompts to create this task.
+
+Menu.task:chg:Changing a Task
+	Select change to change a task item. You will be be given a filled-in
+	form with the selected task information to modify. 

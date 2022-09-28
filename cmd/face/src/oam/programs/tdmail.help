@@ -1,0 +1,6 @@
+ABSTRACT:
+	This task allows the administrator of a system to remove the
+	default Mail Services supplied with the FACE package.  When
+	FACE is installed, the default Mail Services are also installed.
+	Therefore, this task must be used if the default Mail Services
+	are not desired.

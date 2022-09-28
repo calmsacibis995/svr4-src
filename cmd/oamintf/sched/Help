@@ -1,0 +1,58 @@
+#ident	"@(#)oamintf:sched/Help	1.1"
+
+ABSTRACT:
+	The subcommands in the "schedule automated task" menu provide
+	functions for you to manage cron entries.
+	Using these commands you may add, change, delete or display
+	cron entries.
+
+add.Help:adding a scheduled task.
+	This task will setup a task to be scheduled through cron.
+
+change.Help:changing a scheduled task.
+	This task will change a task that have been previously
+	been scheduled through cron.
+
+delete.Help:delete a scheduled task.
+	This task will delete task(s) that have been previously scheduled.
+
+display.Help:display a scheduled task.
+	This task will display the tasks that have been previously
+	been scheduled through cron.
+
+Form.add:month:month:
+	Enter the month(s) of the year that the task will be performed in.
+
+Form.add:daym:
+	Enter the day(s) of the month.
+
+Form.add:dayw:
+	Enter the day(s) of the week.
+
+Form.add:hour:
+	Enter the Hours(s) of the day.
+
+Form.add:minute:
+	Enter the minute(s) past the Hour.
+
+Form.add:task:
+	Enter the name of the task that you want to schedule.
+
+Form.chg:month:
+	Enter the month(s) of the year that the task will be performed in.
+
+Form.chg:daym:
+	Enter the day(s) of the month.
+
+Form.chg:dayw:
+	Enter the day(s) of the week.
+
+Form.chg:hour:
+	Enter the Hours(s) of the day.
+
+Form.chg:minute:
+	Enter the minute(s) past the Hour.
+
+Form.chg:task:
+	Enter the name of the task that you want to change.
+

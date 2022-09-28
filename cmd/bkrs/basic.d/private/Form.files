@@ -1,0 +1,20 @@
+#ident	"@(#)bkrs:basic.d/private/Form.files	1.1.1.1"
+form="Selective Backup of Files under $HOME"
+lifetime=shortterm
+help=open text /usr/vmsys/OBJECTS/Text.h "$T" "$F"
+
+done=`echo $F1 > /usr/tmp/private.$VPID; run sh -c 'runbackf "/usr/tmp/private.$VPID" "$ARG1 $ARG2 $ARG3 $ARG4" '`close $OBJ_DIR/private/Menu.private
+#done=`echo $F1 > /usr/tmp/private.$VPID; run sh -c 'runbackf "/usr/tmp/private.$VPID" "$ARG1 $ARG2 $ARG3 $ARG4" '`close $OBJ_DIR/private/Menu.private $OBJ_DIR/private/Form.files
+
+name=Files or directories to back up:
+nrow=1
+ncol=1
+rows=3
+columns=70
+frow=2
+fcol=1
+scroll=true
+valid=`filechk Personal "$F1"|regex 0`
+invalidmsg=`filemsg Personal "$F1"`
+fieldmsg=`set -l T="Selective Personal Backup" -l F=backup/private/T.hbkdir1`Enter one or more names separated by spaces and strike SAVE to save input.
+

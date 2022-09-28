@@ -1,0 +1,18 @@
+The Display Scheduled Backups Menu displays the following information
+for each scheduled backup:
+
+      I:  The letter "I" signifies an "incremental" backup.
+      If the first column is blank, the backup is a system
+      backup.
+
+      Month:  One month, a combination of months, or "all" months
+      may be displayed.
+
+      Date:  This signifies the day(s) of the month. One day,
+      a combination of days, or "all" days may be displayed.
+
+      Day:  This signifies the day(s) of the week. One day, a
+      combination of days, or "all" days may be displayed.
+
+      The time in hours (00-24) and minutes (00-60) is displayed.
+

@@ -1,0 +1,49 @@
+#ident	"@(#)nadmin.rfs:other/rfs/control/Form.start2	1.5"
+form="Automatic Operations at Startup"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/form.msg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/rfs/control`
+
+done= `indicator -w;
+	if [ "$F1" = "yes" ];
+	 then
+		message "Sharing designated local resources...";
+		/usr/sbin/shareall -F rfs >/dev/null 2>&1;
+	 fi;
+	if [ "$F2" = "yes" ];
+	 then
+		message "Mounting designated remote resources...";
+		/etc/mountall -F rfs >/dev/null;
+	 fi;
+	echo ""| message;
+	readfile $INTFBASE/form.msg | message;
+	`CLEANUP
+
+#F1
+name="Share designated local resources?"
+nrow=1
+ncol=1
+frow=1
+fcol=35
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+lininfo=start2:share
+invalidmsg="Press CHOICES to select valid response."
+
+#F2
+name="Mount designated remote resources?"
+nrow=2
+ncol=1
+frow=2
+fcol=36
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+lininfo=start2:mount
+invalidmsg="Press CHOICES to select valid response."

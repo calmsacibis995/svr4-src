@@ -1,0 +1,11 @@
+#ident "@(#)windowing:cmd/layers/README	1.1"
+
+set_enc.j and layersys/lsys.873 are specially cross-compiled executables
+for downloading to the 5620.
+
+The release includes a source for set_enc.j although it is not possible
+to compile it without 3b2 cross-compilation tools. To allow those sites
+without cross- compilation tools to create the binary from a printable
+and sccsable "source", a filter (deodx.c) and hex dumps have been supplied:
+	layersys/lsys.873.src
+	set_enc.j.src

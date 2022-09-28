@@ -1,0 +1,41 @@
+#ident	"@(#)oamintf:devices/remove/Text.err	1.1"
+################################################################################
+#	Module Name: Text.err
+################################################################################
+Title="No Devices Available"
+
+framemsg=`readfile $INTFBASE/nodev.msg`
+
+rows=8
+columns=75
+
+text="	
+The /etc/device.tab file does not contain any device entries
+with the 'removecmd' attribute. This attribute is used to
+identify the presence of de-configurable devices.
+
+The remove task does not apply to your second integral hard
+disk or integral cartridge tape.
+"
+
+altslks
+
+name=
+button=9
+action=nop
+
+name=
+button=11
+action=nop
+
+name=
+button=12
+action=nop
+
+name=
+button=13
+action=nop
+
+name=CANCEL
+button=14
+action=CLEANUP

@@ -1,0 +1,23 @@
+#ident	"@(#)lp.admin:printers/systems/Menu.cmodify	1.2"
+
+menu=Choices
+lifeterm=shortterm
+framemsg="Move to your choice and press ENTER."
+
+`set -l name_1="/tmp/lp.n1$VPID";
+fmlgrep '^[^#]' /etc/lp/Systems | fmlcut -f1 -d: > $name_1;
+if [ -s $name_1 ];
+then
+	echo "init=true";
+else
+	echo "init=false";
+	message -b "There are currently no system connections defined.";
+	rm -f $name_1;
+fi`
+
+close=`rm -f $name_1;
+	unset -l $name_1`
+
+`/usr/bin/sort $name_1 | regex '^(.*)$0$' 'name=$m0
+lininfo=$m0
+action=`set -l Form_Choice=$m0`close'`

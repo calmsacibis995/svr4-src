@@ -1,0 +1,28 @@
+#ident	"@(#)oamintf:files/mount/Menu.mntch	1.1"
+
+################################################################################
+#	Module Name: Menu.mntch
+################################################################################
+menu="File System Type Choices"
+
+framemsg=`readfile $INTFBASE/ssmenu.msg`
+
+help=OPEN MENU $INTFBASE/Text.itemhelp Menu.make:ABSTRACT
+
+`$OAMBASE/bin/sysfs | sort | regex '(.*)$0' 'name="$m0"
+`if [ ! -f /etc/fs/$m0/mount ];
+then
+	echo inactive=true;
+fi`action=`set -l "Form_Choice=$m0"`CLOSE'`
+
+name=unknown
+action=`set -l Form_Choice=unknown`CLOSE
+
+name=
+button=1
+action=
+
+name=
+button=7
+action=
+

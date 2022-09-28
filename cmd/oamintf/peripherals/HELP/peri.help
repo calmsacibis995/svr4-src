@@ -1,0 +1,6 @@
+#ident	"@(#)oamintf:peripherals/HELP/peri.help	1.1"
+
+   The submenus in the "peripherals" menu provide functions for
+   managing peripheral devices.  They include a submenu for
+   terminal and port management and an optional submenu for
+   printer and print spooling management.

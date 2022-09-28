@@ -1,0 +1,9 @@
+#ident	"@(#)oamintf:applications/appl.menu	1.2.1.1"
+
+#menu#Administration for Available Applications
+#help#appl.help^Application Management
+#life#permanent
+
+preSVR4^System Administration^OBJECTS/Menu.admin
+preSVR4^Application Setup^OBJECTS/Menu.appsetup
+preSVR4^Programs^OBJECTS/Menu.programs

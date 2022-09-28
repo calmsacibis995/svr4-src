@@ -1,0 +1,10 @@
+Strike CHOICES to display the months. You may select one month, a
+combination of months, or "all" months.
+
+Move to the month(s) desired with the arrow keys, then strike the MARK
+function key. When your selection is completed, strike ENTER.
+
+You can indicate a series of months by typing the first month
+and last month separated by a "-".  For example, 1 - 6 would schedule
+the backup for January, February, March, April, May, and June.
+

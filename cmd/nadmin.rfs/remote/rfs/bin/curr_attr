@@ -1,0 +1,41 @@
+#ident	"@(#)nadmin.rfs:remote/rfs/bin/curr_attr	1.2"
+# If RESDIR is the res name, then it is the first field of the vfstab entry
+
+echo $RESDIR | /bin/grep "\/" 1>/dev/null 
+if [ $? -eq 0 ]
+then
+	/usr/bin/egrep "	$RESDIR	rfs" /etc/mnttab >/usr/tmp/attr$$
+else
+	/usr/bin/egrep "^$RESDIR[ 	]+.*rfs" /etc/mnttab >/usr/tmp/attr$$
+fi
+if [ -s "/usr/tmp/attr$$" ]
+then
+	RES=`/usr/bin/cut -f1 /usr/tmp/attr$$` 
+	DIR=`/usr/bin/cut -f2 /usr/tmp/attr$$` 
+	TMP=`/usr/bin/cut -f4 /usr/tmp/attr$$` 
+	echo $TMP | /bin/grep "ro" >/dev/null
+	if [ $? -eq 0 ]
+	then
+		ACC="read-only"
+	else
+		ACC="read-write"
+	fi
+	echo $TMP | /bin/grep "nocaching" >/dev/null
+	if [ $? -eq 0 ]
+	then
+		CACHE="no"
+	else
+		CACHE="yes"
+	fi
+	echo $TMP | /bin/grep "nosuid" >/dev/null
+	if [ $? -eq 0 ]
+	then
+		SUID="no"
+	else
+		SUID="yes"
+	fi
+	echo "$RES" "$DIR" "$ACC" "$CACHE" "$SUID" > /usr/tmp/attr_$$
+else
+	echo "This resource is not currently mounted" >/usr/tmp/emsg$$
+fi
+echo $$

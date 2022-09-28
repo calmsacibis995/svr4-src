@@ -1,0 +1,20 @@
+#ident	"@(#)bkrs:basic.d/system/Form.files	1.1.1.1"
+form="Selective System Backup"
+lifetime=shortterm
+help=open text /usr/vmsys/OBJECTS/Text.h "$T" "$F"
+
+done=`echo $F1 > /usr/tmp/markfls.$VPID; run sh -c '.chkuser -c "/usr/sadm/sysadm/bin/runbackf /usr/tmp/markfls.$VPID :$ARG1 $ARG2 $ARG3:"'`CLEANUP
+
+
+name=Files or directories to back up:
+nrow=1
+ncol=1
+rows=3
+columns=70
+frow=2
+fcol=1
+scroll=true
+valid=`filechk System "$F1"|regex 0`
+invalidmsg=`filemsg System "$F1"`
+fieldmsg=`set -l T="Selective System Backup" -l F=backup/private/T.hbkdir1`Enter one or more names separated by spaces and strike SAVE to save input.
+

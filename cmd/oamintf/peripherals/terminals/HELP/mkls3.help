@@ -1,0 +1,8 @@
+#ident	"@(#)oamintf:peripherals/terminals/HELP/mkls3.help	1.1"
+
+   Please enter a 'y' or 'n' to install the new line setting
+   or not.  If you enter 'y', the setting will be installed
+   and you will be given the option of adding another line
+   setting or quitting the "mklineset" task.
+   If you enter 'n', you will be able to modify the
+   values you indicated for the new line setting.

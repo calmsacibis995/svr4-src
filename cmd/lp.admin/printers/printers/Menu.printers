@@ -1,0 +1,27 @@
+#ident	"@(#)lp.admin:printers/printers/Menu.printers	1.4.2.1"
+menu=Configure Printers for the Printer Service
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO 
+
+name=add
+description=Add a New Printer
+lininfo="menu:L1"
+action=OPEN FORM /usr/sadm/sysadm/add-ons/lp/printers/printers/add/Form.add
+
+
+name=list
+description=List Printer Configurations
+lininfo="menu:L2"
+action=OPEN FORM /usr/sadm/sysadm/add-ons/lp/printers/printers/Form.list
+
+name=modify
+description=Modify a Printer Configuration
+lininfo="menu:L3"
+action=OPEN FORM /usr/sadm/sysadm/add-ons/lp/printers/printers/modify/Form.modify
+
+
+name=remove
+description=Remove Printers
+lininfo="menu:L4"
+action=OPEN FORM /usr/sadm/sysadm/add-ons/lp/printers/printers/Form.remove
+

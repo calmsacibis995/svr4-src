@@ -1,0 +1,65 @@
+#ident	"@(#)nadmin.nfs:local/nfs/Form.unshar3	1.1"
+form="Terminates Current Sharing of Local Resources via NFS"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile "$INTFBASE/form.msg" | message -p`
+`set -l OBJ_DIR="$INTFBASE/netservices/remote_files/local/nfs`
+
+done=`if [ "$F8" = "all" -o "$F8" = "new" ];
+	then
+		/usr/sbin/unshare -F rfs "$RES";
+	regex -e -v "$RET"
+	'0'	'`message "$RES successfully unshared.";
+		`'
+	'.*'	'`message "Unshare failed. Consult you System Administrators Guide for details.";
+		`' ;
+	fi;
+	if [ "$F8" = "all" -a "$DRET" = "0" ];
+	then
+		/usr/sbin/fumount "$RES";
+	fi;
+	`CLOSE
+
+#F1
+name="The following resource will be unshared:"
+nrow=1
+ncol=1
+frow=1
+fcol=38
+rows=1
+
+#F2
+name="Directory:"
+nrow=3
+ncol=1
+frow=3
+fcol=12
+rows=1
+columns=30
+inactive=true
+value="$DIR"
+
+#F5
+name="Access:"
+nrow=4
+ncol=1
+frow=4
+fcol=9
+rows=1
+columns=10
+inactive=true
+
+
+name="OK to remove the resource unavailable to remote systems immediately?"
+nrow=6
+ncol=1
+frow=6
+fcol=70
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+invalidmsg="Press CHOICES to select valid response."
+lininfo=unshar3:ok
+

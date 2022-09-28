@@ -1,0 +1,113 @@
+#ident	"@(#)oamintf:edsysadm/Form.menu	1.12.2.1"
+
+################################################################################
+#	Module Name: Form.menu
+#	Date: July 1988
+#
+#	ARGS PASSED IN:
+#			ARG1 -> addmenu/chgmenu flag
+#			ARG2 -> package description file name
+#
+#	ARGS PASSED OUT:
+#			ARG1 -> addmenu/chgmenu flag
+#			ARG2 -> package description file name
+#			F1 -> Menu name
+#			F2 -> Menu description
+#			F3 -> Menu location
+#			F4 -> Menu help
+#			"" -> placeholder
+#			"" -> placeholder
+#			LOC:NAME -> original location
+################################################################################
+form="Define a Menu"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+close=`rm -f $GETINFO`
+
+done=`set -l NULLF=""
+`OPEN FORM $EDSYSADM/Form.test "$ARG1" "$ARG2" "$F1" "$F2" "$F3" "$F4" "$NULLF" "$NULLF" "$LOC:$NAME"
+
+# F1
+name=Name:
+lininfo=mname
+nrow=1
+ncol=1
+frow=1
+fcol=7
+rows=1
+columns=16
+`getfld "$GETINFO" NAME | set -l NAME`
+value=$NAME
+
+valid=`regex -e -v "$F1" '^[\_a-z]{1,16}$'`
+
+choicemsg="For Menu Name use 16 or less lower case and underbar characters."
+invalidmsg="Error: Menu Name must be lower case and underbar characters only."
+
+# F2
+name=Description:
+lininfo=descrp
+nrow=2
+ncol=1
+frow=2
+fcol=14
+rows=1
+columns=58
+value=`getfld "$GETINFO" DESC`
+
+# Validates for characters and that the FIRST word is capitalized
+valid=`regex -v "$F2" '^[A-Z][^\@\^\~\`\'\"]*$'`
+#valid=`regex -v "$F2" '^[A-Z][\_\ A-Za-z0-9]+$'`
+
+choicemsg="Menu Description may be 58 characters or less."
+invalidmsg="Capitalize 1st letter of each word. Don't use special characters."
+
+# F3
+name=Location:
+lininfo=loc
+nrow=3
+ncol=1
+frow=3
+fcol=11
+rows=1
+columns=61
+scroll=true
+`getfld "$GETINFO" LOC | set -l LOC`
+value=$LOC
+
+valid=`regex -v "$F3" '^[m][a][i][n][\:][\_A-Za-z0-9][\_\:A-Za-z0-9]*[\_A-Za-z0-9]$' 'true' '^main$' 'true' && 
+      shell " dc=\`echo \"$F3\" | awk '/::/ { exit 1 }'\` 
+#      "`
+
+choicemsg="Start with 'main' and separate menu location levels with ':'."
+invalidmsg="Start with 'main', use letters, numbers, & underbars. Separate levels with ':'."
+
+# F4
+name=Help message:
+lininfo=help
+nrow=4
+ncol=1
+frow=4
+fcol=15
+rows=1
+columns=58
+scroll=true
+value=`getfld $GETINFO HELP`
+
+valid=`valpath -n $F4;
+       if [ $RET -eq 0 ];
+       then
+	   run edhelp $F4;
+       else
+	   echo true;
+       fi`
+	
+invalidmsg="Error: must contain the name of a file using standard filename characters."
+choicemsg="Use absolute or relative path name and standard filename characters."
+
+name=RESET
+button=8
+action=reset

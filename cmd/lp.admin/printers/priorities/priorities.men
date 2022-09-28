@@ -1,0 +1,5 @@
+#ident	"@(#)lp.admin:printers/priorities/priorities.men	1.1"
+^
+list^Examines Priority Limits for Users^Form.list^Help.list
+set default^Set Default Priorities^Form.priority^Help.set default
+set priority^Set User Priorities^Form.set^Help.set priority

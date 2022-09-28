@@ -1,0 +1,30 @@
+#ident	"@(#)oamintf:softwaremgmt/check/task.inst	1.2"
+
+[ -n "$TRACE" ] && set -x
+
+pkginst=
+paths=
+opts=
+
+[ -n "$1" ] &&
+	pkginst="`echo $1 | sed 's/,/ /g'`"
+
+[ -n "$2" -a "$2" != all ] &&
+	paths="-p'`echo $2 | sed 's/ /,/g'` '"
+
+[ "$3" = yes ] &&
+	opts="${opts}a"
+[ "$4" = yes ] &&
+	opts="${opts}c"
+[ "$5" = yes ] &&
+	opts="${opts}x"
+[ "$6" = yes ] &&
+	opts="${opts}f"
+[ "$7" = no ] &&
+	opts="${opts}n"
+[ "$8" = yes ] &&
+	opts="${opts}v"
+[ -n "$opts" ] &&
+	opts="-$opts"
+
+eval pkgchk $opts $paths $pkginst

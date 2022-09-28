@@ -1,0 +1,25 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkoper/Text.bjpok	1.2"
+################################################################################
+#	Module Name: Text.bjpok
+################################################################################
+title="Set Backup Job Operator"
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+lifetime=shortterm
+
+rows=4
+columns=60
+
+text="
+Backup Job operator set to $ARG1."
+
+altslks
+
+name=CONT
+button=11
+action=update $ARG2 true
+
+name=CANCEL
+button=14
+action=CLEANUP

@@ -1,0 +1,122 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/add/Help	1.5.1.2"
+
+ABSTRACT: Add Entries to Backup Table
+	The "add" task allows you to add an entry to a backup table.  If
+	the table does not exist, it will be created.
+	
+	This command only does minimal validation of input values.  To
+	assure that the table constructed is consistent and valid, use
+	the backup command.
+
+TITLE: Add Entries to Backup Table
+
+add:table:
+	"Table:"  Enter the path to the backup table to which you want to
+	add an entry.  The table need not already exist, if you are
+	creating a new table.
+
+add:tag:
+	"Tag:"  Enter an identifier to be used to identify the entry you
+	are adding to the table.  Tags must be unique within tables, so
+	if this one already exists in the table you will be asked to enter
+	a different one.  It is a good idea to make the tag meaningful to
+	you so that it will be easy to remember and will represent the
+	object being backed up.  An example would be "usrffile" to
+	represent a full file backup of the /usr file system or "usrdai"
+	to represent the daily backup of the /usr file system.
+
+add:oname:
+	"Originating Name:"  Enter a nodename (for a file system) or any
+	valid pathname (for a data partition) for the object which this
+	backup operation will back up.  For a file system, the nodename
+	should be the pathname to the normal mount point for the file
+	system.
+
+add:odev:
+	"Originating Device:"  Enter the path to the raw device
+	for the file system or data partition that will be backed up.
+
+add:ddev:
+	"Destination Device:"  Enter the name of the device to be used to
+	create the backup archive.  The device name must be an absolute
+	path to the physical device to be used.  Either device group or
+	device must be specified.
+
+add:method:
+	"Method:"  Enter the method you want this backup operation to use.
+	Press [CHOICES] for a list of valid methods.
+
+add:week:
+	"Week(s):"  Enter a list of ranges of weeks in the rotation period
+	in which this backup operation is to be run or enter the keyword
+	"demand" or the keyword "all".  If you specify "demand", this
+	backup operation will only run on demand, that is, when the keyword
+	"demand" is specified as the weeks parameter on the backup command.
+	If you specify "all", this operation will run for any week in the
+	rotation period.  An example of a list of ranges would be: 1,3-5,7.
+	This specifies that this backup operation will run in the first,
+	third through fifth, and seventh weeks of the rotation period.  It
+	will not run in the second, sixth, eighth or in any higher week of
+	the rotation.
+
+add:day:
+	"Day(s):"  Enter a list of ranges of days in the week on which this
+	backup operation will run.  Days are specified as the digits 0
+	(=Sunday) through 6 (=Saturday).  For example, to specify that this
+	backup operation should take place on Tuesday, Thursday and
+	Saturday, enter 2,4,6.  You may use the keyword "all" to specify
+	backup operations that are to run on every day of the week.
+
+add:opt:
+	"Additional Options:"  Enter yes if you would like to modify any of
+	the following options.
+
+add2:F1:
+	"Method Options:"  Enter the options to be passed to the method
+	(if any).  Example: "-l -t -v" as they would appear on a shell
+	command line format.
+
+add2:F2:
+	"Exception list:"  Enter the pathname to an file that lists the
+	pathnames of files/directories that are not to be included in the
+	backup procedure (only for incfile method).
+
+add2:F3:
+	"Destination Characteristics:"  You may enter device
+	characteristics to override the defaults for the device in 
+	the device table. If you have not entered devic 
+	characteristicsin the device table you must enter them here. 
+
+	Example: dtype=dpart,capacity=31000
+
+add2:F4:
+	"Destination Volume Label(s):"  Enter a list of volume labels
+	for the volumes that will contain the backup archive.  The 
+	volumes will be used in the order in which you specify them
+	here.  If the number of volumes specified here is insufficient
+	to contain the entire backup, the backup operation will fail
+	unless the operator has the privilege to override label checking.
+
+add2:F5:
+	"Priority:"  Enter the priority (from 0 to 100) for the backup
+	operation represented by this entry.  100 is the highest priority,
+	0 the lowest.  A backup operation is not started until all others
+	with a higher priority than it has have been started.  All backup
+	operations at a given priority may execute simultaneously, except
+	for operations at priority 0.  Operations with priority 0 are
+	executed sequentially in an unspecified order.
+
+add2:F6:
+	"Dependencies:"  Enter a list of tags from this table that
+	represent backup operations on which this one depends.  This
+	operation will not be started until operations on which it
+	depends have finished successfully.
+
+add2:F7:
+	"Originating Volume Label:"  Enter the volume label (up to 6
+	characters) for the originating file system or data partition.  This
+	volume label exists for file systems and may exist for a data
+	partition.  The label can be displayed or validated for a file system
+	but is only externally known (for example, taped on the volume) for
+	data partitions.
+

@@ -1,0 +1,365 @@
+#ident	"@(#)lp.admin:printers/filters/Form.3.modify	1.1.1.1"
+
+form=Modify a Filter
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`
+	message -w 'Updating filter description.  Please Wait.';
+	echo "Input types: $F2" |
+	echo "Output types: $F3" |
+	echo "Printer types: $F4" |
+	echo "Printers: $F5" |
+	echo "Filter type: $F6" |
+	echo "Command: $F7" |
+	if [ -n "$TFADMIN" ]; then $TFADMIN lpfilter -f "$filter" -;
+	else lpfilter -f "$filter" -; fi;
+	message "Return = $RET"
+`TOGSLK
+
+close=`
+	free lpdata link
+	unset variables
+	etc...
+`
+
+init=`
+	cocreate lpdata -R filter.mod -e '-EOT-' /usr/lib/lp/lpdata -f $datafile;
+	cosend lpdata "get_filter/n$filter";
+`
+
+name=Filter name:
+nrow=1
+ncol=1
+page=1
+inactive=true
+frow=1
+fcol=16
+rows=1
+columns=14
+value=$filter
+
+name=Input types it can convert:
+nrow=3
+ncol=1
+page=1
+frow=3
+fcol=31
+rows=1
+columns=28
+value=($datafile)itypes
+valid=`regex -v "$F3" '[a-zA-Z0-9-]{1,14}(,[a-zA-Z0-9-]{1,14})*' '' '.*'`
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+
+name=Output types it can produce:
+nrow=4
+ncol=1
+page=1
+frow=4
+fcol=32
+rows=1
+columns=28
+
+# default=Current value.
+
+valid=`regex -v "$F4" '[a-zA-Z0-9-]{1,14}(,[a-zA-Z0-9-]{1,14})*' '' '.*'`
+# \fILegal type-list\fR [TYPES], optional.
+
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+
+name=Printer types it is restricted to:
+nrow=5
+ncol=1
+page=1
+frow=5
+fcol=38
+rows=1
+columns=28
+
+# default=Current value.
+
+valid=`regex -v "$F5" '[a-zA-Z0-9-]{1,14}(,[a-zA-Z0-9-]{1,14})*' '' '.*'`
+# \fIKnown terminfo-list\fR [TERMINFO], optional.
+
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+
+name=Printers it is restricted to:
+nrow=6
+ncol=1
+page=1
+frow=6
+fcol=33
+rows=1
+columns=28
+
+# default=Current value.
+
+valid=`regex -v "$F6" '[a-zA-Z0-9_]{1,14}(,[a-zA-Z0-9_]{1,14})*' '' '.*'`
+# \fIKnown printer-list\fR [PRINTERS], optional.
+rmenu=OPEN MENU $PRINTSERV/filters/Choices.printers
+choicemsg="A list of the printers known to the system."
+invalidmsg="A list of the printers known to the system."
+fieldmsg="A list of the printers known to the system."
+
+
+name=Fast or slow filter:
+nrow=7
+ncol=1
+page=1
+frow=7
+fcol=23
+rows=1
+columns=4
+# default=Current value.
+menuonly=TRUE
+rmenu= { Fast Slow }
+#valid=`regex -v "$F7" 'unknown pattern'`
+# fast or slow, mandatory.
+
+choicemsg="fast, slow"
+invalidmsg="fast, slow"
+fieldmsg="fast, slow"
+
+
+name=Enter the filter command and any fixed options:
+nrow=8
+ncol=1
+page=1
+frow=9
+fcol=5
+rows=1
+columns=60
+
+# default=Current value.
+
+#valid=`regex -v "$F8" '^/'`
+# A standard file name, full path, must exist and be executable, mandatory.
+
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+
+name=INPUT
+nrow=9
+ncol=1
+page=2
+frow=9
+fcol=6
+rows=1
+columns=69
+
+# default=Current value.
+
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+
+name=OUTPUT
+nrow=10
+ncol=1
+page=2
+frow=10
+fcol=7
+rows=1
+columns=68
+
+# default=Current value.
+
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+
+name=TERM
+nrow=11
+ncol=1
+page=2
+frow=11
+fcol=5
+rows=1
+columns=70
+
+# default=Current value.
+
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+
+name=CPI
+nrow=12
+ncol=1
+page=2
+frow=12
+fcol=4
+rows=1
+columns=71
+
+# default=Current value.
+
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+
+name=LPI
+nrow=13
+ncol=1
+page=2
+frow=13
+fcol=4
+rows=1
+columns=71
+
+# default=Current value.
+
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+
+name=LENGTH
+nrow=14
+ncol=1
+page=2
+frow=14
+fcol=7
+rows=1
+columns=68
+
+# default=Current value.
+
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+
+name=WIDTH
+nrow=15
+ncol=1
+page=2
+frow=15
+fcol=6
+rows=1
+columns=69
+
+# default=Current value.
+
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+
+name=PAGES
+nrow=16
+ncol=1
+page=2
+frow=16
+fcol=6
+rows=1
+columns=69
+
+# default=Current value.
+
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+
+name=CHARSET
+nrow=17
+ncol=1
+page=2
+frow=17
+fcol=8
+rows=1
+columns=67
+
+# default=Current value.
+
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+
+name=FORM
+nrow=18
+ncol=1
+page=2
+frow=18
+fcol=5
+rows=1
+columns=70
+
+# default=Current value.
+
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+
+name=COPIES
+nrow=19
+ncol=1
+page=2
+frow=19
+fcol=7
+rows=1
+columns=68
+
+# default=Current value.
+
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+
+name=MODES (pattern)
+nrow=20
+ncol=1
+page=2
+frow=20
+fcol=16
+rows=1
+columns=59
+
+# default=Current value.
+
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+
+name=MODES (replacement)
+nrow=21
+ncol=1
+page=2
+frow=21
+fcol=20
+rows=1
+columns=55
+
+# default=Current value.
+
+choicemsg="N/A"
+invalidmsg="N/A"
+fieldmsg="N/A"
+
+name=CANCEL
+button=14
+action=CLOSE
+
+name=CONTINUE
+button=11
+action=UPDATE

@@ -1,0 +1,27 @@
+#ident	"@(#)lp.admin:printers/systems/Menu.systems	1.2"
+menu=Configure Connections to Other Systems
+
+help=open TEXT $INTFBASE/Text.itemhelp $LININFO
+
+name=add
+description=Add a New System Connection
+lininfo="menu:L1"
+action=OPEN FORM $OBJ_DIR/Form.add
+
+
+name=list
+description=Display Available System Connections
+lininfo="menu:L2"
+action=OPEN FORM $OBJ_DIR/Form.display
+
+
+name=modify
+description=Modify a System Connection
+lininfo="menu:L3"
+action=OPEN FORM $OBJ_DIR/Form.modify
+
+
+name=remove
+description=Remove a System Connection
+lininfo="menu:L4"
+action=OPEN FORM $OBJ_DIR/Form.remove

@@ -1,0 +1,47 @@
+#ident	"@(#)lp.admin:printers/classes/Text.add	1.1"
+title="Errors Encountered While Adding a Class"
+lifetime=longterm
+
+altslks=true
+
+close=UPDATE $ARG4
+
+framemsg="Press CONT to repeat or CANCEL to quit."
+
+text=`
+    echo "";
+    readfile $error;
+    echo ""
+`
+
+name=""
+button=9
+action=badchar
+
+name=""
+button=10
+action=badchar
+
+name=CONT
+button=11
+action=`indicator -w`close `getfrm`
+
+name=""
+button=12
+action=badchar
+
+name=""
+button=13
+action=badchar
+
+name=CANCEL
+button=14
+action=close ${ARG4} `getfrm`
+
+name=""
+button=15
+action=badchar
+
+name=""
+button=16
+action=badchar

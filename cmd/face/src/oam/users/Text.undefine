@@ -1,0 +1,42 @@
+#ident	"@(#)face:src/oam/users/Text.undefine	1.4"
+
+title="Results of Removing a FACE Environment for a FACE User"
+
+framemsg="Press CANCEL to return to the previous frame."
+
+lifetime=longterm
+
+help=open TEXT $INTFBASE/Text.itemhelp text:F1
+
+begrow=any
+begcol=any
+
+close=`unset -l HMSG -l LL; rm -f /tmp/f.md.${VPID}`close ${ARG2} `getfrm`
+
+`$VMSYS/bin/vdelete "$ARG1" > /tmp/f.md.${VPID};
+if [ "${RET}" -ne "0" ];
+then
+	set -l HMSG="
+ERROR: The user could not be removed.
+What follows is the output of the remove.
+";
+else
+	set -l HMSG="
+The FACE user has been successfully removed.
+";
+fi`
+
+header="${HMSG}"
+
+text="`readfile /tmp/f.md.${VPID}`"
+columns=`longline | set -l LL;
+if [ "${LL}" -gt "72" ];
+then
+	echo 72;
+elif [ "${LL}" -lt "48" ];
+then
+	echo 48;
+else
+	echo ${LL};
+fi`
+rows=8

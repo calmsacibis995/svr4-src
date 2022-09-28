@@ -1,0 +1,7 @@
+#ident	"@(#)oamintf:softwaremgmt/check/check.menu	1.1"
+#menu#Software Checking Choices
+#help#fmt.help^Devices Format Choices
+
+installed^Check Installed Packages^Form.inst
+original^Check Against Original Media^Form.orig
+spooled^Check Spooled Packages^Form.spool

@@ -1,0 +1,28 @@
+#ident	"@(#)bkrs:basic.d/system/Menu.system	1.1.1.1"
+menu="System Backup"
+help=open text /usr/vmsys/OBJECTS/Text.h "System Backup" backup/system/T.hbacksys
+
+name=Backup Users
+itemmsg="Move to an item with the arrow keys and strike the ENTER key to select"
+action=`Ckdev f1_or_mt | regex -e
+    0 'open menu $OBJ_DIR/system/Menu.users -d /dev/rdsk/f0t -u'
+    2 'open menu $OBJ_DIR/system/Menu.backusr' `
+
+name=Backup System
+itemmsg="Move to an item with the arrow keys and strike the ENTER key to select"
+action=`Ckdev f1_or_mt | regex -e
+    0 '`run sh -c \'.chkuser -c "/usr/bin/backup -c -d /dev/rdsk/f0t"\'`close $OBJ_DIR/system/Menu.system'
+    2 'open menu $OBJ_DIR/system/Menu.backsys -c' `
+
+name=Incremental System Backup
+itemmsg="Move to an item with the arrow keys and strike the ENTER key to select"
+action=`Ckdev f1_or_mt | regex -e
+    0 '`run sh -c \'.chkuser -c "/usr/bin/backup -p -d /dev/rdsk/f0t"\'`close $OBJ_DIR/system/Menu.system'
+    2 'open menu $OBJ_DIR/system/Menu.backsys -p' `
+
+name=Selective System Backup
+itemmsg="Move to an item with the arrow keys and strike the ENTER key to select"
+action=`Ckdev f1_or_mt | regex -e
+    0 'open form $OBJ_DIR/system/Form.files -d /dev/rdsk/f0t -f'
+    2 'open $OBJ_DIR/system/Menu.backsel' `
+

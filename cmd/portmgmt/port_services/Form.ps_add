@@ -1,0 +1,164 @@
+#ident	"@(#)portmgmt:port_services/Form.ps_add	1.6"
+
+`pmgetpid | set -l PID`
+`if [ $ARG3 = 1 ];
+ then
+	/usr/sbin/nlsadmin -V | set -l VER;
+ else 	if [ $ARG3 = 2 ];
+      	then
+		/usr/sbin/ttyadm -V | set -l VER;
+      	else
+		set -l VER="";
+      	fi;
+fi`
+form=`regex -e -v "$ARG1"
+	'^p$' 'Add Port Services to Port Monitor <$ARG2>'
+	'^t$' 'Add Port Services to Port Monitors of Type <$ARG2>'`
+
+close=` rm /var/tmp/cmd$PID /var/tmp/err$PID;
+	unset -l PID`
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+done=`message -w "Continue to page 2 ...";
+	echo pmadm -a -"$ARG1" "$ARG2" -s "$F1" -i "$F2" -v "$F5" \\ >/var/tmp/cmd$PID;
+	pmadmopts "$F3" "$F4" "$F6" "$F7" >> /var/tmp/cmd$PID;
+	regex -e -v "$ARG3"
+		'^0$' 'OPEN FORM $OBJ_DIR/Form.ps_adduk "$F1" `getfrm`'
+		'^1$' 'OPEN FORM $OBJ_DIR/Form.ps_addls "$F1" `getfrm`'
+		'^2$' 'OPEN FORM $OBJ_DIR/Form.ps_addtm "$F1" `getfrm`'
+		'.*' '`message "unknown code "$ARG3"."`'`
+
+# $F1
+name=Service tag:
+nrow=1
+ncol=2
+frow=1
+fcol=16
+rows=1
+columns=14
+lininfo=pssvctag
+valid=`set -l RET=0 && regex -v "$F1" '^[A-Za-z0-9]+$' && uniq_svctag "$ARG1" "$ARG2" "$F1"`
+invalidmsg=`regex -v "$RET"
+		'^2$'	'Error - tag already exists.'
+		'.*' 	'Error - tag must be alphanumeric.'`
+choicemsg=const "Enter the tag associated with the port service."
+fieldmsg=const "Enter the tag associated with the port service."
+
+# $F2
+name=Service invocation identity:
+nrow=2
+ncol=2
+frow=2
+fcol=32
+rows=1
+columns=14
+lininfo=psid
+valid=`grep "^$F2:" /etc/passwd`
+choicemsg=const "Enter the login ID the service will run as, e.g. root."
+fieldmsg=const "Enter the login ID the service will run as, e.g. root."
+invalidmsg=const "Error - login ID does not exist."
+
+# $F3
+name=Port/service state:
+nrow=3
+ncol=2
+frow=3
+fcol=23
+rows=1
+columns=8
+lininfo=psstate
+value=ENABLED
+rmenu={ DISABLED ENABLED }
+menuonly=true
+choicemsg=const "Select ENABLED/DISABLED"
+fieldmsg=const "Select state of the port service."
+invalidmsg=const "Invalid input - select ENABLED/DISABLED only."
+
+# $F4
+name="utmp" entry to be created for this service?
+nrow=4
+ncol=2
+frow=4
+fcol=46
+rows=1
+columns=3
+lininfo=psutmp
+value=No
+rmenu={ Yes No }
+menuonly=true
+choicemsg=const "Select Yes or No."
+fieldmsg=const "Select Yes or No."
+invalidmsg=const "Invalid input - select Yes/No only"
+
+# $F5
+name=Version number:
+nrow=5
+ncol=2
+frow=5
+fcol=18
+rows=1
+columns=3
+lininfo=psversion
+value=$VER
+#value=`regex -e -v "$ARG3"
+#		'^1$' '`/usr/sbin/nlsadmin -V`'
+#		'^2$' '`/usr/sbin/ttyadm -V`'
+#		'.*'  ' '`
+valid=`regex -v "$F5" '^[0-9]+$'`
+choicemsg=const "Enter the version number of port monitor."
+fieldmsg=const "Enter the version number of port monitor."
+invalidmsg=const "Invalid input - enter a positive number or zero"
+
+# $F6
+name=File name of the port service configuration script:
+nrow=8
+ncol=5
+frow=9
+fcol=9
+rows=1
+columns=40
+lininfo=psscript
+valid=`ckfile regular "$F6"`
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - enter full pathname of the script file'
+		'^2$'	'Error - must specify full pathname.'
+		'^3$'	'Error - file does not exist.'
+		'^6$'	'Error - file is not regular file.'
+		'.*'	'Error - invalid file name'`
+fieldmsg=const "Enter full path name of the script file."
+choicemsg=const "Enter full path name of the script file."
+scroll=true
+
+# $F7
+name=Comments:
+nrow=10
+ncol=5
+frow=11
+fcol=9
+rows=1
+columns=50
+lininfo=pscomments
+fieldmsg=const "Enter comments"
+choicemsg=const "Enter comments"
+scroll=true
+
+name=(Optional fields)
+nrow=7
+ncol=2
+inactive=TRUE
+
+name=Fill in the form and then press [SAVE] to continue on page 2.
+nrow=13
+ncol=4
+inactive=TRUE
+
+name=" "
+nrow=14
+ncol=2
+inactive=TRUE
+show=FALSE
+
+name=Page 1 of 2
+nrow=0
+ncol=54
+inactive=TRUE
+

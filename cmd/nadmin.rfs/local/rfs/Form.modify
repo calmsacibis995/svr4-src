@@ -1,0 +1,98 @@
+#ident	"@(#)nadmin.rfs:local/rfs/Form.modify	1.3"
+form="Modifies Automatic-Current Sharing of A Local Resource via RFS"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/form.msg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/local/rfs`
+
+done=`indicator -w;
+	set -l IMM="$F2" -l AUTO="$F3";
+	set -e RESDIR="$F1";
+	unset -l KEYCMD;
+	if [ "$AUTO" = "yes" ];
+	then
+		"$INTFBASE/netservices/remote_files/local/rfs/bin/auto_attr" | set -l PID;
+		if [ -s "/usr/tmp/amsg_$PID" ];
+		then
+			message "This resource is not shared automatically.";
+		else
+			/usr/bin/cut -s -d" " -f1 "/usr/tmp/a_attr$PID" | set -el RES;
+			/usr/bin/cut -s -d" " -f2 "/usr/tmp/a_attr$PID" | set -el DIR;
+			/usr/bin/cut -s -d" " -f3 "/usr/tmp/a_attr$PID" | set -el ACC;
+			/usr/bin/cut -s -d" " -f4 "/usr/tmp/a_attr$PID" | /usr/bin/tr '\011' '\040' | set -el DESC;
+			if [ "$DESC" = "-" ];
+			then
+				set -el DESC="";
+			fi;
+			/usr/bin/cut -s -d" " -f5 "/usr/tmp/a_attr$PID" | /usr/bin/tr '\072' '\012' | set -el CLIENT;
+			set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/local/rfs/Form.modify2";
+			fi;
+	fi;
+	if [ ! "$KEYCMD" ];
+	then
+		if [ "$IMM" = "yes" ];
+		then
+			"$INTFBASE/netservices/remote_files/local/rfs/bin/imm_attr" | set -l PID;
+			if [ -s "/usr/tmp/cmsg_$PID" ];
+			then
+				message "This resource is not shared currently.";
+				set -l KEYCMD="NOP";
+			else
+				/usr/bin/cut -s -d" " -f1 "/usr/tmp/c_attr$PID" | set -el RES;
+				/usr/bin/cut -s -d" " -f2 "/usr/tmp/c_attr$PID" | set -el DIR;
+				/usr/bin/cut -s -d" " -f3 "/usr/tmp/c_attr$PID" | set -el ACC;
+				/usr/bin/cut -s -d"\"" -f2 "/usr/tmp/c_attr$PID" | set -el DESC;
+				/usr/bin/cut -s -d"\"" -f3 "/usr/tmp/c_attr$PID" | /usr/bin/tr '\072' '\012' | set -el CLIENT;
+				set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/local/rfs/Form.modify3";
+			fi;
+		else
+			message "No options selected.  Press CANCEL to return to the menu.";
+			set -l KEYCMD="NOP";
+		fi;
+	fi;
+	`$KEYCMD
+
+name="Resource or Directory Name:"
+lininfo=modify:res
+nrow=2
+ncol=1
+frow=2
+fcol=29
+rows=1
+columns=40
+invalidmsg="Press CHOICES to select valid response."
+rmenu=`indicator -w;
+	"$INTFBASE/netservices/remote_files/local/rfs/bin/rf_list";
+	if [ -s /usr/tmp/s_list ];
+	then
+		cat /usr/tmp/s_list;
+	else
+		message "There are no resources currently or automatically shared.";
+	fi`
+menuonly=true
+
+name="Modify how the resource is shared currently?"
+lininfo=modify:curr
+nrow=4
+ncol=1
+frow=4
+fcol=46
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+invalidmsg="Press CHOICES to select valid response."
+
+name="Modify how the resource is shared automatically?"
+lininfo=modify:auto
+nrow=5
+ncol=1
+frow=5
+fcol=50
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+invalidmsg="Press CHOICES to select valid response."

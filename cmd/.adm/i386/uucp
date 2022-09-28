@@ -1,0 +1,2 @@
+#ident	"@(#)adm:i386/uucp	1.1"
+rm -f /usr/spool/locks/LCK*

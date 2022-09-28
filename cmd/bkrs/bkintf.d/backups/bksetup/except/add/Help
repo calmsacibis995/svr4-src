@@ -1,0 +1,34 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/except/add/Help	1.2"
+
+ABSTRACT: Add Patterns to the Backup Exception List
+	The "add" task allows you to add patterns to the backup exception
+	list.  Patterns must be in cpio-style format (using metacharacters
+	*?[]).  The character "*" matches any number of occurrences of any
+	character.  The character "?" matches one occurrence of any
+	character.  Characters between the square brackets "[]" match any
+	occurrence of any character in the brackets.  For example, the
+	pattern [0-9] matches one occurrence of any digit.
+	
+	To match all files and directories under a certain directory, enter
+	the path to the directory and follow it by "/*".  For example, to
+	exclude all files under the /tmp directory, enter the pattern
+	"/tmp/*".
+	
+	To match all files on the system which have a particular name, no
+	matter where they occur on the system, precede the file name by "*/".
+	For example, to exclude all files named "a.out" from the backup,
+	enter the pattern "*/a.out".
+	
+	To exclude one particular file from the backup, enter the full path
+	to that file.  For example, to exclude the file "/etc/wtmp" from the
+	backup, enter the patter "/etc/wtmp".
+
+TITLE: Add Patterns to the Backup Exception List
+
+F1:
+	"File Names:"  Enter a file which contains the exception list.
+
+F2:
+	"Patterns:"  Enter a list of patterns for files or directories to be
+	excluded from incremental file backups.  The list items can be
+	separated by commas or by spaces.

@@ -1,0 +1,25 @@
+#ident	"@(#)lp.admin:printers/systems/Text.display	1.1"
+
+title=System Connection(s)
+
+framemsg="Press CANCEL to continue."
+
+`message -w "Retrieving system connections, please wait...";shell "/usr/sbin/lpsystem -l $C_list 2>&1" > $name_2`
+
+rows=14
+begrow=current
+begcol=current
+lifetime=shortterm
+text="`readfile $name_2`"
+columns=`message "Press CANCEL to continue.";longline|set -l LL;
+fmlexpr $DISPLAYW - 3 | set -l DW;
+if [ $LL -gt $DW ];
+then
+	echo $DW;
+else
+	echo $LL;
+fi`
+
+name=""
+button=1
+action=nop

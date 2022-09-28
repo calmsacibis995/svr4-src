@@ -1,0 +1,18 @@
+#ident	"@(#)lp.admin:printers/reports/Text.error	1.1"
+
+title="Error processing"
+
+row=16
+columns=60
+
+begrow=distinct
+begcol=distinct
+
+text="
+	An error has occurred in processing your request
+
+`readfile $error`
+
+"
+
+cancel=`rm $error`close

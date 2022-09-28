@@ -1,0 +1,231 @@
+#ident	"@(#)nadmin.nfs:remote/nfs/Form.modify3	1.1"
+form="Modifies Current Mounting of Remote Resources via NFS"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`set -l OBJ_DIR="$INTFBASE/netservices/remote_files/remote/nfs"`
+`readfile "$INTFBASE/form.msg" | message -p`
+
+done=`indicator -w;
+	getfrm | set -l FRM;
+	if [ "$F14" = "no" ];
+	then
+		message "Automatic mounting of \"$SRV:$RPATH\" will not be modified.";
+		set -l KEYCMD="CLOSE $ARG1 $FRM";
+	else
+		set -el NMNT="$F4";
+		if [ "$F5" = "read-only" ];
+		then
+			set -el ACC="ro";
+		else
+			set -el ACC="rw";
+		fi;
+		if [ "$F6" = "no" ];
+		then
+			set -el SUID=",nosuid";
+		else
+			set -el SUID=",suid";
+		fi;
+		if [ "$F7" = "no" ];
+		then
+			set -el RMNT=",remount";
+		else
+			set -el RMNT="";
+		fi;
+		if [ "$F8" = "background" ];
+		then
+			set -el RTRY=",bg";
+		else
+			set -el RTRY=",fg";
+		fi;
+		if [ "$F9" ];
+		then
+			set -el MTRIES=",retry=$F9";
+		else
+			set -el MTRIES="";
+		fi;
+		if [ "$F10" ];
+		then
+			set -el TIMEO=",timeo=$F10";
+		else
+			set -el TIMEO="";
+		fi;
+		if [ "$F11" = "yes" ];
+		then
+			set -el SEC=",secure";
+		else
+			set -el SEC="";
+		fi;
+		"$INTFBASE/netservices/remote_files/remote/nfs/bin/curr_mod" | set -l PID;
+		if [ -s "/var/tmp/nfs_$PID" ];
+		then
+			set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/remote/nfs/Text.generic 'Modifies Current Mounting of Remote Resources via NFS' '/var/tmp/nfs_$PID' $ARG1 $FRM";
+		else
+			message "Automatic mounting of \"$SRV:$RPATH\" will not be modified.";
+			set -l KEYCMD="CLOSE $ARG1 $FRM";
+      		fi;
+	fi;
+	`$!KEYCMD
+
+#F1
+name="This is how the specified resource is currently mounted:"
+nrow=1
+ncol=1
+frow=1
+fcol=46
+rows=1
+
+#F2
+name="Server:"
+nrow=4
+ncol=1
+frow=4
+fcol=18
+rows=1
+columns=20
+inactive=true
+value="$SRV"
+
+#F3
+name="Directory:"
+nrow=5
+ncol=1
+frow=5
+fcol=18
+rows=1
+columns=20
+inactive=true
+value="$RPATH"
+
+#F4
+name="Mountpoint:"
+nrow=7
+ncol=1
+frow=7
+fcol=18
+rows=1
+columns=20
+lininfo=modify2:mount
+value="$MNT"
+
+#F5
+name="Access:"
+nrow=8
+ncol=1
+frow=8
+fcol=18
+rows=1
+columns=10
+rmenu={ read-only read-write }
+menuonly=true
+lininfo=modify2:acc
+invalidmsg="Press CHOICES to select valid response."
+value="$ACC"
+
+#F6
+name="Setuid:"
+nrow=9
+ncol=1
+frow=9
+fcol=18
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+lininfo=modify2:suid
+invalidmsg="Press CHOICES to select valid response."
+value="$SUID"
+
+#F7
+name="Remount:"
+nrow=10
+ncol=1
+frow=10
+fcol=18
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+invalidmsg="Press CHOICES to select valid response."
+lininfo=modify2:rmnt
+value="$RMNT"
+
+#F8
+name="Retries:"
+nrow=11
+ncol=1
+frow=11
+fcol=18
+rows=1
+columns=10
+rmenu={ background foreground }
+menuonly=true
+lininfo=modify2:rtry
+invalidmsg="Press CHOICES to select valid response."
+value="$RTRY"
+
+#F9
+name="Maximum retries:"
+nrow=12
+ncol=1
+frow=12
+fcol=18
+rows=1
+columns=5
+lininfo=modify2:mtry
+value="$MTRIES"
+
+#F10
+name="Timeout:"
+nrow=13
+ncol=1
+frow=13
+fcol=18
+rows=1
+columns=3
+lininfo=modify2:timeo
+vaue="$TIMEO"
+
+#F11
+name="Security:"
+nrow=14
+ncol=1
+frow=14
+fcol=18
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+lininfo=modify2:sec
+invalidmsg="Press CHOICES to select valid response."
+value="$SEC"
+
+#F12
+name="Modify the above information until you are satisfied"
+nrow=16
+ncol=1
+frow=16
+fcol=52
+rows=1
+
+#F13
+name="with the way the resource will be mounted via NFS."
+nrow=17
+ncol=1
+frow=17
+fcol=52
+rows=1
+
+#F14
+name="OK to modify how the resource is currently being mounted?"
+page=2
+nrow=1
+ncol=1
+frow=1
+fcol=59
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+invalidmsg="Press CHOICES to select valid response."
+lininfo=modify2:ok

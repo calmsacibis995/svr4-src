@@ -1,0 +1,107 @@
+#ident	"@(#)lp.admin:printers/systems/Form.add	1.4.1.1"
+
+#######################################################
+#
+#       Module Name: printers/systems/Form.add
+#
+#######################################################
+
+form=Add a New System Connection
+
+help=open TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`message -w "Adding a new system connection, please wait...";
+if [ -z "$F5" ];
+then
+    shell "/usr/sbin/lpsystem -t $F2 -T $F3 -R $F4 $F1 > /dev/null 2>&1";
+else
+    shell "/usr/sbin/lpsystem -t $F2 -T $F3 -R $F4 -y \"$F5\" $F1 > /dev/null 2>&1";
+fi;
+message "Enter new values and press SAVE to repeat or CANCEL to quit."`update $OBJ_DIR/Form.add true
+
+name=System name:
+lininfo="add:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=14
+rows=1
+columns=56
+scroll=true
+value=" "
+fieldmsg="Enter the name of a remote system and press SAVE when finished."
+valid=`indicator -w;
+fmlexpr "$F1" : '.*' | set -l F1_len;
+if [ $F1_len -eq 0 ];
+then
+    echo false;
+    set -l emsg="You must supply a system name here.";
+elif [ $F1_len -gt 255 ];
+then
+    echo false;
+    set -l emsg="The system name must be less than 256 characters long.";
+elif fmlgrep "^$F1:" /etc/lp/Systems > /dev/null;
+then
+    echo false;
+    set -l emsg="Your entry is already defined as a remote system.";
+else
+    echo true;
+fi`
+invalidmsg=$emsg
+
+name=Scheduler type:
+lininfo="add:F2"
+nrow=2
+ncol=1
+frow=2
+fcol=17
+rows=1
+columns=3
+rmenu={ s5 bsd }
+value=s5
+menuonly=true
+invalidmsg="You must enter either s5 (System V) or bsd (SunOS)."
+fieldmsg="Enter the type of scheduler on the remote system and press SAVE when finished."
+
+name=Connection timeout:
+lininfo="add:F3"
+nrow=3
+ncol=1
+frow=3
+fcol=21
+rows=1
+columns=10
+value="n"
+fieldmsg="Enter a number of minutes or the letter \'n\' and press SAVE when finished."
+valid=`regex -v "$F3" '^n$' 'true' '^[0-9]+$' 'true' '.*' 'false'`
+invalidmsg="You must enter a positive number or the letter \'n\'."
+
+name=Retry period:
+lininfo="add:F4"
+nrow=4
+ncol=1
+frow=4
+fcol=15
+rows=1
+columns=10
+value=10
+fieldmsg="Enter a number of minutes or the letter \'n\' and press SAVE when finished."
+valid=`regex -v "$F4" '^n$' 'true' '^[0-9]+$' 'true' '.*' 'false'`
+invalidmsg="You must enter a positive number or the letter \'n\'."
+
+
+name="Comment:"
+lininfo="add:F5"
+nrow=5
+ncol=1
+frow=5
+fcol=10
+rows=1
+columns=60
+fieldmsg="Enter a comment for this remote system and press SAVE when finished."
+value=" "
+valid=`indicator -w;
+	regex -v "$F5"
+	'^[^:]{1,60}$' 			   'true'
+	'^.*$'			'false'`
+invalidmsg="Comment cannot contain colons."

@@ -1,0 +1,99 @@
+#ident	"@(#)nadmin.nfs:remote/nfs/Form.unmnt2	1.1"
+form="Terminates Automatic Mounting of a Remote Resource via NFS"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`set -l OBJ_DIR="$INTFBASE/netservices/remote_files/remote/nfs"`
+
+done=`if [ "$F7" = "yes" ];
+	then
+		"$INTFBASE/netservices/remote_files/remote/nfs/bin/auto_unmount";
+		message "Automatic mounting of \"$SERV:$RDIR\" has been terminated.";
+	else
+		message "Automatic mounting of \"$SERV:$RDIR\" will not be terminated.";
+	fi;
+	if [ "$IMM" = "yes" ];
+	then
+		"$INTFBASE/netservices/remote_files/remote/nfs/bin/curr_attr" | set -l PID;
+		if [ -s "/usr/tmp/attr_$PID" ];
+		then
+			/usr/bin/cut -d" " -f1 "/usr/tmp/attr_$PID" | set -el SERV;
+			/usr/bin/cut -d" " -f2 "/usr/tmp/attr_$PID" | set -el RDIR;
+			/usr/bin/cut -d" " -f3 "/usr/tmp/attr_$PID" | set -el RES;
+			/usr/bin/cut -d" " -f4 "/usr/tmp/attr_$PID" | set -el ACCESS;
+			set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/remote/nfs/Form.unmnt3";
+		else
+			message "\"$SERV:$RDIR\" is not currently mounted.";
+			set -l KEYCMD="CLOSE";
+		fi;
+	else
+		set -l KEYCMD="NOP";
+	fi;
+	`$KEYCMD
+
+name="The following resource will no longer be"
+nrow=1
+ncol=1
+frow=1
+fcol=41
+rows=1
+
+name="automatically mounted via NFS:"
+nrow=2
+ncol=1
+frow=2
+fcol=30
+rows=1
+
+name="Mountpoint:"
+nrow=4
+ncol=1
+frow=4
+fcol=13
+rows=1
+columns=30
+inactive=true
+value="$RES"
+
+name="Server:"
+nrow=5
+ncol=1
+frow=5
+fcol=9
+rows=1
+columns=30
+inactive=true
+value="$SERV"
+
+name="Remote Directory:"
+nrow=6
+ncol=1
+frow=6
+fcol=19
+rows=1
+columns=20
+inactive=true
+value="$RDIR"
+
+name="Access:"
+nrow=7
+ncol=1
+frow=7
+fcol=9
+rows=1
+columns=10
+inactive=true
+value="$ACCESS"
+
+name="OK to discontinue automatic mounting of the resource?"
+nrow=10
+ncol=1
+frow=10
+fcol=56
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value=yes
+lininfo=unmnt2:ok
+invalidmsg="Press CHOICES to select valid response."
+

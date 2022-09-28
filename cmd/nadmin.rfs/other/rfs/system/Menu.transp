@@ -1,0 +1,14 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/Menu.transp	1.3"
+menu="Select Transport Provider"
+`readfile $INTFBASE/msmenu.msg | message -p`
+
+multiselect=true
+done=`getitems  |set -l Form_Choice;
+	getitems " " |  set -e TRANS;
+	/bin/rm "/var/tmp/TP_$PID" 2>/dev/null;
+	unset -l PID`CLOSE
+
+lifetime=shortterm
+
+`"$INTFBASE/netservices/remote_files/other/rfs/system/bin/find_trans" | set -l PID`
+`cat /var/tmp/TP_$PID |  regex '^(.*)$0$' 'name="$m0"'`

@@ -1,0 +1,18 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FILTER/Form.fadd	1.1"
+form="Filter Name"
+#help=open text $VMSYS/OBJECTS/Text.h "Filter Name" PS/FILTER/T.hfadd1
+done=`indicator -w`open /usr/vmsys/OBJECTS/PS/FILTER/Form.add "$F1"
+
+name=Filter name:
+nrow=1
+ncol=2
+rows=1
+columns=14
+frow=1
+fcol=14
+valid=`/usr/vmsys/admin/PS/FILTER/name "$F1" | set -l NAME; regex -v $NAME 0`
+fieldmsg=Type the name of the filter. Strike SAVE when you complete the form.
+invalidmsg=`echo "$NAME" | regex 1 "$F1 is the name of an existing filter. Type another filter name."
+				 2 "\"Filter Name\" is a mandatory field. Type a filter name."
+				 3  "Name is limited to 14 characters, alphanumeric or \"_\"."`
+`indicator -w`

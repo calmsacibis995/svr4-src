@@ -1,0 +1,57 @@
+#ident	"@(#)oamintf:sched/Text.chgcfm	1.1"
+
+title=Confirmation
+altslks
+
+begrow=center
+begcol=center
+rows=12
+columns=70
+
+`message "Strike the CONT function key to confirm, or strike CANCEL to cancel."`
+
+text=" The following task will be scheduled:
+
+     Task: `cat /tmp/task1.$VPID | /usr/sadm/sysadm/bin/slash`
+     Month(s): $ARG1
+     Date(s): $ARG2
+     Weekday(s): $ARG3
+     Hour(s): $ARG4
+     Minute(s): $ARG5
+
+ Strike CONT to confirm. If you strike CANCEL, the selected
+ task will not be changed."
+
+name=""
+button=9
+action=nop
+
+name=""
+button=10
+action=nop
+
+name=CONT
+button=11
+action=`indicator -w; chg_cron /tmp/task1.$VPID "$ARG1" "$ARG2" "$ARG6" "$ARG4" "$ARG5" "$ARG7"`close $OBJ_DIR/Text.chgcfm $OBJ_DIR/Form.chg $OBJ_DIR/Menu.chg
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=CANCEL
+button=14
+action=close $OBJ_DIR/Text.chgcfm $OBJ_DIR/Form.chg $OBJ_DIR/Menu.chg
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=nop
+
+`indicator -w`

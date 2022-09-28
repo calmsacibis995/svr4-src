@@ -1,0 +1,8 @@
+#ident	"@(#)lp:filter/postscript/font/devpostaps/charlib/bu	1.1"
+/build_bu {
+	pop
+	gsave
+	font findfont size size .75 mul add scalefont setfont
+	(\267) show
+	grestore
+} bind def

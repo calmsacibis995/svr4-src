@@ -1,0 +1,50 @@
+#ident	"@(#)portmgmt:port_quick/Text.priv	1.1.1.1"
+title="Warning"
+lifetime=shortterm
+altslks
+
+begrow=any
+begcol=any
+
+`message "Strike the CONT function key to continue."`
+
+text="You must have system administration privileges to
+use Quick Terminal Setup.
+System administration privileges can be assigned to a user by a privileged 
+user through the Change User Login feature."
+rows=5
+columns=77
+
+name=CANCEL
+button=14
+action=CLEANUP
+
+name=CONT
+button=11
+action=CLEANUP
+
+#name=PREV-FRM
+#button=12
+#action=return prev-frm
+
+#name=NEXT-FRM
+#button=13
+#action=return next-frm
+
+name=""
+button=16
+action=return cancel
+
+name=""
+button=10
+action=nop
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=9
+action=nop
+
+`indicator -w`

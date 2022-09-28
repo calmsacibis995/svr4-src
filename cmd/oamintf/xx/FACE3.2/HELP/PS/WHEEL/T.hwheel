@@ -1,0 +1,23 @@
+This feature enables you to define printwheels to be used by
+AT&T FACE and the LP System.
+
+Some printers have interchangeable printwheels and font cartridges
+to facilitate the printing of multiple fonts. From the system's
+viewpoint, a printwheel and font carriage are the same as each
+requires the user to intervene and mount a printwheel or
+cartridge on the printer. Your system supports both printwheels and
+font cartridges and the term "printwheels" applies to both.
+
+The items on the Printwheels Menu are:
+
+      Add:  Add a description of a printwheel's action to take to
+      alert you when the printwheel should be mounted.
+
+      Change:  Change description of a printwheel.
+
+      Delete - Delete a printwheel description and make it unknown
+      to this interface and LP System.
+
+      Display - Display descriptions of all the printwheels that 
+      have been defined for the system.
+

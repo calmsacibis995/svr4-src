@@ -1,0 +1,14 @@
+#ident	"@(#)nadmin.nfs:other/nfs/control/Help	1.2"
+
+control:start:Start Network File System Operations
+	The nfs start task allows you to start the operation of
+	the Network File System.
+
+control:check:Check Status of NFS File Service
+	The check_status task allows you to check whether the
+	necessary processes for the Network File System are running
+	on your local system.
+
+control:stop:Stop Network File System Operations
+	The nfs stop task allows you to stop the operation of
+	the Network File System.

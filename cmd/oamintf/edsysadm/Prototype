@@ -1,0 +1,69 @@
+#ident	"@(#)oamintf:edsysadm/Prototype	1.4"
+!MENU=/usr/sadm/sysadm/menu
+!INTFBIN=/usr/sadm/sysadm/bin
+
+!OAMBASE=/usr/sadm/sysadm
+
+##############################################################
+#		Edsysadm
+##############################################################
+d edsys $OAMBASE 0555 bin bin
+
+###############
+# Commands
+###############
+f edsys /usr/sbin/edsysadm 0755 bin bin
+f edsys /usr/sbin/delsysadm 0755 bin bin
+
+###############
+# executables
+###############
+d edsys $OAMBASE/edbin 0755 bin bin
+f edsys $OAMBASE/edbin/mkpkg 0755 bin bin
+f edsys $OAMBASE/edbin/mkmf 0755 bin bin
+f edsys $OAMBASE/edbin/mkpf 0755 bin bin
+f edsys $OAMBASE/edbin/mkchgs 0755 bin bin
+f edsys $OAMBASE/edbin/findmenu 0755 bin bin
+f edsys $OAMBASE/edbin/getfld 0755 bin bin
+f edsys $OAMBASE/edbin/getintdef 0755 bin bin
+f edsys $OAMBASE/edbin/getpkgdesc 0755 bin bin
+f edsys $OAMBASE/edbin/test_menu 0755 bin bin
+f edsys $OAMBASE/edbin/updt_pkgdesc 0755 bin bin
+f edsys $OAMBASE/edbin/valfiles 0755 bin bin
+f edsys $OAMBASE/edbin/edhelp 0755 bin bin
+
+###############
+# FMLI objects
+###############
+d edsys $OAMBASE/edmenu 0755 bin bin
+f edsys $OAMBASE/edmenu/Text.dups 0644 bin bin
+f edsys $OAMBASE/edmenu/Text.pkgerr 0644 bin bin
+f edsys $OAMBASE/edmenu/Text.gpderr 0644 bin bin
+f edsys $OAMBASE/edmenu/Text.tmerr 0644 bin bin
+f edsys $OAMBASE/edmenu/Text.ok 0644 bin bin
+f edsys $OAMBASE/edmenu/Text.mkchgerr 0644 bin bin
+f edsys $OAMBASE/edmenu/Text.success 0644 bin bin
+
+f edsys $OAMBASE/edmenu/Form.menu 0644 bin bin
+f edsys $OAMBASE/edmenu/Form.task 0644 bin bin
+f edsys $OAMBASE/edmenu/Form.chgmenu 0644 bin bin
+f edsys $OAMBASE/edmenu/Form.chgtask 0644 bin bin
+f edsys $OAMBASE/edmenu/Form.collision 0644 bin bin
+f edsys $OAMBASE/edmenu/Form.getpkg 0644 bin bin
+f edsys $OAMBASE/edmenu/Form.save 0644 bin bin
+f edsys $OAMBASE/edmenu/Form.savepkg 0644 bin bin
+f edsys $OAMBASE/edmenu/Form.select 0644 bin bin
+f edsys $OAMBASE/edmenu/Form.test 0644 bin bin
+f edsys $OAMBASE/edmenu/Form.overwrite 0644 bin bin
+f edsys $OAMBASE/edmenu/Form.redo 0644 bin bin
+
+f edsys $OAMBASE/edmenu/Menu.pkg 0644 bin bin
+f edsys $OAMBASE/edmenu/Menu.choices 0644 bin bin
+f edsys $OAMBASE/edmenu/Menu.menu 0644 bin bin
+f edsys $OAMBASE/edmenu/Menu.task 0644 bin bin
+f edsys $OAMBASE/edmenu/Menu.testmenu 0644 bin bin
+
+###############
+#  helps
+###############
+f edsys $OAMBASE/edmenu/Help 0644 bin bin

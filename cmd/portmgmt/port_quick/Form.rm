@@ -1,0 +1,27 @@
+
+#ident	"@(#)portmgmt:port_quick/Form.rm	1.1.2.2"
+
+form= Quick Terminal Removal
+lifetime=shorterm
+close=`rm /var/tmp/cmd`
+done=`message -w "Please wait, terminal removal in progress..."; q-rm "$F1" | regex -e
+     6 'open $OBJ_DIR/Text.priv'
+     0 'open $OBJ_DIR/Text.cfr'`
+
+`q-add COLLECT`
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+# $F1
+name=Port Number(s):
+nrow=1
+ncol=2
+frow=1
+fcol=18
+rows=8
+columns=26
+scroll=true
+wrap=true
+lininfo=portnor
+rmenu=OPEN Menu $OBJ_DIR/Menu.rp
+#choicemsg=const "Select the Port Number."
+#fieldmsg=const "Select the Port Number."
+fieldmsg=const `readfile $INTFBASE/form.msg`

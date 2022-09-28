@@ -1,0 +1,29 @@
+#ident	"@(#)devintf:devices/attrs/add/Help	1.2.1.1"
+
+add:ABSTRACT:
+	The "add" task adds an attribute to a device description in the Device
+	Management tables.  You will be asked to supply the alias of the device
+	description you wish to modify, the name of the attribute you
+	wish to add, and the value of that attribute.
+
+Form.add:Alias:the Alias field
+	This field names the alias of the device entry that is to be modified.
+	
+	The value must be a valid alias (i.e. containing only alphanumeric
+	characters, '.', '-', '_', and '$', and no more than 14 characters in
+	length) and must already be defined in the device tables.  This field
+	may not be blank.
+
+Form.add:Attribute:the Attribute field
+	This field names the attribute to be added to the previously named
+	device alias.
+	
+	The value must be an attribute name (i.e. containing only alphanumeric
+	characters, '.', '-', '_', and '$', and no more than 14 characters in
+	length).  The attribute may not already be defined for the named
+	device alias.
+
+Form.add:Value:the Value field
+	This field is the value of the attribute previously named.
+	
+	The data in this field is not validated.

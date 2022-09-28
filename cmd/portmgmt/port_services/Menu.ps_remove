@@ -1,0 +1,27 @@
+#ident	"@(#)portmgmt:port_services/Menu.ps_remove	1.7.1.1"
+
+`pmgetpid | set -l PID`
+menu="Svctag   Pmtag     Pmtype  (Remove Services)"
+multiselect=true
+close=`rm /var/tmp/cmd$PID;
+       unset -l PID -l KEYCMD`
+`pstest remove;
+	regex -e -v "$RET"
+	   '0' '`message "MARK all services you want to remove and then press ENTER."`'
+	   '1' '`message "No service to remove."`'`
+done=`getitems | tr -d '\0' > /var/tmp/cmd$PID;
+	if [ -s /var/tmp/cmd$PID ];
+	then
+		message "Removing [MARK]ed services ...";
+		sh /var/tmp/cmd$PID;
+		message "All [MARK]ed services are removed.";
+		set -l KEYCMD="CLOSE";
+	else
+		message "No item is [MARK]ed.";
+		set -l KEYCMD="RESET";
+	fi`$KEYCMD
+
+`pmadm -L | sed 's/#.*$//' | regex '^([^:][^:]*)$0:([^:][^:]*)$1:([^:][^:]*)$2:.*$'
+ 'name="$m2  "
+  description="$m0     $m1"
+  lininfo="pmadm -r -p $m0 -s $m2"'`

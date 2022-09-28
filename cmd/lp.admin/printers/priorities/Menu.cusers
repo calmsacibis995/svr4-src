@@ -1,0 +1,10 @@
+#ident	"@(#)lp.admin:printers/priorities/Menu.cusers	1.1.1.1"
+
+menu=Choices
+lifeterm=shortterm
+multiselect=true
+framemsg="MARK any number of choices and press ENTER when finished."
+
+done=`getitems " "|set -l Form_Choice`close
+
+`indicator -w;$OAMBASE/add-ons/lp/printers/priorities/getuser.sh $ARG1| /usr/bin/sort | regex '^(.*)$0$' 'name=$m0'`

@@ -1,0 +1,17 @@
+#ident	"@(#)sdb:util/mkdefine	1.1"
+
+if [ $# -eq 1 ]
+then
+    macroname="$1"
+else
+    macroname="ERROR=$0"
+    echo "$0: not exactly one argument - assuming $macroname" >&2
+fi
+
+{
+    echo "$macroname\t= "
+    while read n junk
+    do
+	echo "\t$n"
+    done
+} | sed -e 's/$/ \\/' -e '$s/ \\//'

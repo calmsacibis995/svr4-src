@@ -1,0 +1,32 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/Form.p_add	1.5"
+form="Add Systems to the Domain Password File"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=unset -l PID -l LINES
+
+`readfile $INTFBASE/form.msg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/rfs/system`
+
+done=`indicator -w;
+	set -e SYSTEMS="$F1";
+	run "$INTFBASE/netservices/remote_files/other/rfs/system/bin/add_passwd";
+	if [ -s "/var/tmp/add" ];
+	then
+		set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/other/rfs/system/Text.generic 'Adds Members to the Domain Password File' /var/tmp/add";
+	else
+		message "WARNING: No systems added. Check System Administrators Guide for details.";
+		set -l KEYCMD="NOP";
+	fi;
+set -l SET_SEQ=5;
+`$!KEYCMD
+	
+name="System:"
+nrow=1
+ncol=1
+frow=1
+fcol=13
+rows=5
+columns=14
+scroll=true
+lininfo=p_add:system
+valid=`[ "$F1" ]`
+invalidmsg="Enter name(s) of the system that you want to add to the domain password file."

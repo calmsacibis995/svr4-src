@@ -1,0 +1,36 @@
+#ident	"@(#)initpkg:init.d/adv	1.3.4.1"
+
+USAGE="Usage: /etc/init.d/adv {start | stop}"
+if [ $# -lt 1 ]
+then
+	echo "$USAGE"
+	exit 	exit 1
+fi
+case $1 in
+'start')
+
+#	advertise everything in dfstab (replacement for /etc/rstab)
+ 
+ 	if [ -f /etc/dfs/dfstab ]
+ 	then
+ 		/sbin/sh /etc/dfs/dfstab
+ 	fi
+	;;
+
+'stop')
+#		the following unadvertises everything currently advertised
+
+	if [ -f /etc/dfs/sharetab ]
+	then
+		/usr/bin/cat /etc/dfs/sharetab |
+			while read path resource junk
+			do 
+				/usr/sbin/unshare ${resource}
+			done
+	fi
+	;;
+*)
+	echo "$USAGE"
+	exit 1
+	;;
+esac

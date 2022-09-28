@@ -1,0 +1,190 @@
+#ident	"@(#)bkrs:rsintf.d/restores/rsoper/Form.rsoper	1.8.1.1"
+form="Access Pending Restore Requests"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+`set -l CMD=""`
+
+done=`message -w;
+	set -l ERR=/tmp/$VPID.bea;
+	message -w "Trying to add entry.";
+	run rsop "$F1" "$F2" "$F3" "$F4" "$F5" "$F6" "$F7" "$F8" "$F9" "$ERR";
+	if [ $RET -eq 0 ] ;
+	then
+		getfrm | set -l FNUM;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.rsoper $ERR $FNUM";
+	else
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.err $ERR";
+	fi`$!CMD
+
+begrow=any
+begcol=any
+
+# Destination device field - F1
+name=Destination device:
+lininfo=F1
+nrow=2
+ncol=2
+
+frow=2
+fcol=22
+rows=1
+columns=51
+scroll=true
+
+choicemsg="Enter the device from which the restore request will be satisfied."
+invalidmsg="You must enter a device which appears in the device table."
+#valid=??
+
+# Destination characteristics - F2
+name=Destination characteristics:
+lininfo=F2
+nrow=3
+ncol=2
+
+frow=3
+fcol=31
+rows=1
+columns=41
+scroll=true
+
+choicemsg="Enter the characteristics for the device from which the restore will be done."
+valid=`regex -e -v "$F2" '^.*$'`
+
+# Destination volume labels - F3
+name=Destination volume labels:
+lininfo=F3
+nrow=4
+ncol=2
+
+frow=4
+fcol=29
+rows=1
+columns=42
+scroll=true
+
+choicemsg="Enter the volume labels for the volumes from which the restore will be done."
+valid=`regex -e -v "$F3" '^.*$'`
+
+# Jobids field - F4
+name=Job id(s):
+lininfo=F4
+nrow=5
+ncol=2
+
+frow=5
+fcol=13
+rows=1
+columns=52
+scroll=true
+
+value=all
+choicemsg="Enter the restore jobids you want to service or 'all'."
+
+valid=`shell "if [ \"$F4\" = \"all\" ]
+		then
+			exit 0
+		else
+			valrsids \"$F4\"
+			exit \$?
+		fi"`
+#valid=`regex -e -v "$F4" 'all' 'TRUE'
+#	'^..*$' '`valrsids "$F4"`' `
+
+invalidmsg="Enter a list of valid restore jobids or 'all'."
+
+# Users field - F5
+name=Users:
+lininfo=F5
+nrow=6
+ncol=2
+
+frow=6
+fcol=9
+rows=1
+columns=64
+scroll=true
+
+value=all
+choicemsg="Enter the users whose restore requests you want to service or 'all'."
+
+valid=`shell "if [ \"$F5\" = \"all\" ]
+		then
+			exit 0
+		else
+			valusers \"$F5\"
+			exit \$?
+		fi"`
+#valid=`regex -e -v "$F5" 'all' 'TRUE'
+#	'^..*$' '`valusers "$F5"`'`
+
+invalidmsg="Enter a list of valid login ids or 'all'."
+
+# Method field - F6
+name=Method:
+lininfo=F6
+nrow=7
+ncol=2
+
+frow=7
+fcol=10
+rows=1
+columns=14
+
+choicemsg="Enter the method to be used to satisfy the restore request."
+
+rmenu=OPEN MENU $OBJ_DIR/Menu.methods
+	
+valid=`valmeth $F6`
+invalidmsg="The method name must be one listed in the [CHOICES] menu."
+
+# Origination name - F7
+name=Origination name:
+lininfo=F7
+nrow=8
+ncol=2
+
+frow=8
+fcol=20
+rows=1
+columns=53
+
+choicemsg="Enter the originating file system or partition to be restored."
+
+valid=true
+
+# Origination device - F8
+name=Origination device:
+lininfo=F8
+nrow=9
+ncol=2
+
+frow=9
+fcol=22
+rows=1
+columns=51
+scroll=true
+
+choicemsg="Enter the raw disk device name for the file system or partition to be restored."
+
+valid=true
+
+# Display mode - F9
+name=Display mode:
+lininfo=F9
+nrow=10
+ncol=2
+
+frow=10
+fcol=16
+rows=1
+columns=3
+
+choicemsg="Enter 'yes' if you want the names of files restored to be printed out."
+
+value=no
+rmenu={ yes no }
+menuonly
+invalidmsg="Enter 'yes' or 'no'."

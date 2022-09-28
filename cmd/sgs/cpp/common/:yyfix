@@ -1,0 +1,79 @@
+#ident	"@(#)cpp:common/:yyfix	1.4"
+#
+#	standard out from this shell script produces the static tables files
+
+grep 'typedef.*yytabelem;' y.tab.c
+grep 'typedef.*yytoktype;' y.tab.c
+
+#	assume that the arrays wanted are:
+#	yyexca, yyact, yypact, yypgo, yyr1, yyr2, yychk, yydef,
+#	and the debugging arrays and #if ... #endif pairs are
+#	(in order):  yytoks, yyreds
+
+ed - y.tab.c <<DONE
+/^\(.*\)yyexca[ 	]*\[]/s//extern \1 yyexca[];\\
+\1 yyexca []/
+.ka
+/}/kb
+'a,'bp
+'a,'bd
+/^\(.*\)yyact[ 	]*\[]/s//extern \1 yyact[];\\
+\1 yyact []/
+.ka
+/}/kb
+'a,'bp
+'a,'bd
+/^\(.*\)yypact[ 	]*\[]/s//extern \1 yypact[];\\
+\1 yypact []/
+.ka
+/}/kb
+'a,'bp
+'a,'bd
+/^\(.*\)yypgo[ 	]*\[]/s//extern \1 yypgo[];\\
+\1 yypgo []/
+.ka
+/}/kb
+'a,'bp
+'a,'bd
+/^\(.*\)yyr1[ 	]*\[]/s//extern \1 yyr1[];\\
+\1 yyr1 []/
+.ka
+/}/kb
+'a,'bp
+'a,'bd
+/^\(.*\)yyr2[ 	]*\[]/s//extern \1 yyr2[];\\
+\1 yyr2 []/
+.ka
+/}/kb
+'a,'bp
+'a,'bd
+/^\(.*\)yychk[ 	]*\[]/s//extern \1 yychk[];\\
+\1 yychk []/
+.ka
+/}/kb
+'a,'bp
+'a,'bd
+/^\(.*\)yydef[ 	]*\[]/s//extern \1 yydef[];\\
+\1 yydef []/
+.ka
+/}/kb
+'a,'bp
+'a,'bd
+/^#[ 	]*ifndef[ 	][ 	]*YYDEBUG/;/^#[ 	]*endif/p
+/^#[ 	]*if[ 	][ 	]*YYDEBUG/p
+/^\(.*\)yytoks[ 	]*\[]/s//extern \1 yytoks[];\\
+\1 yytoks []/
+.ka
+/^}/kb
+'a,'bp
+'a,'bd
+/^\(.*\)yyreds[ 	]*\[]/s//extern \1 yyreds[];\\
+\1 yyreds []/
+.ka
+/^}/kb
+'a,'bp
+'a,'bd
+/^#[ 	]*endif/p
+w
+q
+DONE

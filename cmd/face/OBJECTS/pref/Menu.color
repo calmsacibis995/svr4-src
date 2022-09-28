@@ -1,0 +1,58 @@
+#ident	"@(#)face:OBJECTS/pref/Menu.color	1.2"
+
+menu=Choices
+lifetime=shortterm
+
+framemsg="Move to an item with arrow keys and press ENTER to select the item."
+
+name=black
+action=`set -l Form_Choice=black`close
+show=`test "black" != "${ARG1}" -a "black" != "${ARG2}"`
+
+name=blue
+action=`set -l Form_Choice=blue`close
+show=`test "blue" != "${ARG1}" -a "blue" != "${ARG2}"`
+
+name=cyan
+action=`set -l Form_Choice=cyan`close
+show=`test "cyan" != "${ARG1}" -a "cyan" != "${ARG2}"`
+
+name=green
+action=`set -l Form_Choice=green`close
+show=`test "green" != "${ARG1}" -a "green" != "${ARG2}"`
+
+name=magenta
+action=`set -l Form_Choice=magenta`close
+show=`test "magenta" != "${ARG1}" -a "magenta" != "${ARG2}"`
+
+name=red
+action=`set -l Form_Choice=red`close
+show=`test "red" != "${ARG1}" -a "red" != "${ARG2}"`
+
+name=white
+action=`set -l Form_Choice=white`close
+show=`test "white" != "${ARG1}" -a "white" != "${ARG2}"`
+
+name=yellow
+action=`set -l Form_Choice=yellow`close
+show=`test "yellow" != "${ARG1}" -a "yellow" != "${ARG2}"`
+
+name=""
+button=1
+action=nop
+
+name=""
+button=4
+action=nop
+
+name=""
+button=5
+action=nop
+
+name=""
+button=7
+action=nop
+
+name=""
+button=8
+action=nop

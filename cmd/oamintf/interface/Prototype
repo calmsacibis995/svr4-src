@@ -1,0 +1,45 @@
+#ident	"@(#)oamintf:interface/Prototype	1.6.2.1"
+!MENU=/usr/sadm/sysadm/menu
+!PKGBIN=/usr/sadm/install/bin
+!INTFBIN=/usr/sadm/sysadm/bin
+
+f intf $PKGBIN/ie_build 0755 bin bin
+f intf $INTFBIN/object_gen 0755 bin bin
+f intf $INTFBIN/itemhelp 0755 bin bin
+f intf /usr/sbin/sysadm 0755 bin bin
+f intf /usr/sbin/setup 0755 bin bin
+f intf /usr/sbin/powerdown 0755 bin bin
+f intf /usr/sbin/checkfsys 0755 bin bin
+f intf /usr/sbin/makefsys 0755 bin bin
+f intf /usr/sbin/mountfsys 0755 bin bin
+f intf /usr/sbin/umountfsys 0755 bin bin
+f intf /usr/bin/powerdown 0755 bin bin
+f intf /usr/bin/checkfsys 0755 bin bin
+f intf /usr/bin/makefsys 0755 bin bin
+f intf /usr/bin/mountfsys 0755 bin bin
+f intf /usr/bin/umountfsys 0755 bin bin
+
+v intf $MENU/main.menu  0644 bin bin
+f intf $MENU/Form.interface 0644 bin bin
+f intf $MENU/Menu.interface 0644 bin bin
+f intf $MENU/Text.interface 0644 bin bin
+f intf $MENU/Form.sysadm 0644 bin bin
+f intf $MENU/Menu.sysadm 0644 bin bin
+f intf $MENU/Text.sysadm 0644 bin bin
+f intf $MENU/Text.oamhelp  0644 bin bin
+f intf $MENU/Text.itemhelp  0644 bin bin
+f intf $MENU/express 0644 bin bin
+f intf $MENU/resrv.fs 0644 bin bin
+f intf $MENU/oam.init 0644 bin bin
+f intf $MENU/oam.cmd 0644 bin bin
+f intf $MENU/contmsg 0644 bin bin
+f intf $MENU/reptmsg 0644 bin bin
+f intf $MENU/form.msg 0644 bin bin
+f intf $MENU/display.msg 0644 bin bin
+f intf $MENU/conf.msg 0644 bin bin
+f intf $MENU/nodev.msg 0644 bin bin
+f intf $MENU/trept.msg 0644 bin bin
+f intf $MENU/frept.msg 0644 bin bin
+f intf $MENU/ssmenu.msg 0644 bin bin
+f intf $MENU/msmenu.msg 0644 bin bin
+

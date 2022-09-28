@@ -1,0 +1,7 @@
+Input types: simple
+Output types: 435,dumb
+Printer types: any
+Printers: any
+Filter type: fast
+Command: pr -te8 | /usr/lib/lp/bin/lp.cat 0
+Options: 

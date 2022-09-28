@@ -1,0 +1,13 @@
+#ident	"@(#)lp.admin:printers/reports/Form.service	1.2"
+
+#######################################################
+#
+#       Module Name: printer_service/status/Form.service
+#
+#######################################################
+## Apparantly is not used for now.
+
+form=Display Status of Print Service
+
+help=OPEN TEXT $INTFBASE/Text.oamhelp $PRINTSERV/HELP/status/service.help "Display Status of Print Service"
+

@@ -1,0 +1,48 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/WHEEL/Menu.wdelete	1.1"
+menu="Delete Printwheels"
+multiselect
+
+#help=open text $VMSYS/OBJECTS/Text.h "Delete Printwheels" "PS/WHEEL/T.hdelete"
+
+done=`getitems "," |  set -l VAL  ;
+regex -e -v "$VAL" '^$' "open text /usr/vmsys/OBJECTS/PS/WHEEL/Text.nmark \"$VAL\" "
+		'.*,all,.*' '`message Cannot Mark all and other printwheels.`'
+		'all,.*' '`message Cannot Mark all and other printwheels.`'
+		'.*,all' '`message Cannot Mark all and other printwheels.`'
+		'^all$' "open text /usr/vmsys/OBJECTS/PS/WHEEL/Text.cadel \"$VAL\" "
+		'.*' "open text /usr/vmsys/OBJECTS/PS/WHEEL/Text.cdel \"$VAL\" "`
+
+
+close=`rm -rf /usr/tmp/wheels.$VPID`
+
+`/usr/vmsys/admin/PS/WHEEL/getwheel.sh`
+
+`message "MARK the printwheels to delete from the system and strike ENTER key."`
+
+`cat /usr/tmp/wheels.$VPID  | regex '^(.*)$0'
+'name="$m0"
+itemmsg="MARK the printwheels to delete from the system and strike ENTER key." '
+`
+					      
+
+name="MARK"
+action=return 364
+button=2
+
+
+name=PREV-FRM
+action=return prev-frm
+button=4
+
+name=NEXT-FRM
+action=return next-frm
+button=5
+
+name=CMD-MENU
+button=7
+action=cmd-menu
+
+
+name=""
+button=8
+actio=nop

@@ -1,0 +1,31 @@
+#ident	"@(#)bkrs:bkreg.d/table	1.4.1.1"
+#ENTRY FORMAT=tag:oname:odevice:olabel:week:day:method:options:priority:dgroup:ddevice:dchar:dmname:depend:other
+#
+#
+# The following are sample entries.  They will NOT necessarily work as is
+# on all machines.  The odevice entry in particularmay need to be modified to   
+# match the machines configuration.  Use the mount command to determine the
+# appropriate entry.
+#
+# IMPORTANT:  The number of labels provided must be >= the number of vols.
+#
+#  sample rotation entry
+#
+#ROTATION=1
+#ROTATION STARTED=890101
+#
+#  sample root and usr backup to floppy using ffile and incfile
+#
+#rootsun:/:/dev/root::1:0:ffile:::diskette:diskette1::root0,root1,root2,root3,root4::
+#rootdai:/:/dev/root::1:1-6:incfile:::diskette:diskette1::rdai0,rdai1::
+#usrdai:/usr:/dev/dsk/0s3::1:1-6:incfile:::diskette:diskette2::udai0,udai1::
+#usrsun:/usr:/dev/dsk/0s3::1:0:ffile:::diskette:diskette2::usr0,usr1,usr2,usr3,usr4::
+#
+#  sample home backup to a file in /bkup0 called ff100 using ffile
+#  a table of contents is created in /bkup0 called ff100.toc
+#  
+#ff100:/home:/dev/dsk/0s12::1:2:ffile:-t:10::/bkup0:dtype=dir,capacity=31180:ff100,ff100.toc::
+#
+#  sample root backup to a file in /bkup0 called ff200
+#  
+#ff201:/:/dev/dsk/0s1::demand::incfile::10::/bkup0:dtype=dir,capacity=31180:ff200::

@@ -1,0 +1,100 @@
+#ident	"@(#)lp.admin:printers/operations/Form.unmount	1.4.1.1"
+
+#######################################################
+#
+#       Module Name: printer_service/printers/operations/Form.unmount
+#       Author: David C. Miller
+#       Date: July 1988
+#
+#######################################################
+
+form=Unmount a Form or Font From a Printer
+
+help=open TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`set -l name_1=/tmp/lp.n1$VPID -l name_2=/tmp/lp.n2$VPID`
+
+close=`rm -f $name_1 $name_2;
+unset -l name_1 -l name_2`
+
+done=`if [ "$F2" = "yes" ];
+then
+    message -w "Unmounting the current form from printer $F1, please wait...";
+	if [ -n "$TFADMIN" ]; then shell "$TFADMIN lpadmin -p $F1 -M -f $F3 >/dev/null 2>&1";
+	else shell "lpadmin -p $F1 -M -f $F3 >/dev/null 2>&1"; fi;
+fi;
+if [ "$F3" = "yes" ];
+then
+    message -w "Unmounting the current printwheel from printer $F1, please wait...";
+	if [ -n "$TFADMIN" ]; then shell "$TFADMIN lpadmin -p $F1 -M -S none >/dev/null 2>&1";
+	else shell "lpadmin -p $F1 -M -S none >/dev/null 2>&1"; fi;
+fi;
+message "Enter new values and press SAVE to repeat or CANCEL to quit."`update $OBJ_DIR/Form.unmount true
+
+name="Printer:"
+lininfo="unmount:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=10
+rows=1
+columns=14
+value=" "
+fieldmsg="Enter a printer known to this system, press SAVE when finished."
+rmenu={ `cosend lpdata "list_printers/m"` }
+valid=`indicator -w;
+cosend lpdata "list_printers/e" > $name_1;
+cosend lpdata "list_printers/m" > $name_2;
+if [ -n "$F1" -a -d /etc/lp/printers/$F1 ];
+then
+    if fmlgrep "^$F1\$" $name_2 > /dev/null;
+    then
+	if fmlgrep "^$F1\$" $name_1 > /dev/null;
+	then
+	    echo false;
+	    set -l emsg="You must disable printer $F1 before you can unmount things from it.";
+	else
+	    echo true;
+	fi;
+    else
+	echo false;
+	set -l emsg="Printer $F1 has nothing mounted on it.";
+    fi;
+else
+    echo false;
+    if [ -z $F1 ];
+    then
+	set -l emsg="You must enter a value for this field.";
+    else
+	set -l emsg="$F1 is not a valid printer on this system.";
+    fi;
+fi`
+invalidmsg=$emsg
+
+name="Unmount the current form:"
+lininfo="unmount:F2"
+nrow=2
+ncol=1
+frow=2
+fcol=27
+rows=1
+columns=3
+value=no
+rmenu={ yes no }
+menuonly=true
+invalidmsg="The only valid responses are yes and no."
+fieldmsg="Enter yes to unmount the current form, press SAVE when finished."
+
+name="Unmount the current print wheel:"
+lininfo="unmount:F3"
+nrow=3
+ncol=1
+frow=3
+fcol=34
+rows=1
+columns=3
+value=no
+rmenu={ yes no }
+menuonly=true
+invalidmsg="The only valid responses are yes and no."
+fieldmsg="Enter yes to unmount the current print wheel, press SAVE when finished."

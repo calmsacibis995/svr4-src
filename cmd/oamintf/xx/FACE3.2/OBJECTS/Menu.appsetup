@@ -1,0 +1,5 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/Menu.appsetup	1.1"
+
+menu="Application Setup"
+
+`set -l VMSYS=/usr/vmsys`

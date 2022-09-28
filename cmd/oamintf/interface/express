@@ -1,0 +1,37 @@
+#ident	"@(#)oamintf:interface/express	1.7.2.1"
+addgroup^L^main/users/add
+adduser^L^main/users/add
+admpasswd^L^main/system_setup/password
+applications^P^-
+checkfsys^L^main/file_systems/check
+chglogin^L^main/users/modify
+chgname^L^main/users/modify
+chgshell^L^main/users/modify
+compress^P^-
+cpdisk^L^main/storage_devices/copy
+delgroup^L^main/users/remove
+deluser^L^main/users/remove
+diskmgmt^L^main/storage_devices
+files^L^main/file_systems
+harddisk^L^main/storage_devices
+installpkg^L^main/software/install
+listpkg^L^main/software/list
+lsgroup^L^main/users/list
+lsuser^L^main/users/list
+machinemgmt^L^main/machine
+makefsys^L^main/file_systems/make
+mirror^P^-
+modgroup^L^main/users/modify
+moduser^L^main/users/modify
+mountfsys^L^main/file_systems/mount
+netservices^P^-
+networks^P^-
+powerdown -Y^E^/bin/sh -c "cd / ; shutdown -i0 -g0 -y"
+powerdown -y^E^/bin/sh -c "cd / ; shutdown -i0 -g60 -y"
+printers^P^-
+removepkg^L^main/software/remove
+softwaremgmt^L^main/software
+syspasswd^L^main/system_setup/password
+syssetup^L^main/system_setup
+umountfsys^L^main/file_systems/unmount
+usermgmt^L^main/users

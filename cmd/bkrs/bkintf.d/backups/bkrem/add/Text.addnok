@@ -1,0 +1,27 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkrem/add/Text.addnok	1.1"
+################################################################################
+#	Module Name: Text.addnok
+################################################################################
+title="Errors Adding a Backup Table Entry"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+close=`rm -f $ERR`
+
+rows=6
+columns=75
+
+text="
+An error occurred attempting to add an entry.
+
+   `readfile $ERR`"
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

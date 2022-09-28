@@ -1,0 +1,16 @@
+#ident	"@(#)bkrs:basic.d/sched/Menu.chg	1.1.1.1"
+
+menu=Change Scheduled Backup
+lifetime=shortterm
+help=open text /usr/vmsys/OBJECTS/Text.h "Change Scheduled Backups" backup/sched/T.hchg
+
+`set -l file=$ARG1`
+close=`rm -f $file`
+
+`readfile $ARG1`
+
+name=""
+button=8
+action=nop
+
+`indicator -w`

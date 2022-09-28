@@ -1,0 +1,14 @@
+#ident	"@(#)oamintf:files/defaults/Text.modify2	1.1"
+Title="Modify defaults for File systems"
+lifetime=shortterm
+
+`readfile $INTFBASE/display.msg | message`
+
+close=`CLOSE $OBJ_DIR/Text.modify2 $OBJ_DIR/Form.modify2`
+
+begrow=distinct
+begcol=distinct
+rows=3
+columns=45
+
+text="\nDefaults for $ARG1 have been modified."

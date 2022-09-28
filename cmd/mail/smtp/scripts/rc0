@@ -1,0 +1,25 @@
+#ident	"@(#)mail:smtp/scripts/rc0	1.4.3.1"
+#
+#  /etc/rc0.d/K74smtpd - Stop the SMTP daemon (smtpd).
+#
+
+#
+# Stop SMTP listener Daemon.
+#
+PATH=/usr/bin:/bin
+
+pids=`ps -e | egrep smtpd | cut -c1-6`
+[ -n "$pids" ] && kill -9 ${pids}
+
+#
+# Make sure it has stopped running.
+#
+sleep 2
+pids=`ps -e | egrep smtpd | cut -c1-6`
+if [ -n "$pids" ]
+then
+	kill -9 $pids
+	sleep 2
+	pids=`ps -e | egrep "smtpd" | cut -c1-6`
+	[ -n "$pids" ] && echo "\n\t*****  WARNING - couldn't kill smtpd  *****"
+fi

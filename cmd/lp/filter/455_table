@@ -1,0 +1,7 @@
+Input types: simple
+Output types: 455
+Printer types: any
+Printers: any
+Filter type: fast
+Command: eval "scan() { for i in \$* ; do [ \"\$i\" = \"|\" ] && pipes=yes ; [ \"\$pipes\" != \"yes\" ] && { case \"\$i\" in sh ) sf=yes ;; 1 | 2 | 3 ) t_no=-T\$i ;; -t* ) term=\$i ;; -* ) global=\"\$global\"\" \$i\" ;; esac } ; done ; if [ \"\$sf\" = \"yes\" ] ; then F_455=\"/usr/lib/lp/bin/ATT_s_filter -w66 \$term \$t_no | /usr/lib/lp/bin/455_filter \$global \$term \" ; else F_455=\"/usr/lib/lp/bin/455_filter \$global \$term \" ; fi ; <&0 eval \"\$F_455\" ; } ; scan "
+Options: TERM * = -t*,WIDTH * = -w*,MODES linefeedoff = -F,MODES nolf = -F,MODES lfoff = -F,MODES linefeedon = -O,MODES tray1 = 1,MODES tray2 = 2,MODES tray3 = 3,MODES emphasized = -e,MODES emph = -e,MODES bold = -e,MODES b = -e,MODES doublestrike = -d,MODES ds = -d,MODES sp = -d,MODES sheetfeed = sh,MODES sheet = sh,MODES sf = sh,MODES proportional = -p,MODES proport = -p,MODES ps = -p,MODES nonproportional = -n,MODES nops = -n,MODES noproport = -n,MODES reset455 = -r

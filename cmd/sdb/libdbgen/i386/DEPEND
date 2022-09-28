@@ -1,0 +1,25 @@
+Avltree.o:	../common/Avltree.C
+	$(CPLUS_CMD) -c ../common/Avltree.C
+
+Link.o:	../common/Link.C
+	$(CPLUS_CMD) -c ../common/Link.C
+
+Vector.o:	../common/Vector.C
+	$(CPLUS_CMD) -c ../common/Vector.C
+
+Wordstack.o:	../common/Wordstack.C
+	$(CPLUS_CMD) -c ../common/Wordstack.C
+
+str.o:	../common/str.C
+	$(CPLUS_CMD) -c ../common/str.C
+
+num.o:	../common/num.c
+	$(CC_CMD) -c ../common/num.c
+
+OBJECTS	=  \
+	Avltree.o \
+	Link.o \
+	Vector.o \
+	Wordstack.o \
+	str.o \
+	num.o

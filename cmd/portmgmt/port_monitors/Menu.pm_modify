@@ -1,0 +1,13 @@
+#ident	"@(#)portmgmt:port_monitors/Menu.pm_modify	1.4.1.1"
+
+menu="Pmtag    Pmtype  (Modify Port Monitors)"
+`sacadm -L>/dev/null;
+	regex -e -v "$RET"
+	   '^0$' '`message "Move cursor to the port monitor you want to modify and then press ENTER."`'
+	   '^5$' '`message "No port monitor configured."`'
+	   '^.*$' '`message "No port monitor configured."`'`
+
+`sacadm -L | regex '^([^:][^:]*)$0:([^:][^:]*)$1:(.*)$2$'
+ 'name="  $m0"
+  description="     $m1"
+  action=OPEN FORM $OBJ_DIR/Form.pm_modify $m0'`

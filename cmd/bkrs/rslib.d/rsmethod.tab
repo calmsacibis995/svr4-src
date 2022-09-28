@@ -1,0 +1,9 @@
+#ident	"@(#)bkrs:rslib.d/rsmethod.tab	1.2.1.1"
+#
+# This file contains a description of what types of restore objects may
+# be restored by a particular method.
+incfile:part:F D S
+ffile:full:F D S
+fimage:full:F D S
+fdp:full:P
+fdisk:full:A

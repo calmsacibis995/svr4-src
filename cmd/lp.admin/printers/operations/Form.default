@@ -1,0 +1,66 @@
+#ident	"@(#)lp.admin:printers/operations/Form.default	1.3.2.2"
+
+#######################################################
+#
+#       Module Name: printer_service/operations/Form.default
+#       Date: July 1988
+#
+#######################################################
+
+form=Set Default Print Destination
+framemsg="Enter the printer or class to use as your default and press SAVE."
+
+help=open TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`if [ -s /etc/lp/default ];
+then
+	readfile /etc/lp/default|set -l old_default_lp;
+else
+	set -l old_default_lp="";
+fi;
+set -l name_2="/tmp/lp.n2$VPID";
+ls /etc/lp/classes > $name_2;
+ls /etc/lp/printers >> $name_2;
+if [ -s $name_2 ];
+then
+	echo "init=true";
+else
+	echo "init=false";
+	message -b "There are currently no printers or classes defined on your system.";
+	rm -f $name_2;
+fi`
+
+close=`rm -f $name_2;
+	unset -l $name_2`
+
+#done=`lpadmin -d $F1 > /dev/null 2>/dev/null`close
+done=`if [ -n "$TFADMIN" ]; then $TFADMIN lpadmin -d $F1 > /dev/null 2>/dev/null;
+		else lpadmin -d $F1 > /dev/null 2>/dev/null; fi`close
+
+name=Default Printer or Printer Class:
+lininfo="default:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=35
+rows=1
+columns=16
+rmenu=OPEN MENU $OBJ_DIR/Menu.cdefault
+value=$old_default_lp
+valid=`indicator -w;
+if [ -z "$F1" ];
+then
+	echo false;
+	set -l emsg="You must enter a value for this field.";
+else
+	cosend lpdata "list_classes" > $name_2;
+	cosend lpdata "list_printers" >> $name_2;
+	if fmlgrep "$F1" $name_2 > /dev/null;
+	then
+		echo true;
+	else
+		echo false;
+		set -l emsg="$F1 is not a valid class or printer.";
+	fi;
+fi`
+invalidmsg=$emsg

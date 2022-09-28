@@ -1,0 +1,11 @@
+The Select Removable Media Menu allows you to select the appropriate
+disk drive or the cartridge type drive for storing your data. 
+
+The floppy disks used for backup must be formatted in UNIX System
+format. Tapes do not have to be formatted.
+
+Your system will calculate the number of floppies/tapes needed for
+backup and the time required and prompt you to insert additional
+floppies if necessary.  Follow the instructions on your screen to
+insert floppies or tapes.
+

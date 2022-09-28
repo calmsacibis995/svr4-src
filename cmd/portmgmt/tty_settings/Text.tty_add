@@ -1,0 +1,28 @@
+#ident	"@(#)portmgmt:tty_settings/Text.tty_add	1.1.1.1"
+
+title= Adding Line Settings 
+lifetime=shortterm
+framemsg="Press CONT to repeat this task, or CANCEL to return to the menu."
+
+close=`rm /var/tmp/err$PID /var/tmp/m$PID`
+`if [ $ARG1 = 0 ] ;
+then
+	echo "   Line settings with ttylabel <$ARG2> is added successfully." > /var/tmp/m$PID;
+else
+	echo "Line settings with ttylabel <$ARG2> is not added." >> /var/tmp/m$PID;
+	cat /var/tmp/err$PID >> /var/tmp/m$PID;
+fi;`
+text="
+`readfile /var/tmp/m$PID`
+"
+columns=68
+wrap=true
+altslks=TRUE
+
+name=CONT
+button=11
+action=UPDATE $ARG3 TRUE
+
+name=CANCEL
+button=14
+action=cleanup

@@ -1,0 +1,9 @@
+#ident	"@(#)portmgmt:port_services/Menu.ps_atag	1.4.3.1"
+
+menu="Port Monitor Tags and their types"
+`message "Move cursor to the port monitor you want to add a service to and press ENTER."`
+
+`sacadm -L | cut -d: -f1,2 | sort -u |  regex '^([^:][^:]*)$0:(.*)$1$' '
+name="$m0"
+description="              $m1"
+action=`findpmtype p "$m0"`OPEN FORM $OBJ_DIR/Form.ps_add "p" "$m0" "$RET"'`

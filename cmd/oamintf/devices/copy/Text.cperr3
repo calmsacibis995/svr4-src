@@ -1,0 +1,48 @@
+#ident	"@(#)oamintf:devices/copy/Text.cperr3	1.1.4.2"
+
+################################################################################
+#	Module Name: Text.cperr3
+################################################################################
+title="Copy Error"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp Text.cperr:ABSTRACT
+
+lifetime=shortterm
+
+done=`rm -f $CPFILE; devfree ${VPID} $ARG1 $ARG2`
+
+`devattr $ARG2 desc | set -l DESC`
+
+text="
+The copy operation failed.  One of the volumes may be
+damaged, the volume in $DESC may be unformatted
+or write-protected or the drive heads may be dirty and
+need cleaning.  Remove the volumes and inspect them for
+creases, scratches, dirt or other problems.  Also make sure
+the volume in $DESC is not write-protected and is
+properly formatted.
+
+NOTE:	A damaged or dirty volume should not be used
+	since it can damage the heads in the drive.
+	We recommend that you throw it away.
+
+Another possibility is that $ARG2
+has less capacity than $ARG1.  Make sure
+that the capacity of the destination diskette is greater
+than or equal to the source diskette."
+
+rows=18
+columns=70
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+action=`set -l CMD="OPEN TEXT $OBJ_DIR/Text.copy3 $ARG1 $ARG2"`$CMD
+
+name=CANCEL
+button=14
+action=CLEANUP

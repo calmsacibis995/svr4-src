@@ -1,0 +1,35 @@
+#ident	"@(#)face:src/oam/Menu.users	1.2"
+
+menu=FACE User Administration
+
+framemsg="Move the cursor to the item you want and press ENTER to select it."
+
+help=OPEN TEXT $INTFBASE/Text.oamhelp $!LININFO 
+
+lifetime=permanent
+
+
+
+name=add
+description=Add FACE Environment for a UNIX System User
+lininfo="/usr/sadm/sysadm/add-ons/face/applmgmt/FACE/users/add \"Add FACE Environment for a UNIX System User\"" add
+action=OPEN FORM $INTFBASE/Form.interface /usr/sadm/sysadm/add-ons/face/applmgmt/FACE/users/add Form.define
+
+
+name=list
+description=List FACE Users on This System
+lininfo="/usr/sadm/sysadm/add-ons/face/applmgmt/FACE/users/list \"List FACE Users on This System\"" list
+action=OPEN MENU $INTFBASE/Menu.interface /usr/sadm/sysadm/add-ons/face/applmgmt/FACE/users/list Menu.ulist 
+
+
+name=modify
+description=Modify FACE Environment for a FACE User
+lininfo="/usr/sadm/sysadm/add-ons/face/applmgmt/FACE/users/modify \"Modify FACE Environment for a FACE User\"" modify
+action=OPEN FORM $INTFBASE/Form.interface /usr/sadm/sysadm/add-ons/face/applmgmt/FACE/users/modify Form.mod
+
+
+name=remove
+description=Remove FACE Environment for a FACE User
+lininfo="/usr/sadm/sysadm/add-ons/face/applmgmt/FACE/users/remove \"Remove FACE Environment for a FACE User\"" remove
+action=OPEN FORM $INTFBASE/Form.interface /usr/sadm/sysadm/add-ons/face/applmgmt/FACE/users/remove Form.undefine
+

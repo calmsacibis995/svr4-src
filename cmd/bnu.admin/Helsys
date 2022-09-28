@@ -1,0 +1,7 @@
+#ident	"@(#)bnu.admin:Helsys	1.1"
+
+ABSTRACT:Systems
+	The systems menu allows you to manage information that 
+	Basic Networking Utilities stores about remote systems.
+	This information is necessary for your system and remote
+	systems to communicate via mail or uucp.

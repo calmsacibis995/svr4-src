@@ -1,0 +1,8 @@
+#ident	"@(#)oamintf:syssetup/syssetup.menu	1.4.1.1"
+#menu#System Name, Date/Time and Initial Password Setup
+#help#syssetup.help^System Name, Date/Time and Initial Password Setup
+#life#permanent
+
+datetime^System Date and Time Information^datetime/datetime.menu
+nodename^System Name and Network Node Name of the Machine^nodename/nodename.menu
+password^Assign Administrative Login Passwords^password/Form.syspasswd

@@ -1,0 +1,30 @@
+#ident	"@(#)nadmin.rfs:local/rfs/Form.share2	1.4"
+form="Shares a Local Resource Automatically-Immediately via RFS"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=unset -e RES -e EXPL -e DIR -e ACC -e CLIENT -e AUTO -e IMM -l PID;
+
+`readfile "$INTFBASE/form.msg" | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/local/rfs`
+
+done=`indicator -w;
+	getfrm | set -l FRM;
+	set -e CLIENT="$F1";
+	"$INTFBASE/netservices/remote_files/local/rfs/bin/rf_share" | set -l PID;
+	set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/local/rfs/Text.shmsg 'Shares a Local Resource Automatically-Immediately via RFS' /usr/tmp/sh_msg$PID $FRM";
+	`$!KEYCMD
+
+name="Clients:"
+nrow=2
+ncol=1
+frow=2
+fcol=10
+rows=5
+columns=14
+scroll=true
+lininfo=share2:cli
+
+#name=""
+#button=4
+
+#name=""
+#button=5

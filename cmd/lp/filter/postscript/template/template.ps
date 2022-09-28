@@ -1,0 +1,59 @@
+%ident	"@(#)lp:filter/postscript/template/template.ps	1.1.2.1"
+%
+% Version 3.1 template prologue. Assumes the origin is in the upper left corner.
+% Procedures used more than once should probably have bind applied before def.
+%
+
+/#copies 1 store
+/aspectratio 1 def
+/formsperpage 1 def
+/landscape false def
+/magnification 1 def
+/margin 10 def				% space around the edge - default coords
+/orientation 0 def
+/xoffset 0 def				% numbers are in inches
+/yoffset 0 def
+
+/useclippath true def
+/pagebbox [0 0 612 792] def
+
+/inch {72 mul} bind def
+/min {2 copy gt {exch} if pop} bind def
+
+/setup {
+	counttomark 2 idiv {def} repeat pop
+
+	landscape {/orientation 90 orientation add def} if
+
+	pagedimensions
+	xcenter ycenter translate
+	orientation neg rotate
+	width 2 div neg height 2 div translate
+	xoffset inch yoffset inch neg translate
+	margin 2 div dup neg translate
+	magnification dup aspectratio mul scale
+%
+% Any additional scaling probably belongs here.
+%
+
+	newpath
+	0 0 moveto
+} def
+
+/pagedimensions {
+	useclippath userdict /gotpagebbox known not and {
+		/pagebbox [clippath pathbbox newpath] def
+	} if
+	pagebbox aload pop
+	4 -1 roll exch 4 1 roll 4 copy
+	landscape {4 2 roll} if
+	sub /width exch def
+	sub /height exch def
+	add 2 div /xcenter exch def
+	add 2 div /ycenter exch def
+	userdict /gotpagebbox true put
+} def
+
+/pagesetup {/page exch def} bind def
+
+/done {/lastpage where {pop lastpage} if} def

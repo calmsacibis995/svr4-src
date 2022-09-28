@@ -1,0 +1,21 @@
+#ident	"@(#)lp.admin:printers/printers/modify/Text.access	1.2.2.1"
+
+title="Error: Set Printer Access Permissions Subtask"
+
+close=`rm -f $error`
+
+row=15
+columns=55
+
+begrow=distinct
+begcol=distinct
+
+text="
+    Press CANCEL to return to the form.
+
+    While saving the printer access permissions,
+    the following error(s) occurred:
+
+`readfile $error`
+
+"

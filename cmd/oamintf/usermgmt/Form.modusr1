@@ -1,0 +1,30 @@
+#ident	"@(#)oamintf:usermgmt/Form.modusr1	1.2.1.1"
+
+################################################################################
+#	Module Name:  Form.modusr1
+################################################################################
+form="Modify a User Login"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=OPEN FORM $OBJ_DIR/Form.modusr2 $F1
+
+name=Login:
+lininfo=Form.modusr1:modusr
+nrow=1
+ncol=3
+frow=1
+fcol=10
+rows=1
+columns=8
+
+rmenu=OPEN MENU $OBJ_DIR/Menu.logins
+valid=`sed -e 's/^\([^:]*\):[^:]*:\([^:]*\).*/\1,\2/p' -e '/,[0-9]\{1,2\}$/d' /etc/passwd | fmlgrep "^$F1,"`
+
+invalidmsg=const "ERROR: User login does not exist."
+
+name=RESET
+button=8
+action=RESET

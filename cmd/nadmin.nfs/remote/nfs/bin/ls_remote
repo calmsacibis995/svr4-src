@@ -1,0 +1,42 @@
+#ident	"@(#)nadmin.nfs:remote/nfs/bin/ls_remote	1.1"
+#If list remote resources currently mounted
+#
+
+if [ "$IMM" = "yes" ]
+then
+		/etc/mount -v | /bin/grep "type nfs" >/var/tmp/cmnt_$$
+		if [ $? -eq 0 ]
+		then
+			echo "Currently Mounted Resources, displayed in the following order:\nServer:Remote Pathname,Mountpoint,Access\n------------------------------\n" > /var/tmp/rem_$$
+			/usr/bin/awk '{
+			printf "%s %s %s\n", $1, $3 ,$6
+			}' /var/tmp/cmnt_$$ | /bin/sort | /usr/bin/tr '\040' '\011' | /bin/sed -e "s/read\/write\/remote/read-write/g" -e "s/read-only\/remote/read-only/g" >> /var/tmp/rem_$$
+		else
+			echo "There are no nfs remote resources currenty mounted.\n" >/var/tmp/rem_$$
+		fi
+fi
+
+#
+#If list automaticaly mounted resources
+#
+
+if [ "$AUTO" = "yes" ]
+then
+	if [ -s /etc/vfstab ]
+	then
+		/bin/sed "s/^#.*//g" /etc/vfstab |/usr/bin/tr -s '\011' '\040' | /usr/bin/egrep "[ ]nfs[ ]" >/var/tmp/nfs_$$
+		/usr/bin/cut -d" " -f1,3 </var/tmp/nfs_$$ >/var/tmp/nfs1_$$
+		/usr/bin/cut -d" " -f7 </var/tmp/nfs_$$ | /bin/sed -e "s/.*ro[ ,$].*$/read-only /g" -e "s/.*rw[ ,$].*$/ read-write /g" >/var/tmp/nfs2_$$
+		/usr/bin/paste -d" " /var/tmp/nfs1_$$ /var/tmp/nfs2_$$ >/var/tmp/nfs_$$	
+		if [ -s /var/tmp/nfs_$$ ]
+		then
+			echo "\nAutomatically Mounted Resources, displayed in the following order:\nServer:Remote Pathname,Mountpoint,Access\n------------------------------\n" >>/var/tmp/rem_$$
+			/usr/bin/tr -s '\040' '\011' </var/tmp/nfs_$$ >> /var/tmp/rem_$$
+		else
+			echo "\nThere are no nfs remote resources automatically mounted." >>/var/tmp/rem_$$
+		fi
+	else
+		echo "There are no remote resources automatically mounted." >>/var/tmp/rem_$$
+	fi
+fi
+echo $$

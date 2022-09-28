@@ -1,0 +1,13 @@
+#ident	"@(#)initpkg:init.d/fumounts	1.2.7.1"
+
+if [ -f /etc/dfs/sharetab ]
+then
+	/usr/bin/cat /etc/dfs/sharetab | 
+		while read path resource fstype junk
+		do
+			if [ "$fstype" = "rfs" ]
+			then
+				/usr/sbin/fumount ${resource}
+			fi
+		done
+fi

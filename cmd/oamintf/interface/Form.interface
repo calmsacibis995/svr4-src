@@ -1,0 +1,19 @@
+#ident	"@(#)oamintf:interface/Form.interface	1.1"
+`$OAMBASE/bin/object_gen $ARG1 $ARG2`
+
+#
+#  This file is the object specified within generated FMLI objects
+#  by the object generator (object_gen) when it determines that a form
+#  object will be generated.
+#
+#  The line `object_gen $ARG1 $ARG2` is a backquoted expression
+#  that FMLI expands and causes it to execute the program "object_gen",
+#  (the object generator) with the two arguments $ARG1 and $ARG2.
+#  Both variables are expanded by FMLI.  ARG1 is the directory location
+#  of the form object to be generated and ARG2 is the name of the form object.
+#
+#  The contents of this file are identical to those of "Text.interface" and
+#  "Menu.interface".  However three files must exist (one for Menu, Form and 
+#  Text) because FMLI looks at the filename syntax before determining what type
+#  of object it is working with.
+#

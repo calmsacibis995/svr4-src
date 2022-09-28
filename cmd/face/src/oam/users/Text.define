@@ -1,0 +1,43 @@
+#ident	"@(#)face:src/oam/users/Text.define	1.4"
+
+title="Results of Adding a FACE Environment for a UNIX System User"
+
+framemsg="Press CANCEL to return to the previous frame."
+
+lifetime=longterm
+
+help=open TEXT $INTFBASE/Text.itemhelp text:F1
+
+begrow=any
+begcol=any
+
+close=`unset -l HMSG -l LL; rm -f /tmp/f.df.${VPID}`close ${ARG5} `getfrm`
+
+`$VMSYS/bin/vsetup "$ARG1" "$ARG2" "$ARG3" "$ARG4" > /tmp/f.df.${VPID};
+if [ "${RET}" -ne "0" ];
+then
+	set -l HMSG="
+ERROR: The user could not be properly added.
+What follows is the output of the add.
+";
+else
+	set -l HMSG="
+The user has been added as a FACE user.
+What follows is the output of the add.
+";
+fi`
+
+header="${HMSG}"
+
+text="`readfile /tmp/f.df.${VPID}`"
+columns=`longline | set -l LL;
+if [ "${LL}" -gt "72" ];
+then
+	echo 72;
+elif [ "${LL}" -lt "48" ];
+then
+	echo 48;
+else
+	echo ${LL};
+fi`
+rows=8

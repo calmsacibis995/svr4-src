@@ -1,0 +1,3 @@
+#ident	"@(#)pcintf:support/sys5_4/pciptys	1.1"
+ptmx::/usr/lib/saf/ttymon -g -h -d %s -l 9600 -m ptem,ldterm,ttcompat
+ptmx

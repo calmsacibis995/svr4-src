@@ -1,0 +1,88 @@
+
+What you'll find in this directory can be used to let PostScript printers build
+ASCII font files (ie. the width tables). The tables can be printed and/or returned
+to your Unix system over the communications line. All the font files in directory
+../font/devpost were built by sending fontfile.ps and the appropriate template
+from devpost.data to a PostScript printer using the new version of postio (with
+the -t option).
+
+A simple shell script (./buildtables) can be used to recover ASCII width tables,
+provided you've installed the new version of postio and have access to a PostScript
+printer. Arguments should be troff font names that have corresponding template
+files in directory ./devpost.data. If no arguments are given ASCII tables for all
+the files in ./devpost.data will be built. In addition you'll always have to supply
+./buildtables with a printer line using the -l option. For example,
+
+	./buildtables -l/dev/tty01 R I B BI
+
+generates ASCII files for the R, I, B, and BI fonts using the printer connected to
+/dev/tty01, and leaves the new tables in directory ./devpost. What you get back
+should match the width tables in ../font/devpost.
+
+Building a width table for a new font is easy, and all that should be required
+is a new template file in directory devpost.data. The simplest approach is copy
+an existing template file (R is a good choice), and change a few of the definitions
+that you'll find near the start of the file. A diff of the R and B template files
+in ./devpost.data show what needs to be changed.
+
+The buildtables shell script can also build width tables for host resident fonts,
+provided the host resident font file has the same name as the troff font file.
+You can point buildtables to the host resident font directory using the -H option.
+For example something like,
+
+	./buildtables -l/dev/tty01 -H/tmp/hostresident XX
+
+builds the ASCII width table for font XX using devpost.data/XX as the template
+file and /tmp/hostresident/XX as the PostScript font.
+
+Some things you'll find here:
+
+  fontfile.ps
+
+    A prologue file that you combine with a font template file from devpost.data
+    to produce a PostScript program that can be used to build ASCII font files on
+    a PostScript printer. The font file that's generated can be printed and/or
+    returned over the communications line. What happens depends on the value
+    assigned to dispose (near the start of fontfile.ps).
+
+  devpost.data
+
+    Special font template files for all the currently supported fonts. Each one
+    defines things needed in fontfile.ps and then generates a call to procedure
+    buildfontfile. At the very least each data file must define:
+
+	unitwidth	- must match DESC file unitwidth
+	resolution	- must match the DESC file resolution
+	font		- name of the PostScript font (eg. /Times-Roman)
+	encoding	- special array describing the font's charset
+
+    The last line of the template file must be a call to procedure buildfontfile.
+    PostScript code to do any additional work can also be included in the font
+    template file. Take a look at devpost.data/S and devpost.data/S1. The encoding
+    array is handled (by procedure buildfontfile in fontfile.ps) as follows:
+
+	1: Lines containing a single string are added, as is, to the font file.
+
+	2: Lines ending with a number less than 32 are expected to be preceeded
+	   by the ascender data, the width data, and a string that names the
+	   troff character. All four values are added to the font file without
+	   change.
+
+	3: Lines ending with a character code greater than 31 must be preceeded
+	   by a string that names the troff character. Width and ascender data
+	   will be automatically generated and added to the font file.
+
+    Fonts that have a PaintType of 3 won't work properly with the charpath call
+    that's used to determine ascender/descender values. I suspect putting that
+    stuff in was probably a mistake. In fact the way I've done it doesn't make
+    much sense.
+
+  buildtables
+
+    A shell script that uses template files in ./devpost.data, fontfile.ps, and
+    the new version of postio to build ASCII width tables on a PostScript printer
+    and return the tables back over the communications line. Host resident fonts
+    can also be handled using the -H option. All that's required is that the troff
+    font and the host resident PostScript font file have the same one or two
+    character name.
+

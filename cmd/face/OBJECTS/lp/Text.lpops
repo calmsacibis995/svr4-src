@@ -1,0 +1,46 @@
+#ident	"@(#)face:OBJECTS/lp/Text.lpops	1.3"
+
+title="Printer ${ARG2}"
+lifetime=shortterm
+
+close=`rm -f /tmp/fc.lpq.${VPID}`
+
+framemsg="Press the CANCEL function key to cancel."
+
+`lpstat -${ARG1} > /tmp/fc.lpq.${VPID};
+if [ ! -s /tmp/fc.lpq.${VPID} ];
+then
+	if [ "${ARG1}" = "o" ];
+	then
+		message 'The Printer Queue is empty.';
+	else
+		message 'There are no defined printers to get the status of.';
+	fi;
+	echo "init=false";
+fi`
+
+rows=8
+text="`readfile /tmp/fc.lpq.${VPID}`"
+columns=`longline | set -l LL;
+if [ "${LL}" -gt "72" ];
+then
+	echo 72;
+else
+	echo ${LL};
+fi`
+
+name=""
+button=1
+action=badchar
+
+name=""
+button=4
+action=badchar
+
+name=""
+button=5
+action=badchar
+
+name=""
+button=8
+action=badchar

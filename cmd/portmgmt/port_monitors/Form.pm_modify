@@ -1,0 +1,141 @@
+#ident	"@(#)portmgmt:port_monitors/Form.pm_modify	1.5.2.1"
+
+`pmgetpid | set -l PID`
+`sacadm -L | grep "^$ARG1:"| 
+regex -e '([^:][^:]*)$0:([^:][^:]*)$1:([^:]*)$2:([^:][^:]*)$3:[^:]*:([^:#][^:#]*)$4#(.*)$5$' 
+'`set -l PMTAG="$m0" -l PMTYPE="$m1" -l FLAGS="$m2" -l RCNT="$m3" -l CMD="$m4" -l COMMENTS="$m5"`'`
+
+`grep "VERSION" /etc/saf/$PMTAG/_pmtab|cut -d= -f2|set -l VERSION`
+
+form= Modify A Port Monitor
+lifetime=shorterm
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=`rm /var/tmp/err$PID;
+       unset -l PID -l PMTAG -l PMTYPE -l FLAGS -l RCNT -l CMD -l COMMENTS -l VERSION`
+done=`message -w "Modifying port monitor <$F1>.";
+	modifypm "$F1" "$F2" "$F3" "$F4" "$F5" "$F6" "$F7" >/var/tmp/err$PID 2>/var/tmp/err$PID;
+   	regex -e -v "$RET"
+		'^0$'  '`message "Port Monitor <$F1> is modified successfully."`'
+		'^4$'  '`message "Port Monitor <$F1> is modified successfully."`'
+		'^.*$' '`message "Port Monitor <$F1> is not modified."`'`CLOSE
+
+# $F1
+name=Port monitor tag:
+nrow=1
+ncol=2
+frow=1
+fcol=23
+rows=1
+columns=14
+value="$PMTAG"
+inactive=TRUE
+
+# $F2
+name=Port Monitor type:
+nrow=2
+ncol=2
+frow=2
+fcol=23
+rows=1
+columns=26
+value="$PMTYPE"
+inactive=TRUE
+
+# $F3
+name=Start port monitor immediately?
+nrow=4
+ncol=2
+frow=4
+fcol=34
+rows=1
+columns=3
+lininfo=pmxflag
+value=`regex -v "$FLAGS"
+		'^.*x.*$' 'No'
+		'.*'	  'Yes'`
+rmenu={ Yes No }
+menuonly=true
+choicemsg=const "Select "Yes" to start port monitor immediately"
+fieldmsg=const "Select "Yes" to start port monitor immediately"
+invalidmsg=const "Invalid input - select Yes/No only"
+
+# $F4
+name=Start state:
+nrow=5
+ncol=2
+frow=5
+fcol=16
+rows=1
+columns=8
+lininfo=pmstate
+value=`regex -v "$FLAGS"
+		'^.*d.*$' 'DISABLED'
+		'.*'	  'ENABLED'`
+rmenu={ DISABLED ENABLED }
+menuonly=true
+choicemsg=const "Select ENABLED/DISABLED"
+fieldmsg=const "Select initial starting state for the port monitor."
+invalidmsg=const "Invalid input - select ENABLED/DISABLED only."
+
+# $F5
+name=Restart count:
+nrow=5
+ncol=27
+frow=5
+fcol=43
+rows=1
+columns=5
+lininfo=pmcount
+value="$RCNT"
+valid=`regex -v "$F5" '^[0-9]+$'`
+choicemsg=const "Enter number of restarts allowed."
+fieldmsg=const "Enter number of restarts allowed."
+invalidmsg=const "Invalid input - enter a positive number or zero"
+
+# $F6
+name=Command to start the port monitor:
+nrow=6
+ncol=2
+frow=7
+fcol=5
+rows=1
+columns=43
+lininfo=pmcmd
+value="$CMD"
+valid=`ckfile command "$F6"`
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - enter full pathname of the command'
+		'^2$'	'Error - must specify full pathname.'
+		'^3$'	'Error - file does not exist.'
+		'^4$'	'Error - command is not executable.'
+		'.*'	'Error - invalid command'`
+choicemsg=const "Enter the command for starting the port monitor."
+fieldmsg=const "Enter the command for starting the port monitor."
+scroll=TRUE
+
+# $F7
+name=Comments:
+nrow=8
+ncol=2
+frow=9
+fcol=5
+rows=1
+columns=43
+lininfo=pmcomments
+value="$COMMENTS"
+fieldmsg=const "Enter comments"
+choicemsg=const "Enter comments"
+wrap=true
+scroll=true
+
+name=Fill in the form and press SAVE.
+nrow=11
+ncol=4
+inactive=TRUE
+
+name=" "
+nrow=12
+ncol=2
+inactive=TRUE
+show=FALSE
+

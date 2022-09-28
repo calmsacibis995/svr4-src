@@ -1,0 +1,481 @@
+#ident	"@(#)pcintf:bridge/make.mstr	1.1"
+#
+# PC Interface Unix server makefile
+# @(#)make.mstr	3.39 LCC Modified: 10:20:28 1/30/90
+#
+
+#
+# Default version and directories
+# May be customized and/or overriden by invoker.
+#
+CFLAGS=		-O $(DFLAGS) $(IFLAGS) $(PCFLAGS)
+LFLAGS=		$(IFLAGS) $(DFLAGS)
+
+# Standard C Source files
+CFILES= \
+     ../common.c ../crypt.c ../dir_access.c ../dir_search.c ../disksize.c \
+     ../dosmesg.c ../error.c ../exec.c ../getcwd.c ../log.c ../mapname.c \
+     ../match.c ../mem.c ../net.c ../p_chdir.c ../p_chmod.c \
+     ../p_close.c ../p_connect.c ../p_exit.c ../p_create.c ../p_delete.c \
+     ../p_consvr.c ../p_fstatus.c ../p_lock.c ../p_lseek.c ../unmapname.c \
+     ../p_mapsvr.c ../p_mkdir.c ../p_open.c ../p_pwd.c ../p_rename.c \
+     ../string.c ../rs232.c ../p_read.c ../p_rmdir.c ../p_search.c \
+     ../p_server.c ../p_conread.c ../p_termout.c ../p_write.c ../pckframe.c \
+     ../remotelog.c ../swap.c ../translate.c ../truncate.c ../ttymodes.c \
+     ../valid.c ../vfile.c ../logpacket.c ../pp_consvr.c ../p_mapname.c \
+     ../p_ipc.c ../serchk.c ../p_version.c
+
+# Standard include files
+HFILES= \
+     ../const.h  ../flip.h  ../pci_types.h  ../sccs.h  ../serial.h  ../xdir.h \
+     ../log.h
+
+
+RL_HFILES=\
+     ../../pkg_rlock/rlock.h
+
+#
+# Lists of object modules for each server plus modules common to all servers
+#
+COMMON_O= \
+      common.o  string.o  mem.o  memory.o  log.o  logpacket.o  swap.o  net.o \
+      pckframe.o  rs232.o  ttymodes.o
+
+LOADPCI_O= \
+      loadpci.o
+
+CONSVR_O= \
+      p_consvr.o ifc_list.o
+
+PPCONSVR_O= \
+      pp_consvr.o serchk.o
+
+MAPSVR_O= \
+      p_mapsvr.o valid.o ifc_list.o
+
+DOSOUT_O= \
+      p_termout.o
+
+DOSSVR_O= \
+      p_connect.o p_server.o p_open.o p_close.o p_read.o p_write.o \
+      p_create.o p_delete.o p_rmdir.o p_mkdir.o p_rename.o p_lseek.o \
+      p_search.o p_fstatus.o p_chdir.o p_pwd.o p_exit.o p_chmod.o \
+      p_lock.o p_uexec.o match.o dir_search.o exec.o \
+      error.o getcwd.o translate.o truncate.o mapname.o unmapname.o diskstat.o \
+      disksize.o dir_access.o vfile.o p_conread.o remotelog.o dosmesg.o \
+      p_mapname.o p_ipc.o p_version.o
+
+#
+# Main target
+#
+icmpci : consvr mapsvr 3bdossvr 3bdosout
+
+icm232: 3bdossvr 3bdosout 
+
+pci: consvr dossvr dosout mapsvr 
+
+rdpci: libs consvr dossvr-rd dosout-rd mapsvr
+
+pci232: libs dossvr dosout 
+
+3bpci: consvr 3bdossvr 3bdosout mapsvr 
+
+3bpcirl: consvr 3bdossvr 3bdosout mapsvr 
+
+vme: consvr vmedossvr vmedosout mapsvr
+
+ibmpci: iconsvr idossvr dosout mapsvr
+
+vme232rl: vmerldossvr vmerldosout 
+
+ibmpcirl: iconsvr idossvrrl mapsvr 
+
+ibmpcird: iconsvr dossvr-rd mapsvr dosout-rd
+
+vmeethrl: consvr vmerldossvr vmerldosout mapsvr 
+
+ibmpci: iconsvr idossvr dosout mapsvr
+
+rlxenixrs: xdosout rlxdossvr
+
+rlxenixpci: consvr mapsvr xdosout rlxdossvr 
+
+rltowerpci: consvr twrdossvr twrdosout mapsvr 
+
+rltowerrs: twrdossvr twrdosout 
+
+xenixpci: libs xdossvr xdosout consvr mapsvr
+
+xenixrs : libs xdossvr xdosout
+
+rs232: dossvr dosout
+
+3brs232: 3bdossvr 3bdosout 
+
+ixrs232: ixdossvr ppconsvr pcidebug protprint
+
+ixrs232rl: ixdossvrrl ppconsvr pcidebug protprint
+
+tca: tcadossvr ppconsvr pcidebug protprint
+
+uni386232: uni386dossvr uni386dosout 
+
+uni386eth: consvr uni386dossvr uni386dosout mapsvr 
+
+libs: liblockset librlock 
+
+liblockset:
+	cd ../../pkg_lockset; make "DFLAGS = $(DFLAGS)"
+
+librlock:
+	cd ../../pkg_rlock; make "DFLAGS = $(DFLAGS)"
+
+loadpci: $(LOADPCI_O) $(COMMON_O)
+	-rm -f loadpci
+	$(CC) -o loadpci $(LDFLAGS) $(LOADPCI_O) $(COMMON_O) $(LIBFLAGS)
+
+ppconsvr: $(PPCONSVR_O) $(COMMON_O) valid.o prot.o
+	-rm -f ppconsvr
+	$(CC) -o ppconsvr $(PPCONSVR_O) $(COMMON_O) $(LIBFLAGS) \
+		valid.o prot.o
+
+iconsvr: $(CONSVR_O) serchk.o $(COMMON_O)
+	-rm -f iconsvr
+	$(CC) -o iconsvr $(LDFLAGS) $(CONSVR_O) serchk.o $(COMMON_O) $(LIBFLAGS)
+
+consvr: $(CONSVR_O) $(COMMON_O)
+	-rm -f consvr
+	$(CC) -o consvr $(LDFLAGS) $(CONSVR_O) $(COMMON_O) $(LIBFLAGS)
+
+mapsvr: $(MAPSVR_O) $(COMMON_O)
+	-rm -f mapsvr
+	$(CC) -o mapsvr $(LDFLAGS) $(MAPSVR_O) $(COMMON_O) $(LIBFLAGS)
+
+ixdossvr: $(DOSSVR_O) $(COMMON_O) valid.o prot.o crypt.o
+	-rm -f ixdossvr
+	$(CC) -o ixdossvr $(DOSSVR_O) $(COMMON_O) $(LIBFLAGS) \
+		valid.o prot.o crypt.o
+
+ixdossvrrl: $(DOSSVR_O) $(COMMON_O) valid.o prot.o crypt.o 
+	-rm -f ixdossvr
+	$(CC) -o ixdossvr $(DOSSVR_O) $(COMMON_O) $(LIBFLAGS) \
+		valid.o prot.o crypt.o 
+
+dossvr: $(DOSSVR_O) $(COMMON_O) lock.o
+	-rm -f dossvr
+	$(CC) -o dossvr $(LDFLAGS) $(DOSSVR_O) $(COMMON_O) lock.o\
+		$(LIBFLAGS)  
+
+dossvr-rd: $(DOSSVR_O) $(COMMON_O) lock.o semfunc.o 
+	-rm -f dossvr
+	$(CC) -o dossvr $(LDFLAGS) $(DOSSVR_O) $(COMMON_O) \
+		$(LIBFLAGS)  lock.o semfunc.o
+
+idossvr: $(DOSSVR_O) $(COMMON_O) crypt.o
+	-rm -f idossvr
+	$(CC) -o idossvr $(LDFLAGS) $(DOSSVR_O) $(COMMON_O) crypt.o $(LIBFLAGS)
+
+idossvrrl: $(DOSSVR_O) $(COMMON_O) crypt.o 
+	-rm -f idossvr
+	$(CC) -o idossvr $(LDFLAGS) $(DOSSVR_O) $(COMMON_O) crypt.o \
+		 $(LIBFLAGS) 
+
+tcadossvr: $(DOSSVR_O) $(COMMON_O) valid.o prot.o crypt.o
+	-rm -f tcadossvr
+	$(CC) -o tcadossvr $(DOSSVR_O) $(COMMON_O) $(LIBFLAGS) \
+		valid.o prot.o crypt.o
+
+dosout: $(DOSOUT_O) $(COMMON_O)
+	-rm -f dosout
+	$(CC) -o dosout $(LDFLAGS) $(DOSOUT_O) $(COMMON_O) $(LIBFLAGS)
+
+dosout-rd: $(DOSOUT_O) $(COMMON_O) semfunc.o
+	-rm -f dosout
+	$(CC) -o dosout $(LDFLAGS) $(DOSOUT_O) semfunc.o \
+		$(COMMON_O) $(LIBFLAGS)
+
+3bdossvr: $(DOSSVR_O) $(COMMON_O) semfunc.o 
+	-rm -f 3bdossvr dossvr
+	$(CC) -o 3bdossvr $(LDFLAGS) $(DOSSVR_O) $(COMMON_O) \
+		$(LIBFLAGS)  semfunc.o
+
+3bdosout: $(DOSOUT_O) $(COMMON_O) semfunc.o
+	-rm -f 3bdosout dosout
+	$(CC) -o 3bdosout $(LDFLAGS) $(DOSOUT_O) semfunc.o \
+		$(COMMON_O) $(LIBFLAGS)
+
+xdossvr: $(DOSSVR_O) $(COMMON_O) semfunc.o xcrypt.o lock.o
+	-rm -f xdossvr
+	$(CC) -o xdossvr $(LDFLAGS) $(DOSSVR_O) $(COMMON_O) \
+		semfunc.o xcrypt.o lock.o $(LIBFLAGS)
+
+xdosout: $(DOSOUT_O) $(COMMON_O) semfunc.o 
+	-rm -f xdosout
+	$(CC) -o xdosout $(LDFLAGS) $(DOSOUT_O) semfunc.o \
+		$(COMMON_O) $(LIBFLAGS) 
+
+twrdossvr: $(DOSSVR_O) $(COMMON_O) semfunc.o 
+	-rm -f twrdossvr dossvr
+	$(CC) -o twrdossvr $(LDFLAGS) $(DOSSVR_O) $(COMMON_O) \
+		$(LIBFLAGS)  semfunc.o
+
+twrdosout: $(DOSOUT_O) $(COMMON_O) semfunc.o
+	-rm -f twrdosout dosout
+	$(CC) -o twrdosout $(LDFLAGS) $(DOSOUT_O) semfunc.o \
+		$(COMMON_O) $(LIBFLAGS)
+
+vmedossvr: $(DOSSVR_O) $(COMMON_O) semfunc.o
+	-rm -f dossvr
+	$(CC) -o dossvr $(DOSSVR_O) semfunc.o $(COMMON_O) $(LIBFLAGS)
+
+vmedosout: $(DOSOUT_O) $(COMMON_O) semfunc.o
+	-rm -f dosout
+	$(CC) -o dosout $(LDFLAGS) $(DOSOUT_O) semfunc.o $(COMMON_O) $(LIBFLAGS)
+	-rm -f pcidebug
+	$(CC) -o pcidebug pcidebug.o
+
+vmerldossvr: $(DOSSVR_O) $(COMMON_O) semfunc.o 
+	-rm -f dossvr
+	$(CC) -o dossvr $(LDFLAGS) $(DOSSVR_O) $(COMMON_O) \
+		$(LIBFLAGS)  semfunc.o
+
+vmerldosout: $(DOSOUT_O) $(COMMON_O) semfunc.o
+	-rm -f dosout
+	$(CC) -o dosout $(LDFLAGS) $(DOSOUT_O) semfunc.o \
+		$(COMMON_O) $(LIBFLAGS)
+
+uni386dossvr: $(DOSSVR_O) $(COMMON_O) semfunc.o 
+	-rm -f dossvr
+	$(CC) -o dossvr $(LDFLAGS) $(DOSSVR_O) $(COMMON_O) \
+		$(LIBFLAGS)  semfunc.o
+
+uni386dosout: $(DOSOUT_O) $(COMMON_O) semfunc.o
+	-rm -f dosout
+	$(CC) -o dosout $(LDFLAGS) $(DOSOUT_O) semfunc.o \
+		$(COMMON_O) $(LIBFLAGS)
+
+uni386dossvr: $(DOSSVR_O) $(COMMON_O) semfunc.o 
+	-rm -f dossvr
+	$(CC) -o dossvr $(LDFLAGS) $(DOSSVR_O) $(COMMON_O) \
+		$(LIBFLAGS)  semfunc.o
+
+uni386dosout: $(DOSOUT_O) $(COMMON_O) semfunc.o
+	-rm -f dosout
+	$(CC) -o dosout $(LDFLAGS) $(DOSOUT_O) semfunc.o \
+		$(COMMON_O) $(LIBFLAGS)
+
+protprint: protprint.o
+	-rm -f protprint
+	$(CC) -o protprint protprint.o
+
+lint:
+	lint $(LFLAGS) $(CFILES)
+
+pcidebug: pcidebug.o
+	-rm -f pcidebug
+	$(CC) -o pcidebug pcidebug.o
+
+# Dependencies
+
+common.o: ../common.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../common.c
+
+crypt.o: ../crypt.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../crypt.c
+
+dir_access.o: ../dir_access.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../dir_access.c
+
+dir_search.o: ../dir_search.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../dir_search.c
+
+diskstat.o: ../diskstat.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../diskstat.c
+
+disksize.o: ../disksize.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../disksize.c
+
+dosmesg.o: ../dosmesg.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../dosmesg.c
+
+error.o: ../error.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../error.c
+
+exec.o: ../exec.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../exec.c
+
+getcwd.o: ../getcwd.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../getcwd.c
+
+ifc_list.o: ../ifc_list.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../ifc_list.c
+
+loadpci.o: ../loadpci.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../loadpci.c
+
+lock.o: ../lock.c $(RL_HFILES) $(HFILES)
+	$(CC) -c $(RLFLAGS) $(CFLAGS) $(SVRFLAGS) ../lock.c
+
+log.o: ../log.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../log.c
+
+lset.o: ../lset.c $(RL_HFILES) $(HFILES)
+	$(CC) -c $(RLFLAGS) $(CFLAGS) $(SVRFLAGS) ../lset.c
+
+mapname.o: ../mapname.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../mapname.c
+
+unmapname.o: ../unmapname.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../unmapname.c
+
+mapfile.o: ../mapfile.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../mapfile.c
+
+match.o: ../match.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../match.c
+
+mem.o: ../mem.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../mem.c
+
+memory.o: ../memory.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../memory.c
+
+net.o: ../net.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../net.c
+
+pcidebug.o: ../pcidebug.c ../log.h
+	$(CC) -c -O $(CFLAGS) ../pcidebug.c 
+
+protprint.o: ../protprint.c 
+	$(CC) -c -O $(CFLAGS) ../protprint.c
+
+p_chdir.o: ../p_chdir.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_chdir.c
+
+p_chmod.o: ../p_chmod.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_chmod.c
+
+p_close.o: ../p_close.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_close.c
+
+p_connect.o: ../p_connect.c $(HFILES) $(RL_HFILES)
+	$(CC) -c $(RLFLAGS) $(CFLAGS) $(SVRFLAGS) ../p_connect.c
+
+p_conread.o: ../p_conread.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_conread.c
+
+p_consvr.o: ../p_consvr.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_consvr.c
+
+pp_consvr.o: ../pp_consvr.c $(HFILES)
+	$(CC) -c $(RLFLAGS) $(SVRFLAGS) $(CFLAGS) ../pp_consvr.c
+
+p_create.o: ../p_create.c $(HFILES) 
+	$(CC) -c $(RLFLAGS) $(SVRFLAGS) $(CFLAGS) ../p_create.c
+
+p_delete.o: ../p_delete.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_delete.c
+
+p_exit.o: ../p_exit.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_exit.c
+
+p_fstatus.o: ../p_fstatus.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_fstatus.c
+
+p_lock.o: ../p_lock.c $(HFILES)
+	$(CC) -c $(RLFLAGS) $(SVRFLAGS) $(CFLAGS) ../p_lock.c
+
+p_lseek.o: ../p_lseek.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_lseek.c
+
+p_mapname.o: ../p_mapname.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_mapname.c
+
+p_mapsvr.o: ../p_mapsvr.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_mapsvr.c
+
+p_mkdir.o: ../p_mkdir.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_mkdir.c
+
+p_open.o: ../p_open.c $(HFILES)
+	$(CC) -c $(RLFLAGS) $(SVRFLAGS) $(CFLAGS) ../p_open.c
+
+p_pwd.o: ../p_pwd.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_pwd.c
+
+p_read.o: ../p_read.c $(HFILES) $(RL_HFILES)
+	$(CC) -c $(RLFLAGS) $(SVRFLAGS) $(CFLAGS) ../p_read.c
+
+p_rename.o: ../p_rename.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_rename.c
+
+p_rmdir.o:  ../p_rmdir.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_rmdir.c
+
+p_search.o: ../p_search.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_search.c
+
+p_server.o: ../p_server.c $(HFILES) $(RL_HFILES)
+	$(CC) -c $(RLFLAGS) $(SVRFLAGS) $(CFLAGS) ../p_server.c
+
+p_termout.o: ../p_termout.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_termout.c
+
+p_version.o: ../p_version.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_version.c
+
+p_write.o: ../p_write.c $(HFILES) $(RL_HFILES)
+	$(CC) -c $(RLFLAGS) $(SVRFLAGS) $(CFLAGS) ../p_write.c
+
+p_uexec.o: ../p_uexec.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../p_uexec.c
+
+pckframe.o: ../pckframe.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../pckframe.c
+
+remotelog.o: ../remotelog.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../remotelog.c
+
+rs232.o: ../rs232.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../rs232.c
+
+semfunc.o: ../semfunc.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../semfunc.c
+
+string.o: ../string.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../string.c
+
+swap.o: ../swap.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../swap.c
+
+translate.o: ../translate.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../translate.c
+
+truncate.o: ../truncate.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../truncate.c
+
+ttymodes.o: ../ttymodes.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../ttymodes.c
+
+prot.o: ../prot.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../prot.c
+
+valid.o: ../valid.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../valid.c
+
+vfile.o: ../vfile.c $(HFILES) $(RL_HFILES)
+	$(CC) -c $(RLFLAGS) $(SVRFLAGS) $(CFLAGS) ../vfile.c
+
+logpacket.o: ../logpacket.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../logpacket.c
+
+xcrypt.o: ../crypt.xenix $(HFILES)
+	cp ../crypt.xenix ../xcrypt.c
+	$(CC) -c $(CFLAGS) ../xcrypt.c
+	rm -f ../xcrypt.c
+
+p_ipc.o: ../p_ipc.c ../pci_ipc.h
+	$(CC) -c $(CFLAGS) ../p_ipc.c
+
+serchk.o: ../serchk.c $(HFILES)
+	$(CC) -c $(CFLAGS) ../serchk.c

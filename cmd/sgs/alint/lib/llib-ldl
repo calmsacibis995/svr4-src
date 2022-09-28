@@ -1,0 +1,5 @@
+#ident	"@(#)alint:lib/llib-ldl	1.1"
+/* LINTLIBRARY */
+/* PROTOLIB1 */
+
+#include <dlfcn.h>

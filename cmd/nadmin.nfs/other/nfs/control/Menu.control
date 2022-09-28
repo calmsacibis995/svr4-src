@@ -1,0 +1,40 @@
+#ident	"@(#)nadmin.nfs:other/nfs/control/Menu.control	1.4"
+menu=Network File System Control
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/ssmenu.msg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/nfs/control`
+
+
+name=check_status
+description=Check Status of NFS File Service
+action=`indicator -w;
+	$INTFBASE/netservices/remote_files/other/nfs/control/bin/status | set -l PID`OPEN TEXT $INTFBASE/netservices/remote_files/other/nfs/control/Text.control
+lininfo=control:check
+
+name=start
+description=Start Network File System Operations
+action=`indicator -w;
+	message -f "Starting Network File System Operations.  Please wait...";
+	sleep 10;
+	run /sbin/sh /etc/init.d/nfs start;
+	$INTFBASE/netservices/remote_files/other/nfs/control/bin/status | set -l PID;
+	if [ -f "/var/tmp/start_stat$PID" ];
+	then
+		message -f "Network File System operations have been started.";
+	else
+		message -f "Network File System operations could not be started.";
+	fi;
+	/bin/rm /var/tmp/start_stat$PID 2>/dev/null`NOP
+
+lininfo=control:start
+
+name=stop
+description=Stop Network File System Operations
+action=`indicator -w;
+	message -f "Stopping Network File System Operations.  Please wait...";
+	sleep 10;
+	run /sbin/sh /etc/init.d/nfs stop;
+	message -f "Network File System Operations have been stopped."`NOP
+lininfo=control:stop
+

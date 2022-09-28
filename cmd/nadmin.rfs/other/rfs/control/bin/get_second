@@ -1,0 +1,33 @@
+#ident	"@(#)nadmin.rfs:other/rfs/control/bin/get_second	1.2"
+# get domain name
+
+DOM=`dname -d`
+UNAME=`uname -n`
+rm /usr/tmp/netid_$$ 2>/dev/null
+
+/usr/bin/rfadmin | /bin/sed "s/^.*[ ]on[ ]//g" | /bin/grep "$DOM.$UNAME" >/usr/tmp/names_$$ 
+
+ERR=0
+
+if [ -s /usr/tmp/names_$$ ]
+then
+	TRANS=`/bin/sed "s/[ ]is[ ].*$//g" /usr/tmp/names_$$`
+	for tran in `echo $TRANS`; do
+		/bin/grep "$DOM[ 	][Ss][ 	]$DOM.$UNAME" /etc/rfs/$tran/rfmaster 1>/dev/null
+		if [ $? -eq 0 ]
+		then
+			echo $tran >>/usr/tmp/netid_$$
+		else
+			ERR=1
+		fi
+	done
+else
+	echo "$UNAME is not currently acting as a primary name server." >/usr/tmp/pass_$$
+fi
+if [ $ERR -eq 1 ]
+then
+	echo "$UNAME is not currently a secondary name server." >/usr/tmp/pass_$$
+fi
+
+#echo the process id so fmli can get the temp file name
+echo $$

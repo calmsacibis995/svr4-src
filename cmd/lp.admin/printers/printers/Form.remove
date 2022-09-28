@@ -1,0 +1,67 @@
+#ident	"@(#)lp.admin:printers/printers/Form.remove	1.5.3.1"
+
+#######################################################
+#
+#       Module Name: Form.remove
+#
+#######################################################
+
+form="Remove Printer(s)"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO 
+
+`indicator -w; set -l name_2="/tmp/lp.n2$VPID";
+ls /etc/lp/printers > $name_2;
+if [ -s "$name_2" ];
+then
+	echo "init=true";
+else
+	echo "init=false";
+	message -b "There are no printers available";
+fi`
+
+
+close=`/usr/bin/rm -f $name_2;
+	unset -l do_all -l name_2 -l name_valid -l bad_one`
+
+done=`message -w "Removing printers";
+
+		echo "$F1" | tr ',' ' ' | set -l list;
+		shell "
+			for p in $list
+			do
+				$TFADMIN lpadmin -x \$p;
+			done
+			" > $error;
+	`close
+
+
+name=Printer name(s):
+lininfo="remove:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=18
+rows=1
+columns=40
+fieldmsg='Enter printers to be removed then press [SAVE]'
+scroll=true
+rmenu=OPEN MENU $OBJ_DIR/Menu.pr.ch
+choicemsg="MARK choices then press ENTER"
+valid=`indicator -w;
+	unset -l bad_one;
+	ls /etc/lp/printers > $name_2;
+	echo "all" >> $name_2;
+	if [ -z "$F1" ];
+	then
+		set -l no_value=true -l name_valid=false;
+	else
+		set -l no_value=false -l name_valid=true;
+	fi;
+	echo "$F1" | tr " ," "[\012*]" | regex -e '^(.*)$0$'
+	'`fmlgrep "^$m0$" $name_2 || set -l bad_one="$m0" -l name_valid=false`' > /dev/null`$name_valid
+invalidmsg=`if [ "$no_value" = "true" ];
+	then
+		echo "You must enter a value for this field.";
+	else
+		echo "$bad_one is an invalid printer - press [CHOICES] for selection";
+	fi`

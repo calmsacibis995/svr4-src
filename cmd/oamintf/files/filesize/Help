@@ -1,0 +1,51 @@
+#ident	"@(#)oamintf:files/filesize/Help	1.1.1.1"
+ABSTRACT:
+
+	The "filesize" task prints the names of the largest files
+	in the directory you specify.
+
+	In the first field, please enter the name of the directory 
+	you would like to search.  There is no default for this field.
+	The directory name must be an absolute path (beginning with
+	slash (/)) to an existing directory.  Warning:  It will take
+	a longer time to to search directories with short names such
+	as "/" or "/usr".
+
+	The second field allows you to enter a positive integer value 
+	that specifies how many large files to report.  If you don't
+	enter a number, the 10 largest files in the directory will 
+	be listed.
+TITLE:List Largest File(s) in a given Directory
+F1:Directory to be searched: 
+	Name of the directory that you wish to search. There is no
+	default for this field. The directory must be an absolute
+	path (beginning with slash (/)) to an existing directory.
+	Warning: Takes longer for shorter path names such as "/".
+F2:Number of large files to be reported:
+	This field allows you to enter a positive integer value
+	that specifies how many large files to report.  If you don't
+	enter a number, the 10 largest files in the directory will
+	be listed.
+sizenokhelp:
+
+	An error occurred while attempting to get the list of files
+	you asked for.  The error may be because the directory
+	does not have any files in it.  You may specify a 
+	different directory and number of files, or you may quit the 
+	"filesize" task.
+sizeokhelp:
+
+	You are looking at a listing of the 'n' largest files in the
+	directory you specified (where 'n' is the number you specified
+	on the first "filesize" task form).
+
+	Files are listed in the order of largest to smallest, so the
+	largest files will appear first in the list.
+
+	The format of the display is:
+
+	       file size     date of
+	owner  (characters)  last access  filename
+	-----  ------------  -----------  --------
+	
+	

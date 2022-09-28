@@ -1,0 +1,20 @@
+#ident	"@(#)bkrs:basic.d/sched/Menu.del	1.1.1.1"
+
+menu=Delete Scheduled Backups
+multiselect
+
+help=open text /usr/vmsys/OBJECTS/Text.h "Delete Scheduled Backups" backup/sched/T.hdel
+
+done=`indicator -w; getitems | getdel "$ARG2" > /tmp/tobedel.$VPID; prtask -b -s -F /tmp/delcfm.$VPID file < /tmp/tobedel.$VPID | regex 
+	'^0$' "open text $OBJ_DIR/sched/Text.nodel /tmp/tobedel.$VPID"
+	'^2$' "open text $OBJ_DIR/sched/Text.delcfm /tmp/delcfm.$VPID /tmp/tobedel.$VPID"`
+
+close=`rm -f $ARG1`
+
+`readfile $ARG1`
+
+name=""
+button=8
+action=nop
+
+`indicator -w`

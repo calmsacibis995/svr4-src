@@ -1,0 +1,43 @@
+#ident	"@(#)oamintf:edsysadm/Menu.choices	1.4"
+################################################################################
+#	Module Name: Menu.choices
+#	Date: March 1988
+#
+#	INPUTS:	ARG1 --> menu/task form object suffix
+#		ARG2 --> package description file
+#		ARG3 --> menu/task flag
+#			->chgmenu
+#			->chgtask
+#			->addmenu
+#			->addtask
+################################################################################
+menu="$ARG1 descriptions"
+
+framemsg=`readfile $INTFBASE/ssmenu.msg`
+
+`sort $GETINFO | regex '^(.*)$0' 'name="$m0"
+action=`set -l "Form_Choice=$m0";
+
+	message -w "Retrieving information from \"$ARG2\" file.";
+
+	getpkgdesc -n "$Form_Choice" "$ARG2" > $GETINFO;
+
+	if [ $RET -eq 0 ];
+	then
+		set -l CMD="OPEN FORM $EDSYSADM/Form.$ARG1 $ARG3";
+	else if [ "$RET" -eq 1 ];
+	then
+		set -l CMD="OPEN MENU $EDSYSADM/Menu.choices $OBJ";
+	else
+		set -l CMD="OPEN TEXT $EDSYSADM/Text.gpderr $RET";
+	fi;
+	fi`$CMD'`
+
+name=
+button=1
+action=
+
+name=
+button=7
+action=
+

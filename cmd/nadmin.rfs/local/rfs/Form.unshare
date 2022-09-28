@@ -1,0 +1,92 @@
+#ident	"@(#)nadmin.rfs:local/rfs/Form.unshare	1.5"
+form="Terminates Automatic/Current Sharing of a Local Resource via RFS"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+close=unset -el RESDIR -el DIR -el RES -el ACC -el CLIENT -el DESC -el IMM -el AUTO -el PID
+
+done=`indicator -w;
+	set -el IMM="$F2" -el AUTO="$F3";
+	set -e RESDIR="$F1";
+	unset -l KEYCMD;
+	unset -l PID;
+	if [ "$AUTO" = "yes" ];
+	then
+		"$INTFBASE/netservices/remote_files/local/rfs/bin/auto_attr" | set -el PID;
+		if [ -s "/usr/tmp/amsg_$PID" ];
+		then
+			message "This resource is not shared automatically.";
+		else
+			/usr/bin/cut -s -d" " -f1 "/usr/tmp/a_attr$PID" | set -el RES;
+			/usr/bin/cut -s -d" " -f2 "/usr/tmp/a_attr$PID" | set -el DIR;
+			/usr/bin/cut -s -d" " -f3 "/usr/tmp/a_attr$PID"| set -el ACC;
+			/usr/bin/cut -s -d" " -f4 "/usr/tmp/a_attr$PID" | /usr/bin/tr '\011' '\040' | set -el DESC;
+			set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/local/rfs/Form.unshar2";
+			rm "/usr/tmp/a_attr$PID";
+		fi;
+	fi;
+	if [  -z "$KEYCMD" ];
+	then
+		if [ "$IMM" = "no" ];
+		then
+			set -l KEYCMD="CLOSE";
+		else
+			"$INTFBASE/netservices/remote_files/local/rfs/bin/imm_attr" | set -l PID;
+			if [ -s "/usr/tmp/cmsg_$PID" ];
+			then
+				message "This resource is not shared currently.";
+				set -l KEYCMD="CLOSE";
+			else
+				/usr/bin/cut -s -d" " -f1 "/usr/tmp/c_attr$PID" | set -el RES;
+				/usr/bin/cut -s -d" " -f2 "/usr/tmp/c_attr$PID" | set -el DIR;
+				/usr/bin/cut -s -d" " -f3 "/usr/tmp/c_attr$PID" | set -el ACC;
+				/usr/bin/cut -s -d"\"" -f2 "/usr/tmp/c_attr$PID" | set -el DESC;
+				set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/local/rfs/Form.unshar3";
+				rm "/usr/tmp/c_attr$PID" 2>/dev/null;
+			fi;
+		fi;
+	fi;
+	`$KEYCMD
+
+`readfile "$INTFBASE/fcontmsg" | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/local/rfs`
+
+name="Resource or Directory Name:"
+page=1
+nrow=2
+ncol=1
+frow=2
+fcol=30
+rows=1
+columns=30
+lininfo=unshare:res
+rmenu=`$INTFBASE/netservices/remote_files/local/rfs/bin/rf_list;
+	cat /usr/tmp/s_list`
+menuonly=true
+invalidmsg="Must be a resource or directory that is currently shared."
+
+name="Unshare the resource immediately?"
+page=1
+nrow=3
+ncol=1
+frow=3
+fcol=35
+rows=1
+columns=3
+rmenu={ yes no }
+value="yes"
+menuonly=true
+lininfo=unshare:imm
+
+name="Terminate automatic sharing of the resource?"
+page=1
+nrow=4
+ncol=1
+frow=4
+fcol=46
+rows=1
+columns=3
+rmenu= { yes no }
+value="yes"
+menuonly=true
+lininfo=unshare:auto
+

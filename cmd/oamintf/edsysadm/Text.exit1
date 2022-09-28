@@ -1,0 +1,26 @@
+#ident	"@(#)oamintf:edsysadm/Text.exit1	1.2"
+
+################################################################################
+#	Module Name: Text.exit1
+#	Date: August 1987
+################################################################################
+title="Package Error"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+text="
+   An unknown error occurred that caused the function to
+   terminate."
+
+rows=4
+columns=65
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

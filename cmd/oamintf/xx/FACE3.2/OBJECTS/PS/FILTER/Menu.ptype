@@ -1,0 +1,35 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FILTER/Menu.ptype	1.1"
+menu="CHOICES"
+multiselect
+
+done=`indicator -w;getitems " " | set -l Form_Choice` close
+
+close=`rm -f /usr/tmp/ptype.$VPID`
+
+`/usr/vmsys/admin/PS/FILTER/ptype $VPID`
+
+
+`cat /usr/tmp/ptype.$VPID| regex '^(.*)$0'
+'name="$m0" 
+itemmsg=MARK the printer types and strike ENTER.
+'`
+
+name=""
+button=1
+action=nop
+
+name=""
+button=4
+action=nop
+
+name=""
+button=5
+action=nop
+
+name=""
+button=7
+action=nop
+
+name=""
+button=8
+action=nop

@@ -1,0 +1,21 @@
+#ident	"@(#)nadmin.nfs:local/nfs/bin/nf_list	1.2"
+/usr/sbin/share -F nfs | /usr/bin/tr -s '\011' '\040' | /bin/sed "s/^-[ 	]//g"  > /var/tmp/s_list$$
+
+
+/bin/nl /etc/dfs/fstypes | grep '1	nfs' >/dev/null
+if [ $? -eq 0 ]
+then
+	/bin/sed -e "s/^#.*//g" -e "/^$/d" /etc/dfs/dfstab | /bin/grep -v "[ 	]*-F[ 	]*" >/var/tmp/auto_$$
+fi
+
+/bin/sed "s/^#.*//g" /etc/dfs/dfstab | /usr/bin/tr -s '\011' '\040' | /usr/bin/fgrep -e"-F nfs" >>/var/tmp/auto_$$
+
+/usr/bin/nawk '{  for ( i = NF; i > 0; --i) printf "%s ", $i
+		 if ( i = 1) printf "\n" }' </var/tmp/auto_$$ >> /var/tmp/s_list$$
+
+echo "{" > /var/tmp/s_list
+/usr/bin/cut -d" " -f1 /var/tmp/s_list$$ | 
+		 /usr/bin/tr -s '\040' '\012' | /bin/sort -u >> /var/tmp/s_list
+echo "}" >> /var/tmp/s_list
+/bin/rm /var/tmp/auto_$$ /var/tmp/s_list$$
+

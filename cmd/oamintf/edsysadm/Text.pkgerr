@@ -1,0 +1,37 @@
+#ident	"@(#)oamintf:edsysadm/Text.pkgerr	1.2"
+
+################################################################################
+#	Module Name: Text.pkgerr
+#	Date: August 1988
+################################################################################
+title="Packaging Error"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+begrow=any
+begcol=any
+
+`regex -e -v "$ARG1"
+	'^1$' '`set -l ERR="Invalid argument given."`'
+	'^2$' '`set -l ERR="A duplicate entry was found in the menu information file."`'
+	'^4$' '`set -l ERR="More than 1 menu information file exist."`'
+	'^5$' '`set -l ERR="The following file does not exist."`'
+	'^6$' '`set -l ERR="Cannot update prototype file - not crated by edsysadm."`'`
+
+text="   The packaging of software for
+   the Interface was NOT successful.
+
+   Error : $ERR"
+
+rows=7
+columns=75
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

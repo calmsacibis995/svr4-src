@@ -1,0 +1,30 @@
+#ident	"@(#)oamintf:usermgmt/Form.rmgrp	1.2.2.1"
+
+################################################################################
+#	Module Name:  Form.rmgrp
+################################################################################
+form="Remove a Group Definition"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=OPEN TEXT $OBJ_DIR/Text.rmgrp $F1
+
+name=Group:
+lininfo=Form.rmgrp:rmgrp
+nrow=1
+ncol=3
+frow=1
+fcol=10
+rows=1
+columns=8
+
+rmenu=OPEN MENU $OBJ_DIR/Menu.pgrp
+valid=`chk_pgrp $F1`
+
+invalidmsg=const "ERROR: Enter an existing group name or group id."
+
+name=RESET
+button=8
+action=RESET

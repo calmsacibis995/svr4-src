@@ -1,0 +1,77 @@
+#ident	"@(#)lp.admin:printers/requests/Form.release	1.4.3.1"
+
+#######################################################
+#
+#       Module Name: Form.release
+#
+#######################################################
+
+form=Release print requests from Hold
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO 
+
+`indicator -w; 
+	set -l name_r="/tmp/lp.rr$VPID";
+	set -l name_rx="/tmp/lp.rx$VPID";
+	if [ -n "$TFADMIN" ]; then $TFADMIN lpstat -oall | fmlcut -d' ' -f1 > $name_r;
+	else lpstat -oall | fmlcut -d' ' -f1 > $name_r; fi;
+	set -l name_rx=$name_r;
+if [ -s "$name_r" ];
+then
+	:;
+else
+	echo "init=false";
+	message -b "There are no print requests available";
+fi`
+
+close=`/usr/bin/rm  $name_r;
+	usr/bin/rm  $name_rx;
+	unset -l do_all -l name_r -l name_valid -l bad_one`
+
+done=`message -w "Releasing print requests";
+	if [ $F1 = 'all' ];
+	then
+	readfile $name_r | tr '\012' ' ' | set -l rlist;
+	else
+	echo "$F1" | tr ',' ' ' | set -l rlist;
+	fi;
+	shell "
+	for r in $rlist
+	do
+	$TFADMIN lp -i\$r -H resume;
+	done 
+	"  2> $error;
+	message "";
+	`update
+
+name=Request-ids: 
+lininfo="release:F1"
+nrow=2
+ncol=1
+frow=2
+fcol=14
+rows=1
+columns=40
+scroll=true
+rmenu=OPEN MENU $OBJ_DIR/Menu.pr.ch "all"
+choicemsg="MARK choices then press ENTER"
+fieldmsg="Enter the print request-ids then press [SAVE] to release"
+
+valid=`indicator -w;
+	unset -l bad_one;
+	if [ -z "$F1" ];
+	then
+		set -l no_value=true -l name_valid=false;
+	else
+		set -l no_value=false -l name_valid=true;
+	fi;
+	echo "$F1" | tr " ," "[\012*]" | regex -e '^(.*)$0$'
+	'`fmlgrep "^$m0\$" $name_rx || set -l bad_one="$m0" -l name_valid=false`' > /dev/null`$name_valid
+invalidmsg=`if [ "$no_value" = "true" ];
+	then
+	    echo "Enter a request-id or press CANCEL to exit";
+	else
+	    echo "$bad_one Invalid print request - press [CHOICES] for selection";
+	fi;`
+
+

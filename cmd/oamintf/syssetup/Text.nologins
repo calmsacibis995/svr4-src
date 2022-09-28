@@ -1,0 +1,41 @@
+#ident	"@(#)oamintf:syssetup/Text.nologins	1.3"
+
+################################################################################
+#	Module Name: Text.nologins
+#	Calling Sequence:
+#	Functional Description: This Text object displays a screen
+#				of no locked logins  for the 'setup' 
+#				password command.
+#	How:
+#	Inputs:
+#	Functions Called:
+################################################################################
+
+Title="Error Defining Administrative and System Login(s) Passwords"
+
+#begrow=1
+#begcol=1
+
+framemsg=`readfile $INTFBASE/conf.msg
+
+lifetime=shortterm
+
+rows=18
+columns=75
+
+text="
+An error occured while attempting to create the administrative and
+system login ids.
+`readfile /tmp/passwd.err`"
+
+#	(This is for confirmation, warning and repetition text screens
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

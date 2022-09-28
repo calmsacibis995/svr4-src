@@ -1,0 +1,42 @@
+#ident	"@(#)nadmin.rfs:other/rfs/control/Menu.control	1.5"
+
+###############################################################################
+#    Module Name:  Menu.control
+#    Author:  D. L. Williams
+#    Date:    10/88
+#    Description:  
+###############################################################################
+menu=Remote File Sharing Control
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=unset -l PPID -l KEYCMD
+
+`readfile $INTFBASE/ssmenu.msg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/rfs/control`
+
+name=check_status
+description=Checks Whether Remote File Sharing Is Running
+action=OPEN TEXT $INTFBASE/netservices/remote_files/other/rfs/control/Text.check
+lininfo=control:check
+
+name=pass_control
+description=Passes Name Server Responsibility back to the Primary
+lininfo=control:passctl
+action=`indicator -w;
+	"$INTFBASE/netservices/remote_files/other/rfs/control/bin/get_second" | set -l PPID;
+	if [ -s "/usr/tmp/netid_$PPID" ];
+	then
+		set -l KEYCMD="OPEN MENU $INTFBASE/netservices/remote_files/other/rfs/control/Menu.passctl";
+	else
+		set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/other/rfs/control/Text.msg 'Passes Name Server Responsibility back to the Primary' /usr/tmp/pass_$PPID";
+	fi;
+	`$KEYCMD
+
+name=start
+description=Starts Remote File Sharing
+action=OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/control/Form.start
+lininfo=control:start
+
+name=stop
+description=Stop Remote File Sharing
+action=OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/control/Form.stop
+lininfo=control:stop

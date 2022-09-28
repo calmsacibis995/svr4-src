@@ -1,0 +1,5 @@
+#ident	"@(#)oamintf:machinemgmt/whoson.Help	1.1"
+ABSTRACT:
+	The "whos_on" task prints the login, terminal device number, and
+	sign-on date and time of all users who are currently using the
+	system.

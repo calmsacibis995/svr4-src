@@ -1,0 +1,5 @@
+#ident	"@(#)adm:TIMEZONE	1.1"
+#	Set timezone environment to default for this machine
+
+TZ=EST5EDT
+export TZ

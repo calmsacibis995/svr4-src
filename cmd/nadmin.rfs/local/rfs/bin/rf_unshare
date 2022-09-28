@@ -1,0 +1,13 @@
+#ident	"@(#)nadmin.rfs:local/rfs/bin/rf_unshare	1.2"
+#to remove resources from the automatic advertise list
+
+/bin/grep -v "share[ 	]*-F[ 	]*rfs.*$DIR[ 	]$RES" /etc/dfs/dfstab >/usr/tmp/$$.dfstab
+
+if [ $? -lt 2 ]
+then
+	/bin/mv /usr/tmp/$$.dfstab /etc/dfs/dfstab
+	echo "\n$RES has been removed from the Automatic Advertise List.">/usr/tmp/a_adv$$
+else
+	echo "\n$RES has NOT been removed from the Automatic Advertise List.">/usr/tmp/a_adv$$
+fi
+echo $$

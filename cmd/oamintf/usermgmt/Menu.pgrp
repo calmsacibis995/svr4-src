@@ -1,0 +1,26 @@
+#ident	"@(#)oamintf:usermgmt/Menu.pgrp	1.2"
+
+################################################################################
+#	Module Name: Menu.pgrp
+#	Description: This menu provides the user with a pop-up menu for
+#		     user group selection.  /etc/group is sorted and piped
+#		     through regex to set the name and description fields.
+#		     Selecting only groups with group ids of 100 or greater. 
+#		     Form_Choices is set to the item the user selects.
+################################################################################
+menu="Existing User Groups"
+
+framemsg=`readfile $INTFBASE/ssmenu.msg`
+
+`sort +0 -1 -t: /etc/group | regex '^([^:][^:]*)$0:[^:]*:([0-9][0-9][0-9][0-9]*)$1:.*$' 'name="$m0"
+description="$m1"
+action=`set -l "Form_Choice=$m0"`CLOSE'`
+
+name=
+button=1
+action=
+
+name=
+button=7
+action=
+

@@ -1,0 +1,81 @@
+#ident	"@(#)initpkg:init.d/firstcheck	1.7.5.2"
+#	Perform the "never have been run before" checks.
+
+set `/sbin/who -r`
+if [ $9 != "S" -a $9 != "1" ]
+then
+	exit
+fi
+
+echo '
+This machine has not been used as a customer machine yet.  The messages that
+follow are from checking the built-in file systems for damage that might have
+occurred during shipment.  As long as you do not see either of the messages
+                                BOOT UNIX
+or                      FILE SYSTEM WAS MODIFIED
+all is well.  If either message does come out, call your service representative.
+However, the machine is still usable unless you are told otherwise.'
+echo '\nHit <CR> to continue:\c'
+read foo
+
+echo '\nChecking file systems:
+'
+exec < /etc/vfstab
+error=0
+while read special fsckdev mountp fstype fsckpass automnt mntflgs
+do
+	# ignore comments and empty lines
+	case $special in
+        '#'* | '')	continue;;
+	esac 
+
+	if [ "$automnt" != "yes" -o "$fstype" = "rfs" ]
+	then
+		continue
+	fi 
+
+	msg=`/sbin/fsck -m -F $fstype $special 2>&1`
+	case $? in
+	0)	# file system is sane
+		echo "$special is sane"
+		continue
+		;;
+
+	33)	# already mounted
+		echo "$special is already mounted"
+		continue
+		;;
+
+	32)	# needs checking
+		echo "$msg\n\t $fsckdev is being checked" 1>&2
+		if [ "$fstype" != "s5" ]
+		then
+			/sbin/fsck -F $fstype -y $fsckdev
+		else
+			/sbin/fsck -F $fstype -y -t /var/tmp/firstcheck -D $fsckdev
+		fi
+
+		if [ $? = 0 ]
+		then
+			error=0
+		else
+			error=1
+		fi
+		;;
+	esac
+
+done
+
+if [ $error -eq 0 ]
+then
+	echo '\n'
+else
+	echo '
+        WARNING: The file system check has identified serious problems.
+        We strongly recommend that you contact your service representative
+        before using the machine.
+
+The power will now be turned off.
+'
+	/sbin/uadmin 2 0
+fi

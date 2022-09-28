@@ -1,0 +1,13 @@
+#ident	"@(#)oampkg:pkgscripts/default	1.5.4.1"
+mail=root
+instance=unique
+partial=ask
+runlevel=ask
+idepend=ask
+rdepend=ask
+space=ask
+setuid=nocheck
+conflict=nocheck
+action=nocheck
+basedir=default
+list_files=nocheck

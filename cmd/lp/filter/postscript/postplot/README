@@ -1,0 +1,5 @@
+#ident	"@(#)lp:filter/postscript/postplot/README	1.1"
+A PostScript translator for plot(4) graphics files. Only supporting System V's
+version of plot - Ninth Edition Unix systems will probably need a separate
+translator.
+

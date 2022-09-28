@@ -1,0 +1,33 @@
+#ident	"@(#)bkrs:bklib.d/bkrsdates.dat	1.1.1.1"
+%m/%d/%y %I:%M:%S %p
+%m/%d/%y %H:%M:%S
+%m/%d/%y %I:%M %p
+%m/%d/%y %H:%M
+%m/%d/%y %I %p
+%m/%d/%y %H
+%m/%d/%y
+%m/%d
+%b %d, %Y %H:%M:%S %p
+%b %d, %Y %I:%M:%S
+%B %d, %Y %H:%M:%S %p
+%B %d, %Y %I:%M:%S
+%b %d, %Y %H:%M %p
+%b %d, %Y %I:%M
+%B %d, %Y %H:%M %p
+%B %d, %Y %I:%M
+%b %d, %Y %H %p
+%b %d, %Y %I
+%B %d, %Y %H %p
+%B %d, %Y %I
+%b %d, %Y
+%B %d, %Y
+%b %d
+%B %d
+%b
+%B
+%m%d8/19/89M%y
+%m%d8/19/89M%Y
+%m%d8/19/89M
+%m%d%H
+%m%d
+%m

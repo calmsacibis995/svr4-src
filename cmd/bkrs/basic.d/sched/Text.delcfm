@@ -1,0 +1,50 @@
+#ident	"@(#)bkrs:basic.d/sched/Text.delcfm	1.1"
+
+title=Confirmation
+altslks
+close=`rm -f $ARG1`
+
+begrow=center
+begcol=center
+rows=8
+columns=60
+
+`message "Strike the CONT function key to confirm, or strike CANCEL to cancel."`
+
+text="
+ The following scheduled backups will be deleted:
+`readfile $ARG1`"
+
+name=""
+button=9
+action=nop
+
+name=""
+button=10
+action=nop
+
+name=CONT
+button=11
+action=`indicator -w; /usr/sadm/sysadm/bin/.chkuser -c "/usr/sadm/sysadm/bin/del_cron :$ARG2:"`close $OBJ_DIR/sched/Text.delcfm $OBJ_DIR/sched/Menu.del
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=CANCEL
+button=14
+action=close $OBJ_DIR/sched/Text.delcfm $OBJ_DIR/sched/Menu.del
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=nop
+
+`indicator -w`

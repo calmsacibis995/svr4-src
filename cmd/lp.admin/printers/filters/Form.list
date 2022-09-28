@@ -1,0 +1,48 @@
+#ident	"@(#)lp.admin:printers/filters/Form.list	1.3"
+form="Display Filter Information"
+
+`indicator -w; set -l name_2="/tmp/lp.n2$VPID";
+  fmlcut -d: -f5 /etc/lp/filter.table > $name_2;
+if [ -s "$name_2" ];
+then
+	echo "init=true";
+else
+	echo "init=false";
+	message -b "There are no filters available";
+fi`
+
+framemsg="Enter filters then press [SAVE]"
+
+done=OPEN TEXT $OBJ_DIR/Text.filt.ls "$F1"
+
+close=`/usr/bin/rm -f $name_2;
+	unset -l do_all -l name_2 -l name_valid -l bad_one`
+
+
+name="Filter names:"
+nrow=1
+ncol=1
+frow=1
+fcol=14
+rows=1
+columns=30
+scroll=true
+rmenu=OPEN MENU $OBJ_DIR/Menu.filter.ch
+valid=`indicator -w;
+	unset -l bad_one;
+       fmlcut -d: -f5 /etc/lp/filter.table > $name_2;
+	if [ -z "$F1" ];
+	then
+		set -l no_value=true -l name_valid=false;
+	else
+	echo "all" >> $name_2;
+		set -l no_value=false -l name_valid=true;
+	fi;
+	echo "$F1" | tr  " ,"  "[\012*]" | regex -e '^(.*)$0$'
+	'`fmlgrep "^$m0$" $name_2 || set -l bad_one="$m0" -l name_valid=false`' > /dev/null`$name_valid
+invalidmsg=`if [ "$no_value" = "true" ];
+	then
+		echo "You must enter a value for this field.";
+	else
+		echo "$bad_one is an invalid filter- press [CHOICES] for selection";
+	fi`

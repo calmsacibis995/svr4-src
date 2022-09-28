@@ -1,0 +1,29 @@
+#ident	"@(#)oamintf:peripherals/terminals/HELP/mkls2.help	1.1"
+
+   You are looking at a detailed display for a particular tty setting.
+   Tty settings are used by getty(1M) to set up the speed and terminal
+   settings for a line.  They supply information on what the login(1)
+   prompt should look like as well as the speed to try next if the
+   user indicates the current speed is not correct by typing a <break>
+   character.
+
+   The following information is contained in the display:
+
+   Initial Flags:  These flags are the initial settings for the line
+                   if a terminal is not specified to getty(1).
+
+   Final Flags:  These flags take the same values as the initial-flags
+                 and are set just before getty(1) executes login(1).
+
+   Login Prompt:  This is the prompt that appears when a connection
+                  is made with the line.
+
+   Next Setting:  If the current entry does not specify the desired
+                  speed (indicated by the user typing a <break>
+                  character), then this is the next entry that 
+                  should be searched for.  This allows a series 
+                  of speeds to be linked together, into a closed set, 
+                  for sequencing.  (For example, 2400 linked to 1200, 
+                  which in turn is linked to 300, which finally is 
+                  linked to 2400.)
+

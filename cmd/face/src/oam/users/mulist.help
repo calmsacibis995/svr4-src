@@ -1,0 +1,7 @@
+ABSTRACT:
+	This task allows the administrator of a system to list the FACE
+	users on this system.
+
+menu:F1:FACE Users on This System
+	This frame contains a list of the login IDs of all the users on this
+	system that have been given a FACE environment.

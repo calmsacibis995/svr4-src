@@ -1,0 +1,12 @@
+#ident	"@(#)lp:filter/postscript/font/devpostaps/S1	1.1"
+name S1
+internalname 1545
+special
+max_range 2
+charset
+de	50	2	176
+rd	50	0	174
+ld	50	0	172
+ru	50	0	95
+#	72	0	35
+@	96	0	64

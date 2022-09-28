@@ -1,0 +1,118 @@
+#ident	"@(#)sdb:util/depend	1.13"
+usage="usage: $0 [cpp arguments] cfile ..."
+
+cfiles=""
+sfiles=""
+cppargs=""
+
+cppC=${cppC-"$LIB/${PFX}acomp -E -B"}
+
+for i
+do
+	case "$i" in
+	*.[cCYyl])	cfiles="$cfiles $i"
+			;;
+	*.s)		sfiles="$sfiles $i"
+			;;
+	-[PCTDUI]*)	cppargs="$cppargs $i"
+			;;
+	-[cpfgOSEPBtW]*)	# cc args, ignored
+			;;
+	+[xcpfgOSEPBtW]*)	# CC args, ignored
+			;;
+	*)		echo $0: unknown arg: $i >&2 ; echo $usage >&2 ; exit 1
+			;;
+	esac
+done
+
+if [ ! "${cfiles}${sfiles}" ] ; then
+	exit 0
+fi
+
+Objects=""
+
+for i in $sfiles
+do
+	# object file always in current directory.
+	ofile=`../../util/Basename $i .s`.o
+	Objects="$Objects $ofile"
+
+	echo "$ofile: $i"
+	echo "\t$(AS) $(ASFLAGS) -o $ofile $i"
+	echo
+done
+
+oldmethod=1
+strip=1
+
+for i in $cfiles
+do
+	# object file always in current directory.
+	ofile=`../../util/Basename $i .[cCyYl]`.o
+	Objects="$Objects $ofile"
+
+	case "$i" in
+	*.[CY])	CCargs="-Dc_plusplus -I/usr/include/CC" ;;
+	*)	CCargs="" ;;
+	esac
+
+	#Note: CCargs is not loop invariant.
+	#      therefore may not "factor out" variant prefix easily.
+	{
+	    if [ "$oldmethod" = "1" ]
+	    then
+		$cppC $cppargs $CCargs $i | egrep "^# " | cut -f3 -d" "
+	    else
+		echo $i ; cc -EH $cppargs $CCargs $i 2>&1 >/dev/null
+	    fi
+	} | sort -u |
+	awk '
+	BEGIN	{ 	ofile = '\"$ofile\"'
+			out = ofile ":	"
+		}
+		{ 	file = $0
+			if ( '$oldmethod' ) {
+			    # strip quotation marks.
+			    file = substr(file,2,length(file)-2)
+			}
+			if ( file ~ /^\.\// )
+				file = substr(file,3)	# remove ./
+			if ( length(out) + length(file) > 70 ) {
+				printf "%s\n", out
+				out = ofile ":	"
+			}
+			out = out " " file
+		}
+	END	{	printf "%s\n", out
+			if ( '\"$i\"' ~ /\.C$/ ) {
+			    printf "\t$(CPLUS_CMD) -c %s\n\n", '\"$i\"'
+			} else if ( '\"$i\"' ~ /\.Y$/ ) {
+			    printf "\t$(YACC) $(YFLAGS) %s\n", '\"$i\"'
+			    printf "\t$(CPLUS_CMD) -c y.tab.c\n"
+			    printf "\tmv y.tab.o %s\n", ofile
+			    printf "\tif cmp -s y.tab.h scanner.h ; \\\n"
+			    printf "\tthen \\\n"
+			    printf "\t\trm y.tab.h ; \\\n"
+			    printf "\telse \\\n"
+			    printf "\t\trm -f scanner.h ; mv y.tab.h scanner.h ; \\\n"
+			    printf "\tfi \n\n"
+			} else if ( '\"$i\"' ~ /\.l$/ ) {
+			    printf "\t$(LEX) %s\n", '\"$i\"'
+			    printf "\t$(CC_CMD) -c lex.yy.c\n"
+			    printf "\tmv lex.yy.o %s\n\n", ofile
+			} else {
+			    printf "\t$(CC_CMD) -c %s\n\n", '\"$i\"'
+			}
+		}
+	' -
+done
+
+# Append list of object files to side list.
+# std.make must convert this into the definition
+# of the $(OBJECTS) macro.  This is necessary because
+# BASEDEPEND may be built from more than one call to depend.
+#
+for n in $Objects
+do
+    echo "$n"
+done >> OBJECT.list

@@ -1,0 +1,20 @@
+#ident	"@(#)oamintf:softwaremgmt/defaults/Menu.logins	1.1.1.1"
+
+menu="Choices"
+multiselect=TRUE
+framemsg=`readfile $INTFBASE/msmenu.msg`
+
+done=`getitems "," | set -l "Form_Choice"`CLOSE
+
+# the following is done in a shell due to 
+# the fact that fmli couldn't handle the pipe properly
+`shell "/usr/bin/logins | sed 's/^/name=/;s/ .*//' | sort"`
+
+name=
+button=1
+action=
+
+name=
+button=7
+action=
+

@@ -1,0 +1,32 @@
+#ident	"@(#)oamintf:syssetup/Text.apswdok	1.1.1.1"
+################################################################################
+#	Module Name: Text.apswdok
+################################################################################
+Title="Defining Administrative and System Login(s) Password Information"
+
+#`set -l LIFE=longterm`
+#lifetime=$LIFE
+
+lifetime=shortterm
+
+`readfile $INTFBASE/trept.msg | message -t`
+#framemsg=`readfile $INTFBASE/trept.msg`
+
+rows=7
+columns=75
+
+text="
+The password has been defined as follows: 
+
+   `passwd -s $ARG1 | sed -e 's/  **/  /g'`
+
+(Name, Password Status, Last Changed, Minimum, Maximum, and Warning Days)"
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

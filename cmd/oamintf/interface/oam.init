@@ -1,0 +1,65 @@
+#ident	"@(#)oamintf:interface/oam.init	1.4.2.1"
+Title="Operations, Administration & Maintenance"
+
+slk_layout=4-4
+columns=45
+rows=7
+text="
+	UNIX System V/386
+	Copyright (C) 1989, 1990 AT&T
+	All Rights Reserved"
+
+
+BANNER="UNIX System V/386 Operations, Administration and Maintenance"
+BANCOL=2
+
+#
+# colors, user defaults supercede system defaults
+#
+screen=black
+highlight_bar_text=white
+slk_text=black
+
+`readfile $OAMBASE/pref/.colorpref`
+`readfile $HOME/pref/.colorpref`
+nobang=true
+
+name=QUIT
+button=9
+action=CLEANUP
+
+toggle=2
+
+
+name=
+button=4
+action=nop
+
+name=
+button=5
+action=nop
+
+name=
+button=8
+action=
+
+name=CONT
+button=11
+action=CLOSE
+
+name=PREVPAGE
+button=12
+action=PREVPAGE
+
+name=NEXTPAGE
+button=13
+action=NEXTPAGE
+
+name=CANCEL
+button=14
+action=CANCEL
+
+name=CMD-MENU
+button=15
+action=CMD-MENU
+

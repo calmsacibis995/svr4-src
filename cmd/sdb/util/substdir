@@ -1,0 +1,16 @@
+#ident	"@(#)sdb:util/substdir	1.3"
+#
+# substdir -- script to go through the depend output and substitute
+# in the configurable directories so that it is easier to build a private
+# version of the entire debug subtree and simply change the logical name
+# of the directory
+#
+# substdir is a filter
+#
+# usage: substdir directoryname string
+#
+# e.g.
+#
+#	substdir /debug/alpha '$(ROOT)'
+#
+exec sed "s@ $1@ $2@g"

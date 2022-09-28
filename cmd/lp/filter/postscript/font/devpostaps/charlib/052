@@ -1,0 +1,13 @@
+%ident	"@(#)lp:filter/postscript/font/devpostaps/charlib/052	1.1.2.1"
+%Build file for * (ASCII code 052).
+
+/build_052 {
+	pop
+	gsave
+	newpath
+	0 0 moveto
+	(\052) false charpath flattenpath pathbbox pop pop exch pop .50 mul neg
+	grestore
+	0 exch rmoveto
+	(\052) show
+} bind def

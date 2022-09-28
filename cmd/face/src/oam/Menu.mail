@@ -1,0 +1,23 @@
+#ident	"@(#)face:src/oam/Menu.mail	1.2"
+
+menu=Mail Services Administration
+
+framemsg="Move the cursor to the item you want and press ENTER to select it."
+
+help=OPEN TEXT $INTFBASE/Text.oamhelp $!LININFO 
+
+lifetime=permanent
+
+
+
+name=add
+description=Add Mail Services to Programs Menu
+lininfo="/usr/sadm/sysadm/add-ons/face/applmgmt/FACE/mail_services/add \"Add Mail Services to Programs Menu\"" add
+action=OPEN TEXT $INTFBASE/Text.interface /usr/sadm/sysadm/add-ons/face/applmgmt/FACE/mail_services/add Text.amail
+
+
+name=remove
+description=Remove Mail Services from Programs Menu
+lininfo="/usr/sadm/sysadm/add-ons/face/applmgmt/FACE/mail_services/remove \"Remove Mail Services from Programs Menu\"" remove
+action=OPEN TEXT $INTFBASE/Text.interface /usr/sadm/sysadm/add-ons/face/applmgmt/FACE/mail_services/remove Text.dmail
+

@@ -1,0 +1,21 @@
+#ident	"@(#)bkrs:basic.d/system/Menu.backsel	1.1.2.1"
+menu="Select Removable Media"
+lifetime=shortterm
+help=open text /usr/vmsys/OBJECTS/Text.h "Select Removable Media" backup/private/T.hdevice
+
+name=Floppy Drive 1 
+itemmsg="Move to an item with the arrow keys and strike the ENTER key to select"
+action=open form $OBJ_DIR/system/Form.files "-d /dev/rdsk/f0t -f"
+
+`Ckdev f1 | regex '^2$'
+'name=Floppy Drive 2
+itemmsg="Move to an item with the arrow keys and strike the ENTER key to select"
+action=open form $OBJ_DIR/system/Form.files "-d /dev/rdsk/f1t -f"
+'`
+
+`Ckdev mt | regex '^2$'
+'name=Cartridge Tape
+itemmsg="Move to an item with the arrow keys and strike the ENTER key to select"
+action=open form $OBJ_DIR/system/Form.files "-d /dev/rmt/c0s0 -t -f"
+'`
+

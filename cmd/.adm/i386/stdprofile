@@ -1,0 +1,22 @@
+#ident	"@(#)adm:i386/stdprofile	1.1.1.1"
+
+#	This is the default, standard profile provided to users.
+#	Users are expected to edit it to meet their own needs.
+
+MAIL=/usr/mail/${LOGNAME:?}
+
+
+if [ "`tty`" != "/dev/console" -o x${TERM} = "xansi" ]
+then
+	echo "TERM=\c"
+	read TERM
+fi
+
+# PATH is set during the login sequence. To enhance your PATH
+#	while preserving the default settings, try:
+#
+# PATH=$PATH:"your_path"
+#
+
+HZ=100
+export MAIL PATH TERM HZ

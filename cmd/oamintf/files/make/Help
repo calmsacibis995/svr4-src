@@ -1,0 +1,100 @@
+#ident	"@(#)oamintf:files/make/Help	1.1"
+ABSTRACT:
+	The make task helps in creating file systems. The 
+	type of the file system to be created must be known.
+	After the file system is created, the user will be 
+	provided with the option of mounting the file system.
+TITLE:
+Form.make:TITLE:
+Form.make:F1:Device that will contain the file system:
+	Devices that contain file systems are usually partitions on
+	the hard disk.
+
+ 	Among other devices which can contain file systems floppy 
+	diskette drives are the most common. 
+	
+Form.make:F2:File system type:
+	The Unix system provides file systems of different types.
+	Different file system types provide different functionalities
+	for different applications. Your system may have file systems 
+	of one or more types. For a listing of file system types 
+	available on your system use the "Display" task.
+
+	It is very important for you to specify the correct file system
+	type while performing these operations. Specifying the wrong 
+	type may cause the corruption of the file system.
+Form.make2:TITLE:
+Form.make2:F3:Label for the  file system:
+	Enter the label for the file system being created.
+	This is an optional field.
+
+Form.make2:F2:Once created, should the new file system be mounted?
+	A "yes" reply to this prompt will cause the newly created
+	file system to be automatically mounted. A "no" response
+	to this prompt will simply create the file system which
+	will not be available for use until you mount it. 
+
+Form.mntpt:TITLE:
+Form.mntpt:F1:File system name when mounted:
+	The Unix system provides the capability to add or remove 
+	file systems which are stored on hardware devices such as
+	hard disks and diskettes via the processes of mounting and 
+	unmounting. File systems are added by mounting the device
+	that contains the file system at a leaf directory on the 
+	system. This leaf directory is known as the mount point for 
+	file system and and becomes the root of the newly mounted 
+	file system when the mount is successful. 
+
+	For example if the diskette (/dev/dsk/f0t) is mounted on
+	the mount-point "/mnt" then the file system name of the 
+	newly added file system is "/mnt".
+
+	The file system name must be a valid 'empty' directory
+	and may not be mounted if you are attempting to make a
+	new file system on it.
+
+Form.s5:TITLE:
+Form.s5:F1:Name of prototype file:
+	Enter the full pathname of the file which contains the 
+	information needed to create the new file system. 
+	If no prototype file is specified, then the file system
+	will be created with a root directory and a lost+found
+	directory.  See the mkfs(1M) manual page for details
+	on prototype file formats.
+
+Form.s52:TITLE:
+Form.s52:F1:Block Size in Bytes:
+	This refers to the logical block size of the file
+	system in bytes. Block sizes are usually powers of
+	two and never smaller than the physical block size
+	of 512 bytes.
+Form.s52:F2:Number of Blocks:
+	This refers to the number of physical blocks to be 
+	used in creating the new file system. The number 
+	entered must be less than or equal to the number of
+	physical blocks (sectors) available on the floppy
+	or the hard disk partition. 
+	
+Form.s52:F3:Number of Files:
+	This refers to the number of files (or inodes) you
+	want to allocate on your new file system.
+Form.ufs:TITLE:
+Form.ufs:F1:Name of prototype file:
+	Enter the full pathname of the file which contains the 
+	information needed to create the new file system. 
+Form.ufs2:TITLE:
+Form.ufs2:F1:Number of Blocks in the file System:
+	This refers to the number of physical blocks to be 
+	used in creating the new file system. The number 
+	entered must be less than or equal to the number of
+	physical blocks (sectors) available on the floppy
+	or the hard disk partition. 
+	
+Form.ufs2:F2:Block Size in Bytes:
+	This refers to the logical block size of the file
+	system in bytes. Block sizes are usually powers of
+	two and never smaller than the physical block size
+	of 512 bytes.
+Form.ufs2:F3:Fragment Size in bytes:
+	Please refer to the UFS user documentation for more information
+	concerning UFS fragment size.

@@ -1,0 +1,33 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/Text.generic	1.3"
+title="$ARG1"
+#close=`/bin/rm "$ARG2"`
+altslks=true
+
+`readfile $INTFBASE/conf.msg | message -p`
+
+text="`readfile $ARG2`"
+columns=50
+
+name=CONT
+button=11
+action=CLOSE `getfrm`
+
+name=PREVPAGE
+button=12
+action=PREVPAGE
+
+name=NEXTPAGE
+button=13
+action=NEXTPAGE
+
+name=CANCEL
+button=14
+action=CLEANUP
+
+name=CMD-MENU
+button=15
+action=CMD-MENU
+
+name=
+button=16
+action=CMD-MENU

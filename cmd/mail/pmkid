@@ -1,0 +1,15 @@
+#ident	"@(#)mail:pmkid	1.1.2.1"
+#	This file makes an id string.
+
+CMD='s/\(.*\)\.sl/\1/'
+PREFIX=`echo $1|sed -e $CMD`
+if [ -f $1 ]; then
+	THIS=`grep "@(#)$1" $1 |sed -e 's/^.*@(#)\(.*	.*\)\"/\1/'`
+fi
+if [ "X$THIS" = X ]; then
+	THIS="nullstamp"
+fi
+ID=id
+echo "${PREFIX}_${ID}() {" >${PREFIX}${ID}.c
+echo "static char ${PREFIX}stamp[]=\"@{#}@{#} $THIS\";" >>$PREFIX$ID.c
+echo "static char ${PREFIX}what[]=\"@(#) $THIS\"; }" >>$PREFIX$ID.c

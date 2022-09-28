@@ -1,0 +1,117 @@
+#ident	"@(#)oamintf:files/mount/Help	1.1"
+ABSTRACT:
+	This task supports the mounting of file systems. They
+	can be mounted as read-write or read-only and with 
+	setuid programs enabled or disabled. 
+
+	File systems mounted with setuid programs disabled 
+	will ignore setuid on execution. Disabling setuid programs
+	is a security measure that the administrator can take.
+
+	The file system type of the file system must be known
+	and will be asked for.
+TITLE:
+Form.mount:TITLE:
+Form.mount:F1:Device that contains the file system:
+	Devices that contain file systems are usually partitions on
+	the hard disk. For example the partition /dev/dsk/1s3 is
+	the fourth partition on the second (numbering from zero) hard
+	disk.  Among other devices which can contain file systems floppy 
+	diskette drives are the most common. 
+
+Form.mount:F2:File system name when mounted:
+	The Unix system provides the capability to add or remove 
+	file systems which are stored on hardware devices such as
+	hard disks and diskettes via the processes of mounting and 
+	unmounting. File systems are added by mounting the device
+	that contains the file system at a leaf directory on the 
+	system. This leaf directory is known as the mount point for 
+	file system and becomes the root of the newly mounted 
+	file system when the mount is successful. 
+
+	For example if the diskette (/dev/dsk/f0t) is mounted on
+	the mount-point "/mnt" then the file system name of the 
+	newly added file system is "/mnt".
+Form.mount2:TITLE:
+Form.mount2:F1:File System Type (IMPORTANT: DO NOT GUESS): 
+	The Unix system provides file systems of different types.
+	Different file system types provide different functionalities
+	for different applications. Your system may have file systems 
+	of one or more types. For a listing of file system types 
+	available on your system use the "Display" task.
+
+	It is very important for you to specify the correct file system
+	type while performing these operations. Specifying the wrong 
+	type may cause the corruption of the file system. If you are
+	unsure of the file system type, type unknown at the prompt and
+	the interface will run heuristics which will try and determine
+	the type of the file system.
+Form.mount2:F2:Mount Options:
+	File systems can be mounted in different ways depending
+	on the options provided while mounting them. All file 
+	systems allow you to mount them "read only" or "read/write".
+	By mounting a file system "read only" you can prevent users
+	from writing to the file system. Other options include the
+	ability to allow and disallow "setuid" permissions on the 
+	file system. 
+
+	The following prompts will prompt you for the various 
+	mount options allowed by the file system in question. 
+Form.mount2:F3:Read and Write Privileges:
+	You must specify the Read and Write privileges which will
+	be allowed for this file system. If the file system 
+	contains sensitive data which should not be modified by
+	other users the privilige used should be "read only".
+	In other cases you may grant "read/write" privileges for
+	this file system.
+Form.mount2:F4:Should setuid programs be allowed:
+	By entering 'yes', 'no', or 'na' at this prompt you can 
+	specify whether setuid privileges will be allowed, will not
+	be allowed, or are not applicable for
+	this file system. The default is yes.
+Form.mount3:TITLE:
+Form.mount3:F1:File system Type (IMPORTANT: DO NOT GUESS):
+	The Unix system provides file systems of different types.
+	Different file system types provide different functionalities
+	for different applications. Your system may have file systems 
+	of one or more types. For a listing of file system types 
+	available on your system use the "Display" task.
+
+	It is very important for you to specify the correct file system
+	type while performing these operations. Specifying the wrong 
+	type may cause the corruption of the file system. If you are
+	unsure of the file system type, type unknown at the prompt and
+	the interface will run heuristics which will try and determine
+	the type of the file system.
+Form.mount3:F2:Mount Options:
+	File systems can be mounted in different ways depending
+	on the options provided while mounting them. All file 
+	systems allow you to mount them "read only" or "read/write".
+	By mounting a file system "read only" you can prevent users
+	from writing to the file system. Other options include the
+	ability to allow and disallow "setuid" permissions on the 
+	file system. 
+
+	The following prompts will prompt you for the various 
+	mount options allowed by the file system in question. 
+Form.mount3:F3:Read and Write Privileges:
+	You must specify the Read and Write privileges which will
+	be allowed for this file system. If the file system 
+	contains sensitive data which should not be modified by
+	other users the privilige used should be "read only".
+	In other cases you may grant "read/write" privileges for
+	this file system.
+Form.mount3:F4:Should setuid programs be allowed:
+	By entering yes or no at this prompt you can 
+	specify whether setuid privileges will be allowed
+	on this file system. The default is yes.
+mounttask:
+	The file system requested will be checked for sanity
+	prior to mounting. The check will fail if the file
+	system is currently mounted or if it is the wrong
+	type.
+findtypetask:
+	You have selected a file system type of "unknown". A
+	file system type "check" was run, the results of which
+	have been displayed. You must now type [CANCEL] two times,
+	complete the form with this information and then type [SAVE].

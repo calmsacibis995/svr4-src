@@ -1,0 +1,25 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/rotation/Text.rotok	1.2"
+################################################################################
+#	Module Name: Text.rotok
+################################################################################
+title="Change Rotation Period"
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+lifetime=shortterm
+
+rows=4
+columns=60
+
+text="
+Rotation period changed successfully to $ARG1."
+
+altslks
+
+name=CONT
+button=11
+action=update $ARG2 true
+
+name=CANCEL
+button=14
+action=CLEANUP

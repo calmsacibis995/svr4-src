@@ -1,0 +1,21 @@
+#ident	"@(#)portmgmt:port_services/Menu.ps_add	1.5.2.1"
+
+menu=Add Port Services
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`sacadm -L>/dev/null;
+	regex -e -v "$RET"
+	   '^5$' '`message "Cannot add service, no port monitors are configured."`'`
+`sacadm -L>/dev/null;
+	regex -v "$RET"
+	   '^0$' '
+name="add to one"
+description="Add a service to a particular port monitor             "
+lininfo=psadd_one
+action=OPEN MENU $OBJ_DIR/Menu.ps_atag
+
+name="add to many"
+description="Add a service to all port monitors of a particular type"
+lininfo=psadd_many
+action=OPEN MENU $OBJ_DIR/Menu.ps_atype'
+	   '^5$' '`message "Cannot add service, no port monitors are configured."`'`

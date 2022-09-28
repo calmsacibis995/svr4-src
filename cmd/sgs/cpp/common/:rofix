@@ -1,0 +1,6 @@
+#ident	"@(#)cpp:common/:rofix	1.2"
+ed $1 <<!
+g/^[ 	]*\.data/s/data/text/
+w
+q
+!

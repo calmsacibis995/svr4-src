@@ -1,0 +1,15 @@
+#
+#ident	"@(#)ypcmd:net_files/updaters	1.2"
+
+#       Update file for yellow pages
+
+# where the yp files live
+DIR=/etc
+# where the yp binaries live
+EXEDIR=/usr/sbin
+# where the make command lives
+CCS=/usr/ccs/bin
+
+publickey.byname:
+	-@$(EXEDIR)/udpublickey $(DIR)/publickey  "/usr/ccs/bin/make publickey"; \
+	echo $$?

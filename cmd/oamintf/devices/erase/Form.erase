@@ -1,0 +1,57 @@
+#ident	"@(#)oamintf:devices/erase/Form.erase	1.1"
+
+################################################################################
+#	Module Name: Form.erase
+################################################################################
+form="Erase Contents of Device"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=OPEN TEXT $OBJ_DIR/Text.erase $F2
+
+name=Device group:
+lininfo=devgrp
+nrow=1
+ncol=3
+frow=1
+fcol=17
+rows=1
+columns=18
+show=`showgrp $ARG1;
+	if [ $RET -eq 0 ];
+	then
+	  echo true;
+	else
+	  echo false;
+	fi`
+
+rmenu={ `getdgrp type=$ARG1 erasecmd:* | sort` }
+valid=`getdgrp type=$ARG1 erasecmd:* $F1 | grep $F1 > /dev/null;
+	if [ "$RET" -eq 0 ];
+	then
+	  echo true;
+	else
+	  echo false;
+	fi`
+invalidmsg=const "ERROR: Invalid device group entered."
+
+name=Device drive:
+lininfo=devdr
+nrow=2
+ncol=3
+frow=2
+fcol=17
+rows=1
+columns=18
+
+rmenu=OPEN MENU $OBJ_DIR/../Menu.drive $F1 $ARG1
+valid=`valdrive $F1 $ARG1 $F2`
+
+invalidmsg=const "ERROR: Invalid device entered."
+
+name=RESET
+button=8
+action=RESET

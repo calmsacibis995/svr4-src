@@ -1,0 +1,29 @@
+#ident	"@(#)oamintf:edsysadm/Text.exit5	1.2"
+
+################################################################################
+#	Module Name: Text.exit5
+#	Date: August 1987
+################################################################################
+title="Package Error"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+close=`rm -f /tmp/tmp_nfnd`
+wrap=false
+
+text="
+   The following file(s) do not exist:
+         `readfile /tmp/tmp_nfnd`"
+
+rows=10
+columns=65
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

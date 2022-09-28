@@ -1,0 +1,16 @@
+#ident	"@(#)nadmin.dfs:remote/Menu.type	1.2"
+###############################################################################
+#    Module Name:  Menu.type
+#    Description:  
+#      Menu.type is the generic menu that prompts for the file type.
+#      *The /etc/dfs/fstypes file is read to get all installed distributed
+#       file types.
+#      *OTYPE is set by the calling Menu to the 'type' to OPEN(FORM/MENU/TEXT)
+###############################################################################
+menu="Select File System"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`sort +0 -1 /etc/dfs/fstypes  |  regex '^([^ 	]*)$0[ 	]*(.*)$1$' 'name="$m0"
+description="$m1"
+		action=OPEN "$OTYPE" "$INTFBASE/netservices/remote_files/remote/$m0/$FILE" 
+

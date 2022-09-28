@@ -1,0 +1,9 @@
+#ident	"@(#)portmgmt:port_services/Menu.ps_atype	1.3.1.1"
+
+menu="Valid Port Monitor Types"
+
+`message "Move cursor to port monitor type you want to add service to and press ENTER."`
+
+`sacadm -L | cut -d: -f2 | sort -u |  regex '^(.*)$0$' '
+name="$m0  "
+action=`findpmtype t "$m0"`OPEN FORM $OBJ_DIR/Form.ps_add "t" "$m0" "$RET"'`

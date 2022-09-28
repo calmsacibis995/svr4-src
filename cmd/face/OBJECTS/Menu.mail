@@ -1,0 +1,23 @@
+#ident	"@(#)face:OBJECTS/Menu.mail	1.5"
+
+menu=Mail Services
+
+help=OPEN TEXT OBJECTS/Text.h "Mail Services" T.hmail
+
+framemsg="Move to an item with arrow keys and press ENTER to select the item."
+
+name="New Mail "
+description=read newly arrived mail
+action=`message "Checking mailbox. Please wait.";
+if /usr/bin/mailx -e;
+then
+	message "Retrieving mail message. Please wait.";
+	sleep 2;
+	run -t"Suspended Read New Mail" /usr/bin/mailx;
+else
+	message -b 1 "No mail available for \"$LOGNAME\".";
+fi`nop
+
+name="Send Mail "
+description=send mail
+action=OPEN FORM OBJECTS/Form.send Send

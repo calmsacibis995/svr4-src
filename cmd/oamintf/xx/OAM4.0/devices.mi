@@ -1,0 +1,3 @@
+#ident	"@(#)oamintf:xx/OAM4.0/devices.mi	1.1"
+#status#new
+main:storage_devices:groups^Device Group Administration^groups.menu

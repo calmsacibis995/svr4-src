@@ -1,0 +1,23 @@
+#ident	"@(#)devintf:devices/reserve/reserve/listavails	1.1"
+reservd=`devreserv | cut -d' ' -f1`
+if [ "$reservd" ]
+then
+    for i in `getdev`
+    do
+	NOTFOUND=TRUE
+	for j in $reservd
+	do 
+	    if [ "$j" = "$i" ]
+	    then 
+		NOTFOUND=FALSE
+		break
+	    fi
+	done
+	if [ "$NOTFOUND" = "TRUE" ] 
+	then 
+	    echo $i
+	fi
+    done
+else
+    getdev
+fi

@@ -1,0 +1,37 @@
+Call.o:	Call.C
+	$(CPLUS_CMD) -c Call.C
+
+Call2.o:	Call2.C
+	$(CPLUS_CMD) -c Call2.C
+
+Expr.o:	../common/Expr.C
+	$(CPLUS_CMD) -c ../common/Expr.C
+
+Label.o:	../common/Label.C
+	$(CPLUS_CMD) -c ../common/Label.C
+
+Place.o:	../common/Place.C
+	$(CPLUS_CMD) -c ../common/Place.C
+
+Rvalue.o:	../common/Rvalue.C
+	$(CPLUS_CMD) -c ../common/Rvalue.C
+
+SDBinfo.o:	../common/SDBinfo.C
+	$(CPLUS_CMD) -c ../common/SDBinfo.C
+
+fetch.o:	fetch.c
+	$(CC_CMD) -c fetch.c
+
+format.o:	../common/format.C
+	$(CPLUS_CMD) -c ../common/format.C
+
+OBJECTS	=  \
+	Call.o \
+	Call2.o \
+	Expr.o \
+	Label.o \
+	Place.o \
+	Rvalue.o \
+	SDBinfo.o \
+	fetch.o \
+	format.o

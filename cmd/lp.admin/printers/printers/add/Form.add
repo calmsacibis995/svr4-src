@@ -1,0 +1,301 @@
+#ident	"@(#)lp.admin:printers/printers/add/Form.add	1.3.4.3"
+
+form=Add a New Printer
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO 
+
+done=`indicator -w;
+	set -e toclose="$OAMBASE/add-ons/lp/printers/printers/add/Form.add";
+  set -e lp_printer=$F1 -e lp_fldsys=$F2 -e lp_prtype=$F3 -e lp_default=$F4 -e use_stdcon=$F5 -e use_stdprt=$F6;
+  if [ "$use_stdcon" = "yes" ];
+  then
+	message -w "Adding printer, please wait.";
+	if [ "$lp_fldsys" != "$lp_system" ];
+	then
+	if [ -n "$TFADMIN" ]; then shell "LD_BIND_NOW=1 $TFADMIN lpadmin -p $lp_printer -T $lp_prtype -s $lp_fldsys!$lp_printer > /dev/null 2> $error";
+	else shell "LD_BIND_NOW=1 lpadmin -p $lp_printer -T $lp_prtype -s $lp_fldsys!$lp_printer > /dev/null 2> $error"; fi;
+	else
+		if [ "$lp_default" != "none" ];
+		then
+
+		if [ -n "$TFADMIN" ]; then shell "LD_BIND_NOW=1 $TFADMIN lpadmin -p $lp_printer -T $lp_prtype -e$lp_default $lp_device -A 'mail lp' > /dev/null 2> $error";
+		else shell "LD_BIND_NOW=1 lpadmin -p $lp_printer -T $lp_prtype -e$lp_default $lp_device -A 'mail lp' > /dev/null 2> $error"; fi;
+		else
+		if [ -n "$TFADMIN" ]; then shell "LD_BIND_NOW=1 $TFADMIN lpadmin -p $lp_printer -T $lp_prtype $lp_device -A 'mail lp' > /dev/null 2> $error";
+		else shell "LD_BIND_NOW=1 lpadmin -p $lp_printer -T $lp_prtype $lp_device -A 'mail lp' > /dev/null 2> $error"; fi;
+		fi;
+	fi;
+
+	if [ "$RET" != "0" -a -s $error ];
+	then
+		echo "OPEN TEXT $OAMBASE/add-ons/lp/printers/printers/add/Text.error";
+	else
+		echo "OPEN TEXT $OAMBASE/add-ons/lp/printers/printers/add/Text.confirm";
+	fi;
+  else
+	if [ "$lp_default" != "none" ];
+	then
+		message -w "Collecting similar printer information, please wait.";
+    		cosend lpdata "get_printer/n$lp_default" > /dev/null 2>/dev/null;
+		if [ -n "$TFADMIN" ]; then $TFADMIN lpstat -p $lp_default -l > /usr/tmp/stat$$;
+		else lpstat -p $lp_default -l > /tmp/stat$$; fi;
+    		cat /tmp/stat$$ | sed 's/: /=/gp' | 
+		sed 's/^	//gp' | sed 's/After fault/recover/gp' |
+		sed 's/Content types/content/gp'  >> $datafile;
+		rm -f /tmp/stat$$;
+		cat /etc/lp/printers/$lp_default/configuration | 
+		sed 's/: /=/gp' >> $datafile;
+	fi;
+ 	if [ "$F3" = "" -o "$F3" = "unknown" ];
+	then
+		set -f$datafile Prtype="";
+	else
+		set -f$datafile Prtype="-T$F3";
+	fi;
+
+	if tput -T $F3 daisy > /dev/null 2>/dev/null;
+	then
+		set -e has_chset=FALSE -e has_pw=TRUE;
+	else
+		tput -T $F3 csnm 0 | set -l tmp;
+		if [ -n "$tmp" ];
+		then
+			set -e has_chset=TRUE -e has_pw=FALSE;
+		else
+			set -e has_chset=FALSE -e has_pw=FALSE;
+		fi;
+	fi;
+
+    if [ "$F2" = "$lp_system" ];
+    then
+      echo "OPEN FORM $OAMBASE/add-ons/lp/printers/printers/add/Form.conf.lcl";
+    else
+      unset -e lp_device;
+      echo "OPEN FORM $OAMBASE/add-ons/lp/printers/printers/add/Form.conf.rmt";
+    fi;
+  fi`
+
+##F1
+name=Printer name:
+lininfo="add:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=15
+rows=1
+columns=14
+valid=`
+	indicator -w;
+	regex -v "$F1" 
+	'^[Aa][Ll][Ll]$'	'"all" is a reserved word'
+	'^[Aa][Nn][Yy]$'	'"any" is a reserved word'
+	'^[Nn][Oo][Nn][Ee]$'	'"none" is a reserved word'
+	'^[_a-zA-Z0-9]{1,14}$'	'ok'
+	'^.*$'			'name must be 1-14 letters, numbers, and "_"'
+	| set -l lp_errtmp;
+
+	if [ "$lp_errtmp" = 'ok' ];
+	then
+	    if [ -d /etc/lp/printers/$F1 ];
+	    then
+		set -l lp_errtmp="\"$F1\" already exists";
+		echo false;
+	    else
+		echo true;
+	    fi;
+	else
+		echo false;
+	fi;
+`
+invalidmsg="Invalid printer:  $lp_errtmp."
+
+##F2
+name=System name:
+lininfo="add:F2"
+nrow=2
+ncol=1
+frow=2
+fcol=14
+rows=1
+inactive=`
+    indicator -w;
+	if [ -f /usr/lib/lp/lpNet ];
+    then
+	false;
+    else
+	true;
+    fi;
+`
+columns=14
+value=`if [ -n "$TFADMIN" ]; then $TFADMIN uname -n;
+else uname -n; fi`
+rmenu={ `indicator -w;lpsystem -l | fmlgrep 'System:' | fmlcut -c29-43; uname -n`  }
+menuonly=true
+fieldmsg="Enter a system that is known to lp or your local system name."
+invalidmsg="Invalid entry: Strike the CHOICES key for valid system selections."
+choicesmsg="Select a system and then strike RETURN."
+
+#F3
+name=Printer type:
+lininfo="add:F3"
+nrow=3
+ncol=1
+frow=3
+fcol=15
+rows=1
+columns=14
+value=unknown
+valid=`
+	indicator -w;
+	if tput -T $F3 longname > /dev/null 2> /dev/null;
+	then
+		echo true;
+	else
+		echo false;
+	fi;
+`
+fieldmsg="Enter a type of printer that is known in the Terminfo database."
+invalidmsg="Invalid entry: Entry must be defined in the Terminfo database."
+
+
+##F4
+name=Similar printer to use for defaults:
+lininfo="add:F4"
+nrow=4
+ncol=1
+frow=4
+fcol=39
+rows=1
+columns=14
+value=none
+rmenu={ `indicator -w;ls /etc/lp/printers` "none" }
+menuonly=true
+fieldmsg="Strike the CHOICES key to view valid printers."
+invalidmsg="Invalid entry: Strike the CHOICES key for valid printer selections."
+choicesmsg="Select a printer or \"none\" and then strike RETURN."
+
+##F5
+name=Do you want to use standard configurations? ( eg alerts, banners ): 
+lininfo="add:F5"
+nrow=5
+ncol=1
+frow=5
+fcol=72
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value=yes
+
+##F6 - Just print the use standard ports field - yes or no
+name=
+lininfo="add:F9"
+nrow=6
+ncol=1
+frow=6
+fcol=72
+rows=1
+columns=3
+rmenu={ yes no }
+value=`
+	if [ "$F2" = "$lp_system" ];
+	then
+		echo "yes";
+	else
+		echo "";
+	fi;
+`
+inactive=`
+	if [ "$F2" = "$lp_system" ];
+	then
+		echo "false";
+	else
+		echo "true";
+	fi;
+`
+
+##F7 Placeholder - None functional
+name=
+nrow=7
+ncol=1
+frow=7
+fcol=1
+rows=1
+columns=19
+value=`
+	if [ "$F2" = "$lp_system" ];
+	then
+		echo "Device or Address:";
+	else
+		echo " ";
+	fi;
+`
+inactive=true
+
+##F8
+name=
+lininfo="add:F8"
+nrow=7
+ncol=1
+frow=7
+fcol=20
+rows=1
+columns=38
+value=`
+	if [ "$F2" != "$lp_system" ];
+	then
+		echo "";
+	fi;
+`
+valid=`indicator -w;
+	if  [ "$F2" = "$lp_system" ];
+	then
+		if  [ "$F8" = "" ];
+		then
+			set -l nodev="You must enter a device or address when adding a local printer";
+			echo false;
+		else
+			if [ -r "$F8" ];
+			then
+				set -e lp_device="-v$F8";
+			elif echo "$F8" | fmlgrep " " > /dev/null;
+			then
+				set -l nodev="You can not have blanks in a device or address.";
+				echo false;
+			else
+				set -e lp_device="-U$F8";
+				echo true;
+			fi;
+		fi;
+	else
+		echo true;
+	fi;
+`
+invalidmsg=$nodev
+inactive=`
+	if [ "$F2" = "$lp_system" ];
+	then
+		echo "false";
+	else
+		echo "true";
+	fi;
+`
+
+##F9 Placeholder - None functional
+name=
+nrow=6
+ncol=1
+frow=6
+fcol=1
+rows=1
+columns=68
+value=`
+	if [ "$F2" = "$lp_system" ];
+	then
+		echo "Do you want to use standard port settings? ( eg baud rate, parity ):";
+	else
+		echo " ";
+	fi;
+`
+inactive=true
+

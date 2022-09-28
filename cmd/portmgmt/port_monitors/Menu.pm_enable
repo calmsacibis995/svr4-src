@@ -1,0 +1,28 @@
+#ident	"@(#)portmgmt:port_monitors/Menu.pm_enable	1.5.1.1"
+
+`pmgetpid | set -l PID`
+menu="Pmtag    Pmtype (Enable Port Monitors)"
+multiselect=true
+close=` rm /var/tmp/cmd$PID; 
+	unset -l PID -l KEYCMD`
+`sacadm -L|egrep "DISABLED|STARTING">/dev/null;
+	regex -e -v "$RET"
+	   '^0$' '`message "MARK all port monitors you want to enable and then press ENTER."`'
+	   '^5$' '`message "No port monitor to enable."`'
+	   '^.*$' '`message "No port monitor to enable."`'`
+done=`getitems | tr -d '\0' > /var/tmp/cmd$PID;
+	if [ -s /var/tmp/cmd$PID ];
+	then
+		message "Enabling [MARK]ed port monitors.";
+		sh /var/tmp/cmd$PID;
+		message "All [MARK]ed port monitors are enabled.";
+		set -l KEYCMD="CLOSE";
+	else
+		message "No item is [MARK]ed.";
+		set -l KEYCMD="RESET";
+	fi`$KEYCMD
+
+`sacadm -L|egrep "DISABLED|STARTING"|sort +0 -1 -t:|  regex '^([^:][^:]*)$0:([^:][^:]*)$1:.*$' 
+ 'name="   $m0"
+  description="    $m1"
+  lininfo="sacadm -e -p $m0"'`

@@ -1,0 +1,46 @@
+#ident	"@(#)oamintf:devices/remove/Text.remove	1.1.1.1"
+
+################################################################################
+#	Module Name: Text.remove
+################################################################################
+title="Remove a Device"
+framemsg=`readfile $INTFBASE/conf.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp Text.remove:ABSTRACT
+
+close=`devfree $VPID $ARG1 2>/dev/null`
+
+text="
+WARNING: Once this procedure starts it will make $ARG1 inaccessible
+to the system."
+
+rows=6
+columns=75
+
+altslks
+
+name=
+button=9
+action=nop
+
+name=
+button=10
+action=nop
+
+name=CONT
+button=11
+action=`message -f -w "Removing $ARG1 from the system.";
+
+	run devtabcmd $ARG1 removecmd;
+
+	if [ $RET -eq 0 ];
+	then
+	  set -l CMD="OPEN TEXT $OBJ_DIR/Text.rmok $ARG1";
+	else
+	  set -l CMD="OPEN TEXT $OBJ_DIR/Text.rmnok $ARG1";
+	fi`$CMD
+
+name=CANCEL
+button=14
+action=CLOSE
+

@@ -1,0 +1,9 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/Menu.member	1.2"
+menu="$ARG1"
+multiselect=true
+`readfile $INTFBASE/msmenu.msg | message -p`
+
+done=`getitems  |set -l Form_Choice;
+	getitems " " |  set -e MEMBERS`CLOSE
+
+`cat "$ARG2" | regex '^(.*)$0$' 'name="$m0"

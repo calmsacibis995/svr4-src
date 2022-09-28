@@ -1,0 +1,7 @@
+Input types: simple
+Output types: 475
+Printer types: any
+Printers: any
+Filter type: fast
+Command: /usr/lib/lp/bin/475_filter
+Options: WIDTH * = -w*,TERM * = -t*,MODES p10 = -p10,MODES p12 = -e,MODES p17 = -c,MODES elite = -e,MODES compressed = -c,MODES compress = -c,MODES bold = -b,MODES b = -b,MODES reset475 = -r

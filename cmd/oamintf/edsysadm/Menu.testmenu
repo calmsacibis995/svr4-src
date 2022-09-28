@@ -1,0 +1,29 @@
+#ident	"@(#)oamintf:edsysadm/Menu.testmenu	1.3"
+
+################################################################################
+#	Module Name: Menu.testmenu
+#	Date: August 1988
+#
+#	Description:
+#		This Menu object concatenates temp file created by 'test_menu'
+#		into arguments that are passed to 'object_gen'.
+#
+#		'object_gen' creates and displays a temp menu for the user to
+#		verify that it works.
+#
+#		Before closing remove all temp files.
+#	Args Passed Out:
+#		ITEMNAME -> Name of menu item
+#		MENUPATH -> Full path to ".menu file"
+#		MENUNAME -> name of ".menu file
+################################################################################
+close=`rm -rf $TESTBASE/menu;
+       rm $TESTBASE/${VPID}.arg1;
+       rm $TESTBASE/${VPID}.arg2;
+       rm $TESTBASE/${VPID}.arg3`
+
+`cat $TESTBASE/${VPID}.arg1 | set -l ITEMNAME;
+cat $TESTBASE/${VPID}.arg2 | set -l MENUPATH;
+cat $TESTBASE/${VPID}.arg3 | set -l MENUNAME;
+
+$OAMBASE/bin/object_gen -t $ITEMNAME $MENUPATH $MENUNAME`

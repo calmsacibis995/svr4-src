@@ -1,0 +1,41 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/hwset/Text.compat	1.1"
+
+title="Peripherals Setup is not currently available"
+framemsg="Strike QUIT to return directly to the main menu."
+wrap=true
+
+rows=12
+columns=65
+text="This menu provides backwards compatibility for pre-SVR4
+add-ons that install user interface forms and menus. You have
+not installed any pre-SVR4 applications that have modified the
+Peripherals Setup menu. There are currently no available menu
+entries for Peripherals Setup on your system.
+
+If you have installed a release 4.0 compatible application for
+a storage device that requires software configuration, please
+return to the main menu and select Storage Device Operations and
+Definitions.
+"
+
+altslks
+
+name=""
+button=11
+action=nop
+
+name=""
+button=12
+action=nop
+
+name=""
+button=13
+action=nop
+
+name=CANCEL
+button=14
+action=CLOSE
+
+name=""
+button=15
+action=nop

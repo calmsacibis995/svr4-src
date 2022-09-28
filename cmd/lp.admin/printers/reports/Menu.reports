@@ -1,0 +1,24 @@
+#ident	"@(#)lp.admin:printers/reports/Menu.reports	1.4.3.1"
+menu=Display Status of Printer Service
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO 
+
+name=forms
+lininfo="reports:L1"
+description=Display Forms Status
+action=OPEN FORM /usr/sadm/sysadm/add-ons/lp/printers/reports/Form.forms
+
+name=printers
+lininfo="reports:L2"
+description=Display Printer Status
+action=OPEN FORM /usr/sadm/sysadm/add-ons/lp/printers/reports/Form.printers
+
+name=requests
+lininfo="reports:L3"
+description=Display Status of Print Requests 
+action=OPEN FORM /usr/sadm/sysadm/add-ons/lp/printers/reports/Form.requests
+
+name=wheels
+lininfo="reports:L4"
+description=Display Status of Printwheels and Character Sets
+action=OPEN FORM /usr/sadm/sysadm/add-ons/lp/printers/reports/Form.wheels

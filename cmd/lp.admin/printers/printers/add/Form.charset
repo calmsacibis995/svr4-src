@@ -1,0 +1,38 @@
+#ident	"@(#)lp.admin:printers/printers/add/Form.charset	1.2.1.1"
+
+form="Software Selectable Character Set Aliasing Subtask - Printer $lp_printer"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+framemsg="The given defaults are from the terminfo database - Remap these if you wish."
+
+done=`
+	set -e toclose="$toclose $OAMBASE/add-ons/lp/printers/printers/add/Form.charset";
+	message -w "Saving character set information, please wait.";
+	set -e fieldvals="$F2 $F3 $F4 $F5 $F6 $F7 $F8 $F9 $F10 $F11 $F12 $F13 $F14 $F15 $F16 $F17 $F18 $F19 $F20 $F21 $F22 $F23 $F24 $F25 $F26 $F27 $F28 $F29 $F30 $F31 $F32 $F33 $F34 $F35 $F36 $F37 $F38 $F39 $F40 $F41 $F42 $F43 $F44 $F45 $F46 $F47 $F48 $F49 $F50 $F51 $F52 $F53 $F54 $F55 $F56 $F57 $F58 $F59 $F60 $F61 $F62 $F63 $F64 $F65";
+	$OAMBASE/add-ons/lp/printers/printers/add/findchg.sh | sed 's/,end$//gp' |
+        set -e cslist;
+
+	if [ "$cslist" = "end" ];
+	then
+		message -w "No character set information was changed in this form.";
+		sleep 3;
+	else
+		if [ -n "$TFADMIN" ]; then $TFADMIN lpadmin -p $lp_printer -S $cslist > /dev/null 2> $error;
+		else lpadmin -p $lp_printer -S $cslist > /dev/null 2> $error; fi;
+		message -w "New character set information saved.";
+		sleep 3;
+	fi;
+
+	if [ "$RET" != "0" -a -s $error ];
+	then
+		echo "OPEN TEXT $OAMBASE/add-ons/lp/printers/printers/add/Text.charset";
+	else
+			message -w "Going to next subtask, please wait.";
+			echo "OPEN FORM $OAMBASE/add-ons/lp/printers/printers/add/Form.access";
+	fi;
+`
+
+
+`
+    shell "$OAMBASE/add-ons/lp/printers/printers/add/mkform.sh";
+`

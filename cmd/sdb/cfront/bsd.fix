@@ -1,0 +1,57 @@
+#!/bin/sh
+#ident	"@(#)sdb:cfront/bsd.fix	1.1"
+#This shell script should be run exactly once by BSD 4.3 or later users.
+#It fixes various files to allow a build of cfront on a BSD system.
+#The fixes are:
+#	1. Runs bsd.sed in the scratch directory.  This updates the ..c
+#	   files to use the bsd FILE structure instead of the system V
+#	   FILE structure.
+#	2. #define's BSD in the header files incl/stdio.h and incl/generic.h.
+#	   These files contain Unix version-dependent constructs.
+#	   This also causes BSD to be defined when cfront is built.
+#	3. turns on BSD in the main makefile.  This causes lib/mk/makefile
+#	   to execute "ranlib" after libC.a is made.
+#
+echo	"Fix cfront to allow a build on BSD systems:"
+echo
+echo	"Running scratch/bsd.sed:"
+echo
+(cd scratch; sh bsd.sed)
+echo
+echo	"Updating incl/stdio.h and incl/generic.h:"
+echo
+for file in incl/stdio.h incl/generic.h
+do
+	echo chmod +w $file
+	chmod +w $file
+	echo ed $file
+	ed $file <<!
+0a
+#ifndef BSD
+#define BSD
+#endif
+.
+w
+q
+!
+done
+echo
+echo	"You should not use incl/ctype.h; use /usr/include/ctype.h instead."
+echo
+echo	"mv incl/ctype.h incl/ctype.h.save"
+mv incl/ctype.h incl/ctype.h.save
+echo
+echo	"Updating makefile"
+echo
+echo	"chmod +w makefile"
+chmod +w makefile
+ed makefile <<!
+/^CCFLAGS=-O/s/$/ -DBSD/p
+/^BSD=$/s/$/1/p
+w
+q
+!
+echo
+echo
+echo	"$0 complete.  You may now build cfront as specified"
+echo	"in the release notes."

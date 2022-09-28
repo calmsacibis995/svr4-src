@@ -1,0 +1,294 @@
+#ident	"@(#)alint:common/lint	1.23"
+
+PATH=/bin:/usr/bin
+if [ "$TMPDIR" = "" ]
+then
+	unixver=`uname -r`
+	case $unixver in
+	4*) TMPDIR=/var/tmp ;;
+	3*) TMPDIR=/usr/tmp ;;
+	*)  TMPDIR=/usr/tmp ;;	# uts, etc.
+	esac
+fi
+LPASS=${CCSLIB:-/usr/ccs/lib}	# where pass 1 and pass2 are found
+LLDIR=${CCSLIB:-/usr/ccs/lib}	# where lint libraries are found
+TOUT=$TMPDIR/tlint.$$		# combined input for second pass
+T1=$TMPDIR/tlint1$$		# definitions from C source
+T2=$TMPDIR/tlint2$$		# tentative definitions from C source
+T3=$TMPDIR/tlint3$$		# function calls, misc
+T4=$TMPDIR/tlint4$$		# strings for printf/scanf checking
+HOUT=$TMPDIR/hlint$$		# header messages file
+NOUT=$TMPDIR/nlint$$		# holds names of included files
+LINT1=$LPASS/lint1		# pass 1 of lint
+LINT2=$LPASS/lint2		# pass 2 of lint
+
+CPPF="-C -Alint(on)"		# options for cpp part of lint1
+LINTF=				# options for the lint passes
+FILES=				# the *.c and *.ln files in order
+NDOTC=0				# how many *.c were there
+DEFL=$LLDIR/llib-lc.ln		# the default lint library to use
+LLIB=				# lint library file to create
+LNOUT=				# for cflow
+CXOUT=				# for cxref
+CONLY=				# set for compile only (no second pass)
+PREONLY=			# run cpp only on file
+FULLPATH=			# set if -F option
+DIRLST=				# ordered list of args to -L option
+LIBLST=				# lint libs to look for in DIRLST
+RETVAL=
+EXIT=0				# Normal exit code
+VERSION=
+ERRORS=				# list of files with errors in them
+AMODE=				# ANSI modes: -Xt, -Xa, -Xc
+TMPFILES="$TOUT $HOUT $NOUT $T1 $T2 $T3 $T4"
+
+trap "rm -f $TMPFILES; exit 2" 1 2 3 15
+
+USAGE="Usage: lint [-abchkmnpsuvxyFV] [-lx] [-o lib] [-L libdir] file ..."
+BADUSE="lint: file with unknown suffix ignored:"
+OPTARG=abcghkl:mno:spuvxyD:FVI:L:U:O1:2:X:PW:R:Y:E
+set -- `getopt $OPTARG "$@"`
+if [ $? -ne 0 ]
+then
+    echo $USAGE >&2
+    exit 2
+fi
+while [ $# -gt 0 ]
+do
+    case $1 in
+	-p)	LINTF="$LINTF $1"; shift;;
+	-n)	shift; DEFL=;;
+	-c)	shift; CONLY=1;;
+#
+# W option for cfloW only - makes output go to specified file
+# R option for cxRef only - makes identifier output go to specified file
+#
+	-W)	LINTF="$LINTF $1"; LNOUT="$2"; shift 2;;
+	-R)	LINTF="$LINTF $1$2"; CXOUT="$2"; shift 2;;
+	-[abhkmsuvxy]) LINTF="$LINTF $1"; shift;;
+	-V)	LINTF="$LINTF $1"; VERSION=1; shift;;
+	-F)	LINTF="$LINTF $1"; FULLPATH=1; shift;;
+	-[IDUY]) CPPF="$CPPF $1$2"; shift 2;;
+	-[PE])	CPPF="$CPPF $1"; shift; PREONLY=1;;
+	-L)	DIRLST="$DIRLST $2"; shift 2;;
+	-l)	LIBLST="$LIBLST llib-l$2.ln"; shift 2;;
+	-o)	OPT=`basename $2`; LLIB="llib-l$2.ln"; shift 2;;
+	-[12])	LINTF="$LINTF $1$2"; shift 2;;
+	-X)	LINTF="$LINTF $1$2"; AMODE=$2; shift 2;;
+#
+# some cc options to be ignored.
+#
+	-[Og])	shift;;
+	--)	shift;
+		while [ $# -gt 0 ]
+		do
+		    case $1 in	
+			-*)	set -- `getopt $OPTARG "$@"`;
+				if [ $? -ne 0 ]
+				then
+				    echo $USAGE >&2
+				    exit 2
+				fi
+				break;;
+			*.[ci])	FILES="$FILES $1"
+				NDOTC=`expr $NDOTC + 1`
+				shift;;
+			*.ln)	FILES="$FILES $1"; shift;;
+#
+# If making a lint library, then allow any suffix.  This is because
+# lint libraries typically look like: llib-lX where X stands for the
+# library (i.e. llib-lc, llib-lm, llib-lmalloc, etc ...)
+# 
+			*)	if [ ! "$LLIB" ]
+				then
+				    echo $BADUSE $1 >&2
+				else
+				    FILES="$FILES $1"
+				    NDOTC=`expr $NDOTC + 1`
+				fi
+				shift;;
+		    esac
+		done
+		;;
+	-*)	echo "lint: bad option ignored: $1" >&2;;
+    esac
+done
+
+
+#
+# Only use -Dlint if this isn't running as cxref (CXOUT) or
+# as cflow (LNOUT) or mode is not -Xc
+#
+if [ "$LNOUT" = "" -a "$CXOUT" = "" -a "$AMODE" != "c" ]
+then
+	CPPF="$CPPF -Dlint"
+fi
+	
+
+# Give something to lint to do!
+if [ "$FILES" = "" ]
+then
+	if [ "$VERSION" = "" ]
+	then
+		echo "lint: no file arguments" >&2
+		exit 1
+	else
+		$LINT1 -V
+		exit 0
+	fi
+fi
+
+#
+# Check to see if all the lint libraries specified on the command line
+# can be found either in the initial lint directory (normally /usr/ccs/lib),
+# /usr/lib, or in one of the user specified directories (via -L <dir>).
+#
+LLDIR="$DIRLST $LLDIR /usr/lib"
+for LIB in $LIBLST
+do
+    for DIR in $LLDIR
+    do
+        if [ -r "$DIR"/"$LIB" ]
+        then
+            FILES="$FILES $DIR/$LIB"
+            break
+        fi
+    done
+    if [ ! -r "$DIR"/"$LIB" ]
+    then
+        echo "lint: $LIB not found" >&2
+    fi
+done
+
+#
+# Run pass1 only, creating .ln files.
+# Any .ln files on the command line will be ignored.
+#
+if [ "$CONLY" -o "$PREONLY" ]
+then
+    for i in $FILES
+    do
+	case $i in
+	*.ln)	;;
+	*)	T=`basename $i .c`.ln
+		if [ "$FULLPATH" ]
+		then
+		    FNAME=$i
+		else
+		    FNAME=`basename $i`
+		fi
+
+		if [ $NDOTC -gt 1 ]
+		then
+		    echo $FNAME:
+		fi
+		$LINT1 $CPPF $LINTF -T $HOUT,$NOUT,$T1,$T2,$T3,$T4 $i
+#
+# If return value is 0, save the output to the .ln file, and print
+# header file warnings.
+# 
+		RETVAL=$?
+		if [ $RETVAL = 0 ]
+		then
+		    if [ ! "$PREONLY" ]
+		    then
+			cat $T1 $T2 $T3 $T4 > $T
+			cat -s $HOUT
+		    fi
+		else
+		    cat -s $HOUT
+		    echo "lint: errors in $FNAME; no output created" >&2
+		    EXIT=$RETVAL
+		fi
+		rm -f $HOUT $NOUT;;
+	esac
+    done
+else
+    for i in $FILES
+    do
+	case $i in
+	*.ln)	cat <$i >> $TOUT;;
+	*)	if [ "$FULLPATH" ]
+		then
+		    FNAME=$i
+		else
+		    FNAME=`basename $i`
+		fi
+
+		if [ $NDOTC -gt 1 ]
+		then
+		    echo $FNAME:
+		fi
+		$LINT1 $CPPF $LINTF -T $HOUT,$NOUT,$T1,$T2,$T3,$T4 $i
+		RETVAL=$?
+#
+# If return value ok, save into temp file for later use by lint2.
+# Otherwise, cat the header file messages, and indicate there was
+# a problem.
+#
+
+		if [ $RETVAL = 0 ]
+		then
+		    cat $T1 $T2 $T3 $T4 >> $TOUT
+		else
+		#rm -f $HOUT $NOUT
+		    echo "lint: errors in $FNAME; no output created" >&2
+		    if [ "$ERRORS" = "" ]
+		    then
+			ERRORS=$FNAME
+		    else
+			ERRORS="$ERRORS,$FNAME"
+		    fi
+		    EXIT=$RETVAL
+		fi
+		;;
+	esac
+    done
+
+    if [ $EXIT != 0 ]
+    then
+	cat -s $HOUT
+	rm -f $TMPFILES
+	echo "lint: pass2 not run - errors in $ERRORS" >&2
+	exit $EXIT
+    fi
+
+# A lint library is to be created.
+    if [ "$LLIB" ]
+    then
+	cp $TOUT $LLIB
+    fi
+
+    if [ "$LNOUT" ]
+    then
+	cp $TOUT $LNOUT
+	rm -f $TMPFILES
+	exit 0
+    fi
+
+    if [ "$CXOUT" ]
+    then
+	rm -f $TMPFILES
+	exit 0
+    fi
+
+# Add in the default lint library (if -n was not used)
+    if [ "$DEFL" ]
+    then
+	cat <$DEFL >> $TOUT
+    fi
+
+# Print the errors/warnings from the header file
+    cat -s $HOUT
+
+    $LINT2 $LINTF $TOUT
+    RETVAL=$?
+    if [ $RETVAL != 0 ]
+    then
+	rm -f $TMPFILES
+	exit $RETVAL
+    fi
+fi
+
+rm -f $TMPFILES
+exit $EXIT

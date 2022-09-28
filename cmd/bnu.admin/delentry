@@ -1,0 +1,43 @@
+#ident	"@(#)bnu.admin:delentry	1.2.1.1"
+
+################################################################################
+#	Module Name: delentry.sh
+#	
+#	Inputs:
+#		$1 - filename 
+#               $2,... arguments
+#
+#	Description: Remove an entry from a system file
+#
+###############################################################################
+trap 'exit 0' 1 2  15
+
+BNUS1=$1
+BNUS2=$2
+shift
+shift
+for i in $*
+do
+BNUS2=$BNUS2.$i
+done
+cat $BNUS1 | sed "/^$BNUS2/d" >temp 2>&1
+if [ $? != 0 ]
+then
+ 	exit 1
+fi
+
+diff temp $BNUS1 1>diffile
+
+if [ -s diffile ]
+then
+	cp temp $BNUS1
+	if [ $? != 0 ]
+	then
+ 		exit 1
+	fi
+else
+	exit 1
+fi
+
+rm temp
+rm diffile

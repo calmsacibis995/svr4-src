@@ -1,0 +1,30 @@
+#ident	"@(#)lp.admin:printers/priorities/Text.list	1.1.1.1"
+
+#######################################################
+#
+#       Module Name: printer_service/priorities/Text.list
+#
+#######################################################
+
+title=Priority Limits for Users
+
+framemsg="Press CANCEL to continue."
+
+close=`/usr/bin/rm -f /tmp/lp.dls$VPID`
+
+`indicator -w;
+if [ -n "$TFADMIN" ]; 
+then $TFADMIN lpusers -l > /tmp/lp.dls$VPID;
+else lpusers -l > /tmp/lp.dls$VPID;
+fi`
+
+text="`readfile /tmp/lp.dls$VPID`"
+
+columns=`longline | set -l LL;
+fmlexpr ${DISPLAYW} - 3 | set -l DW;
+if [ "${LL}" -gt "${DW}" ];
+then
+    	echo ${DW};
+else
+    	echo ${LL};
+fi`

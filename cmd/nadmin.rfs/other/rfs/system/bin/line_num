@@ -1,0 +1,2 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/bin/line_num	1.1"
+ls -p /etc/rfs | /bin/sed -e "s/^.*[^/]$//g" -e "s/\/$//g" | /usr/bin/egrep -v "auth.info" |  /usr/bin/tr -s '\012' '\040' | wc -w

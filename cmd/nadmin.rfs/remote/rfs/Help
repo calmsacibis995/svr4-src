@@ -1,0 +1,156 @@
+ABSTRACT:
+
+domain:TITLE:Specify a Domain
+
+domain:domain:
+	Enter the name of a domain from which you
+	want to make a resource available on
+	your local system.
+
+list:TITLE:List Remote Resources Mounted via Remote File Sharing
+
+list:curr:
+	Choose 'yes' to see the remote resources
+	that are currently mounted.
+
+list:auto:
+	Choose 'yes' to see the remote resources
+	that are mounted automatically when
+	Remote File Sharing operation begins.
+
+modify:TITLE:Modifies Automatic/Current Mounting of a Remote Resource via RFS
+
+modify2:TITLE:Modifies Automatic Mounting of a Remote Resource via RFS
+
+modify3:TITLE:Modifies Current Mounting of a Remote Resource via RFS
+
+modify:res:
+	Choose the pathname of a directory on the local
+	system or the RFS resource name of a remote 
+	resource that is currently or automatically
+	mounted via RFS.
+
+modify:curr:
+	Choose 'yes' to modify how a remote 
+	resource is currently mounted.
+
+modify:auto:
+	Choose 'yes' to modify how a remote resource
+	is mounted automatically when Remote File
+	Sharing operation begins.
+
+modify2:mount:
+	Enter the pathname of the directory at
+	which you want to mount the remote resource.
+
+modify2:acc:
+	Choose 'read-only' if you want the resource to
+	be readable but not writable by local users.
+	choose 'read-write' if you want the resource to be
+	readable and writable by local users.
+
+modify2:cache:
+	Choose 'no' only if you want your local
+	system not to save remote data in between accesses.
+
+modify2:suid:
+	Choose 'yes' only if you want remote setuid
+	programs to be able to run setuid on your
+	system.
+
+modify2:conf:
+	Answer "yes" if you want to change how
+	local users can use the resource via
+	Remote File sharing the next time RFS 
+	starts up.  Current use of the resource will
+	not be affected by this action.
+
+modify3:mount:
+	Enter the pathname of the directory at
+	whicn you want to mount the remote resource.
+
+modify3:acc:
+	Choose 'read-only' if you want the resource to
+	be readable but not writable by local users.
+	choose 'read-write' if you want the resource to be
+	readable and writable by local users.
+
+modify3:cache:
+	Choose 'no' only if you want your local
+	system not to save remote data in between accesses.
+
+modify3:suid:
+	Choose 'yes' only if you want remote setuid
+	programs to be able to run setuid on your
+	system.
+modify3:conf:
+	Answer 'yes' if you want to change how
+	local users can use the resource via Remote
+	File Sharing.  Later automatic mounts of the
+	resource will not be affected by this action.
+
+mount:TITLE:Mount a Remote Resource Automatically/Immediately via Remote File Sharing
+
+mount:res:
+	Enter the RFS name of the remote resource that you want to mount.
+
+mount:imm:
+	Choose "yes" to mount the resource immediately.
+
+mount:auto:
+	Choose "yes" to mount the resource
+	automaticaly when Remote File Sharing
+	operation begins.
+
+mount:mount:
+	Enter the name of the local directory at
+	which you want to mount the
+	remote resource.
+
+mount:acc:
+	Choose "read-write" if you want your users to
+	be able to modify the resource.
+
+mount:cache:
+	Choose 'no' only if you want to prevent the 
+	local system from keeping local copies of the
+	data blocks it reads from and writes to the
+	remote resource. 
+
+mount:suid:
+	Choose 'no"'if you want to prevent remote setuid 
+	programs from executing setuid on your local system.
+
+unmnt2:TITLE:Terminates Automatic Mounting of a Remote Resource via RFS
+
+unmnt3:TITLE:Terminates Current Mounting of a Remote Resource via RFS
+
+unmount:TITLE:Terminates Automatic-Current Mounting of a Remote Resource via RFS
+
+unmnt2:ok:
+	Answer "yes" if you want the displayed local resource no longer
+	to be made available automatically
+	to local users via Remote file Sharing.  Current local use
+	will not be affected.
+
+unmnt3:imm:
+	Answer "yes" if you want local users not to 
+	use the remote resource displayed above.  Previously-
+	arranged automatic mounting of the resource
+	will occur unless you have just discontinued
+	automatic mounting of it.  Current access by
+	local users systems will not be affected.
+
+unmount:res:
+	Choose either the mountpoint or the RFS resource
+	name of a remote resource that is currently or
+	automatically mounted via RFS.
+
+unmount:imm:
+	Choose 'yes' to unmount the remote 
+	resource immediately.
+
+unmount:auto:
+	Choose 'yes' to stop mounting the resource
+	automatically when Remote File Sharing operation
+	begins.

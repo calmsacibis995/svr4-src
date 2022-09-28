@@ -1,0 +1,5 @@
+
+Common header and source files used when you compile most of the programs in this
+package.  Only required changes may be to the pathnames set in path.h. They must
+agree with the LIBDIR and FONTDIR definitions in ../Makefile.
+

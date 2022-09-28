@@ -1,0 +1,24 @@
+#ident	"@(#)lp.admin:printers/operations/Menu.cdisable	1.2"
+
+menu=Choices
+lifeterm=shortterm
+multiselect=true
+framemsg="MARK any number of choices and press ENTER when finished."
+
+`set -l name_1="/tmp/lp.n1$VPID";
+cosend lpdata "list_printers/e" >> $name_1;
+if [ -s $name_1 ];
+then
+	echo "all" >> $name_1;
+else
+	echo "init=false";
+	message -b "There are currently no printers that are enabled.";
+	rm -f $name_1;
+fi`
+
+close=`rm -f $name_1;
+	unset -l $name_1`
+
+done=`getitems " "|set -l Form_Choice`close
+
+`/usr/bin/sort $name_1 | regex '^(.*)$0$' 'name=$m0'`

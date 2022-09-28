@@ -1,0 +1,54 @@
+#ident	"@(#)lp.admin:printers/filters/Form.add	1.4.2.1"
+
+form=Add a New Filter
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=OPEN FORM $OBJ_DIR/Form.mod2 $F2 $F1
+
+name=New Filter:
+lininfo="add:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=14
+rows=1
+columns=14
+valid=`indicator -w;
+    regex -v "$F1"
+	'^[Aa][Ll][Ll]$'	'"all" is a reserved word'
+	'^[Aa][Nn][Yy]$'	'"any" is a reserved word'
+	'^[Nn][Oo][Nn][Ee]$'	'"none" is a reserved word'
+	'^[_a-zA-Z0-9]{1,14}$' 	'ok'
+	'.*'			'must be 1-14 letters, numbers and underscores.'
+    | set -l badval;
+    if [ "$badval" != 'ok' ];
+    then
+	echo false;
+    else
+	if fmlcut -d: -f5 /etc/lp/filter.table | fmlgrep "^$F1\$" > /dev/null;
+	then
+	    set -l badval="\"$F1\" already exists";
+	    echo false;
+	else
+	    echo true;
+	fi;
+    fi`
+choicemsg='Filter names may be 1-14 letters, numbers and underscores.'
+fieldmsg='Enter name for new filter.'
+invalidmsg="Filter name - $badval"
+
+name=Model Filter:
+lininfo="add:F2"
+nrow=2
+ncol=1
+frow=2
+fcol=14
+rows=1
+columns=14
+menuonly=true
+value=default_filter
+rmenu={ "default_filter" `fmlcut -d: -f5 /etc/lp/filter.table | /usr/bin/sort` }
+choicemsg="Enter choice then press ENTER"
+fieldmsg="Enter filter to be used as a model for the new filter then press [SAVE]"
+invalidmsg="$F2 Invalid filter - press [CHOICES] for selection"

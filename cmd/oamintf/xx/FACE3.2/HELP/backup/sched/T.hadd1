@@ -1,0 +1,5 @@
+Strike CHOICES to toggle between and the type of backup 
+(System Backup/Incremental System Backup) or type your choice.
+
+If you type an invalid backup type, you will be warned.
+

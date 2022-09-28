@@ -1,0 +1,26 @@
+#ident	"@(#)oamintf:devices/Menu.disk	1.1"
+
+################################################################################
+#	Module Name: Menu.disk
+#
+#	Inputs:
+#		ARG1 - Device group
+################################################################################
+menu="Device Drive Choices"
+
+framemsg=`readfile $INTFBASE/ssmenu.msg`
+
+help=OPEN MENU $INTFBASE/Text.itemhelp Menu.disk:ABSTRACT
+
+`getdisk $ARG1 | sort | regex '^([^:][^:]*)$0:([^:][^:]*)$1' 'name="$m0"
+description="$m1"
+action=`set -l "Form_Choice=$m0"`CLOSE'`
+
+name=
+button=1
+action=
+
+name=
+button=7
+action=
+

@@ -1,0 +1,35 @@
+#ident	"@(#)face:OBJECTS/Menu.office	1.6"
+
+menu="Office of $LOGNAME"
+
+help=OPEN TEXT OBJECTS/Text.h "Office" T.hoffice
+
+framemsg="Move to an item with arrow keys and press ENTER to select the item."
+
+name="Filecabinet: $HOME"
+action=OPEN DIRECTORY $HOME
+
+name=Other Users
+action=OPEN MENU OBJECTS/Menu.users
+
+name=Preferences
+action=OPEN MENU OBJECTS/pref/Menu.pref
+
+name='Programs Administration ( MS-DOS )'
+action=OPEN MENU OBJECTS/dos/Menu.install
+show=`test -f /usr/vpix/dosinst`
+
+name=`if [ -f /usr/vpix/dosinst ];
+then
+	echo 'Programs Administration ( UNIX )';
+else
+	echo 'Programs Administration';
+fi`
+action=OPEN MENU OBJECTS/programs/Menu.install "HOME"
+
+name=Wastebasket
+action=OPEN DIRECTORY $HOME/WASTEBASKET
+
+name=""
+button=8
+action=nop

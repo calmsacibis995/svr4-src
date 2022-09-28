@@ -1,0 +1,20 @@
+#ident	"@(#)nadmin.rfs:remote/rfs/bin/imm_mod	1.2"
+# unmount the resource to be modified
+/sbin/umount $RES
+
+if [ "$SUID" = "no" ]
+then
+	NACC="$ACC,nosuid"
+else
+	NACC="$ACC"
+fi
+if [ "$CACHE" = "no" ]
+then
+	NACC="$NACC,nocaching"
+fi
+
+# Mount resource immediately
+/sbin/mount -F rfs -o $NACC $RES $MNT;
+echo "Current mounting of remote resource \"$RES\" has been modified." > /usr/tmp/rem_$$
+
+echo $$

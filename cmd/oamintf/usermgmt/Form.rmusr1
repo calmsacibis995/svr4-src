@@ -1,0 +1,30 @@
+#ident	"@(#)oamintf:usermgmt/Form.rmusr1	1.2.1.1"
+
+################################################################################
+#	Module Name:  Form.rmusr1
+################################################################################
+form="Remove User Login"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=OPEN FORM $OBJ_DIR/Form.rmusr2 $F1
+
+name=User login to be removed:
+lininfo=Form.rmusr1:rmusr
+nrow=1
+ncol=3
+frow=1
+fcol=29
+rows=1
+columns=8
+
+rmenu=OPEN MENU $OBJ_DIR/Menu.logins
+valid=`sed -e 's/^\([^:]*\):[^:]*:\([^:]*\).*/\1,\2/p' -e '/,[0-9]\{1,2\}$/d' /etc/passwd | fmlgrep "^$F1,"`
+
+invalidmsg=const "ERROR: User login does not exist."
+
+name=RESET
+button=8
+action=RESET

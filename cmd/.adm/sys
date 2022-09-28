@@ -1,0 +1,5 @@
+#ident	"@(#)adm:sys	1.2.2.1"
+#
+# The sys crontab should be used to do performance collection. See cron
+# and performance manual pages for details on startup.
+#

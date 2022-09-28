@@ -1,0 +1,230 @@
+#ident	"@(#)oamintf:syssetup/Form.dateset	1.2.6.1"
+
+################################################################################
+#	Module Name: Form.dateset
+#	Calling Sequence: This form is invoked through the 
+#			  "main:syssetup:datetime:set" task option 
+#			  (datetime.menu).
+#	Functional Description:	Prompt the user for setting the date, time
+#                               and timezone of the system and then calling
+#                               subsequent forms to take appropriate action.
+#	Inputs: None.
+#	Outputs: Variables to the dateset shell script for processing of date, 
+#                time and timezone.
+#	Functions Called: 
+#			  dateset, Menu.timezones, Text.dateok, Text.datenok
+#	Issues:
+################################################################################
+
+Form="Set System Date and Time Information"
+
+`gettz`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+#begrow=1
+#begcol=1
+
+done=`message -f -w "Setting System Date and Time Information.";
+         datechk $F2 $F3 $F5;
+         if [ $RET -eq 0 ] ;
+         then
+         	dateset $F2 $F3 $F5 $F7 $F8 $F9 $F10 $F11;
+         	if [ $RET -eq 0 ] ;
+         	then
+   			set -l SETCMD="OPEN TEXT $OBJ_DIR/Text.dateok $F2 $F3 $F5 $F7 $F8 $F9 $F10";
+         	else
+   			set -l SETCMD="OPEN TEXT $OBJ_DIR/Text.datenok $F2 $F3 $F5 $F7 $F8 $F9 $F10";
+         	fi ;
+         else
+   		message "ERROR: Invalid Date. Please check Date." ;
+   		set -l SETCMD="REFRESH" ;
+         fi`$SETCMD
+
+# F1
+name="Date:"
+lininfo="Form.dateset:date"
+nrow=1
+ncol=1
+fcol=-1
+
+# F2
+name=""
+lininfo="Form.dateset:month"
+nrow=1
+ncol=19
+frow=1
+fcol=20
+rows=1
+columns=9
+value=`date +%B`
+choicemsg=const 'Please enter the Month (Jan - Dec) or (January - December)'
+invalidmsg=const 'Error - Please enter the Month (Jan - Dec) or (January - December)'
+valid=`valdate -f %b $F2 || valdate -f %B $F2`
+
+# F3
+name=""
+lininfo="Form.dateset:day"
+nrow=1
+ncol=29
+frow=1
+fcol=30
+rows=1
+columns=2
+value=`date +%d`
+choicemsg=const 'Please enter the Day (01-31 or 1-31)'
+invalidmsg=const 'Error - Please enter the Day (01-31 or 1-31)'
+valid=`valdate -f %e $F3 || valdate -f %d $F3`
+
+# F4
+name=","
+nrow=1
+ncol=32
+fcol=-1
+
+# F5
+name=""
+lininfo="Form.dateset:year"
+nrow=1
+ncol=33
+frow=1
+fcol=34
+rows=1
+columns=4
+value=`date +%Y`
+choicemsg=const 'Please enter the Year (greater than or equal to 1970).'
+valid=`valdate -f %Y $F5`
+invalidmsg=const "ERROR: Please enter the Year (greater than or equal to 1970)."
+
+# F6
+name="Time:"
+lininfo="Form.dateset:time"
+nrow=2 
+ncol=1
+fcol=-1
+
+# F7
+name=""
+lininfo="Form.dateset:hour"
+nrow=2
+ncol=19
+frow=2
+fcol=20
+rows=1
+columns=2
+value=`date +%I`
+choicemsg=const 'Please enter the Hour (00-12 or 0-12)'
+invalidmsg=const 'Error - Please enter the Hour (00-12 or 0-12)'
+valid=`regex -v "$F7" '^[0-9]$' || valtime -f %I $F7`
+
+# F8
+name=":"
+lininfo="Form.dateset:minute"
+nrow=2 
+ncol=22
+frow=2
+fcol=23
+rows=1
+columns=2
+value=`date +%M`
+choicemsg=const 'Please enter the Minute (00-59 or 0-59)'
+invalidmsg=const 'Error - Please enter the Minute (00-59 or 0-59)'
+valid=`regex -v "$F8" '^[0-5][0-9]$' || valtime -f %M $F8`
+
+# F9
+name="AM/PM:"
+lininfo="Form.dateset:meridian"
+nrow=3
+ncol=1
+frow=3
+fcol=20
+rows=1
+columns=2
+value=`date +%p`
+choicemsg=const 'Please enter AM/PM or am/pm'
+invalidmsg=const 'Error - Please enter AM/PM or am/pm'
+valid=`valtime -f %p $F9`
+
+# F10
+name="Timezone:"
+lininfo="Form.dateset:timezone"
+nrow=4
+ncol=1
+frow=4
+fcol=20
+rows=1
+columns=9
+`grep 'TZ=' /etc/TIMEZONE | cut -f2 -d= | set -l TZONE;
+echo $TZONE | regex 'GMT0' 'Greenwich' 'AST4' 'Atlantic' 'AST4ADT' 'Atlantic' 'EST5' 'Eastern' 'EST5EDT' 'Eastern' 'CST6' 'Central' 'CST6CDT' 'Central' 'MST7' 'Mountain' 'MST7MDT' 'Mountain' 'PST8' 'Pacific' 'PST8PDT' 'Pacific' 'YST8' 'Yukon' 'YST8YDT' 'Yukon' 'AST10' 'Alaska' 'AST10ADT' 'Alaska' 'BST11' 'Bering' 'BST11BDT' 'Bering' 'HST10' 'Hawaii' '.*' ' ' | set -l TIMEZONE`
+value=`echo $TIMEZONE`
+rmenu=OPEN MENU $OBJ_DIR/Menu.timezones
+valid=`regex -v "$F10" 'Greenwich' 'true' 'Atlantic' 'true' 'Eastern' 'true' 'Central' 'true' 'Mountain' 'true' 'Pacific' 'true' 'Yukon' 'true' 'Alaska' 'true' 'Bering' 'true' 'Hawaii' 'true' "$TZ" 'true'`
+invalidmsg=const 'Not an available time zone. See choices.'
+
+# F11
+name="Is daylight savings time in effect?:"
+lininfo="Form.dateset:daylight"
+nrow=5
+ncol=1
+frow=5
+fcol=38
+rows=1
+columns=3
+value=`echo $TZONE | grep "DT" >/dev/null; regex -v $RET '0' 'yes' '1' 'no'`
+valid=`if [ "$F10" = "Greenwich" -o "$F10" = "Hawaii" ];
+ then
+	regex -v "$F11" '^no$' '^n$' '^NO$' '^N$';
+ else
+	regex -v "$F11" '^yes$' 'true' '^Yes$' 'true' '^YES$' 'true' '^y$' 'true' '^Y$' 'true' '^no$' 'true' '^No$' 'true' '^NO$' 'true' '^n$' 'true' '^N$' 'true';
+ fi`
+invalidmsg=`if [ "$F10" = "Greenwich" -o "$F10" = "Hawaii" ];
+ then
+	echo "ERROR: Timezone $F10 cannot have Daylight Savings Time - enter 'no'." ;
+ else
+	echo "ERROR: Please enter yes or no. Do you want Daylight Savings Time?";
+  fi`
+
+choicemsg=const "Please enter yes or no - Do you want Daylight Savings Time?"
+
+# F12
+name=""
+nrow=7
+ncol=1
+frow=7
+fcol=1
+rows=1
+columns=60
+value=const "Please Note: This task should be done in single-user mode."
+inactive=true
+
+# F13
+name=""
+nrow=8
+ncol=1
+frow=8
+fcol=1
+rows=1
+columns=50
+value=const "Warning: Setting the date/time while the system"
+#value=const "It's bad practice to change the date while the system is running multi-user."
+inactive=true
+
+# F14
+name=""
+nrow=9
+ncol=1
+frow=9
+fcol=1
+rows=1
+columns=50
+value="         is in multi-user state can be dangerous."
+inactive=true
+
+#for a form object
+
+name=RESET
+button=8
+action=reset
+

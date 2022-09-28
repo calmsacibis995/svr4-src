@@ -1,0 +1,67 @@
+#ident	"@(#)bkrs:basic.d/sched/Menu.week	1.1.1.1"
+
+menu=Choices
+multiselect
+lifetime=shortterm
+done=`getitems " " | /usr/sadm/sysadm/bin/format 7 | set -l Form_Choice`close
+
+name=Su
+description=Sunday
+lininfo=0
+itemmsg=const "Mark day(s) of the week with the MARK function key, and strike the ENTER key."
+
+name=M
+description=Monday
+lininfo=1
+itemmsg=const "Mark day(s) of the week with the MARK function key, and strike the ENTER key."
+
+name=T
+description=Tuesday
+lininfo=2
+itemmsg=const "Mark day(s) of the week with the MARK function key, and strike the ENTER key."
+
+name=W
+description=Wednesday
+lininfo=3
+itemmsg=const "Mark day(s) of the week with the MARK function key, and strike the ENTER key."
+
+name=Th
+description=Thursday
+lininfo=4
+itemmsg=const "Mark day(s) of the week with the MARK function key, and strike the ENTER key."
+
+name=F
+description=Friday
+lininfo=5
+itemmsg=const "Mark day(s) of the week with the MARK function key, and strike the ENTER key."
+
+name=S
+description=Saturday
+lininfo=6
+itemmsg=const "Mark day(s) of the week with the MARK function key, and strike the ENTER key."
+
+name=all
+description=All of the above
+itemmsg=const "Mark day(s) of the week with the MARK function key, and strike the ENTER key."
+
+name=""
+button=1
+action=nop
+
+name=""
+button=4
+action=nop
+
+name=""
+button=5
+action=nop
+
+name=""
+button=7
+action=nop
+
+name=""
+button=8
+action=nop
+
+`indicator -w`

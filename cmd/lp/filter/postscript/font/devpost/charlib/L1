@@ -1,0 +1,13 @@
+%ident	"@(#)lp:filter/postscript/font/devpost/charlib/L1	1.2.3.1"
+/build_L1 {
+    pop
+    /picstr 40 string def
+    gsave
+    currentpoint translate
+    .533 72 mul size mul 36 div
+    .5 72 mul size mul 36 div
+    scale
+    160 150 1 [160 0 0 -150 0 150]
+    {currentfile picstr readhexstring pop} image
+    grestore
+} def

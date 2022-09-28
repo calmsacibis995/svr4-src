@@ -1,0 +1,97 @@
+AddrList.o:	../common/AddrList.C
+	$(CPLUS_CMD) -c ../common/AddrList.C
+
+Bdi.o:	../common/Bdi.C
+	$(CPLUS_CMD) -c ../common/Bdi.C
+
+Bdibuild.o:	../common/Bdibuild.C
+	$(CPLUS_CMD) -c ../common/Bdibuild.C
+
+Cache.o:	../common/Cache.C
+	$(CPLUS_CMD) -c ../common/Cache.C
+
+Coff.o:	../common/Coff.C
+	$(CPLUS_CMD) -c ../common/Coff.C
+
+Coffbuild.o:	../common/Coffbuild.C
+	$(CPLUS_CMD) -c ../common/Coffbuild.C
+
+Elfbuild.o:	../common/Elfbuild.C
+	$(CPLUS_CMD) -c ../common/Elfbuild.C
+
+Evaluator.o:	../common/Evaluator.C
+	$(CPLUS_CMD) -c ../common/Evaluator.C
+
+Fetalline.o:	../common/Fetalline.C
+	$(CPLUS_CMD) -c ../common/Fetalline.C
+
+Fetalrec.o:	../common/Fetalrec.C
+	$(CPLUS_CMD) -c ../common/Fetalrec.C
+
+Locdesc.o:	../common/Locdesc.C
+	$(CPLUS_CMD) -c ../common/Locdesc.C
+
+NameList.o:	../common/NameList.C
+	$(CPLUS_CMD) -c ../common/NameList.C
+
+Object.o:	../common/Object.C
+	$(CPLUS_CMD) -c ../common/Object.C
+
+Reflist.o:	../common/Reflist.C
+	$(CPLUS_CMD) -c ../common/Reflist.C
+
+SectHdr.o:	../common/SectHdr.C
+	$(CPLUS_CMD) -c ../common/SectHdr.C
+
+Source.o:	../common/Source.C
+	$(CPLUS_CMD) -c ../common/Source.C
+
+Symbol.o:	../common/Symbol.C
+	$(CPLUS_CMD) -c ../common/Symbol.C
+
+Symtab.o:	../common/Symtab.C
+	$(CPLUS_CMD) -c ../common/Symtab.C
+
+Symtable.o:	../common/Symtable.C
+	$(CPLUS_CMD) -c ../common/Symtable.C
+
+TYPE.o:	../common/TYPE.C
+	$(CPLUS_CMD) -c ../common/TYPE.C
+
+Tagcheck.o:	../common/Tagcheck.C
+	$(CPLUS_CMD) -c ../common/Tagcheck.C
+
+builder.o:	../common/builder.C
+	$(CPLUS_CMD) -c ../common/builder.C
+
+dbtools.o:	../common/dbtools.C
+	$(CPLUS_CMD) -c ../common/dbtools.C
+
+dbtools1.o:	../common/dbtools1.C
+	$(CPLUS_CMD) -c ../common/dbtools1.C
+
+OBJECTS	=  \
+	AddrList.o \
+	Bdi.o \
+	Bdibuild.o \
+	Cache.o \
+	Coff.o \
+	Coffbuild.o \
+	Elfbuild.o \
+	Evaluator.o \
+	Fetalline.o \
+	Fetalrec.o \
+	Locdesc.o \
+	NameList.o \
+	Object.o \
+	Reflist.o \
+	SectHdr.o \
+	Source.o \
+	Symbol.o \
+	Symtab.o \
+	Symtable.o \
+	TYPE.o \
+	Tagcheck.o \
+	builder.o \
+	dbtools.o \
+	dbtools1.o

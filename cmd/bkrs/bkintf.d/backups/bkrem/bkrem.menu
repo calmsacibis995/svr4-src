@@ -1,0 +1,8 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkrem/bkrem.menu	1.2.1.1"
+#menu#Schedule Backup Reminder
+#life#permanent
+
+add^Add Entries to the Schedule of Backup Reminder Messages^add/Form.add
+display^Display the Schedule of Backup Reminder Messages^display/Text.display
+modify^Modify Entries in the Schedule of Backup Reminder Messages^modify/Form.modify
+remove^Remove Entries from the Schedule of Backup Reminder Messages^remove/Form.remove

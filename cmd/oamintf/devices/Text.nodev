@@ -1,0 +1,21 @@
+#ident	"@(#)oamintf:devices/Text.nodev	1.1"
+
+################################################################################
+#	Module Name: Text.nodev
+################################################################################
+title="Device Drive Choices"
+
+framemsg=`readfile $INTFBASE/nodev.msg`
+
+rows=4
+columns=60
+
+text="
+There are no devices available or all available devices
+contain file systems which are currently mounted."
+
+altslks
+
+name=CANCEL
+button=14
+action=CLEANUP

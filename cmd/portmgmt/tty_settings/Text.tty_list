@@ -1,0 +1,14 @@
+#ident	"@(#)portmgmt:tty_settings/Text.tty_list	1.3.1.1"
+
+`pmgetpid | set -l PID`
+title=Detailed Line Settings for Ttylabel <$ARG1>
+close=`rm /var/tmp/list$PID`
+lifetime=shortterm
+framemsg="Press CANCEL to return to the original ttylabel list."
+
+text="`settinglist $ARG1 > /var/tmp/list$PID;
+	readfile /var/tmp/list$PID`
+"
+
+columns=65
+rows=18

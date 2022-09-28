@@ -1,0 +1,23 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FORM/Menu.alert	1.1"
+menu="Choices"
+
+`message "Move to an item with the arrow keys and strike ENTER to select."`
+
+
+name="send mail to $LOGNAME"
+action=`set -l Form_Choice=mail`close
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+name=none
+action=`set -l Form_Choice=none`close
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+
+
+name=CMD-MENU
+button=7
+action=cmd-menu
+
+name=""
+button=8
+actio=nop

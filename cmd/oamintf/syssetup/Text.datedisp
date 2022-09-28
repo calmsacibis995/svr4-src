@@ -1,0 +1,41 @@
+#ident	"@(#)oamintf:syssetup/Text.datedisp	1.1.1.2"
+
+################################################################################
+#	Module Name: Text.datedisp
+#	Calling Sequence: nodename.menu
+#	Functional Description: This Text object displays the System-Name and
+#				the Network Node-Name
+#	How:
+#	Inputs:
+#	Functions Called:
+#	Issues:
+################################################################################
+
+Title=Display System Date and Time Information
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp "display:ABSTRACT"
+
+rows=12
+columns=72
+
+framemsg=`readfile $INTFBASE/display.msg`
+
+`date +%B | set -l MM ;
+ date +%d | set -l DD ;
+ date +%Y | set -l YY ;
+ date +%I | set -l HH ;
+ date +%M | set -l MN ;
+ date +%p | set -l AP ;
+ grep 'TZ=' /etc/TIMEZONE | fmlcut -f2 -d= | set -l A1 ;
+ regex -v $A1 'DT' 'yes' '.*' 'no' | set -l XX ;
+ echo  $A1 | fmlcut -c1-4 | regex 'GMT0' 'Greenwich' 'AST4' 'Atlantic' 'EST5' 'Eastern' 'CST6' 'Central' 'MST7' 'Mountain' 'PST8' 'Pacific' 'YST8' 'Yukon' 'AST1' 'Alaska' 'BST1' 'Bering' 'HST1' 'Hawaii' '.*' ' ' | set -l FTZ`
+
+text="
+   Date: 			$MM $DD, $YY
+   Time: 			$HH:$MN
+   AM/PM:			$AP
+   Timezone:			$FTZ
+   Daylight savings time?	$XX
+   
+   "
+

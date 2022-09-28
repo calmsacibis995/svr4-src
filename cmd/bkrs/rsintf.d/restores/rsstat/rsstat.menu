@@ -1,0 +1,7 @@
+#ident	"@(#)bkrs:rsintf.d/restores/rsstat/rsstat.menu	1.6.2.1"
+#menu#Restore Request Status Management
+#life#permanent
+
+full^Display a Full Report of Pending Restore Requests^full/Text.full
+modify^Modify the Status of Pending Restore Requests^modify/Form.modify
+selective^Display a Selective Report of Pending Restore Requests^selective/Form.select

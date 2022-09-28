@@ -1,0 +1,60 @@
+#ident	"@(#)bkrs:basic.d/sched/Menu.sched	1.1.1.1"
+
+menu="Schedule Backup to Tape"
+
+help=open text /usr/vmsys/OBJECTS/Text.h "Schedule Backup to Tape" backup/sched/T.hsched
+
+name=Add
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+action=`indicator -w; shell "
+	if [ \`/usr/sadm/sysadm/bin/.chkuser -u\` = 0 ]
+	then if [ -r /dev/rmt ]
+	     then if [ \`/usr/sadm/sysadm/bin/.chkuser -c \"/usr/sadm/sysadm/bin/prtask :-b: :-l: :-A: :/tmp/addbk.$VPID:\"\` = 2 ]
+		  then echo 3
+		  else echo 2
+		  fi 
+	     else echo 1
+	     fi
+	else echo 0
+	fi" | regex -e 
+	    '^3$' 'open $OBJ_DIR/sched/Text.already /tmp/addbk.$VPID'
+	    '^2$' 'open $OBJ_DIR/sched/Form.add'
+	    '^1$' 'open $OBJ_DIR/sched/Text.notape'
+	    '^0$' 'open $OBJ_DIR/sched/Text.privil add'`
+
+name=Change
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+action=`indicator -w; shell "
+	if [ \`/usr/sadm/sysadm/bin/.chkuser -u\` = 0 ]
+	then if [ \`/usr/sadm/sysadm/bin/.chkuser -c \"/usr/sadm/sysadm/bin/prtask :-b: :-l: :-C: :/tmp/chgbk.$VPID: :/tmp/bkchg.$VPID:\"\` = 2 ]
+	     then if [ -r /dev/rmt ]
+		  then echo 3
+		  else echo 2
+		  fi 
+	     else echo 1
+	     fi
+	else echo 0
+	fi" | regex -e 
+	    '^3$' 'open $OBJ_DIR/sched/Menu.chg /tmp/chgbk.$VPID'
+	    '^2$' 'open $OBJ_DIR/sched/Text.notape'
+	    '^1$' 'open $OBJ_DIR/sched/Text.nosched'
+	    '^0$' 'open $OBJ_DIR/sched/Text.privil change'`
+
+name=Delete
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+action=`indicator -w; /usr/sadm/sysadm/bin/.chkuser -u -c "/usr/sadm/sysadm/bin/prtask :-b: :-l: :-D: :/tmp/delbk.$VPID: :/tmp/bkdel.$VPID:" | regex 
+	'^2$' "open $OBJ_DIR/sched/Menu.del /tmp/delbk.$VPID /tmp/bkdel.$VPID"
+	'^0$' "open $OBJ_DIR/sched/Text.nosched"
+ 	'^1$' "open $OBJ_DIR/sched/Text.privil delete"`
+
+name=Display
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+action=`indicator -w; /usr/sadm/sysadm/bin/display /tmp/dplbk.$VPID | regex 
+		'^1$' 'open $OBJ_DIR/sched/Text.display /tmp/dplbk.$VPID'
+		'^0$' 'open $OBJ_DIR/sched/Text.nosched'`
+
+name=""
+button=8
+action=nop
+
+`indicator -w`

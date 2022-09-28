@@ -1,0 +1,25 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkstat/limit/Text.limok	1.2"
+################################################################################
+#	Module Name: Text.limok
+################################################################################
+title="Limit Status Log Size"
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+lifetime=shortterm
+
+rows=4
+columns=60
+
+text="
+Status log size set to $ARG1 weeks."
+
+altslks
+
+name=CONT
+button=11
+action=update $ARG2 true
+
+name=CANCEL
+button=14
+action=CLEANUP

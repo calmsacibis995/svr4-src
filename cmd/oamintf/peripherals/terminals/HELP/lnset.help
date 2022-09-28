@@ -1,0 +1,12 @@
+#ident	"@(#)oamintf:peripherals/terminals/HELP/lnset.help	1.1"
+
+   The "lineset" task allows you to display detailed  information 
+   about line settings for a particular tty.  The tty line settings
+   often are hunt sequences, where, if the first line setting does
+   not work, the line "hunts" to the next line setting, until one
+   that works comes by.  This subcommand shows the various sequences
+   of line settings.
+
+   To see detail, please select a line setting.
+   
+   Press [CHOICES] to see available line settings.

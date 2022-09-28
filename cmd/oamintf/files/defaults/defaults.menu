@@ -1,0 +1,10 @@
+#ident	"@(#)filemgmt:defaults/defaults.menu	1.1.1.1"
+
+#menu#Manage Defaults
+#help#defaults.help^Defaults Managment
+#life#permanent
+
+add^Add defaults^Form.add
+display^Display defaults^Form.display
+modify^Modify defaults^Form.modify
+remove^Remove defaults^Form.remove

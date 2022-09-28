@@ -1,0 +1,19 @@
+#ident	"@(#)oamintf:devices/Help	1.2.1.1"
+ABSTRACT:
+	The items in the "storage_devices" menu provide functions for
+	using storage devices.  They include the ability to copy
+	information from one volume to another, to display storage
+	device information, to erase the contents of a volume,
+	to configure a storage device on the system, or to de-configure
+	a storage device on the system.  Storage devices may include
+	integral disks, floppy diskettes, SCSI data storage devices,
+	9-track tapes and other devices configured into the system.
+
+Menu.drive:ABSTRACT
+	This pop-up menu displays the available device drives on the
+	system.
+
+Menu.disk:ABSTRACT
+	This pop-up menu displays the available disk drives on the
+	system.  Disk drives that hold the '/' (root) or '/usr'
+	partitions are excluded from this menu.

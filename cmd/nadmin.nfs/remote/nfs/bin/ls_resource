@@ -1,0 +1,27 @@
+#ident	"@(#)nadmin.nfs:remote/nfs/bin/ls_resource	1.1"
+#
+#Get NFS name of remote resources currently mounted
+#
+
+/sbin/mount  -v |  /usr/bin/egrep "type[ 	]+nfs[ 	]+"  >/var/tmp/c_mnt$$
+if [ $? -eq 0 ]
+then
+	/usr/bin/cut -d" " -f1,3 </var/tmp/c_mnt$$  | /usr/bin/tr -s '\040' '\012' >/var/tmp/cmnt$$
+fi
+	
+#
+#If list automaticaly advertised resources
+#
+
+/bin/sed "s/^#.*//g" /etc/vfstab | /usr/bin/egrep "[ 	]+nfs[ 	]+"   > /var/tmp/a_mnt$$
+if [ $? -eq 0 ]
+then
+	/usr/bin/tr -s '\011' '\040' < /var/tmp/a_mnt$$ | /usr/bin/cut -d" " -f1,3 | /usr/bin/tr '\040' '\012' >/var/tmp/amnt$$ 2>/dev/null
+fi
+
+echo "{ " > /var/tmp/mnt$$
+cat /var/tmp/cmnt$$ /var/tmp/amnt$$ >>/var/tmp/mnt$$ 2>/dev/null
+echo "} " >> /var/tmp/mnt$$
+rm /var/tmp/cmnt$$ /var/tmp/amnt$$ 2>/dev/null
+
+echo $$

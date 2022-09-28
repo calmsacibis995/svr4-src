@@ -1,0 +1,14 @@
+#ident	"@(#)devintf:devices/reserve/reserve/Help	1.2"
+
+reserve:ABSTRACT:
+	The "reserve" task places a device reservation on a device that is
+	described in the Device Management tables.  You will be asked for the
+	alias of the device you wish to reserve.
+
+Form.reserve:Device:the Device field
+	This is the name of the device (alias to the device) you
+	wish to reserve, thus making it unavailable to other users
+	of the device management feature.
+	
+	This field may not be blank and must reference a device that is
+	administered in the Device Management tables.

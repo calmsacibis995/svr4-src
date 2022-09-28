@@ -1,0 +1,45 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FORM/Text.nmark	1.1"
+title=Warning
+lifetime=shortterm
+altslks=true
+
+rows=3
+columns=25
+
+`message  Strike the CONT function key to continue.`
+
+text="
+  No forms were marked."
+
+name=CANCEL
+button=14
+action=close 
+
+
+name=CONT
+button=11
+action=close 
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=""
+button=10
+action=nop
+
+name=""
+button=9
+action=nop
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+`indicator -w`

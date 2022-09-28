@@ -1,0 +1,57 @@
+control:TITLE:Remote File Sharing Control
+start:TITLE:Starts Remote File Sharing 
+start2:TITLE:Starts Remote File Sharing 
+stop:TITLE:Stops Remote File Sharing
+pass_ctl:TITLE:Passes Name Server Responsibility back to Primary
+
+control:check:
+	The check_status task allows you to check whether the
+	necessary processes for Remote File Sharing are running on
+	your local system.
+
+start2:share:
+	Choose "yes" if you want to share local resources for 
+	which automatic sharing has previously been set up.
+
+start2:mount:
+	Choose "yes" if you want to make available on
+	your local system remote resources for
+	which automatic mounting has previously
+	been set up.
+
+control:stop:
+	The stop task allows you to stop the operaton of Remote
+	File Sharing.
+
+pass_ctl:netid
+	Mark the network id of each transport
+	provider for which you want to pass name
+	server responsibility back to the primary
+	name server.
+
+control:pass_cntl:
+	The pass_control task alows you to pass Remote File
+	Sharing domain name server responsibility from a 
+	secondary name server back to the primary name server on
+	a transport provider.
+
+control:start:
+	The start task alows you to start the operation of
+	Remote File Sharing.
+
+stop:confirm:
+	Enter "yes" if you want to stop
+	Remote File Sharing operations.
+
+start:verify:
+	Answer "yes" if you want RFS (1) to verify the
+	identity of each client system listed in the files
+	/usr/nserve/auth.info/domain/passwd before
+	granting its initial request for access to resources
+	on your local system and (2) to deny access
+	to all other systems.
+	Answer "no" if you are satisfied with the 
+	verification of just those clients
+	listed in the files /usr/nserve/auth.info/domain/passwd and
+	are willing for all other systems to access your local 
+	resources without verification.

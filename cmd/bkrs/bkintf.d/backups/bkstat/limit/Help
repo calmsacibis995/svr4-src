@@ -1,0 +1,14 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkstat/limit/Help	1.2.1.1"
+
+ABSTRACT: Limit Time of Backup Status Log Entries
+	The "limit" task allows you to set the length of time (in weeks)
+	that entries in the backup status log are kept.  The default is
+	the current value.
+
+TITLE: Limit Time of Backup Status Log Entries
+
+F1:Weeks(s) Field
+	"Weeks:"  Enter the number of weeks you want status log information
+	to be kept.  Entries older than that number of weeks will be
+	deleted automatically.  The number you enter must be a whole number
+	greater than or equal to 1.

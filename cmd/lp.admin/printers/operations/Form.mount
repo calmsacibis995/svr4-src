@@ -1,0 +1,188 @@
+#ident	"@(#)lp.admin:printers/operations/Form.mount	1.4.1.2"
+
+#######################################################
+#
+#       Module Name: printer_service/printers/operations/Form.mount
+#       Date: July 1988
+#
+#######################################################
+#Note to developer: this form will only work within OAM, will not
+#  validate or give correct choices starting with "fmli Menu.lp".
+
+form=Mount a Form or Font On a Printer
+
+help=open TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`set -l name_1=/tmp/lp.n1$VPID`
+
+close=`rm -f $name_1;
+	unset -l name_1 -l pr_wheel -l pr_lock`
+
+done=`
+if [ -n "$F3" ];
+then
+    	message -w "Mounting printwheel $F3 on printer $F1, please wait...";
+	$TFADMIN lpadmin -p $F1 -M -S $F3 >/dev/null 2>&1;
+fi;
+if [ -n "$F2" ];
+then
+    	message -w "Mounting form $F2 on printer $F1, please wait...";
+    	if [ "$F4" = "no" ];
+    	then
+		$TFADMIN lpadmin -p $F1 -M -f $F2 >/dev/null 2>&1;
+    	else
+	sleep 2;
+	run -n /usr/bin/sh -c "/usr/bin/echo 'Press ENTER after the prompt to print another alignment pattern.
+Type q and press ENTER when you are finished.' ; $TFADMIN lpadmin -p $F1 -M -f $F2 -a";
+        fi;
+fi;
+message "Enter new values and press SAVE to repeat or CANCEL to quit."`update $OBJ_DIR/Form.mount true
+
+name=Printer:
+lininfo=mount:F1
+nrow=1
+ncol=1
+frow=1
+fcol=10
+rows=1
+columns=14
+value=
+fieldmsg="Enter a printer known to the system, press SAVE when finished."
+rmenu={ `indicator -w; ls /etc/lp/printers` }
+#rmenu={ `cosend lpdata "list_printers"` }
+valid=`indicator -w;
+if [ -n "$F1" -a -d /etc/lp/printers/$F1 ];
+then
+    echo true;
+    set -l printer_f1="$F1";
+    if fmlgrep -i '^Printer type:.*$' /etc/lp/printers/$F1/configuration > $name_1;
+    then
+	readfile $name_1 | fmlcut -f2 -d: | fmlcut -f2 -d' ' | set -l pr_type;
+    else
+	set -l pr_type=unknown;
+    fi;
+else
+    echo false;
+fi`
+invalidmsg=`if [ -z $F1 ];
+then
+	echo "You must enter a value for this field.";
+else
+	echo "$F1 is not a valid printer on this system.";
+fi`
+
+name="Form to be mounted:"
+lininfo="mount:F2"
+nrow=2
+ncol=1
+frow=2
+fcol=21
+rows=1
+columns=14
+fieldmsg="Enter a form known to printer $F1, press SAVE when finished."
+rmenu=OPEN MENU $OBJ_DIR/Menu.cmountf
+valid=`test -d /etc/lp/forms/$F2`
+invalidmsg="$F2 is not a defined form on this system."
+
+
+name="Print wheel to be mounted:"
+lininfo="mount:F3"
+nrow=3
+ncol=1
+frow=3
+fcol=28
+rows=1
+columns=14
+value=`indicator -w; set -l pr_wheel=" " -l pr_lock=false;
+if [ -n "$F2" ];
+then
+    if /usr/bin/tput -T $pr_type daisy > /dev/null 2>/dev/null;
+    then
+        if fmlgrep -i '^character set choice:.*$' /etc/lp/forms/$F2/describe > $name_1;
+        then
+    	    if fmlgrep -i ',mandatory' $name_1 > /dev/null;
+    	    then
+    	        set -l pr_lock=true;
+    	        readfile $name_1 | fmlcut -f2 -d: | fmlcut -f2 -d' ' | fmlcut -f1 -d, | set -l pr_wheel;
+    	    else
+    	        readfile $name_1 | fmlcut -f2 -d: | fmlcut -f2 -d' ' | set -l pr_wheel;
+    	    fi;
+    	    if [ "$pr_wheel" = "any" ];
+    	    then
+    	        set -l pr_lock=false -l pr_wheel=" ";
+    	    fi;
+        fi;
+    fi;
+    echo $pr_wheel;
+elif [ -n "$F1" -a -z "$F2" ];
+then
+	if [ -n "$TFADMIN" ]; then $TFADMIN lpstat -S | fmlgrep "mounted on $F1" | fmlcut -f1 -d, | fmlcut -f3 -d' ' | set -l pr_wheel;
+	else lpstat -S | fmlgrep "mounted on $F1" | fmlcut -f1 -d, | fmlcut -f3 -d' ' | set -l pr_wheel; fi;
+    echo $pr_wheel;
+fi`
+valid=`indicator -w;
+regex -v "$F3" '^[a-z_A-Z0-9]{1,14}$' 'true' '.*' 'false' | set -l cmp_res;
+if [ "$pr_lock" = "true" ];
+then
+    if [ "$F3" = "$pr_wheel" ];
+    then
+	echo true;
+    else
+	echo false;
+	set -l emsg="The only valid value for this form is $pr_wheel.";
+    fi;
+else
+    if [ -z "$F3" -a -z "$F2" ];
+    then
+	echo false;
+	set -l emsg="You must supply a value here since you have not named a form to be mounted.";
+    elif [ -z "$F3" ];
+    then
+	echo true;
+    else
+	echo $cmp_res;
+	set -l emsg="$F3 is not a valid printwheel name.";
+    fi;
+fi`
+invalidmsg="$emsg"
+fieldmsg="Enter a printwheel known to printer $F1, press SAVE when finished."
+
+
+name="Print an alignment pattern:"
+lininfo="mount:F4"
+nrow=4
+ncol=1
+frow=4
+fcol=29
+rows=1
+columns=3
+rmenu={ yes no }
+value=no
+fieldmsg="Enter yes if you want to print alignment pattern(s), press SAVE when finished."
+inactive=`test -z "$F2"`
+valid=`indicator -w;
+if [ -z "$F4" ];
+then
+    echo false;
+    set -l emsg="You must enter a value for this field.";
+elif [ "$F4" = "no" ];
+then
+    echo true;
+elif [ "$F4" = "yes" ];
+then
+    if [ -z "$F2" ];
+    then
+	echo false;
+	set -l emsg="You can only print an alignment pattern if you specify a form to be mounted.";
+    elif [ -f /etc/lp/forms/$F2/align_ptrn ];
+    then
+	echo true;
+    else
+	echo false;
+	set -l emsg="There is no alignment pattern for form $F2.";
+    fi;
+else
+    echo false;
+    set -l emsg="The only valid answer here is either yes or no.";
+fi`
+invalidmsg="$emsg"

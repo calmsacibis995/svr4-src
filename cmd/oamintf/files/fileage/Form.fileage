@@ -1,0 +1,37 @@
+#ident	"@(#)filemgmt:fileage/Form.fileage	1.1.2.1"
+Form="Lists Files Older than a Particular Date"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/form.msg | message`
+
+done=`indicator -w;
+	$OAMBASE/bin/filesearch "$F1" "$F2";
+	regex -e -v $RET 
+	'^0$' 'OPEN TEXT $OBJ_DIR/Text.searchok "$F1" "$F2"'
+	'^.*$' 'OPEN TEXT $OBJ_DIR/Text.searchnok "$F1" "$F2"'`
+
+name="Directory to be searched: "
+lininfo=F1
+nrow=1
+ncol=1
+frow=2
+fcol=1
+rows=1
+columns=50
+scroll=true
+valid=`regex -v "$F1" '^[/].*' && [ -d "$F1" ]`
+invalidmsg=const 'Directory name must begin with "/" and must be a valid directory name.'
+
+name="Age of files to be reported, in days: "
+lininfo=F2
+nrow=3
+ncol=1
+frow=3
+fcol=40
+rows=1
+columns=3
+value=90
+#valid=`[ "$F2" -ge 1 -a "$F2" -le 999 ]`
+valid=`valint "$F2"`
+invalidmsg=const 'Answer must be an integer between 0 and 999'
+choicemsg=const 'Enter a number between 0 and 999'

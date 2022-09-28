@@ -1,0 +1,116 @@
+#ident	"@(#)oamintf:usermgmt/modify.Help	1.3.1.1"
+ABSTRACT:
+	The "modify" task allows you to modify either a user definition
+	or a group definition on your system.
+
+Form.modify:modify:User or Group
+	Enter either "user" or "group".  If you select "user", you will
+	see a form that asks you to enter the login you wish to modify.
+	If you select "group" you will see a form that asks you to enter
+	the name of the group you wish to modify.
+
+Form.modgrp1:modgrp:Group Name
+	Enter a valid group name or press CHOICES to select from a list
+	of all groups currently defined on this system.\n
+
+	After you press SAVE, a form will be displayed with defaults
+	taken from the group's current definition.  Modify only those
+	values you want to change.
+
+
+Form.modgrp2:grpname:Group Name
+	Enter the name of the new group.  It must be a character string
+	from 1 to 8 characters in length.  It may not include a colon (:).
+	The group name must be unique (that is, it may not be the same as
+	a group name already defined on your system).
+
+Form.modgrp2:grpid:Group ID
+	Enter the numeric ID to be assigned to the new group.  The numeric
+	ID is a number that uniquely identifies the new group to the system.
+	It must be a number between 100 and the MAXUID value defined for
+	your system (commonly 60000).
+
+Form.modgrp2:primem:Primary Member(s)
+	Enter the list (0 or more) of primary members of the new group,
+	separating each by a comma.  Primary members belong to this group
+	when they log in to the system.  The user definition for each login
+	listed will be updated to reflect the new group as the primary group.
+
+Form.modgrp2:supmem:Supplementary Member(s)
+	Enter a list (0 or more) of supplementary members of the new group,
+	separating each by a comma.  Any supplementary members may execute
+	the newgrp(1M) command after they log in and become a member of the
+	group. Enter either login id's or numeric user id's in this list.
+
+Form.modusr1:modusr:Login
+	Enter a valid login or press CHOICES to select from a list of all
+	currently defined logins.  After you press SAVE, a form will be
+	displayed with defaults taken from the user's current definition.
+	Modify the desired values.
+
+Form.modusr2:comments:Comments
+	Enter the name of the user, if you wish to modify it.  It must be a
+	character string that does not include the colon(:).  This
+	information will appear in the comment field of the user's login
+	definition entry.
+
+Form.modusr2:login:Login
+	Enter the new login for the user.  It must be a character string from
+	1 to 8 characters in length.  It may not include a colon (:).  The
+	login is the string the user types to log in to the system.  The login
+	must be unique (that is, it may not be the same as a login already in
+	use on your system).
+
+Form.modusr2:usrid:User ID
+	Enter the new numeric ID to be assigned to the user.  This must be a
+	number between 100 and the MAXUID value defined for your system
+	(commonly 60000).  The numeric user ID is a number that uniquely
+	identifies the user on the system.
+
+Form.modusr2:prigrp:Primary Group
+	Enter the new primary group for the user.  The value entered in the
+	primary group field may be either a valid group name or numerical
+	group id.  Press CHOICES for a list of the group names defined on your
+	system.  The primary group is the group assigned to the user upon
+	login.  It gets associated with all files the user creates unless the
+	user has executed the "newgrp" command.
+
+Form.modusr2:supgrp:Supplementary Group(s)
+	Modify the list of groups in which the user will have supplementary
+	membership.  The values entered in this field may be either valid
+	group names or numerical group IDs.  Press CHOICES for a list of the
+	group names defined on your system.  You may leave this field blank.
+	The user may execute the "newgrp" command after login and become a
+	member of any of these groups for the duration of that login session.
+	No more than "NGROUPS_MAX" groups may be specified in this field.
+	"NGROUPS_MAX" is a parameter on your system.
+
+Form.modusr2:homedir:Home Directory
+	Enter the full path name to the user's new home directory.  It
+	must be an absolute path to a directory that does not already exist.
+	The default home directory is "default_base_home_dir/login", where
+	"default_base_home_dir" is "/home" unless you have changed it with
+	the "defaults" task and "login" is the new user's login.  This field
+	is limited to a maximum of 256 characters within the login definition
+	file (/etc/passwd).
+
+Form.modusr2:shell:Shell
+	Enter the full path name to an existing shell program.  It must be an
+	existing executable file.  The shell is the program that gets executed
+	for the user upon login.  This field is limited to a maximum of 256
+	characters within the login definition file (/etc/passwd).
+
+Form.modusr2:inact:Login Inactivity
+	Enter the number of days of login inactivity after which the user
+	cannot login.
+
+Form.modusr2:expire:Login Expiration Date
+	Enter the date beyond which a user cannot log in.  This date
+	must be a future date and must be in the following format:
+	mm/dd/yy
+
+Form.modusr2:admin:System Administration Privileges
+	Enter Yes or No. Yes will enable this user to perform
+	system administration functions within this interface.
+	No will restrict the user from performing any
+	system administration functions in this interface.

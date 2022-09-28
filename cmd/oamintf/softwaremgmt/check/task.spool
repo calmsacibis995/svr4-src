@@ -1,0 +1,18 @@
+#ident	"@(#)oamintf:softwaremgmt/check/task.spool	1.2"
+
+[ -n "$TRACE" ] && set -x
+
+pkginst=
+paths=
+opts=
+
+[ -n "$2" ] &&
+	pkginst="`echo \"$2\" | sed 's/,/ /g'`"
+
+[ -n "$3" -a "$3" != all ] &&
+	paths="-p'`echo \"$3\" | sed 's/ /,/g'` '"
+
+[ "$4" = yes ] &&
+	opts="-v"
+
+eval pkgchk -d $1 $opts $paths $pkginst

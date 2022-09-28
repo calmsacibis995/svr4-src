@@ -1,0 +1,44 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FILTER/Text.display	1.1"
+title="Display a Filter"
+lifetime=shortterm
+altslks
+
+`message "Strike the CONT function key to continue."`
+edit=false
+rows=15
+columns=77
+
+text="`$VMSYS/admin/PS/FILTER/disp "$ARG1"`"
+
+
+name=CANCEL
+button=14
+action=close $VMSYS/OBJECTS/PS/FILTER/Text.display $VMSYS/OBJECTS/PS/FILTER/Form.cd
+
+name=CONT
+button=11
+action=close $VMSYS/OBJECTS/PS/FILTER/Text.display $VMSYS/OBJECTS/PS/FILTER/Form.cd
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=""
+button=16
+action=return cancel
+
+name=""
+button=10
+action=nop
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+`indicator -w`
+name=""
+button=9
+action=nop

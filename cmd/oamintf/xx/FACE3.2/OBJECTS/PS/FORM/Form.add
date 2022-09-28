@@ -1,0 +1,271 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FORM/Form.add	1.1"
+form="Add a Form"
+lifetime=longterm
+altslks=true
+
+#help=open text $VMSYS/OBJECTS/Text.h "$T" "$F"
+
+`/usr/vmsys/admin/PS/FORM/cspwls.sh`
+
+done=`/usr/vmsys/admin/PS/FORM/depend.sh  "$F11" "$F12" "$F13" "$F14" "$F15" | regex -e 
+'^1$'	'`readfile /usr/tmp/err.$VPID | message `' 
+'^0$'	'`/usr/vmsys/admin/.chkuser -c "/usr/vmsys/admin/PS/FORM/addform.sh :$F1: :$F2: :$F3: :$F4: :$F5: :$F6: :$F7: :$F8: :$F9: :$F10: :$F11: :$F12: :$F13: :$F14: :$F15: :$F16: "  | regex 
+	0	"open text /usr/vmsys/OBJECTS/PS/FORM/Text.cadd \"$F1\" "`' `
+
+close=`rm -rf /usr/tmp/pwlist.$VPID /usr/tmp/err.$VPID /usr/tmp/pass.$VPID`
+
+name=Form name:
+nrow=1
+ncol=2
+rows=1
+columns=8
+frow=1
+fcol=13
+value=$ARG1
+inactive=true
+
+name=Description of form: 
+nrow=2
+ncol=2
+rows=1
+columns=40
+frow=2
+fcol=23
+fieldmsg=`set -l T="Description of Form" -l F=PS/FORM/T.hadd2`const "Type a description of the form you are adding to the system."
+valid=`regex -v "$F2" '.*'  'true'`
+
+name=Characters per inch:
+nrow=3
+ncol=2
+rows=1
+columns=2
+frow=3
+fcol=23
+value=10
+valid=`/usr/vmsys/admin/PS/FORM/valcpi.sh "$F3" `
+rmenu={ 10 12 30 }
+menuonly=false
+fieldmsg=`set -l T="Characters Per Inch" -l F=PS/FORM/T.hadd3`const "Type number for characters per inch or strike CHOICES. (See manual for range.)"
+invalidmsg=`readfile /usr/tmp/err.$VPID`
+choicemsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+name=Lines per inch:
+nrow=4
+ncol=2
+rows=1
+columns=2
+frow=4
+fcol=18
+value=6
+valid=`/usr/vmsys/admin/PS/FORM/vallpi.sh "$F4" `
+fieldmsg=`set -l T="Lines Per Inch" -l F=PS/FORM/T.hadd4`const "Type number of lines per inch. (See printer manual for ranges.)"
+invalidmsg=`readfile /usr/tmp/err.$VPID`
+
+
+name=Page length in lines:
+nrow=5
+ncol=2
+rows=1
+columns=3
+frow=5
+fcol=24
+value=66
+valid=`echo $F5 | regex '^[1-9]$' "true" '[1-9][0-9]' "true" '[1-9][0-9][0-9]' "true" `
+fieldmsg=`set -l T="Page Length in Lines" -l F=PS/FORM/T.hadd5`const "Type number of lines in each page. (See printer manual for ranges.)"
+invalidmsg="Input must be an integer of 3 digits or less."
+
+
+name=Page width in characters:
+nrow=6
+ncol=2
+rows=1
+columns=3
+frow=6
+fcol=28
+value=80
+valid=`echo $F6 | regex '^[1-9]$' "true" '[1-9][0-9]' "true" '[1-9][0-9][0-9]' "true" `
+fieldmsg=`set -l T="Page Width in Characters" -l F=PS/FORM/T.hadd6`const "Type number of characters in each line. (See printer manual for ranges.)"
+invalidmsg="Input must be an integer of 3 digits or less."
+
+
+name=Number of pages in the form:
+nrow=7
+ncol=2
+rows=1
+columns=4
+frow=7
+fcol=31
+value=1
+valid=`echo "$F7" | regex '^[1-9]$' "true" '[1-9][0-9]' "true" '[1-9][0-9][0-9]' "true" '[1-9][0-9][0-9]0-9]' "true"`
+fieldmsg=`set -l T="Number of Pages in the Form" -l F=PS/FORM/T.hadd7`const "Type the number of pages in the form. (See printer manual for ranges.)"
+invalidmsg="Input must be an integer of four digits or less."
+
+name=Character set or printwheel to use with form:
+nrow=8
+ncol=2
+rows=1
+columns=14
+frow=8
+fcol=48
+value=any
+rmenu={ `readfile /usr/tmp/pwlist.$VPID` }
+menuonly=true
+fieldmsg=`set -l T="Character set or Printwheel to Use With Form" -l F=PS/FORM/T.hadd8`const "Strike the CHOICES function key. Strike SAVE when you complete the form."
+invalidmsg="$F8 is not a valid printwheel or character set on your system."
+choicemsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+name=Character set or printwheel mandatory:
+nrow=9
+ncol=2
+rows=1
+columns=3
+frow=9
+fcol=42
+value=No
+rmenu={ Yes No }
+menuonly=true
+fieldmsg=`set -l T="Character set or Printwheel Mandatory" -l F=PS/FORM/T.hadd9`const "Strike the CHOICES function key. Strike SAVE when you complete the form."
+invalidmsg=$F9 is not a valid input. Strike CHOICES for valid choices.
+
+
+name=Ribbon color:
+nrow=10
+ncol=2
+rows=1
+columns=10
+frow=10
+fcol=16
+rmenu={ black blue green red yellow any }
+menuonly=false
+value=any
+valid=`echo $F10 | regex  '^[0-9A-Za-z_]+$' `
+fieldmsg=`set -l T="Ribbon Color" -l F=PS/FORM/T.hadd10`const "Strike the CHOICES function key. Strike SAVE when you complete the form."
+invalidmsg="Ribbon color is limited to ten alphanumeric characters."
+choicemsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+
+name=Alignment pattern file:
+nrow=11
+ncol=2
+rows=1
+columns=40
+frow=11
+fcol=26
+valid=`/usr/vmsys/admin/PS/FORM/chkfile.sh "$F11"`
+fieldmsg=`set -l T="Alignment Pattern File" -l F=PS/FORM/T.hadd11`const "Type the pathname of the file that contains an alignment pattern."
+invalidmsg="$F11 does not exist on your system."
+
+name=Content type of alignment pattern file:
+nrow=12
+ncol=2
+rows=1
+columns=14
+frow=12
+fcol=42
+value=`regex -e -v "$F11" '^$' ''`
+valid=`/usr/vmsys/admin/PS/FORM/valcon.sh "$F12" "$F11"`
+rmenu={ any simple 455 473 475 HP dumb }
+menuonly=false
+fieldmsg=`set -l T="Content Type of Alignment Pattern File" -l F=PS/FORM/T.hadd12`const "Strike the CHOICES function key. Strike SAVE when you complete the form."
+invalidmsg=`readfile /usr/tmp/err.$VPID`
+choicemsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+
+name=Mount form alert action:
+nrow=13
+ncol=2
+rows=1
+columns=40
+frow=13
+fcol=27
+value=mail 
+rmenu=OPEN menu /usr/vmsys/OBJECTS/PS/FORM/Menu.alert
+menuonly=false
+valid=`/usr/vmsys/admin/PS/FORM/vcmount.sh "$F13"`
+fieldmsg=`set -l T="Mount Form Alert Action" -l F=PS/FORM/T.hadd13`const "Strike the CHOICES function key or type a command to execute for alert."
+invalidmsg=`readfile /usr/tmp/err.$VPID`
+choicemsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+name=Frequency of alert in minutes:
+nrow=14
+ncol=2
+rows=1
+columns=4
+frow=14
+fcol=33
+value=`regex -v "$F13" 'none' ''
+			'.*' 'once'`
+valid=`/usr/vmsys/admin/PS/FORM/valfreq.sh "$F14" "$F13" `
+rmenu={ once 1 5 30 60 }
+menuonly=false
+fieldmsg=`set -l T="Frequency of Alert in Minutes" -l F=PS/FORM/T.hadd14`const "Strike the CHOICES function key. Strike SAVE when you complete the form."
+invalidmsg=`readfile /usr/tmp/err.$VPID`
+choicemsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+
+name=Number of print requests to wait before alert:
+nrow=15
+ncol=2
+rows=1
+columns=2
+frow=15
+fcol=49
+value=`regex -v "$F13" 'none' ''
+			'.*' '1'`
+valid=`/usr/vmsys/admin/PS/FORM/valpr.sh "$F15" "$F13" `
+rmenu={ 1 5 10 20 }
+menuonly=false
+fieldmsg=`set -l T="Number of Print Requests to Wait Before Alert" -l F=PS/FORM/T.hadd15`const "Strike the CHOICES function key. Strike SAVE when you complete the form."
+invalidmsg=`readfile /usr/tmp/err.$VPID`
+choicemsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+
+name=Permitted users:
+nrow=16
+ncol=2
+rows=2
+columns=70
+frow=17
+fcol=5
+wrap=true
+value=none
+rmenu=OPEN menu /usr/vmsys/OBJECTS/PS/FORM/Menu.muser
+menuonly=false
+valid=`/usr/vmsys/admin/PS/FORM/pu.sh "$F16" `
+fieldmsg=`set -l T="Permitted Users" -l F=PS/FORM/T.hadd16`const "Strike the CHOICES function key. Strike SAVE when you complete the form."
+invalidmsg=`readfile /usr/tmp/err.$VPID`
+choicemsg=const "MARK items to select and strike the ENTER key."
+
+
+name=CANCEL
+button=14
+action=close /usr/vmsys/OBJECTS/PS/FORM/Form.add /usr/vmsys/OBJECTS/PS/FORM/Form.asel
+
+name=CHOICES
+button=10
+action=CHOICES
+
+name=SAVE
+button=11
+action=done
+
+name=PREV-FRM
+button=12
+action=prev-frm
+
+name=NEXT-FRM
+button=13
+action=next-frm
+
+name=HELP
+button=9
+action=help
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=nop
+

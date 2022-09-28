@@ -1,0 +1,17 @@
+#ident	"@(#)oamintf:files/display/Help	1.1.1.1"
+ABSTRACT:
+	This task displays a list of the file system types 
+	installed on your system. This includes both add-on
+	file system types that have been installed by the 
+	administrator and the file system types that are
+	delivered in the System V core.
+TITLE:
+dispfstyptask:Installed File System Types
+	A list of the file system types installed on your system
+	has been displayed. Note that some file system types do
+	not support some of the familiar s5 file system features.
+	For example, BFS file systems to not have file system
+	labels, therefore, labelit(1M) is not available through
+	OA&M for this file system type. Please consult your user
+	documentation for more information concerning specific
+	file system types.

@@ -1,0 +1,25 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksched/modify/Text.modok	1.2"
+################################################################################
+#	Module Name: Text.modok
+################################################################################
+title="Modifying Backup Table Entry"
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+lifetime=shortterm
+
+rows=4
+columns=60
+
+text="
+Successfully modified entry."
+
+altslks
+
+name=CONT
+button=11
+action=update $ARG1 true
+
+name=CANCEL
+button=14
+action=CLEANUP

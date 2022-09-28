@@ -1,0 +1,29 @@
+#ident	"@(#)nadmin.dfs:remote/Help	1.1"
+ABSTRACT:
+	
+remote:list:List Automatically-Currently Mounted Remote Resources
+	The list menu allows you to list the resources that
+	your local system currently has mounted from remote systems
+	of that are automatically mounted from remote systems when
+	distributed file system operation begins.
+
+remote:mount:Mount Remote Resources Automatically-Immediately
+	The mount menu allows you to make available to local
+	users selected resources on remote systems.  You may
+	arrange for remote resources to be automatically mounted
+	when distributed file system operation begins.  You may
+	also cause remote resources to be mounted immediately.
+	
+remote:modify:Modify Automatic-Current Mounting of Remote Resources
+	The modify menu allows you to change the options with
+	which remote resources are currently mounted in your local
+	file hierarchy.  This task also allows you to change the
+	options with which remote resources are automatically
+	mounted when distributed file system operation begins.
+	
+remote:unmount:Stop Automatic-Current Mounting of Remote Resources 
+	The unmount menu allows you to prevent the automatic
+	mounting of remote resources in your system's file
+	hierarchy when distributed file system operation begins.
+	You may also terminate current mounts of remote resources
+	in the file hierarchy of your local system.

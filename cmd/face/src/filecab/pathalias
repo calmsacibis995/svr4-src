@@ -1,0 +1,20 @@
+#ident	"@(#)face:src/filecab/pathalias	1.4"
+
+OBJECTS=$VMSYS/OBJECTS
+HELP=$VMSYS/HELP
+
+office=$VMSYS/OBJECTS/Menu.office
+programs=$VMSYS/OBJECTS/Menu.programs
+mail_services=$VMSYS/OBJECTS/Menu.mail
+programs_administration=$VMSYS/OBJECTS/programs/Menu.install
+
+filecabinet=$HOME
+wastebasket=$HOME/WASTEBASKET
+preferences=$VMSYS/OBJECTS/pref/Menu.pref
+printer_operations=$VMSYS/OBJECTS/lp/Menu.lpops
+other_users=$VMSYS/OBJECTS/Menu.users
+
+color_attributes=$VMSYS/OBJECTS/pref/Form.color
+display_frames=$VMSYS/OBJECTS/pref/Form.display
+office_functions=$VMSYS/OBJECTS/pref/Form.func
+permissions=$VMSYS/OBJECTS/pref/Form.perm

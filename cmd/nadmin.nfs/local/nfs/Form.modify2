@@ -1,0 +1,201 @@
+#ident	"@(#)nadmin.nfs:local/nfs/Form.modify2	1.2"
+form="Modifies Automatic Sharing of Local Resources via NFS"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=unset -l ID -l MODE -l RWCLIENT -l ROCLIENT -l ROOTCLIENT
+altslks=true
+
+`echo "Fill in the form and press NEXTPAGE to continue." |message -p`
+
+
+done=`if [ "$F12" = "yes" ];
+	then
+		set -e ID="$F6" -e MODE="$F7" -e RWCLIENT="$F9" -e ROCLIENT="$F10" -e ROOTCLIENT="$F11";
+		"$INTFBASE/netservices/remote_files/local/nfs/bin/auto_mod";
+		message -f "Automatic sharing of $DIR has been modified.";
+	else
+		message -f "Automatic sharing of $DIR has NOT been modified.";
+	fi;
+	if [ "$IMM" = "yes" ];
+	then
+		"$INTFBASE/netservices/remote_files/local/nfs/bin/imm_attr" | set -l PID;
+		if [ -s "/var/tmp/cmsg_$PID" ];
+		then
+			message -f "This resource is not shared currently.";
+			set -l KEYCMD="CLOSE";
+		else
+			/usr/bin/cut -s -d" " -f1 "/var/tmp/c_attr$PID" | set -el DIR;
+			/usr/bin/cut -s -d" " -f2 "/var/tmp/c_attr$PID" | set -el DIR;
+			/usr/bin/cut -s -d" " -f3 "/var/tmp/c_attr$PID" | set -el ACC;
+			/usr/bin/cut -s -d"\"" -f2 "/var/tmp/c_attr$PID" | set -el DESC;
+			/usr/bin/cut -s -d"\"" -f3 "/var/tmp/c_attr$PID" | /usr/bin/tr '\072' '\012' | set -el CLIENT;
+			set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/local/nfs/Form.modify3";
+		fi;
+	else
+		set -l KEYCMD="CLOSE";
+	fi;
+	`$!KEYCMD
+# F1
+name="This is how the specified resource is shared automatically"
+nrow=1
+ncol=1
+frow=1
+fcol=47
+rows=1
+
+# F2
+name="when Network File System server operation begins:"
+nrow=2
+ncol=1
+frow=2
+fcol=46
+rows=1
+
+# F3
+name="Directory:"
+nrow=5
+ncol=1
+frow=5
+fcol=12
+rows=1
+columns=60
+inactive=true
+value="$DIR"
+
+#F4
+name="Modify the following information until you are"
+nrow=7
+ncol=1
+frow=7
+fcol=46
+rows=1
+
+#F5
+name="satisfied with the way the resource will be shared."
+nrow=8
+ncol=1
+frow=8
+fcol=51
+rows=1
+
+#F6
+name="ID for unknown users:"
+lininfo=modify:id
+nrow=10
+ncol=1
+frow=10
+fcol=23
+rows=1
+columns=6
+value="$ID"
+
+#F7
+name="Mode of authentication:"
+lininfo=modify:auth
+nrow=11
+ncol=1
+frow=11
+fcol=25
+rows=1
+columns=7
+rmenu={ default secure }
+menuonly=true
+value="$MODE"
+invalidmsg="Press CHOICES to select valid response."
+
+# F8
+name="Modifies the List of Remote Systems That Can Access the Resource:"
+page=2
+nrow=0 
+ncol=1
+frow=0
+fcol=60
+rows=1
+
+# F9
+name="Read-Write Clients:"
+page=2
+nrow=2
+ncol=1
+frow=2
+fcol=26
+value="$RWCLIENT"
+scroll=true
+rows=5
+columns=14
+lininfo=modify:rwclients
+
+# F10
+name="Read-Only Clients:"
+page=2
+nrow=8
+ncol=1
+frow=8
+fcol=26
+rows=5
+columns=14
+scroll=true
+lininfo=modify:roclients
+value="$ROCLIENT"
+
+# F11
+name="Root-Access Clients:"
+page=2
+nrow=14
+ncol=1
+frow=14
+fcol=26
+rows=5
+columns=14
+scroll=true
+lininfo=modify:rootclients
+value="$ROOTCLIENT"
+
+# F12
+name="OK to modify how the resource is currently being shared?"
+page=3
+nrow=6
+ncol=1
+frow=6
+fcol=58
+rows=1
+columns=3
+rmenu={ yes no }
+#menuonly=true
+valid=`readfile $INTFBASE/form.msg| message -p;
+[ "$F12" = "yes" -o "$F12" = "no" ]`
+invalidmsg="Press CHOICES to select valid response."
+value="yes"
+lininfo=modify2:ok
+
+name="HELP"
+button=9
+action=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+name="CHOICES"
+button=10
+action=CHOICES
+
+name="SAVE"
+button=11
+action=DONE
+
+name="NEXTPAGE"
+button=12
+name="CONTINUE"
+action=NEXTPAGE
+
+name="PREVPAGE"
+button=13
+action=PREVPAGE
+
+name="CANCEL"
+button=14
+action=CLOSE
+
+name="CMD-MENU"
+button=15
+action=CMD-MENU
+
+name=""
+button=16
+action=NOP

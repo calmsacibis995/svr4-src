@@ -1,0 +1,24 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FILTER/Form.cd	1.1"
+form="Filter Name"
+lifetime=longterm
+#help=open text $VMSYS/OBJECTS/Text.h "Filter Name" PS/FILTER/T.hcd1
+done=`indicator -w;echo "$ARG1" | regex c "open form /usr/vmsys/OBJECTS/PS/FILTER/Form.change "$F1""
+			d "open text /usr/vmsys/OBJECTS/PS/FILTER/Text.display "$F1""`
+
+close=`rm -f $ARG2`
+
+name=Filter name:
+nrow=1
+ncol=2
+rows=1
+columns=14
+frow=1
+fcol=14
+rmenu={ `readfile $ARG2` }
+menuonly=true
+valid=`echo "$F1" | regex '^.'`
+fieldmsg=Type the name of the filter. Strike SAVE when you complete the form.
+invalidmsg=`echo "$F1" | regex '^$' "\"Filter name\" is a mandatory field. Type a filter name."
+			       '.*' ""$F1" is not a filter on the system. Strike CHOICES for valid choices."`
+choicemsg=Move to an item with the arrow keys and strike ENTER to select.
+`indicator -w`

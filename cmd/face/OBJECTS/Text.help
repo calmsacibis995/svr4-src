@@ -1,0 +1,32 @@
+#ident	"@(#)face:OBJECTS/Text.help	1.6"
+
+title=Help Facility: $ARG2
+
+init="$RETVAL"
+
+framemsg="Press the CANCEL function key to cancel."
+
+`test -r $VMSYS/HELP/$ARG1 && set -l RETVAL=true || set -l RETVAL=false; 
+ regex -e -v "$RETVAL" 
+	'^false$' '`message "No HELP text is available for this item."`'`
+
+rows=12
+begrow=current
+begcol=current
+lifetime=shortterm
+text="`pathconv -f -v "HELP/$ARG1" | readfile`"
+columns=`longline | set -l LL;
+if [ "${LL}" -gt "${DISPLAYW}" ];
+then
+	echo ${DISPLAYW};
+else
+	echo ${LL};
+fi`
+
+name=""
+button=1
+action=nop
+
+name="CONTENTS"
+button=8
+action=OPEN MENU OBJECTS/Menu.h0.toc

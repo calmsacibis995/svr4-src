@@ -1,0 +1,54 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkhist/select/Help	1.2.3.1"
+
+ABSTRACT: Selective Display of Backup History Information
+	The "selective" task allows you to display selected backup history
+	information from the log.  You may select log entries based on
+	originating device name, backup operation tag and backup date.  You
+	may also specify the long or short form for the display.  The short
+	form includes the backup operation tag, backup date, method used,
+	destination device type, destination volume labels, number of
+	volumes and the location of the table of contents, if any.  The
+	long form displays all the information in the short form, plus the
+	"ls -l" listing of files from the table of contents, if it exists
+	and is online for the given backup operation.
+	
+TITLE: Selective Display of Backup History Information
+
+ERROR:
+	The file you have entered already exists.  Please specify whether the
+	summary report is to be appended to the existing contents of the file
+	or whether the report is to overwrite the current contents.  If you
+	would prefer to choose another file name instead, press [CANCEL] to
+	return to the previous form without writing anything to the file.
+
+select:F1:
+	"Output to:" Enter terminal if you want the output to be sent to
+	your terminal. Enter a file name if you want the output to be
+	saved in a file.
+
+select:F2:
+	"Form:"  Enter "long" for a display that includes the "ls -l"
+	listing for files in the table of contents (if it is online) or
+	"short" for a display that does not include detailed
+	table-of-contents information.
+
+select:F3:
+	"Object Name(s):"  Enter a list of originating object names.  These
+	are the names of the file systems and data partitions whose backup
+	history information you want to display.  You may enter the keyword
+	"all" to see history for any originating object.
+
+select:F4:
+	"Tag(s):"  Enter a list of backup operation tags or the keyword
+	"all".  The display will be limited to backup operations with the
+	tags you specify.
+
+select:F5:
+	"Date:"  Enter the keyword "all" or a date in the form
+	"mm/dd/yy hh:mm".  Only backup history entries with those backup
+	dates will be displayed.
+
+oldfile:F1:
+	"File already exists.  How should output be written to the file?"
+	"Output method: " Enter 'append' to add output to end of file or
+	'overwrite' to replace file contents."

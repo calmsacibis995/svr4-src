@@ -1,0 +1,53 @@
+#ident	"@(#)bkrs:rsintf.d/restores/rsstat/modify/Form.modify	1.4"
+form="Modify the Status of Pending Requests"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+done=`message -w "Trying to $F1 restore job.";
+	set -l ERR=/tmp/$VPID.bea;
+	rsschg $F1 $F2 2>$ERR;
+	if [ $RET -eq 0 ] ;
+	then
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.modok $FNUM";
+	else
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.modnok";
+	fi`$!CMD
+
+begrow=any
+begcol=any
+
+# Operation field - F1
+name=Operation:
+lininfo=F1
+nrow=2
+ncol=2
+
+frow=2
+fcol=14
+rows=1
+columns=8
+
+choicemsg="Enter the new status for the restore request."
+invalidmsg="Enter the new status (cancel or complete) for the restore request."
+rmenu={ cancel complete }
+menuonly
+
+# Job_id field - F2
+name=Job_id:
+lininfo=F2
+nrow=4
+ncol=2
+
+frow=4
+fcol=10
+rows=1
+columns=11
+
+choicemsg="Enter the restore jobid whose status you wish to modify."
+
+valid=`rsid "$F2"`
+
+invalidmsg="Enter a valid restore jobid."
+

@@ -1,0 +1,25 @@
+#ident	"@(#)portmgmt:port_monitors/Menu.pm_lstag	1.5.1.1"
+
+`pmgetpid | set -l PID`
+menu="Pmtag    Pmtype  (List Port Monitors)"
+close=`rm /var/tmp/cmd$PID /var/tmp/list$PID;
+       unset -l KEYCMD -l PID`
+multiselect=true
+`message "MARK all port monitors you want to list and then press [ENTER]."`
+done=`getitems | tr -d '\0' > /var/tmp/cmd$PID;
+	if [ -s /var/tmp/cmd$PID ];
+	then
+		message "Preparing the listings ...";
+		sacadm -l|sed -n '1p' >/var/tmp/list$PID;
+  		echo ----------------------------------------------------->>/var/tmp/list$PID;
+		sh /var/tmp/cmd$PID | sed '/PMTAG/d' >> /var/tmp/list$PID;
+		set -l KEYCMD="OPEN TEXT $OBJ_DIR/Text.pm_list /var/tmp/list$PID";
+		message " ";
+	else
+		message "No item is [MARK]ed.";
+		set -l KEYCMD="RESET";
+	fi`$KEYCMD
+`sacadm -L | sort | regex '^([^:][^:]*)$0:([^:][^:]*)$1:(.*)$2$'
+ 'name="  $m0"
+  description="     $m1"
+  lininfo="sacadm -l -p $m0 ; echo -----------------------------------------------------"'`

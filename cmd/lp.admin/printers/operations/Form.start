@@ -1,0 +1,13 @@
+#ident	"@(#)lp.admin:printers/operations/Form.start	1.2"
+
+#######################################################
+#
+#       Module Name: printer_service/service/Form.start
+#       Date: July 1988
+#
+#######################################################
+
+form=Start the Print Service
+
+help=OPEN TEXT $INTFBASE/Text.oamhelp $PRINTSERV/HELP/service/start.help "Start the Print Service"
+

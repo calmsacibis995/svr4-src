@@ -1,0 +1,52 @@
+#ident	"@(#)nadmin.rfs:local/rfs/bin/auto_attr	1.2"
+echo $RESDIR | /bin/grep "/" 1>/dev/null
+if [ $? -eq 0 ]
+then
+	/bin/sed "s/^#.*//g" /etc/dfs/dfstab | /usr/bin/tr -s '\011' '\040' | /usr/bin/egrep -e"-F rfs.*[ ]$RESDIR[ ]" >/usr/tmp/temp_$$
+else
+	/bin/sed "s/^#.*//g" /etc/dfs/dfstab | /usr/bin/tr -s '\011' '\040' | /usr/bin/egrep -e"-F rfs.*[ ]$RESDIR$" >/usr/tmp/temp_$$
+fi
+
+if [ ! -s "/usr/tmp/temp_$$" ]
+then
+	echo "This resource is not shared automatically" >/usr/tmp/amsg_$$
+else
+
+# get description before separating line into fields...
+
+	/bin/sed -e "s/-d[ ]*/-d/gp" -e "s/-o[ ]*r/-or/gp" -e "s/.*-F rfs//gp" </usr/tmp/temp_$$ >/usr/tmp/cut_$$
+
+	/usr/bin/egrep -e "-d\".*\"" /usr/tmp/cut_$$ 1>/dev/null
+	if [ $? = 0 ]
+	then
+#		echo "\"" >/usr/tmp/d$$
+		/usr/bin/cut -d"\"" -f2 </usr/tmp/cut_$$ | /usr/bin/tr '\040' '\011' >>/usr/tmp/d$$
+#		echo "\"" >>/usr/tmp/d$$
+		DESCR=`paste -s /usr/tmp/d$$` 
+		/bin/sed "s/-d\".*\"//" </usr/tmp/cut_$$ >/usr/tmp/cut$$
+	else
+		/usr/bin/fgrep -e "-d" /usr/tmp/cut_$$ 1>/dev/null
+		if [ $? = 0 ]
+		then
+			DESCR=`/bin/sed -e"s/.*[ ]-d//" -e "s/[ ].*//" </usr/tmp/cut_$$`
+			/bin/sed "s/-d[^ ]*[ ]//" </usr/tmp/cut_$$ >/usr/tmp/cut$$
+		else
+			DESCR="-"
+			mv /usr/tmp/cut_$$ /usr/tmp/cut$$
+		fi
+	fi
+
+	/usr/bin/tr -s '\040' '\012' </usr/tmp/cut$$ > /usr/tmp/attr_$$
+	RES=`/usr/bin/egrep  -v "[-.:/]" < /usr/tmp/attr_$$`
+	DIR=`/usr/bin/egrep "^[/]" </usr/tmp/attr_$$`
+	TMP=`/usr/bin/egrep  -e "-or[ow]" < /usr/tmp/attr_$$`
+	CLIENT=`echo $TMP | /bin/sed "s/-or[ow][=]*//gp"`
+	ACC=`echo $TMP | /usr/bin/cut -d"=" -f1 | /bin/sed -e "s/-oro/read-only/gp" -e "s/-orw/read-write/gp"`
+
+	if [ ! "$CLIENT" ]
+	then
+		CLIENT="unrestricted"
+	fi 
+echo "$RES" "$DIR" "$ACC" "$DESCR" "$CLIENT" > /usr/tmp/a_attr$$ 
+fi
+echo $$

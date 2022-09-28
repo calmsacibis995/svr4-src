@@ -1,0 +1,593 @@
+#ident	"@(#)lp.admin:printers/printers/Help	1.2.4.2"
+ABSTRACT:
+	[GENERAL]
+	The "printers" menu gives you several tasks: for adding
+	new printers to the print service; for modifying the printer
+	configurations; for removing printers; and for listing the 
+	printer configurations.
+	
+	
+menu:L1:add
+	[GENERAL]
+	You use "add" task to add a new printer to the print service.
+	Minimally you'll need to know:
+	
+	* which port the printer is connected to OR how the printer is to
+	be reached using the Basic Networking Utilities.
+	
+	Better service will be provided to you and the users if you also specify:
+	
+	* the type of printer (as listed in the Terminfo database--see the System
+	Administrator's Guide for help on this);
+	
+	* the default page size and print spacing that should be in effect;
+	
+	* how you are to be alerted when a problem occurs with the printer;
+	
+	* what print wheels, font cartridges, or character sets are available
+	on the printer;
+	
+	* what forms can be used on the printer;
+
+menu:L2:list
+	[GENERAL]
+	You use the "list" task to examine the complete
+	configuration of one or more printers. You may want to do
+	this, for instance, if you suspect a configuration mistake
+	is causing a problem. If you just want a quick status check
+	to see what printers are available, use the "status" task, instead.
+	
+	If you are trying to add a new printer and want to use an
+	existing printer as a basis for defining a similar
+	configuration, you can use the "list" task to examine it,
+	or better yet, just start adding the printer--you will be
+	able to specify the name of the similar printer and the Line 
+	Printer Service will use it as a configuration template.
+
+menu:L3:modify
+	[GENERAL]
+	You use the "modify" task to modify the configuration of
+	a printer. The same information you gave when you added the
+	printer will provide the defaults for each item you are
+	asked to respecify, so you can quickly step through the
+	configuration to find the item you want to modify.
+	
+menu:L4:remove
+	[GENERAL]
+	You use the "remove" task to remove a printer from the
+	print service. No more print requests will be accepted for
+	it, no more files will be printed on it, and the
+	configuration information will be destroyed. However, if
+	there are print requests currently queued for the printer,
+	you cannot remove it.
+
+add:F1:Printer name:
+	[Name of the new printer ...]
+	You are expected to enter the name of the printer. Names
+	must be made up of letters, digits, and underscores.
+	
+add:F2:System name:
+	[Name of the system ...]
+	You are expected to enter the name of the system where
+	this printer is physically connected.
+
+add:F3:Printer type:
+	[Type of printer ...]
+	You are expected to identify the type of printer this is.
+	You must give a name that's known in the Terminfo database;
+	you'll be told if it isn't.
+	
+	The printer type is needed if the Line Printer Service is to:
+	screen print requests that ask for certain page sizes, print
+	spacing, and character sets; verify the default page sizes,
+	print spacing, and list of available character sets you give
+	later; and properly initialize the printer before printing a
+	user's files. You do not have to give a printer type,
+	though.
+	
+add:F4:Similar printer to use for defaults:
+	[If this printer is similar to one already added, enter the name ]
+	You are expected to enter the name of a printer that already
+	has been added. The printer's configuration will be used as
+	a guide for answering the rest of the questions.
+
+add:F5:Do you want to use standard configurations?
+	[Do you want to use standard configurations? ...]
+	Answer "no" if you want to change these configurations:
+
+	Class
+	Description of the printer
+	Printer type
+	File types printable without filtering
+	Can a user skip the banner page?
+	Default character pitch
+	Default line pitch
+	Default page width
+	Default page length
+	Command to run for alerts
+	Frequency of alert (in minutes)
+	Printer recovery method
+	Is the printer also a login terminal?
+	Print wheel(s) available for this printer:
+	Character Set(s) available for this printer:
+	Users who are allowed access to this printer
+	Users who are denied access to this printer
+	Forms allowed on this printer
+	Forms denied on this printer
+
+add:F8:
+	[If the printer is directly connected, enter the port to use.]
+	If this printer is directly connected, you must identify
+	which port is used. The names are typically like
+	"/dev/tty01," "/dev/lp," etc., but will depend on the
+	configuration of your system.
+	
+	If this printer is connected through a network, you must
+	specify the dialing instructions to use to connect to the
+	printer. The Basic Networking Utilities will be used for
+	all network connections. Enter the same argument (a phone
+	number or system name) you would give with the "cu" shell
+	command to reach the printer. (Don't give any of the "cu"
+	options.) You will have to set up the Basic Networking
+	configuration for this to work.
+	
+
+add:F9:
+	[Do you want to use standard port settings? ...]
+	Answer "no" if you want to change these port settings:
+	
+	Baud rate
+	Parity
+	Stop bits
+	Character size
+	Hangup on loss of carrier
+	XON/XOFF output control
+	Allow any character to restart output
+	Postprocess output
+	Map NL to CR-NL on output
+	Map lowercase to uppercase on output
+	Carriage Return Delay
+	Newline Delay
+	Backspace Delay
+	Formfeed Delay
+	Vertical Tab Delay
+	Horizontal Tab Delay
+	Other options
+
+conf.lcl:F1:'Class:'
+	[Class to add it to ...]
+	You are expected to enter the name of a class of printers to which this
+	printer should belong. Classes are used to group similar printers under
+	a single name, so that users can pick a class as the destination for
+	their print request. This helps when you want to control to some extent
+	the printing load on the printers in the class: The printers are
+	selected from the class in the order they have been added. Thus the
+	first printers in the class will generally be the busiest, and the last
+	printers in the class will be the least used.
+	
+	You don't need to group printers by manufacturer or by similar type
+	as the Line Printer Service automatically does that. When user's specify
+	the type of files they want to print but don't select a particular
+	printer, any printer that will handle the type will be used.
+	
+conf.lcl:F2:'Description of the printer:'
+	[Enter one line that describes the printer for your users ...]
+	You are expected to enter a single line of text that will be
+	displayed to people whenever they ask for a description of
+	the printer. It's a good idea to keep it short so that it
+	will fit across the screen.
+	
+conf.lcl:F3:'Printer type:'
+	[Type of printer ...]
+	You are expected to identify the type of printer this is.
+	You must give a name that's known in the Terminfo database;
+	you'll be told if it isn't.
+	
+	The printer type is needed if the Line Printer Service is to:
+	screen print requests that ask for certain page sizes, print
+	spacing, and character sets; verify the default page sizes,
+	print spacing, and list of available character sets you give
+	later; and properly initialize the printer before printing a
+	user's files. You do not have to give a printer type,
+	though.
+	
+conf.lcl:F4:'File types printable without filtering:'
+	[Types of files printable without filtering ...]
+	You are expected to identify the types of files the printer
+	can handle directly, without filtering. If the name of the
+	printer type is enough here, then you don't have to
+	enter anything. However, some printers can accept several
+	types because they convert them automatically into a common
+	type or in some other way understand the different control
+	sequences in each type. You should list all the types the
+	printer can handle.
+	
+	An important type on UNIX systems is identified by the word
+	"simple"; this is a file type often found on UNIX systems
+	because the files contain only linefeeds and perhaps tabs
+	and backspaces. If the printer can accept "simple" files,
+	give that name here.
+	
+	Separate several names with commas.
+	
+conf.lcl:F5:'Can a user skip the banner page?'
+	[Can a user skip the banner page? ...]
+	Enter "yes" if a user can skip the printing of a
+	banner page before his or her request, or "no" if
+	not. It is generally a good idea to require the printing of
+	banner pages, because it will help the people who have to
+	separate output into individual print-outs for each user,
+	unless you have some other means of doing this. There are
+	cases, such as the printing of checks, where being able to
+	turn off the banner page is important.
+
+conf.lcl:F6:'Default character pitch:'
+	[Characters Per Inch:]
+	You are expected to enter a number, possibly followed by a
+	"i" or "c", that specifies the column spacing (character
+	pitch) to be used to print your files. A trailing "i" would
+	scale the number to columns per inch, a trailing "c" would
+	scale it to columns per centimeter; leaving out either
+	letter also scales it to columns per inch.
+	
+conf.lcl:F7:'Default line pitch:'
+	[Lines Per Inch:]
+	You are expected to enter a number, possibly followed by a
+	"i" or "c", that specifies the line spacing (line pitch) to
+	be used to print your files. A trailing "i" would scale the
+	number to lines per inch, a trailing "c" would scale it to
+	lines per centimeter; leaving out either letter also scales
+	it to lines per inch.
+	
+conf.lcl:F8:'Default page width:'
+	[Page width:]
+	You are expected to enter a number, possibly followed by a
+	"i" or "c", that specifies the width of the page on which
+	to print. A trailing "i" would scale the number to inches,
+	a trailing "c" would scale it to centimeters; leaving out
+	either letter means the value is the number of columns.
+	
+conf.lcl:F9:'Default page length:'
+	[Page length:]
+	You are expected to enter a number, possibly followed by a
+	"i" or "c", that specifies the length of the page on which
+	to print. A trailing "i" would scale the number to inches,
+	a trailing "c" would scale it to centimeters; leaving out
+	either letter means the value is the number of lines.
+	
+conf.lcl:F10:'Command to run for alerts:'
+	[Enter a command to run to alert you when the printer faults ...]
+	You are expected to enter the type of alert that should be
+	issued when the printer has a problem. Enter "none" if you
+	don't want to be alerted, otherwise: enter "mail lp" if you
+	want mail sent to you; enter "write lp" if you want a message
+	written to your terminal; or enter a shell command to be
+	run each time an alert is to be made.
+	
+conf.lcl:F11:'Frequency of alert (in minutes):'
+	[How often should you be alerted ...]
+	You are expected to enter the number of minutes that should
+	elapse between repeated alerts. To keep you informed that a
+	problem still exists, the Line Printer Service will keep issuing
+	alerts until the problem has been fixed. Entering ONCE will
+	mean you want to be alerted just once.
+	
+conf.lcl:F12:'Printer recovery method:'
+	[How should printing restart after you fix a printer fault? ...]
+	You are expected to specify how the Line Printer Service should
+	recover after a printer problem has been fixed. Enter
+	"continue" if the printer is to continue printing at the top
+	of the page where printing stopped. Enter "beginning" if it
+	is to start at the beginning again. Enter "wait" if it is
+	to leave the printer disabled and wait for someone to enable
+	the printer again.
+	
+	WARNING:
+	The Line Printer Service requires the use of a filter to provide the ability
+	to continue where printing stopped. If a filter capable of this is not
+	being used when a printer stops with a problem, then you will be told in the
+	alert message printing won't continue where it left off if you had wanted it
+	to.
+	
+conf.lcl:F13:'Is the printer also a login terminal?'
+	[Is the printer also a login terminal? ...]
+	Enter "yes" if this printer is also used as a
+	login terminal by someone, or enter "no"
+	otherwise.
+
+apwheel:F1:Print wheel
+	[List the print wheels you have available for this printer ...]
+	You are expected to enter the list of print wheels or font
+	cartridges that are available for this printer. You can
+	choose whatever names you want, as long as they are composed
+	of letters, digits, and underscores and are 14 characters
+	long or less. However, you should use names consistently:
+	If another printer has a print wheel or cartridge that is
+	similar enough that users won't care about the difference,
+	name them the same.
+	
+	If you don't list the print wheels or cartridges available
+	for this printer, the Line Printer Service will assume that none
+	can be used on it. Print requests for a print wheel or
+	cartridge not listed here will be refused UNLESS you first
+	mount it on the printer. (Giving a list here will not
+	restrict you from mounting other print wheels or cartridges
+	on the printer.)
+
+
+charset:F1:
+	
+	[Map these names into aliases ...]
+	You are expected to list aliases for the character sets defined for this
+	printer, mapping each one to a name defined in the Terminfo database for
+	this type of printer. You don't have to give a list here, because the 
+	Line Printer Service will use the list given in the Terminfo database, 
+	or will
+	use the names "cs0", "cs1", "cs2", etc., as alternatives to real names.
+	However, the names given in the Terminfo database may not be consistent
+	across all printers, and the names "cs0", etc. are not descriptive, so
+	users may be confused.
+	
+	You can help avoid this confusion by listing the names you would like
+	people to use on your system. If you have a mix of printers of different
+	styles, some that take print wheels, some that take font cartridges, and
+	some that have selectable character sets, you can give the same names for
+	the print wheels, cartridges, and character sets that print sufficiently
+	similar.
+	
+	If you enter a list, separate names with commas.
+
+access:F2:"Users who are allowed access to this printer:"
+	[List the users who are allowed access to this printer ...]
+	You are expected to list the users who ARE allowed to use
+	this form. Please give the login names or user-ID's of the users, not
+	their proper names. Separate several names with commas.
+	
+	You can allow EVERYBODY by
+	entering the word "all."
+	
+access:F3:"Users who are denied access to this printer:"
+	[List the users who are denied access to this printer...]
+	You are expected to list the users who are NOT allowed to
+	use this printer. Please give the login names or user-ID's of the users,
+	not their proper names. Separate several names with commas.
+	
+	If it is easier to specify access
+	restrictions by listing just those who ARE allowed to use
+	the printer, leave this field blank and fill in the next.
+	
+	You can deny EVERYBODY by entering the word "all."
+	
+access:F4:"Forms allowed on this printer:"
+	[List the forms that can be used with this printer ...]
+	You are expected to list the forms that are allowed to
+	be used with this printer. Separate several names with commas.
+	
+	You can allow ALL forms by entering the word "all."
+
+access:F5:"Forms denied on this printer:"
+	[List the forms that can't be used with this printer ...]
+	You are expected to list the forms that are NOT allowed to
+	be used with this printer. Separate several names with
+	commas.
+	
+	If it is easier to specify access restrictions by listing
+	just those forms that ARE allowed with the printer,
+	leave this field blank and fill in the next.
+	
+	You can deny ALL forms by entering the word "all."
+	
+comm.lcl:F1:Printer:
+
+comm.lcl:F2:Baud rate:
+	[Baud rate ...]
+	Enter the baud rate that your printer expects to use.  If you are
+	using a parallel port, ignore this field.
+
+comm.lcl:F3:Parity:
+	[Parity...]
+	You are expected to enter the parity setting for the printer that
+	will be connected to this device.  ( For more information, see
+	"parenb" under stty(1M) in the "User's Reference Manual." )
+
+comm.lcl:F4:Stop bits:
+	[Stop bits ...]
+	Enter the number of stop bits the printer expects between columns.
+	( For more information, see "cstopb" under stty(1M) in the 
+	"User's Reference Manual." )
+
+comm.lcl:F5:Character size:
+	[Character size...]
+	Character size is the number of bits per character.  USASCII uses
+	7 bits;  printing with foreign character sets will often require
+	8 bits.  ( For more information, see "cs5, cs6, cs7, cs81" under 
+	stty(1M) in the "User's Reference Manual." )
+
+comm.lcl:F6:Hangup on loss of carrier:
+	[Hangup on loss of carrier ...]
+	This should be "yes" if your printer drops DTR when a fault occurs.
+	If your printer drops DTR when its buffer reaches capacity, enter
+	"no." ( For more information, see "clocal" under stty(1M) in the 
+	"User's Reference Manual." )
+
+	
+comm.lcl:F7:XON/XOFF output control:
+	[XON/XOFF output control ...]
+	This should be "yes" if your printer expects to use XON/XOFF 
+	(DC3/DC1) flow control.  Only set this to "no" if you have a 
+	fast filter which supports a flow control other than XON/XOFF.
+	( For more information, see "ixon" under stty(1M) in the 
+	"User's Reference Manual." )
+
+comm.lcl:F8:Allow any character to restart output:
+	[Allow any character to restart output ...]
+	This should be set to "no" unless your printer expects to restart
+	output with some character other than XON.
+	( For more information, see "ixany" under stty(1M) in the 
+	"User's Reference Manual." )
+
+comm.lcl:F9:Postprocess output:
+	[Postprocess output ...]
+	Postprocessing of output may include:  delays for certain characters, 
+	tab expansion, mapping of newline and carriage return, and mapping 
+	of lowercase to uppercase.  This must be set to "yes" if your 
+	printer needs any of these features.
+	( For more information, see "opost" under stty(1M) in the 
+	"User's Reference Manual." )
+
+comm.lcl:F10:Map NL to CR-NL on output:
+	[Map NL to CR-NL on output ...]
+	If your printer will map a newline return to a carriage return-newline
+	pair, set this to "no."  Otherwise, leave this "yes."
+	( For more information, see "ocrnl" under stty(1M) in the 
+	"User's Reference Manual." )
+
+comm.lcl:F11:Map lowercase to uppercase on output:
+	[Map lowercase to uppercase on output ...]
+	If your printer is incapable of printing lowercase characters, 
+	enter "yes.  Otherwise, enter "no."
+	( For more information, see "olcuc" under stty(1M) in the 
+	"User's Reference Manual." )
+
+comm.lcl:F12:Carriage Return Delay:
+	[Carriage Return Delay ...]
+	This specifies how much the system should delay after issuing a
+	carriage return.  The values are relative with 0 being no delay
+	and 3 being the maximum delay.
+	( For more information, see "cr0, cr1, cr2, cr3" under stty(1M) 
+	in the "User's Reference Manual." )
+
+comm.lcl:F13:Newline Delay:
+	[Newline Delay ...]
+	This specifies how much the system should delay after issuing a
+	newline.  The values are relative with 0 being no delay
+	and 1 being the maximum delay.
+	( For more information, see "n10, n11" under stty(1M) 
+	in the "User's Reference Manual." )
+	
+comm.lcl:F14:Backspace Delay:
+	[Backspace Delay...]
+	This specifies how much the system should delay after issuing a
+	backspace.  The values are relative with 0 being no delay
+	and 1 being the maximum delay.
+	( For more information, see "b0, b1" under stty(1M) 
+	in the "User's Reference Manual." )
+
+comm.lcl:F15:Formfeed Delay:
+	[Formfeed Delay...]
+	This specifies how much the system should delay after issuing a
+	formfeed.  The values are relative with 0 being no delay
+	and 1 being the maximum delay.
+	( For more information, see "ff0, ff1" under stty(1M) 
+	in the "User's Reference Manual." )
+
+comm.lcl:F16:Vertical Tab Delay:
+	[Vertical Tab Delay...]
+	This specifies how much the system should delay after issuing a
+	vertical tab.  The values are relative with 0 being no delay
+	and 1 being the maximum delay.
+	( For more information, see "vt0, vt1" under stty(1M) 
+	in the "User's Reference Manual." )
+
+comm.lcl:F17:Horizontal Tab Delay:
+	[Horizontal Tab Delay...]
+	This specifies how much the system should delay after issuing a
+	horizontal tab.  The values are relative with 0 being no delay
+	and 2 being the maximum delay. If your printer does not support 
+	tabs, enter "expand" and tabs will be expanded to an appropriate
+	number of spaces.
+	
+	Note that if the printer expects tabs as part of a control sequence
+	or you intend to print binary, graphic images, you probably don't
+	want tabs to be expanded.
+	( For more information, see "tab0, tab1, tab2, tab3" under stty(1M) 
+	in the "User's Reference Manual." )
+
+comm.lcl:F18:Other options:
+	[Other options...]
+	Any other options not listed in the menu that you wish to supply
+	to the stty(1) command should be entered here.
+	( For more information, stty(1M) in the "User's Reference Manual." )
+
+modify:F1:Printer name:
+	[Name of the printer ...]
+	You are expected to enter the name of the printer that you
+	wish to modify. 
+
+modify:L1:configure
+	[Local Printer Configuration Subtask]
+	You can change these settings:
+	
+	Class
+	Description of the printer
+	Printer type
+	File types printable without filtering
+	Can a user skip the banner page?
+	Default character pitch
+	Default line pitch
+	Default page width
+	Default page length
+	Command to run for alerts
+	Frequency of alert (in minutes)
+	Printer recovery method
+	Is the printer also a login terminal?
+
+modify:L2:configure
+	[Remote Printer Configuration Subtask]
+	You can change these settings:
+	
+	Description of the printer
+	Printer type
+	File types printable without filtering
+
+modify:L3:comm_setup
+	[Local Printer Communication Subtask]
+	You can change these settings:
+	
+	Baud rate
+	Parity
+	Stop bits
+	Character size
+	Hangup on loss of carrier
+	XON/XOFF output control
+	Allow any character to restart output
+	Postprocess output
+	Map NL to CR-NL on output
+	Map lowercase to uppercase on output
+	Carriage Return Delay
+	Newline Delay
+	Backspace Delay
+	Formfeed Delay
+	Vertical Tab Delay
+	Horizontal Tab Delay
+	Other options
+
+modify:L4:charset
+	[Software Selectable Character Set Aliasing Subtask]
+	You can change the character set names available for your
+	printer.
+	
+modify:L5:printwheel
+	[Removeable Print Wheel Naming Subtask]
+	You can change the print wheels available for your
+	printer.
+
+modify:L6:access
+	[Printer Access Setup Subtask]
+	You can change these settings:
+	
+	Users who are allowed access to this printer
+	Users who are denied access to this printer
+	Forms allowed on this printer
+	Forms denied on this printer
+
+
+list:F1:Printer name(s):
+	[Name of the printer ...]
+	You are expected to enter the name of a printer that you
+	have defined on your system.
+
+remove:F1:Printer name(s):
+	[Name(s) of the printer ...]
+	You are expected to enter the name(s) of a printer that you
+	have defined on your system that you wish to remove.

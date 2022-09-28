@@ -1,0 +1,22 @@
+#ident	"@(#)devintf:groups/mbrship/add/Help	1.2"
+
+add:ABSTRACT:
+	The "add" task adds a device to the membership of a device group.  You
+	will be asked to supply the name of the device group and the name of a
+	device to add to the membership of that group.
+
+Form.add:Name:the Group Name field
+	This field names the device group to which you wish to add a member.
+	
+	The device group must be a valid group name (i.e. containing only
+	alphanumeric characters, '.', '-', '_', and '$', and no longer than
+	14 characters.  This field may not be blank.
+
+Form.add:Member:the Group Member field
+	This field names the device alias that is to be added to the named
+	device group.  If the alias is specified that is not currently defined,
+	the task will issue a warning message but accept the alias as a member.
+	
+	The aliases must be valid aliases (i.e. they contain only alphanumeric
+	characters and the characters '.', '-', '_', and '$' and contain no
+	more than 14 characters.  These fields may not be blank.

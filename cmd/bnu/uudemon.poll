@@ -1,0 +1,47 @@
+#!/usr/bin/sh
+#ident	"@(#)bnu:uudemon.poll	2.6"
+
+# This shell should be run out of crontab twice an hour,
+#  a little before  uudemon.hour, since this one
+#  does not start the scheduler.
+
+PATH=/usr/bin:/usr/lib/uucp
+SPOOL=/var/spool/uucp
+
+# This is the sub directory that the C. file will be queue in
+DEFQUEUE=Z
+
+POLLFILE=/etc/uucp/Poll
+# POLLFILE is a list of "system <tab> hour1 hour2 hour3 ..." for polling
+# For example 
+#	raven	2  6  10
+# without the # at the beginning.  Lines starting with # are ignored.
+# NOTE a tab must follow the machine name
+
+umask 022
+set +e
+
+HOUR="`date '+%H'`"
+# HOUR="`date | sed -e 's/:.*//' -e 's/^.*\(..\)$/\1/'"
+HOUR=`expr $HOUR + 0`
+
+cat $POLLFILE  |
+sed -n -e "/^[^#].*[ 	]$HOUR[ 	]/s/	.*//p" -e "/^[^#].*[ 	]$HOUR\$/s/	.*//p" |
+while read site
+do
+	if test ! -d ${SPOOL}/${site}
+	then
+		mkdir ${SPOOL}/${site}
+		chown uucp ${SPOOL}/${site}
+	fi
+
+	if test ! -d ${SPOOL}/${site}/${DEFQUEUE}
+	then
+		mkdir ${SPOOL}/${site}/${DEFQUEUE}
+		chown uucp ${SPOOL}/${site}/${DEFQUEUE}
+	fi
+
+	j=`expr $site : '\(.\{1,7\}\)'`
+	touch ${SPOOL}/${site}/${DEFQUEUE}/C.${j}${DEFQUEUE}0000
+	chown uucp ${SPOOL}/${site}/${DEFQUEUE}/C.${j}${DEFQUEUE}0000
+done

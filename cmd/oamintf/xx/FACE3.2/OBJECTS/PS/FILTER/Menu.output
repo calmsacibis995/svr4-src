@@ -1,0 +1,49 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FILTER/Menu.output	1.1"
+menu="CHOICES"
+multiselect
+
+done=`indicator -w;getitems " " | set -l Form_Choice` close
+
+name=any
+itemmsg=MARK the content types of the output files and strike ENTER.
+					      
+name=simple
+itemmsg=MARK the content types of the output files and strike ENTER.
+
+name=HP
+itemmsg=MARK the content types of the output files and strike ENTER.
+
+name=dumb
+itemmsg=MARK the content types of the output files and strike ENTER.
+
+name=435
+itemmsg=MARK the content types of the output files and strike ENTER.
+
+name=455
+itemmsg=MARK the content types of the output files and strike ENTER.
+
+name=473
+itemmsg=MARK the content types of the output files and strike ENTER.
+
+name=475
+itemmsg=MARK the content types of the output files and strike ENTER.
+
+name=""
+button=1
+action=nop
+
+name=""
+button=4
+action=nop
+
+name=""
+button=5
+action=nop
+
+name=""
+button=7
+action=nop
+
+name=""
+button=8
+action=nop

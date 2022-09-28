@@ -1,0 +1,13 @@
+#ident	"@(#)oamintf:devices/remove/Prototype	1.4.2.1"
+!MENU=/usr/sadm/sysadm/menu
+!INTFBIN=/usr/sadm/sysadm/bin
+
+d intf $MENU/devices/remove 0755 bin bin
+f intf $MENU/devices/remove/Form.remove 0644 bin bin
+f intf $MENU/devices/remove/Help 0644 bin bin
+f intf $MENU/devices/remove/Menu.remove 0644 bin bin
+f intf $MENU/devices/remove/Text.err 0644 bin bin
+f intf $MENU/devices/remove/Text.remove 0644 bin bin
+f intf $MENU/devices/remove/Text.rmnok 0644 bin bin
+f intf $MENU/devices/remove/Text.rmok 0644 bin bin
+

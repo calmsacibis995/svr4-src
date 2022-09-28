@@ -1,0 +1,25 @@
+#ident	"@(#)oamintf:usermgmt/Text.agrpok	1.3.2.1"
+################################################################################
+#	Module Name: Text.agrpok
+################################################################################
+title="Add a Group"
+`readfile $INTFBASE/trept.msg | message -t`
+#framemsg=`readfile $INTFBASE/trept.msg`
+
+lifetime=shortterm
+
+rows=4
+columns=60
+
+text="
+Group $ARG1 was added to the system."
+
+altslks
+
+name=CONT
+button=11
+action=update $OBJ_DIR/Form.addgrp true
+
+name=CANCEL
+button=14
+action=CLEANUP

@@ -1,0 +1,39 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkhist/limit/Form.limit	1.4.1.1"
+form="Limit the Backup History Log Size"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+done=`message -w "Trying to set history log size.";
+	set -l ERR=/tmp/$VPID.bea;
+	shell "bkhistory -p $F1 2>$ERR";
+	if [ $RET -eq 0 ] ;
+	then
+		getfrm | set -l FNUM;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.limok $F1 $FNUM";
+	else
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.limnok $F1";
+	fi`$CMD
+
+begrow=any
+begcol=any
+
+# Weeks field
+name=Week(s):
+lininfo=F1
+nrow=2
+ncol=2
+
+value=`brfindtab bkhistory | set -l HISTTAB; getrpd $HISTTAB`
+
+frow=2
+fcol=11
+rows=1
+columns=3
+
+choicemsg="Enter the number of weeks to keep information (1 to 999)."
+
+valid=`valrange -l 1 -u 999 "$F1"`
+
+invalidmsg=`errange -e "~You must enter a number greater than or equal to 1." -l 1 -u 999`

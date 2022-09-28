@@ -1,0 +1,9 @@
+#ident	"@(#)devintf:groups/list/Help	1.2"
+
+list:ABSTRACT:
+	The "list" task lists the device groups defined in the Device
+	Management feature.
+
+LISTING:the Groups List screen
+	This screen contains all of the device groups that are currently
+	administered in the Device Management tables.

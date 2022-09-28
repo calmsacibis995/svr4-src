@@ -1,0 +1,4 @@
+#ident	"@(#)oamintf:buses/buses.menu	1.1"
+#menu#Bus Information and Management
+#help#buses.help^Bus Information and Management
+#life#permanent

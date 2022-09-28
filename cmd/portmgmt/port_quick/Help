@@ -1,0 +1,48 @@
+#ident	"@(#)portmgmt:port_quick/Help	1.1.1.1"
+
+ABSTRACT:
+	The subcommands in the "quick_terminal" menu provide functions
+	for adding/removing a terminal to/from a port.
+	These entries operate on managing port monitors under
+	Service Access Facility or using the clist based
+	"getty".
+
+portno:Port Number(s)
+        Port Numbers are the full PATHNAME of port devices that
+        could be used (if not already in use). One or more Port
+	Numbers can be specified.
+
+        By specifying the device number, you will also be choosing
+        HARDWARE or SOFTWARE flow control.  A tty number with "h"
+        designates hardware flow control and with "s" designates
+        software flow control.
+
+	tty00s tty00h, tty01s, and tty01h refer to internal ports.
+
+	ttys00 to ttys08 and ttyh00 to ttyh08 refer to the eight
+	ports of the first IPC802 or IPC900 Port Controller.  A Streams
+	driver will automatically be started by the Quick Terminal
+	Setup procedure.  A second IPC802 or IPC900 Port Controller
+	will have it's ports numbered from tty[s,h]10 to tty[s,h]18.
+
+	ttyis000 to ttyis016 and ttyih000 to ttyih016 refer to the
+	sixteen ports of the first IPC1600 Port Controller.  A clist
+	driver will automatically be started by the Quick Terminal
+	Setup procedure.  A second IPC1600 Port Controller will
+	have it's ports numbered from ttyi[s,h]100 to ttyi[s,h]118.
+
+        s0vt00 to s0vt16 refer to the ports associated with Fiber
+	Optic Stations).
+
+speed:Speed
+	Press [CHOICE] to see a list of valid speeds.
+
+portnor:Port Number(s)
+	Port Numbers are the full PATHNAME of the terminal that
+	is being removed. One or more Port Numbers can be specified.
+
+add:ABSTRACT:
+	The "add" task will setup a terminal on the specified port(s).
+
+remove:ABSTRACT:
+	The "remove" task will remove a terminal from the specified port(s).

@@ -1,0 +1,34 @@
+#ident	"@(#)nadmin.nfs:remote/nfs/bin/remote_mount	1.1"
+
+# Mount resource immediately
+
+if [ "$IMM" = "yes" ]
+then
+	/sbin/mount -F nfs -o $ACC$SUID$RMNT$RTRY$TIMEOUT$SECURE$MAXRTRY $SERVER:$RES $MOUNTP 2> /var/tmp/err_$$
+	if [ $? -eq 0 ]
+	then
+		echo "The remote resource \"$RES\" is being made available on the local system as \"$MOUNTP\" via NFS." > /var/tmp/rem_$$
+	else
+		echo "The remote resource \"$RES\" could not be mounted immediately.\n" >/var/tmp/rem_$$
+	echo "/sbin/mount -F nfs -o $ACC$SUID$RMNT$RTRY$TIMEOUT$SECURE$MAXRTRY $SERVER:$RES $MOUNTP" >> /var/tmp/err_$$
+		cat /var/tmp/err_$$ >>/var/tmp/rem_$$
+		rm /var/tmp/err_$$
+	fi
+fi
+
+# Mount resource automatically
+# check if mountpoint is already used
+
+if [ "$AUTO" = "yes" ]
+then
+	/usr/bin/egrep "[ 	]+$MOUNTP[	 ]+" /etc/vfstab  1>/dev/null
+	if [ $? -eq 0 ]
+	then
+		echo "\n\"$MOUNTP\" is already used as a mountpoint.  Use the Modify Remote Resources Task to change." >>/var/tmp/rem_$$
+	else
+			echo "$SERVER:$RES\t-\t$MOUNTP\tnfs\t-\tyes	$ACC$SUID$RMNT$RTRY$TIMEOUT$SECURE$MAXRTRY" >>/etc/vfstab;
+		echo "\n\"$RES\" will be mounted as $MOUNTP automatically when Remote File Sharing begins operation." >>/var/tmp/rem_$$
+	fi
+fi
+
+echo $$

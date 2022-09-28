@@ -1,0 +1,211 @@
+#ident	"@(#)nadmin.nfs:remote/nfs/Form.mount	1.1.1.1"
+form="Mounts Remote Resources Automatically-Immediately via NFS"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+done=`if [ "$F3" = "no" -a "$F4" = "no" ];
+	  then
+		echo "No options selected.  Press CANCEL to return to the main menu." |message;
+		set -l KEYCMD="NOP";
+	  else
+		set -el IMM="$F3";
+		set -el AUTO="$F4";
+		set -el SERVER="$F1";
+		set -el RES="$F2";
+		set -el MOUNTP="$F5";
+		set -el MAXRTRY="retry=$F10";
+		if [ "$F6" = "read-write" ];
+		then
+			set -el ACC="rw,";
+		else
+			set -el ACC="ro,";
+		fi;
+		if [ "$F7" = "yes" ];
+		then
+			set -el SUID="suid,";
+		else
+			set -el SUID="nosuid,";
+		fi;
+		if [ "$F8" = "yes" ];
+		then
+			set -el RMNT="remount,";
+		else
+			set -el RMNT="";
+		fi;
+		if [ "$F9" = "background" ];
+		then
+			set -el RTRY="bg,";
+		else
+			set -el RTRY="fg,";
+		fi;
+		if [ "$F11" = "yes" ];
+		then
+			set -el TIMEOUT="soft,";
+		else
+			set -el TIMEOUT="hard,";
+		fi;
+		if [ "$F12" = "yes" ];
+		then
+			set -el SECURE="secure,";
+		else
+			set -el SECURE="";
+		fi;
+		"$INTFBASE/netservices/remote_files/remote/nfs/bin/remote_mount" | set -l PID;
+		set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/remote/nfs/Text.generic 'Mounts a Remote Resource Automaticallly-Immediately via NFS' '/var/tmp/rem_$PID'";
+	fi;
+	`$!KEYCMD
+
+`set -l OBJ_DIR="$INTFBASE/netservices/remote_files/remote/nfs"`
+`readfile "$INTFBASE/form.msg" | message -p`
+
+name="Server:"
+nrow=1
+ncol=1
+frow=1
+fcol=9
+rows=1
+columns=20
+valid=`[ "$F1" ]`
+lininfo=mount:server
+
+name="Remote pathname:"
+nrow=2
+ncol=1
+frow=2
+fcol=18
+rows=1
+columns=30
+valid=`[ "$F2" ]`
+lininfo=mount:remote_path
+
+#F3
+name="Mount the resource immediately?"
+nrow=3
+ncol=1
+frow=3
+fcol=33
+rows=1
+columns=3
+rmenu={ yes no }
+value="yes"
+menuonly=true
+lininfo=mount:imm
+invalidmsg="Press CHOICES to select valid response."
+
+#F4
+name="Mount the resource automatically?"
+nrow=4
+ncol=1
+frow=4
+fcol=35
+rows=1
+columns=3
+rmenu={ yes no }
+value="yes"
+menuonly=true
+lininfo=mount:auto
+invalidmsg="Press CHOICES to select valid response."
+
+name="Mountpoint:"
+nrow=5
+ncol=1
+frow=5
+fcol=13
+rows=1
+columns=20
+valid=`test -d $F5`
+invalidmsg="Must be the name of an existing directory on the local system."
+lininfo=mount:mountpt
+
+name="Access:"
+nrow=6
+ncol=1
+frow=6
+fcol=9
+rows=1
+columns=10
+rmenu={ read-write read-only }
+lininfo=mount:access
+value="read-write"
+menuonly=true
+invalidmsg="Press CHOICES to select valid response."
+
+name="Allow setuid programs:"
+lininfo=set.mnt.help
+nrow=7
+ncol=1
+frow=7
+fcol=24
+rows=1
+columns=3
+rmenu={ yes no }
+value="yes"
+menuonly=true
+invalidmsg="Press CHOICES to select valid response."
+lininfo=mount:setuid
+
+name="Remount read-write:"
+nrow=8
+ncol=1
+frow=8
+fcol=21
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+lininfo=mount:remount
+invalidmsg="Press CHOICES to select valid response."
+
+name="Retry method:"
+nrow=9
+ncol=1
+frow=9
+fcol=15
+rows=1
+columns=10
+rmenu={ background foreground }
+menuonly=true
+value="foreground"
+lininfo=mount:retry
+invalidmsg="Press CHOICES to select valid response."
+
+name="Maximum retries:"
+nrow=10
+ncol=1
+frow=10
+fcol=18
+rows=1
+columns=5
+value="10000"
+valid=`regex -v "$F10" '^[0-9]+$'`
+lininfo=mount:max_rtry
+
+name="Timeout:"
+nrow=11
+ncol=1
+frow=11
+fcol=10
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+lininfo=mount:timeout
+invalidmsg="Press CHOICES to select valid response."
+
+name="Security:"
+nrow=12
+ncol=1
+frow=12
+fcol=11
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value=`/usr/bin/ps -e | /usr/bin/grep keyserv | /usr/bin/sed -e 's/^  *//' -e 's/ .*//' | set -l rpc_pid;
+	if [ "${rpc_pid}" ];
+	then echo yes;
+	else echo no;
+	fi`
+lininfo=mount:security
+invalidmsg="Press CHOICES to select valid response."
+

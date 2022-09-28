@@ -1,0 +1,7 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksched/remove/Text.remove	1.1"
+title="Current Backup Schedule"
+init=`message Press [CANCEL] to return to the removal form.`
+text="`cron_parse -m bksched $ARG1`"
+columns=76
+rows=15
+wrap=FALSE

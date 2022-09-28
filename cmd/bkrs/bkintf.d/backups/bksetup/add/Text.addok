@@ -1,0 +1,29 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/add/Text.addok	1.2.1.1"
+################################################################################
+#	Module Name: Text.addok
+################################################################################
+title="Adding Backup Table Entry"
+
+lifetime=shortterm
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+close=`rm -f $ERR`
+
+rows=4
+columns=60
+
+text="
+Successfully added entry to $ARG1."
+
+`echo $ARG1 >/tmp/_bkreg_$ARG3`pos
+
+altslks
+
+name=CONT
+button=11
+action=update $ARG2 true
+
+name=CANCEL
+button=14
+action=CLEANUP

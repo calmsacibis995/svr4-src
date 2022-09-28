@@ -1,0 +1,81 @@
+#ident	"@(#)oamintf:syssetup/Form.nodeset	1.2.2.1"
+################################################################################
+#	Module Name: Form.nodeset
+#	Calling Sequence: This form is invoked through main:syssetup:nodename
+#			  (nodename.menu)
+#	Functional Description:	Prompt the user for (re)setting the system-name
+#                               and the network node-name of the system. 
+#	Inputs: None.
+#	Outputs: Verifies the system and node names have been (re)set or not.
+#	Functions Called: uname (to display current) & setuname (to set) 
+#	Issues:
+################################################################################
+Form="Set System Name and Network Node Name of the Machine"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+#begrow=distinct
+#begcol=distinct
+
+done=`
+      setuname -s $F1 -n $F2 > /tmp/node.set 2>> /tmp/node.set;
+      if [ $RET -eq 0 ] ;
+      then
+	set -l SYSCMD="OPEN TEXT $OBJ_DIR/Text.nodeokay" ;
+      else
+	set -l SYSCMD="OPEN TEXT $OBJ_DIR/Text.nodenotok $F1 $F2" ;
+      fi`$SYSCMD
+
+name="System name :"
+lininfo=Form.nodeset:sysname
+nrow=1
+ncol=1
+frow=1
+fcol=25
+rows=1
+columns=14
+value=`uname -s`
+invalidmsg=const "Must consist of alphanumeric characters and may contain the dash or underbar."
+choicemsg=const "Must consist of alphanumeric characters and may contain the dash or underbar."
+valid=`regex -v "$F1" '^[-_0-9a-zA-Z]{1,14}$'`
+
+name="Network node name :"
+lininfo=Form.nodeset:nodename
+nrow=2
+ncol=1
+frow=2
+fcol=25
+rows=1
+columns=14
+value=`uname -n`
+invalidmsg=const "Must consist of alphanumeric characters and may contain the dash or underbar."
+choicemsg=const "Must consist of alphanumeric characters and may contain the dash or underbar."
+valid=`regex -v "$F2" '^[-_0-9a-zA-Z]{1,14}$'`
+
+name=""
+nrow=4
+ncol=1
+frow=4
+fcol=1
+rows=1
+columns=50
+value="Warning: (Re)setting the network node name if the"
+inactive=true
+
+name=""
+nrow=5
+ncol=1
+frow=5
+fcol=1
+rows=1
+columns=50
+value="         machine is in a network can be dangerous."
+inactive=true
+
+#SLK for a form object
+name=RESET
+button=8
+action=reset
+

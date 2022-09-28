@@ -1,0 +1,25 @@
+#ident	"@(#)nadmin.rfs:other/rfs/id_map/Menu.idmap	1.5"
+###############################################################################
+#    Module Name:  Menu.idmap
+#    Description:  
+###############################################################################
+menu=User and Group ID Mapping Management
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/ssmenu.msg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/rfs/id_map`
+
+name=display
+description=Displays Current User and Group ID Mappings
+action=OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/id_map/Form.display
+lininfo=idmap:display
+
+name=set uid mapping
+description=Sets Up Standard UID Mappings
+action=OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/id_map/Form.set
+lininfo=idmap:set
+
+name=set gid mapping
+description=Sets Up Standard GID Mappings
+action=OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/id_map/Form.set3
+lininfo=idmap:set

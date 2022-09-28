@@ -1,0 +1,27 @@
+#ident	"@(#)oamintf:usermgmt/Text.rgrpnok	1.2.3.1"
+################################################################################
+#	Module Name: Text.rgrpnok
+################################################################################
+title="Errors Removing a Group Definition"
+`readfile $INTFBASE/conf.msg | message -t`
+framemsg=`readfile $INTFBASE/conf.msg`
+
+close=`rm -f $GRMERR`
+
+rows=6
+columns=60
+
+text="
+An error occurred attempting to remove group $ARG1:
+
+   `readfile $GRMERR`"
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

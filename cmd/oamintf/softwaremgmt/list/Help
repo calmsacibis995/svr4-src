@@ -1,0 +1,35 @@
+#ident	"@(#)oamintf:softwaremgmt/list/Help	1.1"
+
+ABSTRACT:
+	This task lists information about software which is installed on
+	the system or spooled on a device.
+
+pkgloc: Software Location
+	Enter the word "installed" to indicate that you want to check 
+	software which is currently installed on your system.  To verify 
+	software which is spooled, enter the device on which the software 
+	resides (e.g., "diskette1" or "9track1".)  To indicate the default 
+	spool directory, enter "spool".
+
+pkgid: Package Selection
+	Enter the word "all" to list information about all packages.  If 
+	you wish to see information about a specific package, enter the 
+	package instance identifier (e.g., "spell" or "rfs").  You may 
+	enter multiple package identifiers by separating each one with a 
+	comma (e.g., "spell,rfs,windowing".)  To display information about
+	all instance of a particular package, use a wildcard format such
+	as "dbase.*".
+
+catg: Category Selection
+	Each package installed on the system or residing on a spool device
+	is a member of one or more software categories.  Enter a comma 
+	separated list of categories (e.g., "system,application,preSVR4") 
+	or the word "all" to indicate all categories.
+
+dispopt: Display Options
+	Three choices are available:  short, medium and long.  The "short"
+	display lists the primary category, instance identifier and package
+	name.  The "medium" display also includes package architecture and 
+	version information.  The "long" display lists other information 
+	such as the package installation date, and also includes a summary 
+	of the types of files which are included as part of the package.

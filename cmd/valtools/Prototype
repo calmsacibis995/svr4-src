@@ -1,0 +1,70 @@
+#ident	"@(#)valtools:Prototype	1.1.1.1"
+
+## Files from local prototype: component=valtools
+
+# foundation set (predecessor) directories
+
+d foundation usr 0755 root sys
+d foundation usr/bin 0755 root sys
+d foundation usr/sadm/bin 0755 bin bin
+
+# foundation set files
+
+f foundation usr/sadm/bin/puttext 555 bin bin
+
+f foundation usr/bin/ckint 555 bin bin
+s foundation usr/sadm/bin/valint=/usr/bin/ckint
+s foundation usr/sadm/bin/helpint=/usr/bin/ckint
+s foundation usr/sadm/bin/errint=/usr/bin/ckint
+
+f foundation usr/bin/ckitem 555 bin bin
+s foundation usr/sadm/bin/valitem=/usr/bin/ckitem
+s foundation usr/sadm/bin/helpitem=/usr/bin/ckitem
+s foundation usr/sadm/bin/erritem=/usr/bin/ckitem
+
+f foundation usr/bin/ckpath 555 bin bin
+s foundation usr/sadm/bin/valpath=/usr/bin/ckpath
+s foundation usr/sadm/bin/helppath=/usr/bin/ckpath
+s foundation usr/sadm/bin/errpath=/usr/bin/ckpath
+
+f foundation usr/bin/ckrange 555 bin bin
+s foundation usr/sadm/bin/valrange=/usr/bin/ckrange
+s foundation usr/sadm/bin/helprange=/usr/bin/ckrange
+s foundation usr/sadm/bin/errange=/usr/bin/ckrange
+
+f foundation usr/bin/ckstr 555 bin bin
+s foundation usr/sadm/bin/valstr=/usr/bin/ckstr
+s foundation usr/sadm/bin/helpstr=/usr/bin/ckstr
+s foundation usr/sadm/bin/errstr=/usr/bin/ckstr
+
+f foundation usr/bin/ckyorn 555 bin bin
+s foundation usr/sadm/bin/valyorn=/usr/bin/ckyorn
+s foundation usr/sadm/bin/helpyorn=/usr/bin/ckyorn
+s foundation usr/sadm/bin/erryorn=/usr/bin/ckyorn
+
+f foundation usr/bin/ckkeywd 555 bin bin
+s foundation usr/sadm/bin/valkeywd=/usr/bin/ckkeywd
+s foundation usr/sadm/bin/helpkeywd=/usr/bin/ckkeywd
+s foundation usr/sadm/bin/errkeywd=/usr/bin/ckkeywd
+
+f foundation usr/bin/cktime 555 bin bin
+s foundation usr/sadm/bin/valtime=/usr/bin/cktime
+s foundation usr/sadm/bin/helptime=/usr/bin/cktime
+s foundation usr/sadm/bin/errtime=/usr/bin/cktime
+
+f foundation usr/bin/ckdate 555 bin bin
+s foundation usr/sadm/bin/valdate=/usr/bin/ckdate
+s foundation usr/sadm/bin/helpdate=/usr/bin/ckdate
+s foundation usr/sadm/bin/errdate=/usr/bin/ckdate
+
+f foundation usr/bin/ckuid 555 bin bin
+s foundation usr/sadm/bin/valuid=/usr/bin/ckuid
+s foundation usr/sadm/bin/helpuid=/usr/bin/ckuid
+s foundation usr/sadm/bin/erruid=/usr/bin/ckuid
+s foundation usr/sadm/bin/dispuid=/usr/bin/ckuid
+
+f foundation usr/bin/ckgid 555 bin bin
+s foundation usr/sadm/bin/valgid=/usr/bin/ckgid
+s foundation usr/sadm/bin/helpgid=/usr/bin/ckgid
+s foundation usr/sadm/bin/errgid=/usr/bin/ckgid
+s foundation usr/sadm/bin/dispgid=/usr/bin/ckgid

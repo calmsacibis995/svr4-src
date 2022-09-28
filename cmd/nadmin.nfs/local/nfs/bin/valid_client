@@ -1,0 +1,11 @@
+#ident	"@(#)nadmin.nfs:local/nfs/bin/valid_client	1.1"
+
+echo "$RO_CLIENTS" >/var/tmp/ro_$$
+echo "$RW_CLIENTS" >/var/tmp/rw_$$
+/usr/bin/fgrep -f /var/tmp/ro_$$  /var/tmp/rw_$$ >/dev/null
+if [ $? -eq 0 ]
+then
+	echo "0"
+else
+	echo "1"
+fi

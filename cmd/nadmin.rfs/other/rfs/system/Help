@@ -1,0 +1,119 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/Help	1.2.2.1"
+system:TITLE:Cooperating Systems Management
+p_add:TITLE:Adds Systems to the Domain Password File
+rf_add:TITLE:Specify Transport Provider and Name Server Role
+rf_add2:TITLE:Add a Name Server and Its Address
+lsname:TITLE:RFS Domain Name Servers
+rf_rem:TITLE:Removes Name Servers
+p_rem:TITLE:Removes Systems from the Domain Password File
+set:TITLE:Obtains Name of New RFS Domain
+
+
+
+system:add_nameserver:
+	The add_nameserver task allows an administrator of the 
+	primary name server of an RFS domain to add secondary name 
+	servers to appropriate rfmaster files.  The RFS domain to be 
+	administered must be the domain of which the local 
+	system is currently a member.  If the current domain has 
+	no primary name server, then the administrator may add the 
+	local system as the primary name server.
+	To change the current domain, choose the set_domain task
+	on the systems menu.
+
+system:add_host:
+	The add_host task allows an administrator of the primary name
+	server of an RFS domain to add a system to the domain
+	password file.  The RFS domain to be administered must be
+	the domain of which the local system is currently a member.
+	To change the current domain, choose the set_domain task
+	on the systems menu.
+
+rf_add:tp:
+	Choose a transport provider for which you want to specify
+	name servers.
+
+rf_add:role:
+	Choose "primary" if you are starting a new
+	domain or re-defining an existing domain,
+	and the system being added is the local system.
+	Choose "secondary" if the local system is already
+	the primary name server for the current domain
+	on the specified transport provider.
+
+rf_add2:address:
+	Enter the address of the name server
+	that you are adding to the domain.
+	This address must be the correct one for
+	the transport provider specified.
+
+	Answer "yes" if you want to start over
+	in the configuration of the current domain.
+	(The existing configuration will be saved
+	in the rfmaster files of the subdirectories
+	of /etc/dfs/rfs/transports.old.)
+	Otherwise, answer "no".
+
+system:display:
+	the display_domain task allows you to display the
+	name of the current RFS domain.
+
+set:domain:
+	Enter name of the RFS domain for your local
+	system to join.
+
+system:list_act_ns:
+	The list_active_nsvr task allows you to list the name
+	servers that are active in the current domain.  The name
+	server that is active on each transport provider will
+	be displayed.
+
+system:list_hosts:
+	The list_hosts task allows you to list the systems in
+	the password file of the current RFS domain.
+
+system:list_nameservers:
+	The list_nameservers task lists the primary and
+	secondary name servers in the current RFS domain.
+
+system:remove_nameserver:
+	The remove_namesvr task allows an administrator of the local system
+	to remove systems from the local list of name servers
+	for the current domain on specified transport providers.
+	The primary name server should be removed only if another
+	system is made the primary via the "add_nameserver"
+	task on the "systems" menu before RFS is started.
+
+p_rem:system:
+	Mark the names of the systems that you
+	want to remove from the domain.
+
+system:remove_host:
+	The remove task allows an administrator of the primary name
+	server of an RFS domain to remove a system from the domain
+	password file.  The RFS domain to be administered must be
+	the domain of which the local system is currently a member.
+	To change the current domain, choose the set_domain task
+	on the systems menu.
+
+
+system:set_domain:
+	The set_domain task allows you to set the current RFS
+	domain.
+
+p_add:system:
+	Enter the name of a system that you want
+	to add to the domain password file.
+
+rf_add2:system:
+	Enter the name of a system that you want
+	to add to the rfmaster file.
+
+lsname:tp:
+	Mark the network specification of each
+	transport provider for which you want to 
+	list name servers.
+
+rf_rem:tp:
+	choose a transport provider for which you
+	want to remove a name server.

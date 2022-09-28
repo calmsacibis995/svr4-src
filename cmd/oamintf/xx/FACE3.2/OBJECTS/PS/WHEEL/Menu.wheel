@@ -1,0 +1,47 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/WHEEL/Menu.wheel	1.1"
+menu="Printwheels"
+
+`message "Move to an item with the arrow keys and strike ENTER to select."`
+
+#help=open text $VMSYS/OBJECTS/Text.h "Printwheels Menu" "PS/WHEEL/T.hwheel"
+
+
+name=Add
+action=`/usr/vmsys/admin/.chkuser -u | regex 
+	0	"open form /usr/vmsys/OBJECTS/PS/WHEEL/Form.asel"
+	'.*'	"open text /usr/vmsys/OBJECTS/PS/Text.datpriv"`
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+name=Change
+action=`/usr/vmsys/admin/.chkuser -u | regex -e
+	0	'`/usr/vmsys/admin/PS/WHEEL/avlfm.sh | regex
+		'0'	"open form /usr/vmsys/OBJECTS/PS/WHEEL/Form.csel"
+		'.*'	"open text /usr/vmsys/OBJECTS/PS/WHEEL/Text.nowchg"`'
+	'.*'	"open text /usr/vmsys/OBJECTS/PS/Text.datpriv"`
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+name=Delete
+action=`/usr/vmsys/admin/.chkuser -u | regex -e
+	0	'`/usr/vmsys/admin/PS/WHEEL/avlfm.sh | regex 
+		'0'	"open menu /usr/vmsys/OBJECTS/PS/WHEEL/Menu.wdelete"
+		'.*'	"open text /usr/vmsys/OBJECTS/PS/WHEEL/Text.nowheel"`'
+	'.*'	"open text /usr/vmsys/OBJECTS/PS/Text.datpriv"`
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+name=Display
+action=`/usr/vmsys/admin/.chkuser -u | regex -e
+	0	'`/usr/vmsys/admin/PS/WHEEL/avlfm.sh | regex
+		'0'	"open form /usr/vmsys/OBJECTS/PS/WHEEL/Form.dsel"
+		'.*'	"open text /usr/vmsys/OBJECTS/PS/WHEEL/Text.nodis"`'
+	'.*'	"open text /usr/vmsys/OBJECTS/PS/Text.datpriv"`
+
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+
+name=CMD-MENU
+button=7
+action=cmd-menu
+
+name=""
+button=8
+actio=nop

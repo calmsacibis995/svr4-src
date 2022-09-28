@@ -1,0 +1,13 @@
+#ident	"@(#)portmgmt:tty_settings/Menu.tty_list	1.5.1.1"
+
+menu="Ttylabel    Nextlabel (List Line Settings)"
+close
+`message "Preparing the listing, please wait ..."`
+
+`cat /etc/ttydefs|cut -d: -f1,5| ttylist |regex '^([^:]*)$0:(.*)$1##(.*)$2$'
+ 'name="$m0  "
+  description=" $m1"
+  inactive="$m2"
+  action=OPEN TEXT $OBJ_DIR/Text.tty_list "$m0"'`
+
+`message "Move cursor to the ttylabel you want to see in detail and press RETURN."`

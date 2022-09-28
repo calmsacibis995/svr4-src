@@ -1,0 +1,8 @@
+
+A few files that may help if you're planning on writing a new translator. I've
+included the outline of the makefile, the PostScript prologue, and the common C
+code. The basic structure is identical to what's used in all the other PostScript
+translators supplied in this package. There's still plenty of work to before a
+program is ready, but this should give you a decent start. template.ps assumes
+the origin is in the upper left corner of the page.
+

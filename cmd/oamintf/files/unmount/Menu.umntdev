@@ -1,0 +1,28 @@
+#ident	"@(#)oamintf:files/unmount/Menu.umntdev	1.1"
+################################################################################
+#
+#	Module Name: Menu.unmount
+#
+#	Functional Description: This menu is a popup menu for unmounted devices
+#                                selection.
+################################################################################
+menu="Choices for Unmountable Devices"
+lifetime=shortterm
+
+framemsg=`readfile $INTFBASE/ssmenu.msg`
+
+# Remove temporary file when this menu is closed.
+close=`rm /tmp/${VPID}`
+
+# Find all available devices.
+`$OAMBASE/bin/getumntdev > /tmp/${VPID}`
+
+# Sort available devices and create a two column menu with the first
+# column containing the alais name of the device and the second column
+# containing the character special name of the device.
+
+`cat /tmp/${VPID} | regex '^([^:].*)$0:(.*)$1' '
+name="$m0"
+description="$m1"
+action=`set -l "Form_Choice=$m0"`CLOSE' `
+

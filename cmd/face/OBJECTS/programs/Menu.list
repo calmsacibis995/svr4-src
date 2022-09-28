@@ -1,0 +1,16 @@
+#ident	"@(#)face:OBJECTS/programs/Menu.list	1.4"
+
+menu=`regex -v "${ARG3}" '1' "Modify Personal Programs"
+			'2' "List Personal Programs"
+			'3' "Remove Personal Programs"`
+
+help=OPEN TEXT $VMSYS/OBJECTS/Text.mfhelp programs/T.list"${ARG3}" "${ARG4}"
+
+framemsg="Move to an item with arrow keys and press ENTER to select the item."
+
+`$VMSYS/bin/listserv ${ARG1} ${ARG2}`
+
+
+name=UPDATE
+button=8
+action=update

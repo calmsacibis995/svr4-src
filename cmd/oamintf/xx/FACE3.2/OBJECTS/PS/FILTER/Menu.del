@@ -1,0 +1,17 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FILTER/Menu.del	1.1"
+menu="Delete Filters"
+#help=open text $VMSYS/OBJECTS/Text.h "Delete Filters" PS/FILTER/T.hdel
+multiselect
+
+done=`indicator -w;getitems "," | set -l list; /usr/vmsys/admin/PS/FILTER/chkdel "$list" | regex
+	1 "open text $VMSYS/OBJECTS/PS/FILTER/Text.none"
+	2 "open text $VMSYS/OBJECTS/PS/FILTER/Text.all"
+	3 "open text $VMSYS/OBJECTS/PS/FILTER/Text.delcfm"` "$list"
+
+close=`rm -f $ARG1`
+
+
+`cat $ARG1 | regex '^(.*)$0'
+'name="$m0" 
+itemmsg=MARK the filters to delete from the system and strike ENTER.
+'`

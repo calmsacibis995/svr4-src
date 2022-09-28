@@ -1,0 +1,59 @@
+#ident	"@(#)lp.admin:printers/reports/Text.rq.stat	1.4.3.2"
+
+#	Module Name: Text.rq.stat 
+
+title="Status of Print Requests" 
+altslks=true
+
+`indicator -w;
+if [ -n $rlist1 ];
+then
+	set -l statarg=-o$rlist1;
+fi;
+if [ -n $rlist2 ];
+then
+	set -l statarg=-o$rlist2;
+fi;
+if [ -n $rlist3 ];
+then
+	set -l statarg=-u$rlist3;
+fi`
+
+begrow=36
+begrow=1
+rows=18
+columns=74
+scroll=true
+text="`lpstat $statarg -l`"
+
+name=HELP
+button=9
+action=help
+
+name=PREVPAGE
+button=10
+action=prevpage
+
+name=NEXTPAGE
+button=11
+action=nextpage
+
+name=PREV-FRM
+button=12
+action=prev-frm
+
+name=NEXT-FRM
+button=13
+action=next-frm
+
+name=CANCEL
+button=14
+action=`
+	/usr/bin/rm -f $list;
+	unset -e rlist1 -e rlist2 -e rlist3 -l statarg;
+	echo "close /usr/sadm/sysadm/add-ons/lp/printers/reports/Text.rq.stat /usr/sadm/sysadm/add-ons/lp/printers/reports/Form.requests"
+`
+
+name=CMD-MENU
+button=15
+action=cmd-menu

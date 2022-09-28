@@ -1,0 +1,85 @@
+#ident	"@(#)oamintf:edsysadm/Form.savepkg	1.5"
+
+################################################################################
+#	Module Name: Form.savepkg
+#	Date: July 1988
+#
+#
+#	ARGS PASSED IN:
+#			ARG1 -> menu/task flag
+#			ARG2 -> package description file name
+#			ARG3 -> menu/task name
+#			ARG4 -> menu/task description
+#			ARG5 -> menu/task location
+#			ARG6 -> menu/task help
+#			ARG7 -> task action file (TASK ONLY)
+#			ARG8 -> comma separated task files (TASK ONLY)
+#			ARG9 -> original location (LOCATION:NAME)
+#
+#	ARGS PASSED OUT:
+#			ARG1 -> menu/task flag
+#			F1   -> name of package description file
+#			ARG3 -> menu/task name
+#			ARG4 -> menu/task description
+#			ARG5 -> menu/task location
+#			ARG6 -> menu/task help
+#			ARG7 -> task action file (TASK ONLY)
+#			ARG8 -> comma separated task files (TASK ONLY)
+#			ARG9 -> original location (LOCATION:NAME)
+################################################################################
+form="Save Package"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`
+      if [ "$ARG1" = "addmenu" -a -f $F1 ] || [ "$ARG1" = "addtask" -a -f $F1 ];
+      then
+	    set -l CMD="OPEN FORM $EDSYSADM/Form.overwrite \"$ARG1\" \"$F1\" \"$ARG3\"
+			 \"$ARG4\" \"$ARG5\" \"$ARG6\" \"$ARG7\" \"$ARG8\" \"$ARG9\"";
+      else
+
+	message -w "Creating or updating package description, menu information and prototype files.";
+
+   	mkpkg $ARG1 $F1 $ARG3 "$ARG4" $ARG5 $ARG6 $ARG7 $ARG8 $ARG9 > /dev/null;
+
+ 	if [ $RET -eq 0 ];
+	then
+		set -l CMD="OPEN TEXT $EDSYSADM/Text.ok";
+	else if [ $RET -eq 127 ];
+	then
+		set -l CMD="OPEN TEXT $EDSYSADM/Text.dups";
+	else
+		set -l CMD="OPEN TEXT $EDSYSADM/Text.pkgerr $RET";
+	     fi;
+	fi;
+      fi`$!CMD
+
+name=File name:
+lininfo=fname
+nrow=1
+ncol=1
+frow=1
+fcol=11
+rows=1
+columns=50
+`if [ "$ARG2" = "dfltpkg" ];
+ then
+	set -l PKGDESC="";
+ else
+	set -l PKGDESC=$ARG2;
+ fi`
+value=$PKGDESC
+scroll=true
+
+# Must check for valid file name.
+# If file exist it should have read/write permisions.
+valid=`valpath -wr "$F1"`
+
+invalidmsg=const "Error: unable to read/write existing file."
+choicemsg=const "Enter name of package description file."
+
+name=RESET
+button=8
+action=reset

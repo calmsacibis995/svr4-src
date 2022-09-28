@@ -1,0 +1,58 @@
+#ident	"@(#)filemgmt:make/Form.s52	1.1.2.1"
+Form="Create A File System (make)"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+done=`$OAMBASE/bin/ifdiskette $DEVICE | set -l RVAL;
+	if [ "$RVAL" = "true" ];
+	then
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.mkinsert NULL $F1 $ARG1 $F2 $F3 $ARG2 $ARG3";
+	else
+		message Creating a s5 file system. Please Wait;
+		PROTO BLOCKSIZE DEVICE BLOCKS INODES LABEL MOUNTP
+       		$OAMBASE/bin/mkfs_s5 NULL $F1 $ARG1 $F2 $F3 $ARG2 $ARG3 | set -l RVAL;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.make";
+	fi;
+	`$CMD
+
+name="Block Size in Bytes:"
+lininfo=Form.s52:F1
+nrow=1
+ncol=1
+frow=1
+fcol=22
+rows=1
+columns=10
+rmenu={ 512 1024 2048 }
+menuonly=true
+value=1024
+invalidmsg="Press CHOICES to select valid response."
+
+name="Number of Blocks:"
+lininfo=Form.s52:F2
+nrow=2
+ncol=1
+frow=2
+fcol=19
+rows=1
+columns=10
+value=`if [ "$ARG1" ];
+	then
+		$OAMBASE/bin/numblocks "$ARG1";
+	fi;`
+invalidmsg="Error - $F3 is too large"
+
+name="Number of Files:"
+lininfo=Form.s52:F3
+nrow=3
+ncol=1
+frow=3
+fcol=18
+rows=1
+columns=10
+value=`if [ "$F2" ];
+	then
+		expr  $F2 / 4
+	fi; `
+invalidmsg="Error - $F3 is too large"

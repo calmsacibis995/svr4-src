@@ -1,0 +1,19 @@
+#ident	"@(#)oamintf:sched/Menu.del	1.1"
+
+menu=Delete Scheduled Tasks
+multiselect
+help=open text $OBJ_DIR/Text.h "Delete Scheduled Tasks" sched/T.hdel
+
+done=`indicator -w; getitems | getdel "$ARG2" > /tmp/taskdel.$VPID; prtask -t -s -f /tmp/showdel.$VPID < /tmp/taskdel.$VPID | regex 
+	'^0$' "open text $OBJ_DIR/Text.nodel /tmp/taskdel.$VPID"
+	'^1$' "open text $OBJ_DIR/Text.delcfm /tmp/showdel.$VPID /tmp/taskdel.$VPID"`
+
+close=`rm -f $ARG1`
+
+`readfile $ARG1`
+
+name=""
+button=8
+action=nop
+
+`indicator -w`

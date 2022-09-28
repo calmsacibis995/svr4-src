@@ -1,0 +1,27 @@
+#ident	"@(#)face:OBJECTS/Text.show	1.1"
+
+title="Full Pathname"
+framemsg=const "Press CANCEL to continue."
+lifetime=longterm
+
+header='
+The full pathname is:
+'
+
+`fmlexpr "${ARG1}" : '.*' | set -l LEN;
+fmlexpr ${DISPLAYW} - 3 | set -l DW;
+if [ "${LEN}" -le "22" ];
+then
+	echo "columns=22";
+	echo "rows=5";
+elif [ "${LEN}" -le "${DW}" ];
+then
+	echo "columns=${LEN}";
+	echo "rows=5";
+else
+	echo "columns=${DW}";
+	fmlexpr ${LEN} / ${DW} + 5 | set -l DL;
+	echo "rows=${DL}";
+fi`
+
+text="${ARG1}"

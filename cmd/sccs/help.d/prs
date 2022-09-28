@@ -1,0 +1,29 @@
+*#ident	"@(#)sccs:help.d/prs	6.3"
+*	Diagnostic messages for the 'prs' command
+*
+-1
+"nonexistent sid"
+You specified an SID, via the r keyletter, which is not
+an SID of the SCCS file.
+-2
+"curdir failed"
+Try the command again.  If the situation repeats, notify your
+Source Code Administrator or UNIX Project Administrator
+for further assistence.
+-3
+"cannot change directory"
+Try the command again.  If the situation repeats, notify your
+Source Code Administrator or UNIX Project Administrator
+for further assistence.
+-4
+"invalid cutoff date"
+Either no cutoff date was specified, or the format of the
+date was not intelligible.
+-5
+"can't specify cutoff date and SID"
+It makes no since to ask for a specific sid and give a
+cutoff date.
+-6
+"must specify -e or -l with -c"
+You must say whether you want earlier or later deltas 
+than the cutoff date.

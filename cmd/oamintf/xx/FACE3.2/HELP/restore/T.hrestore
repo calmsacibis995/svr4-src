@@ -1,0 +1,18 @@
+The Restore From Removable Media Menu enables you to restore files to
+your hard disk that were backed up to removable media. You can restore
+files from your HOME directory as well as system files that were
+backed up. You must have system administration privileges to perform
+a system restore.
+
+The items on the Restore From Removable Media Menu are:
+
+      Personal Restore:  You can restore all of your own files
+      (directories or regular files) or selectively restore particular
+      files that were backed up from your HOME directory.
+
+      System Restore:  You can restore all files or selectively
+      restore specific files that were backed up.  You can do a
+      restore from system backup, do a selective system restore, or
+      restore other user files. You must have system administration
+      privileges to do this.
+

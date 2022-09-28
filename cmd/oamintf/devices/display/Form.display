@@ -1,0 +1,78 @@
+#ident	"@(#)oamintf:devices/display/Form.display	1.1.3.1"
+
+################################################################################
+#	Module Name: Form.display
+################################################################################
+form="Display Device Information"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`devattr $F2 removable | set -l REM;
+	
+	if [ "$REM"  = "true" ];
+	then
+	  set -l CMD="OPEN TEXT $OBJ_DIR/Text.disprem $F2";
+	else
+
+          message -f -w "Displaying information about $F2 in progress.";
+
+      	  set -l DFILE=/tmp/${VPID}.df;
+
+          devtabcmd $F2 displaycmd > $DFILE;
+
+          if [ $RET -eq 0 ];
+          then
+	     set -l CMD="OPEN TEXT $OBJ_DIR/Text.display";
+          else
+	     set -l CMD="OPEN TEXT $OBJ_DIR/Text.disperr $F1";
+	  fi;
+
+      fi`$CMD
+
+name=Device group:
+lininfo=devgrp
+nrow=1
+ncol=3
+frow=1
+fcol=17
+rows=1
+columns=18
+show=`showgrp $ARG1;
+	if [ $RET -eq 0 ];
+	then
+	  echo true;
+	else
+	  echo false;
+	fi`
+
+rmenu={ `getdgrp type=$ARG1 displaycmd:* | sort` }
+valid=`getdgrp type=$ARG1 displaycmd:* $F1 | grep $F1 > /dev/null;
+	if [ "$RET" -eq 0 ];
+	then
+	  echo true;
+	else
+	  echo false;
+	fi`
+
+invalidmsg=const "ERROR: Invalid device group entered."
+
+name=Device:
+lininfo=devdr
+nrow=2
+ncol=3
+frow=2
+fcol=11
+rows=1
+columns=18
+
+rmenu=OPEN MENU $OBJ_DIR/../Menu.drive $F1 $ARG1
+valid=`valdrive $F1 $ARG1 $F2`
+
+invalidmsg=const "ERROR: Invalid device entered."
+
+name=RESET
+button=8
+action=RESET

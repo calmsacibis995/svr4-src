@@ -1,0 +1,8 @@
+#ident	"@(#)bkrs:rsintf.d/restores/restore.menu	1.9.1.1"
+#menu#Extended Restore Services
+#life#permanent
+
+operator^Set/Display the Restore Operator^operator/Form.setup
+respond^Respond to Restore Job Prompts^respond/Form.rsoper
+restore^Restore from Backup Archives^restore/Form.restore
+status^Modify/Report Pending Restore Request Status^status/rsstat.menu

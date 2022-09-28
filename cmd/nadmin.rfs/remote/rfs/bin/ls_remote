@@ -1,0 +1,45 @@
+#ident	"@(#)nadmin.rfs:remote/rfs/bin/ls_remote	1.2"
+#If list remote resources currently mounted
+#
+
+if [ "$IMM" = "yes" ]
+then
+	if /usr/lbin/rfsrunning
+	then
+		/etc/mount -v | /bin/grep "type rfs" >/usr/tmp/cmnt_$$
+		if [ $? -eq 0 ]
+		then
+			echo "Currently Mounted Resources, displayed in the following order:\nResource Name,Local Path,Access\n" > /usr/tmp/rem_$$
+			/usr/bin/awk '{
+			printf "%s	%s	%s\n", $1, $3 ,$6
+			}' /usr/tmp/cmnt_$$ | /bin/sort | /usr/bin/tr '\040' '\011' >> /usr/tmp/rem_$$
+		else
+			echo "There are no remote resources currenty mounted.\n" >/usr/tmp/rem_$$
+		fi
+	else
+		echo "There are no remote resources currenty mounted.\n" >/usr/tmp/rem_$$
+	fi
+fi
+
+#
+#If list automaticaly mounted resources
+#
+
+if [ "$AUTO" = "yes" ]
+then
+	if [ -s /etc/vfstab ]
+	then
+		/usr/bin/tr -s '\011' '\040' </etc/vfstab | /usr/bin/egrep "[ ]rfs[ ]" | /usr/bin/cut -d" " -f1,3,7 | /bin/sed -e "s/[ ]-$/ read\/write /g" -e "s/[ ]ro$/ read-only /g" -e "s/[ ]ro,/ read-only,/g" -e "s/[ ]rw$/ read\/write /g" -e "s/[ ]rw,/ read\/write,/g" >/usr/tmp/vfs_$$
+
+		if [ -s /usr/tmp/vfs_$$ ]
+		then
+			echo "\nAutomatically Mounted Resources, displayed in the following order:\nResource Name,Local Path,Access\n" >>/usr/tmp/rem_$$
+			/usr/bin/tr -s '\040' '\011' </usr/tmp/vfs_$$ >> /usr/tmp/rem_$$
+		else
+			echo "There are no remote resources automatically mounted." >>/usr/tmp/rem_$$
+		fi
+	else
+		echo "There are no remote resources automatically mounted." >>/usr/tmp/rem_$$
+	fi
+fi
+echo $$

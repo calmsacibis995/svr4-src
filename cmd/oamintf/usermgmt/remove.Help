@@ -1,0 +1,38 @@
+#ident	"@(#)oamintf:usermgmt/remove.Help	1.1.1.1"
+ABSTRACT:
+	The "remove" task allows you to remove either a user or a
+	group from your system.
+
+Form.remove:remove:User or Group
+	Enter either "user" or "group".  The default is "user".  If you
+	enter "user", you will see a form that asks you to specify the
+	user login to be removed.  If you select "group" you will see a
+	form that asks you to specify the group to be removed.
+
+Form.rmgrp:rmgrp:Group
+	Enter a valid user group name or press CHOICES to select from a
+	list of all currently defined user groups.
+
+	After you press SAVE, a confirmation will be displayed
+	showing all values from the group's current definition.
+	At this point, you may decide to go ahead and remove the
+	group or to back out of the task without removing the group.
+
+Form.rmusr1:rmusr:Login
+	Enter a valid user login or press CHOICES to select from a list
+	of all currently defined user logins.
+
+	After you press SAVE, a confirmation frame of information for the
+	user to be removed.  Verify that the user login is the one you wish
+	to remove.  The login definition will be removed from the
+	/etc/passwd file.
+
+Form.rmusr2:confirm:Remove Home Directory and All Files
+	Enter a "yes" if you want the user's home directory and all of
+	the files in it removed.  Otherwise enter a "no" for the login
+	to be removed and the directory and files to remain on the system.
+
+
+
+
+

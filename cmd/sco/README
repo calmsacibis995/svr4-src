@@ -1,0 +1,216 @@
+#ident	"@(#)sco:README	1.1"
+
+			libdos - Version 9E21
+
+This directory contains the C code for handling
+MS-DOS files under UNIX.
+
+A library as well as several utilities are built.
+The libaray consists of atomic functions which can be used for
+future developemnt efforts.
+
+Note that (with the exception of dosformat) this code is totally 
+portable. No system dependant code is used, no ioctls, etc.
+
+Opening the generic floppy devices, we let the device 
+handler determine which type/format of device to use.
+
+The XENIX to UNIX drive matching is done via a configuration
+file called "msdos". This file defines, for each drive, 
+a XENIX identifier and a UNIX identifier.
+
+Normally this file resides in the /etc/default directory.
+If the define for MSDOSENV is specified in MS-DOS.h prior to 
+the build of the commands, then the user may use the environment
+variable specified in MSDOSENV to override the pathname for the
+"msdos" file.
+
+			Build Options
+			-------------
+
+The functionality of the dos commands is affected by several #defines.
+Listed below are the #defines which effect the generation of C code,
+and their effect. Other defines are specified (with comments) in 
+MS-DOS.h. The defines in that header file should be reviewed as well.
+
+All defines MUST be in place BEFORE THE BUILD TAKES PLACE TO HAVE ANY 
+EFFECT.
+
+	DEBUG		Available in most routines. Produces debugging 
+			messages to stderr. This can be defined in the 
+			makefile (CFLAGS), a particular .c files, or 
+			in MS-DOS.h.
+
+	DOSDIR		Defined in the makefile (under taget dosdir),
+			this define causes dosls.c to be built to 
+			produce output similar to the MS-DOS dir 
+			command.
+
+	DOSRMDIR	Defined in the makefile (under target dosrmdir),
+			this define causes dosrm.c to be built to 
+			perform similarly to the MS-DOS command rmdir.
+
+	MORESPACE	MS-DOS flags bad portions of the disk a track
+			at a time. Space can be better used if the 
+			bad areas are flagged by cluster instead (as 
+			there are usually several clusters per track).
+			Defining this in dosformat.c, MS-DOS.h, or
+			the makefile (CFLAGS), will cause bad space to 
+			be marked by cluster as opposed to track.
+
+	MSDOSENV	If defined, its value is the name of an 
+			environment variable to use to override the 
+			default pathname of the msdos configuration
+			file. Normally, this pathname is 
+			/etc/default/msdos. This may be defined in the
+			makefile (CFLAGS), MS-DOS.h, or get_assign.c.
+
+	PRECIOUS	Used in write_sector(). If defined it prevents 
+			any disk from being updated, preserving all 
+			data. This can be defined in the makefile
+			(CFLAGS), MS-DOS.h or in write_sector.c.
+
+	STANDALONE	This is available in chain_clus.c and 
+			loc_free_dir.c. Having this defined causes each
+			of these modules to be able to be run on their 
+			own (a simple main() is included).
+
+	VERIFY		This is defined by default in dosformat.c.
+			Undefining this will cause dosformat to skip the
+			verify procedure. If you have very reliable 
+			drives (and magnetic media) this can save 
+			substantial amounts of time in formats as the 
+			majority of time in formatting, is spent in 
+			verification.
+
+
+
+Assumptions:
+-----------
+
+	1. We assume that the sector size is a multiple of directory
+	entry size in mkdir.c
+
+	2. UNIX files will not have a ':' within them, MS-DOS files 
+	will.
+
+
+
+Usage:
+-----
+
+doscat
+	doscat [-m | -r] file ...
+
+		-m	cr/lf to lf conversion 
+
+		-r	No cr/lf to lf conversion
+
+
+
+doschain *** Debugging Utility ***
+	doschain device from to
+
+		Chains one cluster to another
+
+
+
+doscp
+	doscp	[-m | -r] file file file ... directory
+
+	doscp	file file
+
+		-m	cr/lf to lf conversion 
+
+		-r	No cr/lf to lf conversion
+
+		In two formats doscp either copies one or more
+	files to a specified directory, or it copies one file
+	to another. Files and or directories may reside on either
+	media (MS-DOS or UNIX).
+
+
+dosdir
+	dosdir file ...
+
+		produces MS-DOS dir type output
+
+
+
+dosformat
+	dosformat [-fqv] drive
+
+		Formats an MS-DOS compatible floppy. Supports
+	all 5.25" and 3.5" media supported by MS-DOS versions 1.0
+	through 3.3. Do not attemp to format /dev/rdsk/f[01]t. 
+	These special devices are incapable of being formatted.
+	Choose a device such as /dev/rdsk/f0q15dt, and format that
+	by either adding an entry to the configuration file, or by
+	using explicit device names. For example:
+
+		dosformat /dev/rdsk/f0q15dt:
+
+	The colon is required at the end of the device name.
+
+
+
+dosinfo	*** Debugging Utility ***
+
+		Produces information from BIOS Parameter Block 
+	of MS-DOS diskette in Drive A:
+
+
+
+doslabel
+	doslabel drive
+
+		Creates/Removes volume labels
+
+
+
+dosls 
+	dosls file ...
+
+		produces XENIX ls(C) type output
+
+
+
+dosmkdir
+	dosmkdir directory ...
+
+		Creates one or more MS-DOS directories.
+
+
+
+dosrm
+	dosrm	file ...
+
+		removes one or more files from an MS-DOS diskette
+
+
+
+dosrmdir
+	dosrmdir	directory ...
+
+		removes one or more directories from an MS-DOS diskette
+
+
+
+fatlist	*** Debugging Utility ***
+	fatlist drive:
+		Dumps the fatlist in hex to stdout
+
+
+
+fdread	*** Debugging Utility ***
+	fdread sector
+		Dumps the specified sector of an MS-DOS formatted
+	floppy to stdout. A handy debugging utility.
+
+
+
+loc_dir *** Debugging Utility ***
+	loc_dir file
+
+		Determines the starting sector and displacement 
+	for a directory entry should the passed file be created.

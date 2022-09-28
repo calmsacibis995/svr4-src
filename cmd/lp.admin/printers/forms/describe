@@ -1,0 +1,8 @@
+#ident	"@(#)lp.admin:printers/forms/describe	1.1"
+page length: 66
+page width: 80
+number of pages: 1
+line pitch: 6i
+character pitch: 10i
+character set choice: any
+ribbon color: any

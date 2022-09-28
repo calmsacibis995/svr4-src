@@ -1,0 +1,34 @@
+#ident	"@(#)nadmin.rfs:remote/rfs/bin/auto_mod	1.2"
+if [ "$SUID" = "no" ]
+then
+	NACC="$ACC,nosuid"
+else
+	NACC="$ACC"
+fi
+if [ "$CACHE" = "no" ]
+then
+	NACC="$NACC,nocaching"
+fi
+
+# if the new mount point has been changed, then check to see if it is already
+# being used as a mntpoint in the vfstab
+
+ERR=0
+if [ "$MNT" != "$NMNT" ]
+then
+	/usr/bin/egrep "[ 	]+$NMNT[	 ]+" /etc/vfstab  1>/dev/null
+	if [ $? -eq 0 ]
+	then
+		echo "$NMNT already a mountpoint. Automatic mounting not modified." >>/usr/tmp/rem_$$
+		ERR=1
+	fi
+fi
+if [ "$ERR" = "0" ]
+then
+	/usr/bin/egrep -v "^$RES[ 	]+-[ 	]+$MNT[ 	]+rfs[ 	]+-[ 	]+yes" /etc/vfstab > /usr/tmp/vfstab$$
+	echo "$RES\t-\t\t$NMNT\trfs\t-\tyes\t$NACC" >>/usr/tmp/vfstab$$
+	mv /usr/tmp/vfstab$$ /etc/vfstab
+	echo "Mounting of $RES has been successfully modified." >>/usr/tmp/rem_$$
+fi
+
+echo $$

@@ -1,0 +1,29 @@
+The Backup to Removable Media Menu lets you make a floppy disk or
+cartridge tape copy of the files you have on your computer's hard
+disk.
+
+You can back up all files (system and user), only the files updated
+since the last backup, an individual user's files, or selected
+files/directories.
+
+When copying to floppy, be sure to have several formatted floppy
+disks, depending on the amount of information you have on your system.
+
+The items on the Backup to Removable Media Menu are:
+
+      Backup History:  Displays the date and time of the last
+      system backup and incremental backup.
+
+      Personal Backup:  Performs a backup of all files or selected
+      files in your HOME directory.
+
+      Schedule System Backup:  You can schedule, ahead of time, a
+      system backup and/or incremental system backup. Also, you can
+      delete a previously scheduled backup request or show a list of
+      currently scheduled backups. Adding, changing, or deleting a
+      backup request requires system administration privileges.
+
+      System Backup:  You can backup all system and user files that
+      have been modified or created since your system was installed.
+      You must have system administration privileges to do this.
+

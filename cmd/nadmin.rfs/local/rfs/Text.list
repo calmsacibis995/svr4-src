@@ -1,0 +1,8 @@
+#ident	"@(#)nadmin.rfs:local/rfs/Text.list	1.2"
+title="Resources Automatically-Currently Shared via Remote File Sharing"
+done=`/usr/bin/rm "$ARG1"`
+
+`readfile $INTFBASE/display.msg | message -p`
+
+text="`readfile $ARG1`"
+columns=70

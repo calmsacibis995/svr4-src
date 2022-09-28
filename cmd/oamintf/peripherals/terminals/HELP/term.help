@@ -1,0 +1,6 @@
+#ident	"@(#)oamintf:peripherals/terminals/HELP/term.help	1.1"
+
+   The subcommands in the "terminals" menu provide functions 
+   to change the characteristics of tty lines.  Included are 
+   the abilities to make lines available for login and to 
+   create new line setting hunt sequences.

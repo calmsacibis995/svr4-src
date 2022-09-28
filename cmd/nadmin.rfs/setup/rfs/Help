@@ -1,0 +1,57 @@
+#ident	"@(#)nadmin.rfs:setup/rfs/Help	1.2"
+setup:set_net:Sets Up Network Support for RFS
+	The set task allows you to add (remove) a transport
+	provider to (from) the list of transport providers
+	that support Remote File Sharing.
+
+setup:set_domain:Sets the Current Domain for RFS
+	The set_domain task allows you to set the current RFS
+	domain.
+
+setup:addmaster:Adds Domain Name Servers
+	The add_nameserver task allows an administrator of the 
+	primary name server of an RFS domain to add secondary name 
+	servers to appropriate rfmaster files.  The RFS domain to be 
+	administered must be the domain of which the local 
+	system is currently a member.  If the current domain has 
+	no primary name server, then the administrator may add the 
+	local system as the primary name server.
+	To change the current domain, choose the set_domain task
+	on the systems menu.
+
+setup:add_host:Adds Systems to the Domain Password File
+	The add_host task allows an administrator of the primary name
+	server of an RFS domain to add a system to the domain
+	password file.  The RFS domain to be administered must be
+	the domain of which the local system is currently a member.
+	To change the current domain, choose the set_domain task
+	on the systems menu.
+
+setup:uid_map:Sets Up UID Mappings
+	The set task allows you to setup some simple
+	user id mappings for Remote File
+	Sharing.
+
+setup:gid_map:Sets Up GID Mappings
+	The set task allows you to setup some simple
+	group id mappings for Remote File
+	Sharing.
+
+setup:share:Shares Local Resources via Remote File Sharing
+	The share menu allows you to make available to remote
+	systems selected resources on your local system.  You may
+	set up automatic sharing (for sharing local resources with
+	remote systems when distributed file system operation
+	begins).  Your may also share local resources immediately.
+	
+setup:mount:Mounts Remote Resources via Remote File Sharing
+	The mount menu allows you to make available to local
+	users selected resources on remote systems.  You may
+	arrange for remote resources to be automatically mounted
+	when distributed file system operation begins.  You may
+	also cause remote resources to be mounted immediately.
+	
+setup:start:Starts Remote File Sharing
+	The start task allows you to start the operation of
+	Remote File Sharing.
+

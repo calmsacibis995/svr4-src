@@ -1,0 +1,14 @@
+ABSTRACT:
+	This task allows the administrator of a system to remove any
+	installed applications in the set of Global Programs.
+
+F1:Remove Global Programs
+	The Remove Global Programs task allows you to remove programs
+	that you have added to the Programs Menu in FACE.
+	
+	Each item on the menu represents a global program that you have
+	installed in FACE.  Move to the program that you wish to delete
+	and press ENTER to select it. Once you have selected a program
+	from the menu, a confirmation window will be displayed.  If you
+	press the CONT function key, the program will be deleted.  If you
+	press the CANCEL function key, the program will NOT be deleted.

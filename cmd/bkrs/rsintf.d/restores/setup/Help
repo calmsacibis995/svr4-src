@@ -1,0 +1,17 @@
+#ident	"@(#)bkrs:rsintf.d/restores/setup/Help	1.4.1.1"
+
+ABSTRACT: Restore Request Login
+	The "operator" task allows you to set the restore request operator
+	login.  This login will be notified by mail whenever a restore
+	request that requires operator intervention is queued.
+
+TITLE: Restore Request Login
+
+F1:Restore Operator Assign Field
+	"Restore operator xxx assigned ddd:"  where "xxx" is the login
+	currently assigned as the restore request operator and "ddd" is the
+	date that operator was assigned.  If no operator has been assigned
+	yet, both "xxx" and "ddd" are blank.  You may enter the login which
+	should become the restore operator in this field and press [SAVE]
+	to save the change.  If you [CANCEL] or [QUIT], the operator login
+	will stay as it is.

@@ -1,0 +1,38 @@
+#ident	"@(#)face:OBJECTS/dos/Form.udconv	1.1"
+`set -l OLDVMSYS="$VMSYS" -l VMSYS="/usr/vmsys"`
+
+form="`readfile $VMSYS/admin/dos/$ARG1`"
+
+lifetime=longterm
+
+done=`$VMSYS/admin/dos/udconv "$F1" "$F2" $ARG1 $VPID | regex -e 
+	0 'OPEN TEXT $VMSYS/OBJECTS/dos/Text.udgood'
+	1 'OPEN TEXT $VMSYS/OBJECTS/dos/Text.udbad'`
+
+close=`set -l VMSYS="$OLDVMSYS"`
+
+help=OPEN TEXT $OLDVMSYS/OBJECTS/Text.h "Conversion" "$LININFO"
+
+name=Name of source file:
+nrow=1 
+ncol=2
+rows=1
+columns=35
+frow=1 
+fcol=23
+valid=`[ -f $F1 ]`
+invalidmsg="You did not type a valid source file"
+lininfo="dos/T.hudconv1"
+fieldmsg=Type the full path of the source file.
+
+name=Name of target file:
+nrow=3 
+ncol=2
+rows=1
+columns=35
+frow=3
+fcol=23
+valid=`[ "$F2" != "$F1" -a "$F2" ]`
+invalidmsg="You did not type a valid target file"
+lininfo="dos/T.hudconv2"
+fieldmsg=Type the full path of the target file.

@@ -1,0 +1,17 @@
+#ident	"@(#)xinstall:inst.perms	1.1"
+#       @(#) inst.perms 1.1 90/04/24 xinstall:inst.perms
+#
+#
+#
+# User id's:
+#
+uid     root            0
+uid     bin             2
+#
+# Group id's:
+#
+gid     root            0
+gid     bin             2
+#
+#
+LINK	d755	  bin/bin 1	  ./etc/perms      01

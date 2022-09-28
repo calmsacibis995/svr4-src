@@ -1,0 +1,31 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FORM/Form.asel	1.1"
+form="Form Name"
+lifetime=longterm
+
+#help=open text $VMSYS/OBJECTS/Text.h "Form Name" "PS/FORM/T.hasel1"
+
+done=open form /usr/vmsys/OBJECTS/PS/FORM/Form.add $F1
+
+
+
+name=Form Name:
+nrow=1
+ncol=2
+rows=1
+columns=8
+frow=1
+fcol=13
+valid=`/usr/vmsys/admin/PS/FORM/noform.sh "$F1" ` 
+fieldmsg=const "Type the name of the form. Strike SAVE when you complete the form."
+invalidmsg=`readfile /usr/tmp/err.$VPID`
+
+
+
+name=CMD-MENU
+button=7
+action=cmd-menu
+
+
+name=""
+button=8
+actio=nop

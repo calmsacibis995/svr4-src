@@ -1,0 +1,62 @@
+#ident	"@(#)lp.admin:printers/printers/add/Text.access	1.2.1.1"
+
+title="Error: Set Printer Access Permissions Subtask"
+
+row=15
+columns=55
+
+altslks=true
+begrow=distinct
+begcol=distinct
+
+text="
+    Press CANCEL to quit this process and continue 
+    to the next subtask.  You can set printer access
+    permissions later using the printer modify
+    capability. 
+
+    While saving the printer access permissions,
+    the following error(s) occurred:
+
+`readfile $error`
+
+"
+
+name=HELP
+button=9
+action=help
+
+name=PREVPAGE
+button=10
+action=prevpage
+
+name=NEXTPAGE
+button=11
+action=nextpage
+
+name=PREV-FRM
+button=12
+action=prev-frm
+
+name=NEXT-FRM
+button=13
+action=next-frm
+
+name=CANCEL
+button=14
+action=`
+	set -e toclose="$toclose $OAMBASE/add-ons/lp/printers/printers/add/Text.access";
+	if [ "$use_stdprt" = "no" -a "$lp_fldsys" = "$lp_system" ];
+	then
+		message -w "Going to next subtask, please wait.";
+		echo "OPEN FORM $OAMBASE/add-ons/lp/printers/printers/add/Form.comm.lcl";
+	else
+		message -w "No more subtasks.  Printer add complete.";
+		rm -f $datafile $error;
+	        echo "close $toclose";
+			unset -e toclose;
+	fi;
+`
+name=CMD-MENU
+button=15
+action=cmd-menu

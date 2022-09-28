@@ -1,0 +1,96 @@
+#ident	"@(#)filemgmt:defaults/Form.modify2	1.1.3.1"
+Form="Modify Defaults for a File System"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+done=`indicator -w;
+	message "Modifying defaults for File System. Please wait...";
+		$OAMBASE/bin/moddef "$F1" "$F2" "$F3" "$F4" "$F6" "$F7" "$ARG7" "$ARG8"`OPEN TEXT $OBJ_DIR/Text.modify2 "$F1"
+
+
+
+
+name="Device that contains the file system:"
+lininfo=Form.modify2:F1
+nrow=1
+ncol=1
+frow=1
+fcol=39
+rows=1
+columns=20
+rmenu={ `$OAMBASE/bin/getdefdev | grep -v ALL | sort` }
+value="$ARG1"
+valid=`$OAMBASE/bin/validdev "$F1"`
+invalidmsg="Error - $F1 is not a valid device name"
+
+name="File system name when mounted:"
+lininfo=Form.modify2:F2
+nrow=2
+ncol=1
+frow=2
+fcol=32
+rows=1
+columns=14
+valid=`[ -d "$F2" ]`
+value="$ARG2"
+
+name="File System type:"
+lininfo=Form.modify2:F3
+nrow=3
+ncol=1
+frow=3
+fcol=19
+rows=1
+columns=14
+value="$ARG3"
+rmenu={ `$OAMBASE/bin/sysfs | sort ` }
+menuonly=true
+invalidmsg="Error - $F3 is not a valid file system type"
+
+name="Should the file system be automatically mounted at boot:"
+lininfo=Form.modify2:F4
+nrow=4
+ncol=1
+frow=4
+fcol=58
+rows=1
+columns=3
+value="$ARG6"
+rmenu={ yes no }
+menuonly=true
+invalidmsg="Press CHOICES to select valid response."
+
+name="Mount Options:"
+lininfo=Form.modify2:F5
+nrow=6
+ncol=1
+frow=6
+fcol=28
+inactive=true
+
+name="Read and write privileges:"
+lininfo=Form.modify2:F6
+nrow=7
+ncol=1
+frow=7
+fcol=28
+rows=1
+columns=14
+value="$ARG4"
+rmenu={ read/write read-only }
+menuonly=true
+invalidmsg="Press CHOICES to select valid response."
+
+name="Should setuid programs be allowed:"
+lininfo=Form.modify2:F7
+nrow=8
+ncol=1
+frow=8
+fcol=36
+rows=1
+columns=3
+value="$ARG5"
+rmenu={ yes no na }
+menuonly=true
+invalidmsg="Press CHOICES to select valid response."

@@ -1,0 +1,49 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/WHEEL/Text.cadel	1.1"
+title=Confirmation
+lifetime=shortterm
+altslks=true
+
+rows=6
+columns=55
+
+`message  Strike the CONT function key to confirm, or strike CANCEL to cancel.`
+
+text="
+  If you confirm, all printwheels on your system
+  will be deleted. This means that your system
+  will not recognize any printwheels. If you 
+  strike CANCEL, the printwheel will not be deleted."
+
+name=CANCEL
+button=14
+action=close /usr/vmsys/OBJECTS/PS/WHEEL/Text.cadel /usr/vmsys/OBJECTS/PS/WHEEL/Menu.wdelete
+
+
+name=CONT
+button=11
+action=`/usr/vmsys/admin/.chkuser -c "/usr/vmsys/admin/PS/WHEEL/rmwheel.sh :$ARG1: " `close /usr/vmsys/OBJECTS/PS/WHEEL/Text.cadel /usr/vmsys/OBJECTS/PS/WHEEL/Menu.wdelete
+
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=""
+button=10
+action=nop
+
+name=""
+button=9
+action=nop
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+`indicator -w`

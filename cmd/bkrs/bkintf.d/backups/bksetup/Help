@@ -1,0 +1,39 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/Help	1.3.1.1"
+
+ABSTRACT: Setup Backup Control Table
+	The "setup" menu subcommands allow you to create, modify and
+	display the contents of the backup control table(s).  You may
+	also modify the backup rotation period and current week of the
+	rotation for a backup table.
+	
+	The backup table embodies the backup scheme for a given
+	computer.  It contains information about what is to be backed
+	up, how and when. The entire scheme is based on the specified
+	rotation period.  This is a period in weeks that designates
+	when backup operations are repeated.  Each entry in a backup
+	table contains a designation of weeks and days of the rotation
+	on which this backup operation will occur.  For example, if
+	the rotation period is one week and the backup table contains
+	an entry to back up the /usr file system every weekend durring
+	week 1 of the rotation, then every weekday of every week the
+	/usr file system will be backed up (assuming that the backup
+	command is run each weekday of every week).
+	
+	Each entry in a backup table corresponds to a backup operation
+	and is identified by a tag that is unique within that table.
+	It is a good idea to make the tag meaningful to those who will
+	be running the backups.  For example, the tag could describe
+	the object to be backed up and the frequency with which the
+	backup operation will take place ("usrdai" would be the /usr
+	file system's daily backup).
+	
+	Each backup table entry describes the object (file system or
+	data partition) that is to be backed up, when the backup is
+	to take place (which weeks and days of the backup rotation
+	period), what method is to be used (for example, full file,
+	incremental file, full disk, etc.), the destination device and
+	volumes to be used to hold the archived data, the priority at
+	which the backup is to be run and any other backups on which 
+	this one depends.
+
+TITLE: Setup Backup Control Table

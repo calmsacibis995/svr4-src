@@ -1,0 +1,107 @@
+#ident	"@(#)portmgmt:port_services/Form.ps_addls	1.5.3.1"
+
+form= Add Port Services for listener
+lifetime=shorterm
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=`unset -l stype`
+done=`message -w "Adding service <$ARG1> to the system.";
+	lsopts "$F1" "$F2" "$F3" "$F4" >> /var/tmp/cmd$PID;
+	sh /var/tmp/cmd$PID >/var/tmp/err$PID 2>/var/tmp/err$PID;
+   	regex -e -v "$RET"
+		'^0$'  '`message "Service <$ARG1> is added successfully."`'
+		'^4$'  '`message "Service <$ARG1> is added successfully."`'
+		'^.*$' '`message "Service <$ARG1> is not added."`';
+	RESET`
+
+# $F1
+name=Service type:
+nrow=1
+ncol=2
+frow=1
+fcol=17
+rows=1
+columns=19
+lininfo=lssvctype
+value=Spawn a service
+rmenu={ "Spawn a service" "Pass fd to a server" }
+menuonly=true
+choicemsg=const "Press CHOICES to toggle through the choices."
+fieldmsg=const "Select type of service. Press CHOICES for valid choices."
+invalidmsg=const "Error - invalid input, select from choice menu only"
+
+# $F2
+name=Full service command line OR name of a STREAMS pipe:
+nrow=2
+ncol=2
+frow=3
+fcol=5
+rows=1
+columns=40
+lininfo=lscmd
+valid=`regex -e -v "$F1"
+		'^Spawn.*$' '`set -l stype=command`'
+		'^.*$' '`set -l stype=pipe`' ;
+	ckfile "$stype" "$F2"`
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - enter full path name of command or pipe.'
+		'^2$'	'Error - must specify full pathname.'
+		'^3$'	'Error - file does not exist.'
+		'^4$'	'Error - command is not executable.'
+		'^7$'	'Error - file is not a pipe.'
+		'.*'	'Error - invalid file name'`
+choicemsg=const "Enter full service command line OR full path name of the STREAMS pipe."
+fieldmsg=const "Enter full service command line OR full path name of the STREAMS pipe."
+scroll=TRUE
+
+# $F3
+name=Modules to be pushed:
+nrow=6
+ncol=5
+frow=6
+fcol=28
+rows=1
+columns=34
+lininfo=psmodules
+valid=`pmckmod "$F3"`
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - invalid module list.'
+		'^2$'	'Error - too many modules listed.'
+		'^3$'	'Error - cannot open /dev/sad/user.'
+		'^4$'	'Error - SAD_VML ioctl failed.'
+		'.*'	'Error - invalid module list.'`
+fieldmsg=const "Enter a list of modules seperated by commas. e.g. mtty,tirdwr,ldterm."
+choicemsg=const "Enter a list of modules seperated by commas. e.g. mtty,tirdwr,ldterm."
+
+# $F4
+name=Server\'s private address:
+nrow=7
+ncol=5
+frow=7
+fcol=32
+rows=1
+columns=30
+lininfo=lsaddr
+choicemsg=const "Enter the private address of the server."
+fieldmsg=const "Enter the private address of the server."
+scroll=TRUE
+
+name=(Optional fields)
+nrow=5
+ncol=2
+inactive=TRUE
+
+name=Fill in the form and then press SAVE.
+nrow=9
+ncol=4
+inactive=TRUE
+
+name=" "
+nrow=10
+ncol=2
+inactive=TRUE
+show=FALSE
+
+name=Page 2 of 2
+nrow=0
+ncol=50
+inactive=TRUE

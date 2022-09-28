@@ -1,0 +1,146 @@
+#ident	"@(#)portmgmt:tty_settings/ttyvalues	1.1"
+#	Flag Values found in /etc/ttydefs
+
+0	Hang Up 
+110	110 Baud
+1200	1200 Baud
+134	134 Baud
+150	150 Baud
+1800	1800 Baud
+200	200 Baud
+2400	2400 Baud
+300	300 Baud
+4800	4800 Baud
+50	50 Baud
+600	600 Baud
+75	75 Baud
+9600	9600 Baud
+19200	19200 Baud
+38400	38400 Baud
+brkint	Signal Interrupt on Break
+bs0	No Delay After Backspace
+bs1	Short Delay After Backspace
+bsdly	Select Backspace Delays
+cbaud	
+cdel	
+ceof	cntl d
+cerase	
+cesc	
+cintr	DEL
+ckill	
+clocal	Local line
+cnswtch	
+cnul	
+cquit	FS, cntl |
+cr0	No Delay After Carriage-return
+cr1	Short Delay After Carriage-return
+cr2	Medium Delay After Carriage-return
+cr3	Long Delay After Carriage-return
+crdly	Select Carriage-return Delay
+cread	Enable Receiver
+cs5	5 Bit Character
+cs6	6 Bit Character
+cs7	7 Bit Character
+cs8	8 Bit Character
+csize	Character Size
+cstart	cntl q
+cstop	cntl s
+cstopb	Send two stop bits
+cswtch	cntl z
+echo	Enable Echo
+echoe	Echo Erase Character as Backspace/Space/Backspace
+echok	Echo New-line after Line Kill
+echonl	Echo New-line
+evenp	Parity Enabled, 7 Bit Character
+exta	External A
+extb	External B
+ff0	No Delay After Form-feed
+ff1	Short Delay After Form-feed
+ffdly	Select Form-feed Delays
+hupcl	Hang Up on Last Close
+icanon	Canonical Input (character erase and line kill processing)
+icrnl	Map Carriage-return to New-line
+ignbrk	Ignore Break
+igncr	Ignore Carriage-return
+ignpar	Ignore Characters with Parity Errors
+inlcr	Map New-line to Carriage-return
+inpck	Enable Input Parity Check
+ioctype	
+isig	Enable Signals
+istrip	Strip Character
+iuclc	Map Upper-case to Lower-case on Input
+ixany	Enable Any Character to Restart Output
+ixoff	Enable Start/Stop Input Control
+ixon	Enable Start/Stop Output Control
+ldchg	
+ldclose	
+ldgett	
+ldioc	
+ldopen	
+ldsett	
+loblk	Block Layer Output
+ncc	
+nl0	No Delay After New-line
+nl1	Short Delay After New-line
+nldly	Select New-line Delays
+noflsh	Disable Flush after interrupt or quit
+ocrnl	Map Carriage-return To New-line On Output
+oddp	Parity Enabled, 7 Bit Character, Odd Parity
+ofdel	Fill is DEL Character
+ofill	Use Fill Characters For Delay
+olcuc	Map Lower Case To Upper Case On Output
+onlcr	Map New-line To Carriage-return/New-line On Output
+onlret	New-line Performs Carriage-return Function
+onocr	No Carriage-return at Column 0
+opost	Postprocess Output
+parenb	Parity Enabled
+parity	Parity Enabled, 7 Bit Character
+parmrk	Mark Parity Errors
+parodd	Odd Parity
+sane	Set All Modes To "Traditionally Reasonable" Values
+sspeed	Default speed: 300 baud
+tab0	No Delay After Horizontal-tab
+tab1	Short Delay After Horizontal-tab
+tab2	Long Delay After Horizontal-tab
+tab3	Expand Horizontal-tab To Spaces
+tabdly	Select Horizontal-tab Delays
+tcdset	
+tcflsh	
+tcgeta	
+tcsbrk	
+tcseta	
+tcsetaf	
+tcsetaw	
+tcxonc	
+term_d40	TTY Mod 40/1
+term_d42	TTY Mod 40/2B
+term_h45	Hewlett-Packard 45
+term_none	tty
+term_tec	TEC Scope
+term_tex	Tektronix 4023
+term_v10	DEC VT100
+term_v61	DEC VT61
+tioc	
+tm_anl	auto newline on column 80
+tm_cecho	echo terminal cursor control
+tm_cinvis	DO NOT send esc seq to user
+tm_lcf	last col of last row special
+tm_none	use default flags
+tm_set	must be on to set/res flags
+tm_snl	special newline flag
+veof	
+veol	
+veol2	
+verase	
+vintr	
+vkill	
+vmin	
+vquit	
+vswtch	
+VT0	No Delay After Vertical-tab
+VT1	Short Delay After Vertical-tab
+vtdly	Select Vertical-tab Delays
+vtime	
+xcase	Canonical Upper/Lower Case Presentation
+erase	Set erase character
+^h	Back space character

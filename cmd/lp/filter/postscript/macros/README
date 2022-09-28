@@ -1,0 +1,38 @@
+
+Picture inclusion and color selection macros. Reverse video is also supported
+as a special case of color. tmac.pictures and tmac.color should be installed in
+/usr/lib/tmac if you want to use troff's -m command line option. Otherwise you'll
+have to add lines that look like,
+
+	.so /usr/lib/macros/pictures
+
+and,
+
+	.so /usr/lib/macros/color
+
+to your troff input files whenever you want to use the picture or color macros.
+
+Porting the picture inclusion macros to mm and ms wasn't difficult, although there
+are undoubtedly some surprises waiting. mm needed no changes, but there's at least
+one known problem that hasn't been resolved. If you're printing a left justified
+picture and filling text on the right things get messed up if you come to a heading
+before the picture ends. Apparently the .H macro resets the indent (but not the
+line length). The simplest fix, if you have problems, is call .EP right before the
+.H macro.
+
+Two simple changes to the ms macros are required before picture inclusion will
+work (with ms). The changes, at least in our version of ms, are,
+
+	5c5
+	> .if !\\n(IK .if !\\n(IF .if !\\n(IX .if !\\n(BE .di
+	---
+	< .if !\\n(IK .if !\\n(IF .if !\\n(IX .if !\\n(BE .if !\\n(FT .di
+	11c11
+	> .if \\n(NX<=1 .if \\n(AJ=0 .ll \\n(LLu
+	---
+	< .if \\n(NX<=1 .if \\n(AJ=0 .if \\n(FT=0 .ll \\n(LLu
+
+It might also be convenient to add a call to .EP in the ms .EM macro. Once you've
+made the ms changes the picture inclusion and color selection macros should work
+with most mm and ms documents.
+

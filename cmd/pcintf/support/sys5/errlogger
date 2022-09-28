@@ -1,0 +1,23 @@
+#ident	"@(#)pcintf:support/sys5/errlogger	1.1"
+#! /bin/sh
+# @(#)errlogger	1.2	Changed   2	17:36:26	
+
+# PC-Interface error dispatcher
+
+# Catch all std-out/err output and discard it
+( 
+  tmpFile=/tmp/PCIerr$$
+  
+  # Stash a copy of message in a temp file
+  # Prepend a small explanatory header to standard error message
+  echo "\nSerious or fatal error from PC-Interface:" > $tmpFile
+  cat >> $tmpFile
+  echo >> $tmpFile
+  
+  # Send it all to root and to the console
+  mail root < $tmpFile &
+  cp $tmpFile /dev/console
+  
+  # Clean up
+  rm -f $tmpFile
+) > /dev/null 2>&1

@@ -1,0 +1,55 @@
+#ident	"@(#)filemgmt:make/Form.existsfs	1.1.2.1"
+Form="Create A File System (make)"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=unset -l FRM
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+done=` indicator -w;
+	getfrm | set -l FRM;
+	if [ "$F3" = "yes" ];
+	then
+		$OAMBASE/bin/invfstab "$ARG1" | set -l RVAL2;
+		if [ "$RVAL2" = "true" ];
+		then 
+			/usr/bin/cut -d" " -f2  /tmp/invfstab| set -l MOUNTP;
+			set -l CMD="OPEN FORM $OBJ_DIR/Form.make2 $ARG1 $ARG2 $MOUNTP";
+		else 
+			set -l CMD="OPEN FORM $OBJ_DIR/Form.make2 $ARG1 $ARG2 ";
+		fi;
+		/usr/bin/rm /tmp/invfstab 2>/dev/null;
+	else
+		set -l CMD="CLOSE $FRM";
+	fi;
+	`$CMD
+
+
+name="Warning: A file system already exists on this device."
+lininfo=Form.existsfs:F1
+nrow=1
+ncol=1
+frow=1
+fcol=30
+inactive=true
+
+
+name="It will be overwritten by the new file system."
+lininfo=Form.existsfs:F2
+nrow=2
+ncol=1
+frow=2
+fcol=40
+inactive=true
+
+name="Is this what you want?"
+lininfo=Form.existsfs:F3
+nrow=3
+ncol=1
+frow=3
+fcol=24
+rows=1
+columns=3
+rmenu={ yes no }
+value=yes
+menuonly=true
+invalidmsg="Press CHOICES to select valid response."

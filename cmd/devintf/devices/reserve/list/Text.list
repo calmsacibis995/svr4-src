@@ -1,0 +1,31 @@
+#ident	"@(#)devintf:devices/reserve/list/Text.list	1.4"
+
+title="Reserved Devices"
+lifetime=longterm
+wrap=false
+help=OPEN TEXT $INTFBASE/Text.itemhelp "LISTING"
+framemsg=`readfile $INTFBASE/display.msg`
+begrow=any
+begcol=any
+lifetime=longterm
+
+init=`
+    devreserv | sort | set -l LIST ;
+    if [ "$LIST" ] ;
+    then set -l GO=TRUE ;
+    else set -l GO=FALSE ;
+	 message 'No devices are currently reserved.' ;
+    fi ;
+`$GO
+
+columns=22
+rows=`
+    echo "$LIST" | wc -l | tr -d " " | set -l FOO ;
+    expr "$FOO" '+' "2" | set -l NROWS ;
+    if [ $NROWS -gt 15 ] ;
+    then set -l NROWS=15 ;
+    fi ;
+`$NROWS
+text="Device           Key
+--------------  -----
+$LIST"

@@ -1,0 +1,9 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/Text.lssrvr	1.3"
+title="Lists the Active RFS Domain Name Servers"
+columns=50
+`readfile $INTFBASE/display.msg | message -p`
+
+`shell "$INTFBASE/netservices/remote_files/other/rfs/system/bin/act_nserve" | set -l PID`
+
+text="Active Name Servers of current RFS Domain:
+`readfile /var/tmp/nsrv_$PID`"

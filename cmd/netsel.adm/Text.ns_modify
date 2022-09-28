@@ -1,0 +1,30 @@
+#ident	"@(#)netsel.adm:Text.ns_modify	1.1"
+
+
+
+title=Modify Network Selection Configurations
+rows=10
+columns=60
+altslks=true
+
+text="
+   `if [ $ARG1 = 0 ];
+ then
+	echo "Entry is modified successfully.";
+ else
+	if [ $ARG1 = 1 ];
+ 	then
+		echo "No fields are changed.";
+	else
+		readfile /var/tmp/.stderr;
+		echo " ";
+		echo "   Modify entry failed.";
+	fi;
+ fi`
+	
+   Press [CONT] to modify another entry,
+      or [QUIT] to quit."
+
+name=CONT
+button=11
+action=CLOSE `getfrm` $ARG2

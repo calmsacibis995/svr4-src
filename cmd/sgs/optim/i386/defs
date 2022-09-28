@@ -1,0 +1,600 @@
+#ident	"@(#)optim:i386/defs	1.1.1.14"
+
+/*      machine dependent include file for the Intel 386 */
+
+# include <ctype.h>
+# include <string.h>
+
+/* For now, turn off everything */
+#define IMPREGAL
+#define IMPIL
+/* #define IMPCOMTAIL */
+
+#define TSRET	2	/* used by optim on parse_com for TMPSRET */
+
+/* Intel 386 opcodes */
+
+#define LABEL	3
+#define HLABEL	4
+#define DHLABEL	5	/* hard label created for .def .line */
+#define ASMS	6
+#define LCMT	7
+
+#define	CALL	21
+#define	LCALL	22
+#define	RET	23
+#define	LRET	24
+#define	JMP	25
+#define	LJMP	26
+#define	JA	27
+#define	JAE	28
+#define	JB	29
+#define	JBE	30
+#define	JC	31
+#define	JCXZ	32
+#define	JE	33
+#define	JG	34
+#define	JGE	35
+#define	JL	36
+#define	JLE	37
+#define	JNA	38
+#define	JNAE	39
+#define	JNB	40
+#define	JNBE	41
+#define	JNC	42
+#define	JNE	43
+#define	JNG	44
+#define	JNGE	45
+#define	JNL	46
+#define	JNLE	47
+#define	JNO	48
+#define	JNP	49
+#define	JNS	50
+#define	JNZ	51
+#define	JO	52
+#define	JP	53
+#define	JPE	54
+#define	JPO	55
+#define	JS	56
+#define	JZ	57
+#define	LOOP	58
+#define	LOOPE	59
+#define	LOOPNE	60
+#define	LOOPNZ	61
+#define	LOOPZ	62
+#define	REP	63
+#define	REPNZ	64
+#define	REPZ	65
+#define	AAA	66
+#define	AAD	67
+#define	AAM	68
+#define	AAS	69
+#define	DAA	70
+#define	DAS	71
+#define	ADCB	72
+#define	ADCW	73
+#define	ADCL	74
+#define	ADDB	75
+#define	ADDW	76
+#define	ADDL	77
+#define	DECB	78
+#define	DECW	79
+#define	DECL	80
+#define	DIVB	81
+#define	DIVW	82
+#define	DIVL	83
+#define	IDIVB	84
+#define	IDIVW	85
+#define	IDIVL	86
+#define	IMULB	87
+#define	IMULW	88
+#define	IMULL	89
+#define	INCB	90
+#define	INCW	91
+#define	INCL	92
+#define	MULB	93
+#define	MULW	94
+#define	MULL	95
+#define	NEGB	96
+#define	NEGW	97
+#define	NEGL	98
+#define	SBBB	99
+#define	SBBW	100
+#define	SBBL	101
+#define	SUBB	102
+#define	SUBW	103
+#define	SUBL	104
+#define	ANDB	105
+#define	ANDW	106
+#define	ANDL	107
+#define	ORB	108
+#define	ORW	109
+#define	ORL	110
+#define	XORB	111
+#define	XORW	112
+#define	XORL	113
+#define	CLRB	114
+#define	CLRW	115
+#define	CLRL	116
+#define	RCLB	117
+#define	RCLW	118
+#define	RCLL	119
+#define	RCRB	120
+#define	RCRW	121
+#define	RCRL	122
+#define	ROLB	123
+#define	ROLW	124
+#define	ROLL	125
+#define	RORB	126
+#define	RORW	127
+#define	RORL	128
+#define	SALB	129
+#define	SALW	130
+#define	SALL	131
+#define	SARB	132
+#define	SARW	133
+#define	SARL	134
+#define	SHLB	135
+#define	SHLW	136
+#define	SHLL	137
+#define	SHRB	138
+#define	SHRW	139
+#define	SHRL	140
+#define	SHLDW	141
+#define	SHLDL	142
+#define	SHRDW	143
+#define	SHRDL	144
+#define	CMPB	145
+#define	CMPW	146
+#define	CMPL	147
+#define	TESTB	148
+#define	TESTW	149
+#define	TESTL	150
+#define	CBTW	151
+#define	CWTL	152
+#define	CWTD	153
+#define	CLTD	154
+#define	LDS	155
+#define	LEAW	156
+#define	LEAL	157
+#define	LES	158
+#define	MOVB	159
+#define	MOVW	160
+#define	MOVL	161
+#define	MOVSBW	162
+#define	MOVSBL	163
+#define	MOVSWL	164
+#define	MOVZBW	165
+#define	MOVZBL	166
+#define	MOVZWL	167
+#define	NOTB	168
+#define	NOTW	169
+#define	NOTL	170
+#define	POPW	171
+#define	POPL	172
+#define	PUSHW	173
+#define	PUSHL	174
+#define	XCHGB	175
+#define	XCHGW	176
+#define	XCHGL	177
+#define	XLAT	178
+#define	CLC	179
+#define	CLD	180
+#define	CLI	181
+#define	CMC	182
+#define	LAHF	183
+#define	POPF	184
+#define	PUSHF	185
+#define	SAHF	186
+#define	STC	187
+#define	STD	188
+#define	STI	189
+#define	SCAB	190
+#define	SCAW	191
+#define	SCAL	192
+#define	SCMPB	193
+#define	SCMPW	194
+#define	SCMPL	195
+#define	SLODB	196
+#define	SLODW	197
+#define	SLODL	198
+#define	SMOVB	199
+#define	SMOVW	200
+#define	SMOVL	201
+#define	SSTOB	202
+#define	SSTOW	203
+#define	SSTOL	204
+#define	INB	205
+#define	INW	206
+#define	INL	207
+#define	OUTB	208
+#define	OUTW	209
+#define	OUTL	210
+#define	ESC	211
+#define	HLT	212
+#define	INT	213
+#define	INTO	214
+#define	IRET	215
+#define	LOCK	216
+#define	WAIT	217
+#define	ENTER	218
+#define	LEAVE	219
+#define	PUSHA	220
+#define	POPA	221
+#define	INS	222
+#define	OUTS	223
+#define	BOUND	224
+#define	CTS	225
+#define	LGDT	226
+#define	SGDT	227
+#define	LIDT	228
+#define	SIDT	229
+#define	LLDT	230
+#define	SLDT	231
+#define	LTR	232
+#define	STR	233
+#define	LMSW	234
+#define	SMSW	235
+#define	LAR	236
+#define	LSL	237
+#define	ARPL	238
+#define	VERR	239
+#define	F2XM1	240
+#define	FABS	241
+#define	FCHS	242
+#define	FCLEX	243
+#define	FCOMPP	244
+#define	FDECSTP	245
+#define	FINCSTP	246
+#define	FINIT	247
+#define	FLD1	248
+#define	FLDL2E	249
+#define	FLDL2T	250
+#define	FLDLG2	251
+#define	FLDLN2	252
+#define	FLDPI	253
+#define	FLDZ	254
+#define	FNCLEX	255
+#define	FNINIT	256
+#define	FNOP	257
+#define	FPATAN	258
+#define	FPREM	259
+#define	FPTAN	260
+#define	FRNDINT	261
+#define	FSCALE	262
+#define	FSETPM	263
+#define	FSQRT	264
+#define	FTST	265
+#define	FWAIT	266
+#define	FXAM	267
+#define	FXTRACT	268
+#define	FYL2X	269
+#define	FYL2XP1	270
+#define	FLDCW	271
+#define	FSTCW	272
+#define	FNSTCW	273
+#define	FSTSW	274
+#define	FNSTSW	275
+#define	FSTENV	276
+#define	FNSTENV	277
+#define	FLDENV	278
+#define	FSAVE	279
+#define	FNSAVE	280
+#define	FRSTOR	281
+#define	FBLD	282
+#define	FBSTP	283
+#define	FIADD	284
+#define	FIADDL	285
+#define	FICOM	286
+#define	FICOML	287
+#define	FICOMP	288
+#define	FICOMPL	289
+#define	FIDIV	290
+#define	FIDIVL	291
+#define	FIDIVR	292
+#define	FIDIVRL	293
+#define	FILD	294
+#define	FILDL	295
+#define	FILDLL	296
+#define	FIMUL	297
+#define	FIMULL	298
+#define	FIST	299
+#define	FISTL	300
+#define	FISTP	301
+#define	FISTPL	302
+#define	FISTPLL	303
+#define	FISUB	304
+#define	FISUBL	305
+#define	FISUBR	306
+#define	FISUBRL	307
+#define	FADD	308
+#define	FADDS	309
+#define	FADDL	310
+#define	FADDP	311
+#define	FCOM	312
+#define	FCOMS	313
+#define	FCOML	314
+#define	FCOMP	315
+#define	FCOMPS	316
+#define	FCOMPL	317
+#define	FDIV	318
+#define	FDIVS	319
+#define	FDIVL	320
+#define	FDIVP	321
+#define	FDIVR	322
+#define	FDIVRS	323
+#define	FDIVRL	324
+#define	FDIVRP	325
+#define	FFREE	326
+#define	FLD	327
+#define	FLDS	328
+#define	FLDL	329
+#define	FLDT	330
+#define	FMUL	331
+#define	FMULS	332
+#define	FMULL	333
+#define	FMULP	334
+#define	FST	335
+#define	FSTS	336
+#define	FSTL	337
+#define	FSTP	338
+#define	FSTPS	339
+#define	FSTPL	340
+#define	FSTPT	341
+#define	FSUB	342
+#define	FSUBS	343
+#define	FSUBL	344
+#define	FSUBP	345
+#define	FSUBR	346
+#define	FSUBRS	347
+#define	FSUBRL	348
+#define	FSUBRP	349
+#define	FXCH	350
+
+#define	OTHER	352
+
+/* pseudo ops */
+
+enum psops { /* arranged alphabetically by their actual spellings */
+	TWOBYTE,	/* .2byte */
+	FOURBYTE,	/* .4byte */
+	ALIGN,
+	BCD,
+	BSS,
+	BYTE,
+	COMM,
+	DATA,
+	EVEN,
+	EXT,
+	DOUBLE,
+	FIL,
+	FLOAT,
+	GLOBL,
+	IDENT,
+	LCOMM,
+	LOCAL,
+	LONG,
+	PREVIOUS,
+	SECTION,
+	SET,
+	SIZE,
+	STRING,
+	TEXT,
+	TYPE,
+	VALUE,
+	VERSION,
+	WEAK,
+	WORD,
+	ZERO,
+	POTHER /* gives required dimension of string table */
+};
+
+# define CC '/' /* begin comment character */
+
+# define ASMEND	"/ASMEND"
+
+/* Control sections */
+
+enum Section {CSbss,CSdata,CSdebug,CSline,CStext,CSrodata,CSdata1,CSother} ;
+
+/* predicates and functions */
+
+# define islabel(p) \
+	(p != NULL && (p->op == LABEL || p->op == HLABEL || p->op == DHLABEL))
+# define ishl(p) (p->opcode[0] != '.' || (p->opcode[0] == '.' && p->opcode[1] == '.' ) || p->op == HLABEL || p->op == DHLABEL)
+#define is_hard_label(s) (s[0] != '.' || (s[0] == '.' && s[1] == '.' ))
+# define is_debug_label(p) (p->opcode[0] == '.' && p->opcode[1] == '.' )
+# define is_label_text(s) (s[0] ==  '.' && (s[1] == '.' || isalpha(s[1])))
+# define isuncbr(p) (p->op >= RET && p->op <= LJMP)
+# define iscbr(p) (p->op >= JA && p->op <= JCXZ)
+# define isbr(p) (p->op >= RET && p->op <= LOOPZ)
+# define ishb(p) (p->op == RET || p->op == LRET || p->op == LJMP)
+#define FindWhite(p)    while(!isspace(*p) && *(p) != '\0') p++;
+#define SkipWhite(p)    while(isspace(*p)) p++;
+#define strlength(p)	(strlen(p) + 1)	/* length of string including '\0' */
+/*
+ * The second test in the isrev is extra checking so that
+ * jump indirects do not get converted to jCC indirects which
+ * are illegal on the 386.
+ */
+# define isrev(p) (p->op >= JA && p->op <= JZ && \
+		   !(p->forw != NULL && \
+		     p->forw->op == JMP && \
+		     p->forw->op1[0] == '*') \
+		  )
+
+# define isret(p) (p->op == RET || p->op == LRET)
+# define iscompare(p) (p->op == CMPL || p->op == CMPB || p->op == CMPW)
+# define setlab(p) (p->op  = LABEL)
+# define setbr(p,l) {(p)->op = JMP; (p)->opcode = "jmp"; \
+	(p)->op1 = (l);}
+# define bboptim(f,l) 0
+# define mvlivecc(p) (p->back->nlive = (p->back->nlive & ~CONCODES) | (p->nlive & CONCODES))
+# define swplivecc(p,q) { int x; x=(p->nlive & CONCODES); mvlivecc(q); q->nlive = (q->nlive & ~CONCODES) | x; }
+
+/* maximum number of operands */
+
+# define MAXOPS 4
+
+/* The live/dead analysis information */
+
+# define LIVEDEAD	25
+
+/* live dead bits for physical registers. For each of %eax, %ebx, %ecx, %edx 
+   there are 3 separate live-dead bits: Consider %eax, the 3 live-dead bits
+   correspond to the following names:
+	1. %ah
+	2. %al
+	3. %eax or %ax
+*/
+
+/* temps */
+#define	Eax	0x00000001
+#define	Edx	0x00000002
+#define	Ecx	0x00000004
+
+#define	FP0	0x00000008
+#define	FP1	0x00000010
+
+/* register variables */
+#define	Ebx		0x00000020
+#define	ESI		0x00000040
+#define	EDI		0x00000080
+
+#define FP2		0x00000100
+#define FP3		0x00000200
+#define FP4		0x00000400
+#define FP5		0x00000800
+#define FP6		0x00001000
+#define FP7		0x00002000
+
+#define	EBP		0x00004000
+#define	ESP		0x00008000
+/* condition codes */
+# define CONCODES 	0x00010000
+
+#ifdef NOSPLIT
+/* all register names for a physical register map to the same live_dead bit */
+#define	AH		Eax
+#define	AL		Eax
+#define	BH		Ebx
+#define	BL		Ebx
+#define	CH		Ecx
+#define	CL		Ecx
+#define	DH		Edx
+#define	DL		Edx
+#else
+/* separate live-dead bits for same physical register */
+#define	AH		0x00020000
+#define	AL		0x00040000
+#define	BH		0x00080000
+#define	BL		0x00100000
+#define	CH		0x00200000
+#define	CL		0x00400000
+#define	DH		0x00800000
+#define	DL		0x01000000
+#endif
+
+
+/* everything */
+#define	REGS		0x01FFFFFF
+
+
+/* references to EAX or AX references all 3 live-dead bits, similary for EBX
+   ECX and EDX
+*/
+#define EAX	(Eax|AH|AL)
+#define EBX	(Ebx|BH|BL)
+#define ECX	(Ecx|CH|CL)
+#define EDX	(Edx|DH|DL)
+
+/* maximum return registers */
+#define	MXRETREG	0x0000001F
+
+/* always live registers */
+#define	LIVEREGS	(pic_flag?(EBX|EBP|ESP):(EBP|ESP))
+
+# define isdeadcc(p) ((p->nlive & CONCODES) == 0)
+
+/* integer size for various assumptions in IMPREGAL, and IMPIL */
+#define INTSIZE 4
+
+#ifdef	IMPRETVAL
+extern int RETREG;
+#else	/* IMPRETVAL */
+#define RETREG		0x0000001F
+#endif	/* IMPRETVAL */
+
+/* options */
+
+# define MEMFCN
+# define COMTAIL
+# define PEEPHOLE
+
+/* line number stuff */
+
+# define IDTYPE int
+# define IDVAL 0
+
+#define spflg(i) ( (i) == 'K' || (i) == 'y' || (i) == 'X' || \
+		   (i) == 'Q' || (i) == '_' )	
+			/* indicate flags with suboptions
+			   K: -Ksd, -Ksz ( speed vs. size )
+			      -KPIC,-Kpic ( position indep code )
+			   y: -yu, -ys, -y<num> (inline growth)
+			   X: -Xt, -Xa, -Xc (ansi stuff)
+			   _: -_r, -_e suppress reg_alloc, enter_leave */
+
+/* States of optimization mode */
+#define	ODEFAULT	1
+#define OSPEED		1
+#define OSIZE		2
+
+extern int optmode;
+
+/* Macro to add new instruction:
+**	opn	op code number of new instruction
+**	opst	op code string of new instruction
+**	opn1	operand 1 for new instruction
+**	opn2	operand 2 for new instruction
+*/
+#define addi(pn,opn,opst,opn1,opn2) \
+	{ \
+		(pn) = insert( (pn) );		/* get new node */ \
+		chgop((pn),(opn),(opst));	/* put in opcode num, str */ \
+		(pn)->op1 = (opn1);		/* put in operands */ \
+		(pn)->op2 = (opn2);	\
+	}
+
+#define opm 	ops[MAXOPS+1]
+
+/* Macro to check for profiling code:
+**	pn	pointer to first node
+*/
+#define isprof(pn) ( (pn)->op == MOVL \
+	&& (pn)->forw->op == CALL \
+	&& strcmp( (pn)->forw->op1, "_mcount" ) == 0 ) \
+
+/* (Initial) size of line buffers */
+#define LINELEN BUFSIZ
+
+/* Max size of string needed to represent any address that does not */
+/* contain a symbolic portion  - "dddddddddd(%exx,%exx,8)\0" */
+#define NONSYMADDRSZ	(10+1+4+1+4+1+1+1+1)
+
+enum CC_Mode {Transition, Ansi, Conform};
+
+
+/* Macros to handle volatile operands */
+#define USERDATA
+#define USERTYPE int	/* defines the type of the userdata field of NODE */
+			/* We use it to hold bits indicating whether a */
+			/* given operand of the node is volatile. */
+#define USERINITVAL 0
+
+
+#define mark_vol_opnd(node,opnd) (node)->userdata |= (1 << (opnd))
+#define is_vol_opnd(node,opnd) ((node)->userdata & (1 << (opnd)))
+#ifdef DEBUGGING
+#include "debugging.h"
+#endif

@@ -1,0 +1,13 @@
+#ident	"@(#)nadmin.nfs:remote/nfs/bin/curr_mod	1.1"
+
+umount $SRV:$RPATH 2>/dev/null
+
+mount -F nfs -o $ACC$SUID$RMNT$RTRY$MTRIES$TIMEO$SEC $SRV:$RPATH $NMNT 2>/var/tmp/mnt$$
+if [ $? -eq 0 ]
+then
+	echo "Mounting of $SRV:$RPATH has been successfully modified." >/var/tmp/nfs_$$
+else
+	echo "Mounting of $SRV:$RPATH could not be modified:\n" >/var/tmp/nfs_$$
+	cat /var/tmp/mnt$$ >>/var/tmp/nfs_$$
+fi
+echo $$

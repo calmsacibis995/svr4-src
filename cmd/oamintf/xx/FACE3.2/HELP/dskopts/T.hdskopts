@@ -1,0 +1,29 @@
+The Disk Operations Menu enables you to format floppy disks and copy
+important information from one floppy disk to another.
+
+The items on the Disk Operations Menu are:
+
+      Floppy to Floppy Copy:  Before you begin, make sure that your
+      destination floppy has been formatted and does not have a
+      write-protect tab. Be sure that it does not contain any
+      information you wish to keep because existing information will
+      be overwritten.  When "Floppy To Floppy Copy" is selected, the
+      system prompts you through the procedure.  If you two floppy
+      disk drives you will be asked to specify the source drive and 
+      destination drive.  When the copy is completed, the system 
+      will allow you to make additional copies.
+
+         CAUTION: It is recommended that the source and destination
+         floppies be the same density. It is possible to copy a smaller
+         floppy to a larger floppy without any problems. If you try
+         to copy a larger floppy, you will risk running out of space
+         on the smaller floppy.
+
+      Format Floppy Disk: Enables you to format the floppy disk. 
+      These choices are always available: 1.2 MB UNIX System
+      Floppy Disk and 360 KB UNIX System Floppy Disk.  If you have a
+      3.5-inch floppy disk drive installed, you can format 1.44 MB
+      and 720 KB UNIX System floppies. These choices will be added:
+      1.44 MB UNIX System Floppy Disk and 720 KB UNIX System Floppy
+      Disk.
+

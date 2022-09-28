@@ -1,0 +1,11 @@
+#ident	"@(#)netsel.adm:Text.ns_list	1.1"
+
+title=Display Network Selection Configuration
+lifetime=shortterm
+help=OPEN TEXT $INTFBASE/Text.itemhelp display
+text="
+`nslist`
+
+   press [CANCEL] to return to the previous menu."
+columns=76
+rows=13

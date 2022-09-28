@@ -1,0 +1,30 @@
+#ident	"@(#)oamintf:syssetup/Text.apswdnok	1.1.2.1"
+################################################################################
+#	Module Name: Text.apswdnok
+################################################################################
+Title="Errors Defining Administrative and System Login(s) Password Information"
+
+`readfile $INTFBASE/conf.msg | message -t`
+#framemsg=`readfile $INTFBASE/conf.msg`
+
+lifetime=shortterm
+
+close=`rm /tmp/pswdchk`
+
+rows=6
+columns=75
+
+text="	
+An error occurred attempting to define password:
+
+   `readfile /tmp/pswdchk`"
+
+altslks
+
+name=CONT
+button=11
+action=close
+
+name=CANCEL
+button=14
+action=CLEANUP

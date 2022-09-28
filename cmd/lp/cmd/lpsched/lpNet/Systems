@@ -1,0 +1,70 @@
+#
+#ident	"@(#)lp:cmd/lpsched/lpNet/Systems	1.2"
+#
+#	The following ``#VERSION='' keyword is neccessary.
+#VERSION=1	
+#
+#	LP Spooler System Information
+#
+#	Format (same line separated by ``:'')
+#
+#		System-name
+#			The name of the remote system.
+#
+#		System-password
+#			The remote systems password (encrypted)
+#			for using our local LP services.
+#			(Currently unused.  Reserved for security
+#			version.)
+#
+#		Reserved
+#			Must be a ``-''.
+#
+#		system-type (s5|bsd)
+#			The type of the remote system.
+#			s5:  implies an SVR4.0 machine AND
+#			     SVR4.0 lp (network independent)
+#			     communication protocol.
+#				
+#			bsd: implies TCP/IP network communication AND
+#			     BSD lpd specific communication
+#			     protocol.  (This is used ONLY if
+#			     the remote system is connected to the
+#			     local system via TCP/IP AND it is a
+#			     BSD OS.
+#
+#		Reserved
+#			Must be a ``-''.
+#
+#		timeout (minutes)
+#			``n'' == never timeout
+#			``0'' == do not wait for work
+#			> 0   == wait for work
+#			Default:  Never
+#
+#		retry (minutes)
+#			``n'' == do not retry if connection is dropped.
+#			``0'' == retry immediately if connection
+#				 is dropped.
+#			> 0   == retry every N minutes until timeout.
+#			Default:  10 minutes
+#
+#		Reserved
+#			Must be a ``-''.
+#
+#		Reserved
+#			Must be a ``-''.
+#
+#		Comment
+#	NOTE:
+#	Unused fields must contain a dash except for the password field
+#	which should contain an ``x'' and the comment field which can
+#	be blank.
+#
+#	Example:
+#	
+#	Kepler:x:-:s5:-:n:10:-:-:SVR4.0 OS
+#	fubar:x:-:bsd:10:n:-:-:BSD OS
+#	Galileo:x:-:s5:-:30:10:-:-:
+#########
+

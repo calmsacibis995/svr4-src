@@ -1,0 +1,63 @@
+#ident	"@(#)nadmin.rfs:setup/rfs/Menu.setup	1.5"
+menu=Initial Remote File Sharing Setup
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=unset -l SET_SEQ
+
+`readfile $INTFBASE/ssmenu.msg | message -p;
+set -l OBJ_DIR=$INTFBASE/netservices/remote_files/setup/rfs`
+`set -l SET_SEQ=1`
+
+name=set_networks
+description=Sets Up Network Support for RFS
+action=OPEN MENU $INTFBASE/netservices/remote_files/other/rfs/net/Menu.set
+inactive=vary `[ "$SET_SEQ" != "1" ]`
+lininfo=setup:set_net
+
+name=set_domain
+description=Sets the Current Domain for RFS
+action=OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/system/Form.set
+inactive=vary `[ "$SET_SEQ" != "2" ]`
+lininfo=setup:set_domain
+
+name=add_nameserver
+description=Adds Domain Name Servers  
+action=OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/system/Form.rf_add
+inactive=vary `[ "$SET_SEQ" != "3" ]`
+lininfo=setup:addmaster
+
+name=add_host
+description=Adds Systems to the Domain Password File  
+action=OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/system/Form.p_add
+inactive=vary `[ "$SET_SEQ" != "4" ]`
+lininfo=setup:add_host
+
+name=set_uid_mappings
+description=Sets Up UID Mappings
+action=OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/id_map/Form.set
+inactive=vary `[ "$SET_SEQ" != "5" ]`
+lininfo=setup:uid_map
+
+name=set_gid_mappings
+description=Sets Up GID Mappings
+action=OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/id_map/Form.set3
+inactive=vary `[ "$SET_SEQ" != "6" ]`
+lininfo=setup:gid_map
+
+name=start
+description=Starts Remote File Sharing
+action=OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/control/Form.start "setup"
+inactive=vary `[ "$SET_SEQ" != "7" ]`
+lininfo=setup:start
+
+name=share
+description=Shares Local Resources via Remote File Sharing
+action=OPEN FORM $INTFBASE/netservices/remote_files/local/rfs/Form.share
+inactive=vary `[ "$SET_SEQ" != "8" ]`
+lininfo=setup:share
+
+name=mount
+description=Mounts Remote Resources via Remote File Sharing
+action=OPEN FORM $INTFBASE/netservices/remote_files/remote/rfs/Form.mount
+inactive=vary `[ "$SET_SEQ" != "9" ]`
+lininfo=setup:mount
+

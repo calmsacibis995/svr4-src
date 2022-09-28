@@ -1,0 +1,8 @@
+#ident	"@(#)devintf:devices/Help	1.2.1.1"
+
+ABSTRACT:
+	The "devices" menu provides access to tasks that administer the
+	device descriptions in the Device Management feature.  Tasks available
+	through this menu list and administer device descriptions, as well as
+	provide access to the device reservation system for administered
+	devices.

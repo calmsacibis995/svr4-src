@@ -1,0 +1,50 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FILTER/Text.nofltr	1.1"
+title="Warning"
+lifetime=shortterm
+altslks
+
+begrow=any
+begcol=any
+
+`message "Strike the CONT function key to continue."`
+
+text="
+  The only filters on your system are those that were
+  delivered with the line printer software. You can not
+  change or delete those filters."
+
+rows=5
+columns=58
+
+name=CANCEL
+button=14
+action=return cancel
+
+name=CONT
+button=11
+action=close
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=""
+button=10
+action=nop
+
+name=""
+button=9
+action=nop
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=return cancel
+`indicator -w`

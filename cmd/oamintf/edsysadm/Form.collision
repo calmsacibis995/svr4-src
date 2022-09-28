@@ -1,0 +1,102 @@
+#ident	"@(#)oamintf:edsysadm/Form.collision	1.7"
+
+################################################################################
+#	Module Name: Form.collision
+#	Date: March 1988
+################################################################################
+form="Collision Detected"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`if [ "$ARG1" = "addmenu" ] ;
+then
+	set -l FLAG="chgmenu"; 
+	set -l CHZ="menu";
+else
+	if [ "$ARG1" = "addtask" ] ;
+	then
+		set -l FLAG="chgtask"; 
+		set -l CHZ="task";
+	else
+		if [ "$ARG1" = "chgmenu" ] ;
+		then
+			set -l FLAG="chgmenu"; 
+			set -l CHZ="menu";
+		else
+			if [ "$ARG1" = "chgtask" ] ;
+			then
+				set -l FLAG="chgtask"; 
+				set -l CHZ="task";
+			else
+				set -l FLAG=""; 
+				set -l CHZ="";
+			fi;
+		fi;
+	fi;
+fi`
+
+
+done=`set -l NAME="$ARG2" ;
+      set -l DESC="$ARG3" ;
+      set -l LOC="$ARG4" ;
+      set -l HELP="$ARG5" ;
+      set -l ACTION="$ARG6" ;
+      set -l FILES="$ARG7" ;
+      if [ $F2 = "install" ] ;
+	then
+		message "Installing online changes in the Interface";
+	    	mkchgs $FLAG $ARG2 $ARG3 $ARG4 $ARG5 $ARG6 $ARG7 >/dev/null ;
+		if [ $RET -eq 0 ] ;
+		then
+			set -l SAMECMD="OPEN TEXT $EDSYSADM/Text.success \"$FLAG\" \"$ARG2\" \"$ARG3\" \"$ARG4\" \"$ARG5\" \"$ARG6\" \"$ARG7\"";
+		else
+			if [ $RET -eq 1 ] ;
+			then
+				set -l SAMECMD="OPEN FORM $EDSYSADM/Form.collision 
+                                               \"$FLAG\" \"$ARG2\" \"$ARG3\" \"$ARG4\" \"$ARG5\" \"$ARG6\" \"$ARG7\"";
+			else
+				set -l SAMECMD="OPEN TEXT $EDSYSADM/Text.mkchgerr \"$FLAG\" \"$ARG2\" \"$ARG3\" \"$ARG4\" \"$ARG5\" \"$ARG6\" \"$ARG7\" \"$RET\"";
+			fi;
+		fi;
+	else
+		if [ "$F2" = "rename" -o $F2 = "relocate" ] ;
+		then
+			set -l SAMECMD="OPEN FORM $EDSYSADM/Form.redo \"$ARG1\" \"$ARG2\" \"$ARG3\" \"$ARG4\" \"$ARG5\" \"$ARG6\" \"$ARG7\" \"$F2\"";
+		else if [ "$F2" = "do not install" ] ;
+			then
+				set -l SAMECMD="CLOSE $EDSYSADM/Form.collision";
+			fi;
+		fi;
+	fi`$!SAMECMD
+
+name=""
+nrow=1
+ncol=1
+frow=1
+fcol=1
+rows=1
+columns=50
+# (menu or task name) already exists in ("location").
+value=const "\"$ARG2\" already exists in \"$ARG4\"."
+inactive=true
+
+name="What do you want to do?"
+lininfo=Form.collision:coll
+nrow=2
+ncol=1
+frow=2
+fcol=25
+rows=1
+columns=14
+value=do not install
+rmenu={"do not install" install relocate rename }
+menuonly=true
+
+invalidmsg=const "Error: can only choose from the list of actions given when CHOICES is hit."
+fieldmsg=const "Enter action to be taken."
+
+name=RESET
+button=8
+action=reset

@@ -1,0 +1,12 @@
+#ident	"@(#)oamintf:usermgmt/Help	1.1.2.1"
+ABSTRACT:
+	The items in the "users" menu provide functions for managing
+	logins and groups on your machine.  They include the ability
+	to add, modify and delete users or groups defined on your
+	machine.  You can place users in groups so they can share
+	access to files belonging to members of the group, but protect
+	files from access by users not in the group.  In addition,
+	you can set defaults that will be used for subsequent user
+	definition on your machine, and you can define or redefine
+	user password information.
+

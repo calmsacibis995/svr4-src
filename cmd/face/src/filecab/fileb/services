@@ -1,0 +1,3 @@
+#3B2-4I1
+`echo 'name="Mail Services"';echo 'action=OPEN OBJECTS/Menu.mail'`
+`echo 'name="Spell Checker"';echo 'action=OPEN OBJECTS/spell/Form.spell'`

@@ -1,0 +1,49 @@
+#ident	"@(#)lp.admin:printers/requests/Text.error	1.2.2.1"
+
+title="Report of moved requests"
+altslks=true
+
+row=16
+columns=60
+
+begrow=distinct
+begcol=distinct
+
+text="
+
+Press CANCEL to continue.
+
+`readfile $error`
+
+"
+
+name=HELP
+button=9
+action=help
+
+name=PREVPAGE
+button=10
+action=prevpage
+
+name=NEXTPAGE
+button=11
+action=nextpage
+
+name=PREV-FRM
+button=12
+action=prev-frm
+
+name=NEXT-FRM
+button=13
+action=next-frm
+
+name=CANCEL
+button=14
+action=`
+	rm -f $error;
+	echo "close /usr/sadm/sysadm/add-ons/lp/printers/requests/Text.error /usr/sadm/sysadm/add-ons/lp/printers/requests/Form.move";
+`
+
+name=CMD-MENU
+button=15
+action=cmd-menu

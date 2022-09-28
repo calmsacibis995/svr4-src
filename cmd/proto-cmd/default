@@ -1,0 +1,13 @@
+#ident	"@(#)proto-cmd:default	1.2.1.1"
+mail=root
+instance=	#one, unique, overwrite
+partial=	#quit,nocheck
+runlevel=nocheck
+idepend=	#quit,nocheck
+rdepend=	#quit,nocheck
+space=		#quit,nocheck
+setuid=nocheck
+conflict=nocheck
+action=nocheck
+basedir=	#/usr/$PKGINST or default
+list_files=nocheck

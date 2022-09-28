@@ -1,0 +1,133 @@
+#ident	"@(#)oamintf:softwaremgmt/defaults/Help	1.3"
+
+ABSTRACT:
+	This task allows you to create, modify, list and remove files
+	which control installation defaults.
+
+add:ABSTRACT:
+	This menu item allows you to create installation defaults files
+	on the system to help administer the installation and removal
+	process.
+
+list:ABSTRACT:
+	This menu item allows you to display installation defaults files
+	on the system to view current installation and removal process
+	administration.
+
+modify:ABSTRACT:
+	This menu item allows you to modify installation defaults files
+	on the system to change administration of the installation and 
+	removal process.
+
+remove:ABSTRACT:
+	This menu item allows you to remove installation defaults files
+	from the system.
+
+add-file: Installation Defaults Filename
+	Enter the filename for the installation defaults file that
+	you are creating.  It is a good idea to choose a name which
+	can be used to describe how this administration file is to
+	be used, e.g. "compctr" could be used as the filename for 
+	installing packages received from the local computer center.
+
+list-file: Installation Defaults Filename
+	Enter the filename for the installation defaults file that
+	you want to display.
+
+mod-file: Installation Defaults Filename
+	Enter the filename for the installation defaults file that
+	you want to modify.
+
+remove-file: Installation Defaults Filename
+	Enter the filename for the installation defaults file that
+	you want to remove.
+
+basedir: Default Base Directory
+	Certain packages are relocatable, i.e. their pathnames may be
+	placed in a user-specified directory.  A default for this base
+	directory is specified by the package, and you may choose to
+	always accept this by entering "default" in this field.  If
+	you wish to be prompted during installation for this directory
+	enter "ask".  Otherwise, enter a specific directory where all 
+	relocatable packages will be located (e.g., if the directory 
+	"/opt/$PKGINST" is specified, each package will be given its 
+	own directory under /opt.)
+
+mail: List of Users to Notify
+	If the installation or removal of a package begins modifying the
+	system, notification of the success or failure of the operation
+	is mailed to the users listed in this field.
+
+runlevel: Run Level
+	If the current machine state (i.e., "run level"), does not meet
+	the specification provided by the package being installed or
+	removed, entering "quit" in this field will terminate package 
+	installation or removal.  Using a value of "nocheck" will preclude 
+	the check for run level from being attempted, while "ask" forces 
+	the installation or removal service to prompt for a disposition 
+	to this problem should it be encountered.
+
+conflict: File Conflicts
+	If files are encountered during installation which are already
+	installed on the system and are used by another package, then
+	entering "quit" in this field will terminate package installation.
+	Using a value of "nocheck" will disable conflict checking, while
+	"nochange" causes the package to be installed without the files
+	that are conflicting.  The keyword "ask" forces the installation 
+	service to prompt for a disposition to this problem if it is
+	encountered.
+
+setuid: Setuid Files
+	If files are encountered during installation which are intended
+	to be setuid processes on the system, then entering "quit" in this 
+	field will terminate package installation.  Using a value of 
+	"nocheck" disables this setuid check, while "nochange" causes the
+	package to be installed without the setuid files.  The keyword
+	"ask" forces the installation service to prompt for a disposition 
+	to this problem if it is encountered.
+
+security: Security Impacting Scripts
+	If the package being installed or removed contains scripts which
+	will execute with superuser privileges, then entering "quit" in this 
+	field will terminate package installation or removal.  Using a value
+	of "nocheck" disables this check, while "ask" forces the service 
+	to prompt for a disposition to this problem if it is encountered.
+
+idepend: Installation Dependencies
+	If the package being installed contains dependencies on other 
+	packages which are not met, then entering "quit" in this field 
+	will terminate package installation.  Using a value of "nocheck" 
+	disables this check, while "ask" forces the service to prompt for
+	a disposition to this problem if it is encountered.
+
+rdepend: Removal Dependencies
+	If the packages currently installed on the system contain a 
+	dependency on the package which is being removed, then entering 
+	"quit" in this field will terminate package removal.  Using 
+	a value of "nocheck" disables this check, while "ask" forces the 
+	service to prompt for a disposition to this problem if it is 
+	encountered.
+
+space: Space Checking
+	If the installation service determines there is inadequate space
+	to install a package, entering "quit" in this field will terminate 
+	package installation.  Using a value of "nocheck" disables the 
+	space check, while "ask" forces the service to prompt for a 
+	disposition to this problem if it is encountered.
+
+partial: Partial Installations
+	If the installation service determines that the package being 
+	overwritten or removed is already partially installed, entering 
+	"quit" in this field will terminate package installation or 
+	removal.  Using a value of "nocheck" disables the check, while
+	"ask" forces the service to prompt for a disposition to this 
+	problem if it is encountered.
+
+instance: Multiple Instances
+	If the installation service determines an instance of the package
+	being installed already exists on the system, entering "quit" in 
+	this field will terminate package installation.  Using a value of
+	"overwrite" will cause a package which is the same architecture to
+	be overwritten with the package being installed.  Entering "unique" 
+	in this field instructs the installation service to attempt to 
+	install the package by creating another package instance.

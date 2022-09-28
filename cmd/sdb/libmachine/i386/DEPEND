@@ -1,0 +1,9 @@
+Instr.o:	Instr.C
+	$(CPLUS_CMD) -c Instr.C
+
+Tables.o:	Tables.C
+	$(CPLUS_CMD) -c Tables.C
+
+OBJECTS	=  \
+	Instr.o \
+	Tables.o

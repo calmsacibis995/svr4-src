@@ -1,0 +1,106 @@
+#!/sbin/sh
+
+#ident	"@(#)idcmd:idtune	1.2.1.1"
+#
+# idtune  [ -f | -m ]  name  value
+# Attempt to set the value of tuneable parameter 'name' to 'value'
+# If a value is already given to this parameter (via stune), the user will
+# be asked to confirm the change unless the -f option is used.
+# If the -m option is used, we silently accept existing values greater than
+# the new value.
+
+STUNE=$ROOT/etc/conf/cf.d/stune
+
+force=
+min=
+
+case "$1" in
+	-f)	force=y;  shift;;
+	-m)	min=y;  shift;;
+esac
+
+if [ $# != 2 ]
+then
+	echo >&2 "Usage: idtune [ -f | -m ] parameter value"
+	exit 99
+fi
+
+if [ -d "$ROOT" ]
+then
+	echo "The stune file used is $ROOT/etc/conf/cf.d/stune."
+fi
+
+name=$1
+new_value=$2
+
+if [ ! -f $STUNE ]
+then
+	echo "$name\t$new_value" >$STUNE
+	exit $?
+fi
+
+# check for upper and lower bound in mtune
+mtune=$ROOT/etc/conf/cf.d/mtune
+if [ -d "$ROOT" ]
+then
+	echo "The mtune file used is $ROOT/etc/conf/cf.d/mtune."
+fi
+
+if line=`grep "^$name[	]" $mtune 2>/dev/null`
+then
+	set - $line
+	lbound=$3
+	ubound=$4
+	/etc/conf/bin/idval -g "$new_value" "$ubound"  > /dev/null
+	if [ "$?" -eq "1" ]
+	then
+		echo "The value $new_value is higher than upper limit in mtune for $name, $ubound."
+		exit 1
+	fi
+	/etc/conf/bin/idval -l "$new_value" "$lbound"  > /dev/null
+	if [ "$?" -eq "1" ]
+	then
+		echo "The value $new_value is lower than lower limit in mtune for $name, $lbound."
+		exit 1
+	fi
+fi
+
+if line=`grep "^$name[ 	]" $STUNE 2>/dev/null`
+then
+	set - $line
+	old_value=$2
+	if [ "$old_value" = "$new_value" ]
+	then
+		exit 0
+	fi
+	if [ "$min" ]
+	then
+		/etc/conf/bin/idval -g "$old_value" "$new_value"  >/dev/null
+		if [ "$?" -eq "1" ]
+		then
+			exit 0
+		fi
+	fi
+	if [ ! "$force" ]
+	then
+		echo "\nTuneable Parameter \"$name\" is currently set to ${old_value}."
+		echo "Is it OK to change it to $new_value? (y/n) \c"
+		read ans
+		case $ans in
+			y*|Y*)	;;
+			*)	echo "\n\"$name\" left at ${old_value}.\n"
+				exit 0;;
+		esac
+		echo
+	fi
+	ed - $STUNE >/dev/null 2>&1 <<-!
+		/^$name[ 	]/c
+		$name	$new_value
+		.
+		w
+	!
+	exit $?
+else
+	echo "$name\t$new_value" >>$STUNE
+	exit $?
+fi

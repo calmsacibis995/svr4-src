@@ -1,0 +1,18 @@
+The Schedule Backup To Tape menu allows you to schedule, ahead of time,
+a system backup and/or incremental system backup. The backup can be
+scheduled at a specific date and time or at regular intervals.
+
+The items on the Schedule System Backup Menu are:
+
+      Add:  Adds a request to schedule a backup.
+
+      Change:  Changes a previously scheduled backup request.
+
+      Delete:  Deletes previously scheduled backup requests.
+
+      Display:  Displays a list of currently scheduled
+      backups.
+
+You must have system administration privileges to add, change, or
+delete a backup request.
+

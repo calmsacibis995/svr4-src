@@ -1,0 +1,28 @@
+#ident	"@(#)lp.admin:printers/reports/Form.fonts	1.2"
+
+#######################################################
+#
+#       Module Name: printer_service/status/Form.requests
+#
+#######################################################
+
+form=Show Status of Mountable Printwheels
+
+help=OPEN TEXT $INTFBASE/Text.oamhelp $PRINTSERV/HELP/status/requests.help "Displays Status of Print Requests"
+
+
+
+name=Character set or printwheel name(s): 
+nrow=1
+ncol=1
+frow=1
+fcol=38
+rows=1
+columns=37
+value=ALL
+#valid=`regex -v "$F1" 'unknown pattern' '' '.*'`
+
+#choicemsg=
+#invalidmsg=
+fieldmsg="Enter the name of the printwheel(s) you want a report on."
+

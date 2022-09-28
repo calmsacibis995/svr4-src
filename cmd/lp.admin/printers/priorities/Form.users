@@ -1,0 +1,67 @@
+#ident	"@(#)lp.admin:printers/priorities/Form.users	1.1.1.1"
+
+#######################################################
+#
+#       Module Name: printer_service/priorities/Form.user
+#
+#######################################################
+
+form=Set User(s) Priority Limit
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`message -w "Changing User(s) Priority Limit, please wait...";
+if regex -v "$F1" '^all$' '' '^all[ ,]' '' '[ ,]all$' '' '[ ,]all[ ,]' '' > /dev/null;
+then
+	fmlcut -f1 -d: /etc/passwd | /usr/bin/xargs | /usr/bin/tr ' ' ',' | set -l NF1;
+else
+	echo "$F1" | /usr/bin/tr " " "," | set -l NF1;
+fi;
+shell "$TFADMIN lpusers -q $F2 -u $NF1 > /dev/null 2>&1";
+message "Enter new values and press SAVE to repeat or CANCEL to quit."`update $OBJ_DIR/Form.user true
+
+
+name=User list:
+lininfo="users:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=12
+rows=1
+columns=58
+value=" "
+rmenu=OPEN MENU $OBJ_DIR/Menu.cusers users
+fieldmsg="Enter users to assign a priority limit, press SAVE when finished."
+valid=`indicator -w;
+	unset -l bad_one;
+	if [ -z "$F1" ];
+	then
+		set -l no_value=true -l name_valid=false;
+	else
+		set -l no_value=false -l name_valid=true;
+	fi;
+	echo "$F1" | /usr/bin/tr " ," "[\012*]" | regex -e
+'^all$' 'set -l name_valid=true'
+'^(.*)$0$'
+'`fmlgrep "^$m0:" /etc/passwd || set -l bad_one="$m0" -l name_valid=false`' > /dev/null`$name_valid
+invalidmsg=`if [ "$no_value" = "true" ];
+	then
+		echo "You must enter a value for this field.";
+	else
+		echo "$bad_one is not a valid user name.";
+	fi`
+
+
+name=Priority Limit:
+lininfo="users:F2"
+nrow=2
+ncol=1
+frow=2
+fcol=17
+rows=1
+columns=2
+value=20
+rmenu={ 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 }
+menuonly=true
+invalidmsg="Only an integer in the range 0 to 39 is valid here."
+fieldmsg="Enter the priority limit for the set of users, press SAVE when finished."

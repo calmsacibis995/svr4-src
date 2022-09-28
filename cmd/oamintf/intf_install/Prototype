@@ -1,0 +1,9 @@
+#ident	"@(#)oamintf:intf_install/Prototype	1.4.1.1"
+!PKGBIN=/usr/sadm/install/bin
+!PKGSCR=/usr/sadm/install/scripts
+
+f intf $PKGBIN/intf_inst 0755 bin bin
+f intf $PKGBIN/mod_expr 0755 bin bin
+f intf $PKGBIN/mod_menus 0755 bin bin
+f intf $PKGSCR/i.OAMmif 0644 bin bin
+

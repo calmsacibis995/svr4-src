@@ -1,0 +1,22 @@
+#ident	"@(#)lp.admin:printers/printers/add/Text.pwheel	1.1"
+
+title="Error: Naming Removeable Print Wheel(s) Subtask:"
+
+altslks=true
+
+row=15
+columns=55
+
+begrow=distinct
+begcol=distinct
+
+text="
+    Press CANCEL to return to the form.
+
+    While saving the print wheel information,
+    the following error(s) occurred:
+
+`readfile $error`
+
+"
+cancel=`rm -f $error`close

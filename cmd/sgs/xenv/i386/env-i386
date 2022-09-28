@@ -1,0 +1,41 @@
+#ident	"@(#)xenv:i386/env-i386	1.2.1.5"
+#
+#
+#	Template for the i386 cross environment setup script
+#	The purpose of this shell script is to put the user's cross bin
+#	first in the user's path and to define environment variables used
+#	when building the cross-libraries.
+#
+PATH=
+ROOT=
+SHELL=/bin/sh
+PS1=
+export PATH ROOT SHELL PS1 CCSTYPE
+CCSTYPE=ELF
+VARIANT=
+CFLAGS=
+PCFLAGS=
+PFX=
+CC=
+AR=
+STRIP=
+LORDER=
+YACC=
+LEX=
+LIB=
+USRLIB=
+CCSLIB=
+LIBP=
+PROF=
+DONE=
+DEFLIST=
+INC=
+INCSYS=
+CH='#'
+export VARIANT CFLAGS PCFLAGS PFX CC AR STRIP LORDER YACC LEX LIB USRLIB LIBP PROF DONE DEFLIST INC INCSYS CH CCSLIB
+if [ $# = 0 ]
+then
+	exec /bin/sh
+else
+	exec "$@"
+fi

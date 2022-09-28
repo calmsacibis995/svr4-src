@@ -1,0 +1,358 @@
+#ident	"@(#)pcintf:pkg_rlock/USAGE	1.1"
+Using the RLOCK package -@(#)USAGE	1.1	13:34:05	8/31/89 
+
+This file is a very terse overview of the interfaces to the RLOCK package.  The
+first interface described is the 'rlockshm' program.  This program is used
+to manipulate the shared memory, and to allow dumping of the current contents
+of that memory, as an aid to problem resolution.  The second interface that is
+defined is the programmer's interface, as seen by the programs that want
+to use the RLOCK package.
+
+There is also, in this package, a README file.  This file contains more
+information about the package, and it should also be read before making any
+additions or other major changes.
+
+===============================================================================
+----> rlockshm
+===============================================================================
+
+There are two types of options used by 'rlockshm': documented and undocumented.
+The former type consists of those options that are visible to the user, and
+are documented in any manuals given to him.  The latter type includes all
+the options that are used by support personnel, and are either dangerous,
+confusing or totally unusable by the customer.  It is a convention that
+documented options are all in lower-case, while undocumented options are all in
+upper-case.  This should help prevent most problems.
+
+The full invocation sequence for 'rlockshm' is:
+
+	rlockshm [-cdmor] [-AFHLOUV]
+
+Notice that the lower-case and upper-case options are separate.  When the user
+enters an illegal option he will only see the lower-case ones.  However,
+support personnel have an option (defined below) that allows them to see the
+entire set of options.  To be truly effective, this specific option, along
+with the other conventions mentioned above, should be used throughout the
+entire product line.  In addition, although the options are separated in the
+usage line, they may be used together when the program is actually invoked.
+The specific meaning of each option is:
+
+	documented:
+	-c	- create the shared memory segment
+	-d	- show the default configuration (only)
+	-m	- display miscellaneous existing segment information
+	-o	- handle the old style (multi-segment) shared memory
+	-r	- remove the shared memory segment
+
+	undocumented:
+	-A	- display all (even unused) entries
+	-F	- display the file header table
+	-H	- display the hashed file header table
+	-L	- display the record lock table
+	-O	- display the open file table
+	-U	- print usage with undocumented options (only)
+	-V	- print the version/copyright (only)
+
+Normal operation is to attach to the shared memory, and not to display any
+data at all.  This has the effect of creating the default segment if it doesn't
+already exist, and verifing the ability to attach to it in any case.  The -c
+option forces a new segment(s) to be created.  If it already exists, the
+program will report that fact.  The -r option removes the memory.  If this
+option is specified, any display options are ignored.  Finally, the -o
+option allows creating/attaching/removing the old-style shared memory, which
+consisted of three, not quite entirely, independent segments.  This option
+should only be used for the purposes of backwards compatability.  It should
+not be used for new software, as it has several problems and limitations,
+that have been corrected in the new style.
+
+Another documented option, -d, doesn't do anything with the shared memory.  Its
+only purpose is to print the default configuration information (for new-style
+only), then to exit.
+
+Similarly, the -m option simply prints information for an existing segment,
+but it may be used with other options.
+
+NOTE: The -o option is only necessary when creating/attaching/removing.  If
+the shared memory exists, the display options will automatically determine
+the correct format.
+
+The undocumented options are mostly explained in the comments above.  The 
+display of the tables is normally restricted to those entries that are actually
+being used at the time the program is run.  If there is a need to see the
+unused entries as well, the -A option may be specified.  The other two,
+'non-display' options print specific information about the 'rlockshm' program
+itself, and then exit the program, doing no other processing, regardless of the
+other options.  The -U option prints out the entire usage string, while the
+-V option prints out the version number and copyright information.
+
+===============================================================================
+----> program interface
+===============================================================================
+
+There are two foci here.  One is the header file that is included by any source
+file that wants to make use of the package.  This definition file is called
+
+	rlock.h
+
+and makes all the definitions defined below.  The code itself is available
+in the library,
+
+	librlock.a
+
+WARNING:  It should be noted that there are several variables and functions
+that, while not meant for the RLOCK package user, must be global, for internal
+package use.  To avoid conflicts, all such global variables and functions are
+prefixed with the character string, "_rl".  The user of the package should
+avoid using these three characters to begin any externally visible name.
+
+Some machines with segmented architectures require that pointers be different
+sizes, depending on how far away the reference can be.  The definition for
+
+	FAR
+
+is defined to be the keyword required (i.e. char FAR *xyzP).  If the machine
+that you are on doesn't require this keyword, you may ignore it, and the
+header will use the default of none.  If the machine requires one, however,
+you must define it, either as a compiler option, or at any time before
+including the header file.
+
+DOS opens specify an open mode that consists of several bit fields, of which
+two are of concern to the RLOCK package: sharing mode, and access.  There are
+three macros that are defined to deal with extracting and constructing these
+fields.  In the following, rwShare is the full open mode word, share and rw
+are the sharing mode and access (read/write) fields respectively.  (Actually
+this isn't completely true, but you don't need to worry about it.)
+
+	RW_BITS(rwShare)	- extract 'access' bits from rwShare
+	SHR_BITS(rwShare)	- extract the 'sharing mode' bits from rwShare
+	RW_SHARE(share, rw)	- construct byte from 'sharing' and 'access'
+				  field data.
+
+Since the macros above are useless without knowing the bit patterns, the
+following are defined.  Those values prefixed by 'RW' are the access modes
+(read/write), while those prefixed by 'SHR' are the sharing modes.
+
+	RW_RDONLY	- read only mode
+	RW_WRONLY	- write only
+	RW_RDWR		- read/write
+	RW_FCB		- RW bits for FCB opens
+
+	SHR_RDWRT	- deny read and write
+	SHR_WRT		- deny write
+	SHR_RD		- deny read
+	SHR_NONE	- deny none
+	SHR_DOS		- DOS compatibility mode
+	SHR_FCB		- DOS FCB open mode
+
+When one of the RLOCK package functions is invoked on a file, that file's
+state change causes the function rlockState() to be called.  This function
+is provided by the RLOCK package, in order to resolve external references.
+However, the task is performs is to do nothing.  If the change of state is
+important, the user of the RLOCK package must redefine it.  If this
+definition is linked to the user's program before the RLOCK package, the
+default version will replaced, in favor of the user's version.  The possible
+state changes that can be reported are:
+
+	RLSTATE_OPENED		- the file has been opened
+	RLSTATE_CLOSED		- the file has been closed
+	RLSTATE_LOCKED		- the file was just locked
+	RLSTATE_ALL_UNLOCKED	- all file locks were removed
+
+The package functions may return any of several error codes.  The following
+definitions are provided.  Note that this may not be a complete list, if new
+codes were added to the package, but this file wasn't updated.
+
+	RLERR_NOERR	- not an error
+	RLERR_SYSTEM	- system error
+	RLERR_PARAM	- parameter error
+	RLERR_VERSION	- uknown memory version
+
+	RLERR_LOCKED	- data is locked
+	RLERR_UNLOCKED	- data is unlocked
+	RLERR_NOLOCK	- can't lock table
+	RLERR_NOUNLOCK	- can't unlock table
+	RLERR_GETKEY	- can't get IPC identifier
+	RLERR_LOCKSET	- can't create/access lock set
+	RLERR_FORMAT	- unknown shared memory format
+	RLERR_NOSPACE	- no space available
+	RLERR_INUSE	- specified slot is in use
+	RLERR_UNUSED	- specified slot is unused
+	RLERR_CORRUPT	- shared memory is corrupted
+	RLERR_ADDR	- invalid attach address
+	RLERR_EXIST	- segment already exists
+	RLERR_PERM	- permission denied
+
+The error code is visible via the ONLY external global defined by the
+package.  This variable is defined in the header file by the following.
+
+	extern int	rlockErr;
+
+There are three major categories of functions defined in the package.  The
+first to be defined are the misc. routines.  These handle the creation,
+attachment and removal of shared memory segments, and other general purpose
+functions available in the package.  The second category is the 'open file'
+set of routines.  These deal with adding and removing shared memory
+information that relates to files opened by DOS processes.  The final category
+contains the actual locking routines that are used to set and check the locks
+placed on open files.
+
+In all of the following functions, there are variables used to indicate what
+certain values that must be passed to the function are.  These variables are:
+
+	(int)rlockErr
+		This is the value available in the rlockErr global variable
+		defined above.
+
+	(int)openEntry
+		This is the value that is used to reference any open file
+		that has been added with the addOpen() function below.
+
+	(int)fileDesc
+		This is a standard file descriptor, as returned from an
+		open(2) call.
+
+	(struct stat FAR *)fileStatP
+		This is a pointer to a file's status structure, and is used
+		to uniquely identify the file to the function.  It is
+		presumed that the process has already opened the file.
+
+	(long)sessID
+		The session ID of the process that opened the file.
+
+	(long)dosPID
+		The DOS process ID of the process that opened the file.
+
+	(int FAR *)openModeP
+		A pointer to the open mode of the file (O_READ, etc.,
+		available in fcntl.h).  It is only of use for FCB style
+		opens.
+
+	(int)rwShare
+		This is the open mode as specified for DOS.  It contains
+		the RW_* and SHR_* bits, as defined above, and as built
+		by the RW_SHARE() macro.
+
+	(unsigned long)lockLow
+		The low byte of the range being locked or checked.  This is
+		an absolute offset from the beginning of the file, which
+		starts with byte 0.
+
+	(unsigned long)lockCount
+		This is the number of bytes, starting at lockLow, to be locked
+		or checked.
+
+	(int)state
+		This is the last state change that occured on a specific
+		file.  It has one of the RLSTATE_* values defined above.
+
+Finally, except where otherwise noted, the standard 'int' return codes are
+returned, either 0 for success or -1 for failure.
+
+----- miscellaneous functions -----
+
+There are currently five functions in this category.  The functions are:
+
+	int
+	rlockAttach()
+
+		Attaches to existing shared memory.  If the shared memory
+		doesn't yet exist, it is created.
+
+	int
+	rlockCreate()
+
+		This is identical to rlockAttach(), except that the shared
+		memory must not already exist.  This function is mostly for
+		the benefit of programs that must manipulate shared memory
+		segments.
+
+	char FAR *
+	rlockEString(rlockErr)
+
+		This function returns a string based on the RLOCK package
+		error number passed as a parameter, for use in printing
+		logging or user error messages.  If the error is illegal, a
+		string indicating an unknown error, is returned, which will
+		also contain a printable version of the number.  NIL is
+		never returned.
+
+	int
+	rlockRemove()
+
+		This causes the shared memory (and all attachments to it,
+		in any process) to be removed.  This is not normally used,
+		except by processes that must manipulate the actual shared
+		memory, and is provided as the companion to rlockCreate().
+
+	void
+	rlockState(openEntry, state)
+		This handles the state change when a file is opened, closed,
+		locked, unlocked, etc.  It is normally redefined by the user.
+
+----- open file functions -----
+
+There are two functions in this category, one to add information about an
+open file, one to remove it.
+
+	int
+	addOpen(fileDesc, fileStatP, sessID, dosPID, openModeP, rwShare)
+
+		This function adds the information about the open file into
+		the shared memory.  The indicated value, *openModeP, is
+		ignored, except for FCB type opens.  In that case, it must
+		contain the requested 'maximum' open modes (as described
+		above), and will contain the granted permissions (which may
+		be more restrictive) if the function succeeds.  The file's
+		reference ID (openEntry) is returned if it could be added
+		to the shared memory.  The standard -1 is returned on failure.
+		The file descriptor is always necessary, fileStatP may be
+		NIL.  If it is, addOpen() will get the file status from
+		fileDesc.
+
+	int
+	rmvOpen(openEntry)
+		This function removes an entry that was previously added with
+		addOpen().
+
+----- record locking functions -----
+
+The final category has the actual record locking functions.  The use of these
+functions is dependent on the correct application of the preceeding categories.
+
+	int
+ 	addLock(openEntry, dosPID, lockLow, lockCount)
+
+		This function locks the specified range of the specified
+		file.
+
+	void
+ 	ioDone()
+
+		This function signals the end of an I/O operation on a file,
+		see ioStart() below.  Nothing is returned.
+
+	int
+	ioStart(openEntry, dosPID, lockLow, lockCount)
+
+		When it is necessary to perform an I/O operation (read or
+		write) on a file that may be locked, this function must first
+		be called to check that the area is not already locked.  If it
+		is, this function fails.  Otherwise, the shared memory is
+		locked, to prevent any locks or other operation from being
+		performed on the specified section of the file.  It is very
+		important, therefore, that the I/O be done immediately after
+		this call, and ioDone() be called to free up the shared
+		memory.
+
+	int
+	rmvLock(openEntry, dosPID, lockLow, lockCount)
+
+		This function allows a specific lock to be removed.  The lock
+		must have been applied by addLock() earlier, or this function
+		will fail.
+
+	int
+	rstLocks(openEntry, dosPID)
+
+		This function will release all locks that were created by the
+		specified DOS process, on the specified file.

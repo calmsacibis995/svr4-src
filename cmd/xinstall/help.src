@@ -1,0 +1,36 @@
+     This program allows you to customize the installation of your Xenix
+applications to fit your current needs and avoid the overhead of unnecessary
+files.  You may add or install all or selected portions of an application,
+known as 'packages', or you may remove packages you have already installed.
+
+     Each set is subdivided into one or more separately installable packages to
+provide you with precise control over the completeness and size of your system.
+
+     To INSTALL one or more packages, select option 1 and enter the names of
+the packages to install, separated by spaces.  The package names may be upper
+or lower case.  You will be prompted to insert all the necessary disks.
+
+     To REMOVE one or more packages which you have already installed, choose
+option 2 and enter the names of the packages, separated by spaces.  The files 
+which are a part of the specified packages will be removed from your hard disk.
+
+     To LIST the packages in your current set, choose option 3; to list all
+the files and directories that comprise a particular package, choose option 4;
+to add a single file, choose option 5.
+
+     To SELECT a new set to customize, choose option 6. Custom will prompt
+you for a set to customize. Choose a set and wait a few moments while custom
+figures out which packages in that set are already installed.  You may only
+customize one set at a time.
+
+     To ADD a Supported Product, choose option 4.  You will be prompted to
+insert volume 1 from your distribution, from which custom will extract all the
+information it requires to customize the product.  You may then choose to
+install part or all of the product.  Your new product will thereafter appear in
+the custom set selection menu.
+
+     You may install or remove as many packages as you wish, as frequently as
+you find necessary.  If you need additional details, see the manual page for 
+custom(1M).
+
+Press <RETURN> to continue

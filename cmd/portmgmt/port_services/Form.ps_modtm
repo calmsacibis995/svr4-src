@@ -1,0 +1,372 @@
+#ident	"@(#)portmgmt:port_services/Form.ps_modtm	1.8.4.1"
+
+`pmgetpid | set -l PID`
+`pmadm -L -p "$ARG2" -s "$ARG1" | 
+regex -e '[^:][^:]*:[^:][^:]*:[^:][^:]*:([^:]*)$0:([^:][^:]*)$1:[^:]*:[^:]*:[^:]*:([^:][^:]*)$2:([^:]*)$3:([^:]*)$4:([^:][^:]*)$5:([^:]*)$6:([^:][^:]*)$7:([^:]*)$8:([^:]*)$9:.*$' 
+'`set -l FLAGS="$m0" -l ID="$m1" -l DEVICE="$m2" -l TTYFLAGS="$m3" -l COUNT="$m4" -l CMD="$m5" -l TIMEOUT="$m6" -l LABEL="$m7" -l MODULES="$m8" `'`
+
+`pmadm -L -p "$ARG2" -s "$ARG1" | sed 's/\\\\:/~/'| cut -d: -f16 | tr '~' ':'| set -l PROMPT `
+
+`pmadm -L -p "$ARG2" -s "$ARG1" | sed 's/#.*//' | sed 's/\\\\:/~/'| cut -d: -f17 | tr '~' ':'| set -l DMSG `
+
+`pmadm -L -p "$ARG2" -s "$ARG1" | sed 's/.*#//' | set -l COMMENTS `
+
+`ttyadm -V | set -l VERSION`
+
+form= Modify Port Services
+lifetime=shorterm
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=`rm /var/tmp/cmd$PID /var/tmp/err$PID;
+       unset -L PID -l FLAGS -l ID -l DEVICE -l TTYFLAGS -l COUNT -l CMD -l MODULES -l LABEL -l TIMEOUT -l PROMPT -l DMSG -l COMMENTS -l VERSION`
+done=`message -w "Modifying service <$ARG1>.";
+	echo pmadm -r -p "$ARG2" -s "$ARG1" > /var/tmp/cmd$PID;
+	echo pmadm -a -p "$ARG2" -s "$ARG1" -i "$F13" -v "$VERSION" \\ >>/var/tmp/cmd$PID;
+	pmadmopts "$F4" "$F5" "" "$F19" >>/var/tmp/cmd$PID;
+	tmopts "$F8" "$F9" "$F10" "$F11" "$F12" "$F7" "$F17" "$F16" "$F18" >>/var/tmp/cmd$PID;
+	echo -d "$F14" -l "$F6" -s \\\""$F15"\\\" \`\" >> /var/tmp/cmd$PID;
+	psmod $ARG2 $ARG1 $PID;
+   	regex -e -v "$RET"
+		'^0$'  '`message "Service <$ARG1> is modified successfully."`'
+		'^4$'  '`message "Service <$ARG1> is modified successfully."`'
+		'^.*$' '`message "Service <$ARG1> is not modified.";`'`CLOSE
+
+# $F1
+name=Service tag:
+nrow=0
+ncol=2
+frow=0
+fcol=21
+rows=1
+columns=14
+value=$ARG1
+inactive=true
+
+# $F2
+name=Port monitor tag:
+nrow=1
+ncol=2
+frow=1
+fcol=21
+rows=1
+columns=14
+value=$ARG2
+inactive=true
+
+# $F3
+name=Type:
+nrow=1
+ncol=47
+frow=1
+fcol=54
+rows=1
+columns=14
+value=$ARG3
+inactive=true
+
+# $F4
+name=Port/service state:
+nrow=3
+ncol=2
+frow=3
+fcol=23
+rows=1
+columns=8
+lininfo=psstate
+value=`regex -v "$FLAGS"
+		'^.*x.*$' 'DISABLED'
+		'.*'	  'ENABLED'`
+rmenu={ DISABLED ENABLED }
+menuonly=true
+choicemsg=Select ENABLED/DISABLED
+fieldmsg=Select state of the port service.
+invalidmsg=Invalid input - select ENABLED/DISABLED only.
+
+# $F5
+name=Create "utmp"?
+nrow=3
+ncol=35
+frow=3
+fcol=50
+rows=1
+columns=3
+lininfo=psutmp
+value=`regex -v "$FLAGS"
+		'^.*u.*$' 'Yes'
+		'.*'	  'No'`
+rmenu={ Yes No }
+menuonly=true
+choicemsg=Select Yes or No
+fieldmsg=If "Yes" is selected, a utmp entry will be created for the service.
+invalidmsg=Invalid input - select Yes/No only.
+
+# $F6
+name=Ttylabel:
+nrow=4
+ncol=2
+frow=4
+fcol=13
+rows=1
+columns=15
+lininfo=tmlabel
+value=$LABEL
+rmenu=OPEN MENU $OBJ_DIR/../Menu.c_labels
+valid=`grep "^$F6[ ]*:" /etc/ttydefs`
+choicemsg=const "Move the cursor to the desired ttylabel and press ENTER."
+fieldmsg=const "Enter the ttylabel in /etc/ttydefs. Press CHOICES for a list of ttylabels."
+#invalidmsg=const "Error - ttylabel does not exist."
+invalidmsg=`message "$F6"`
+
+# $F7
+name=Timeout:
+nrow=4
+ncol=35
+frow=4
+fcol=45
+rows=1
+columns=4
+lininfo=tmtimeout
+value=`if [ -n $TIMEOUT ];
+       then
+		echo $TIMEOUT;
+       else
+		echo 0;
+       fi`
+valid=`regex -v "$F7" '^[0-9]+$'`
+fieldmsg=const "Enter timeout period."
+choicemsg=const "Enter timeout period."
+invalidmsg=const "Invalid input - enter a positive number or zero."
+
+# $F8
+name=Hangup:
+nrow=6
+ncol=5
+frow=6
+fcol=21
+rows=1
+columns=3
+lininfo=tmhflag
+value=`regex -v "$TTYFLAGS"
+		'^.*h.*$' 'No'
+		'.*'	  'Yes'`
+rmenu={ Yes No }
+menuonly=true
+choicemsg=const ""
+fieldmsg=const ""
+invalidmsg=const "Invalid input - select Yes/No only"
+
+# $F9
+name=Connect-on-carrier:
+nrow=6
+ncol=28
+frow=6
+fcol=49
+rows=1
+columns=3
+lininfo=tmcflag
+value=`regex -v "$TTYFLAGS"
+		'^.*c.*$' 'Yes'
+		'.*'	  'No'`
+rmenu={ Yes No }
+menuonly=true
+choicemsg=const ""
+fieldmsg=const ""
+invalidmsg=const "Invalid input - select Yes/No only"
+
+# $F10
+name=Bidirectional:
+nrow=7
+ncol=5
+frow=7
+fcol=21
+rows=1
+columns=3
+lininfo=tmbflag
+value=`regex -v "$TTYFLAGS"
+		'^.*b.*$' 'Yes'
+		'.*'	  'No'`
+rmenu={ Yes No }
+menuonly=true
+choicemsg=const ""
+fieldmsg=const ""
+invalidmsg=const "Invalid input - select Yes/No only"
+
+# $F11
+name=Wait-read:
+nrow=7
+ncol=28
+frow=7
+fcol=40
+rows=1
+columns=3
+lininfo=tmrflag
+value=`regex -v "$TTYFLAGS"
+		'^.*r.*$' 'Yes'
+		'^.*b.*$' 'Yes'
+		'.*'	  'No'`
+rmenu={ Yes No }
+menuonly=true
+choicemsg=const "Select Yes or No."
+fieldmsg=const "Select Yes or No".
+invalidmsg=const "Invalid input - select Yes/No only"
+
+# $F12
+name=(Wait-read count:
+nrow=7
+ncol=45
+frow=7
+fcol=63
+rows=1
+columns=4
+lininfo=tmwread
+value=`regex -e -v "$TTYFLAGS"
+		'^.*r.*$' '$COUNT'
+		'^.*b.*$' '0'
+		'.*'	  ' '`
+valid=`ckwcount $F11 $F12`
+choicemsg=const "Enter a positive number or zero (if wait-read is NOT set, skip this field)"
+fieldmsg=const "Enter a positive number or zero (if wait-read is NOT set, skip this field)"
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - enter a positive number or zero.'
+		'^2$'	'Error - must be empty if wait read is not set.'
+		'^3$'	'Error - enter a positive number or zero.'
+		'.*'	'Error - invalid input'`
+
+# $F13
+name=Service invocation identity:
+nrow=8
+ncol=2
+frow=8
+fcol=32
+rows=1
+columns=14
+lininfo=psid
+value=$ID
+valid=`grep "^$F13:" /etc/passwd`
+choicemsg=const "Enter the login ID the service will run as, e.g. root."
+fieldmsg=const "Enter the login ID the service will run as, e.g. root."
+invalidmsg=const "Error - login ID does not exist."
+
+# $F14
+name=Name of TTY device:
+nrow=9
+ncol=2
+frow=9
+fcol=22
+rows=1
+columns=46
+lininfo=tmdevice
+value=$DEVICE
+valid=`ckfile device "$F14"`
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - enter full pathname of the command'
+		'^2$'	'Error - must specify full pathname.'
+		'^3$'	'Error - file does not exist.'
+		'^5$'	'Error - file is not a character special device.'
+		'.*'	'Error - invalid command'`
+choicemsg=const "Enter the full path name of the TTY device, e.g. /dev/term/11."
+fieldmsg=const "Enter the full path name of the TTY device, e.g. /dev/term/11."
+scroll=TRUE
+
+# $F15
+name=Service command:
+nrow=10
+ncol=2
+frow=10
+fcol=20
+rows=1
+columns=48
+lininfo=tmcmd
+value="$CMD"
+valid=`ckfile command "$F15"`
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - enter full pathname of the command'
+		'^2$'	'Error - must specify full pathname.'
+		'^3$'	'Error - command does not exist.'
+		'^4$'	'Error - command is not executable.'
+		'.*'	'Error - invalid command'`
+choicemsg=const "Enter full command line for the service to be invoked."
+fieldmsg=const "Enter full command line for the service to be invoked."
+scroll=TRUE
+
+# $F16
+name=Modules to be pushed:
+nrow=11
+ncol=2
+frow=11
+fcol=25
+rows=1
+columns=43
+lininfo=psmodules
+value="$MODULES"
+valid=`pmckmod "$F16"`
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - invalid module list.'
+		'^2$'	'Error - too many modules listed.'
+		'^3$'	'Error - cannot open /dev/sad/user.'
+		'^4$'	'Error - SAD_VML ioctl failed.'
+		'.*'	'Error - invalid module list.'`
+fieldmsg=const "Enter a list of modules seperated by commas. e.g. mtty,ldterm."
+choicemsg=const "Enter a list of modules seperated by commas. e.g. mtty,ldterm."
+
+# $F17
+name=Prompt message:
+nrow=12
+ncol=2
+frow=12
+fcol=19
+rows=1
+columns=49
+lininfo=tmprompt
+value="$PROMPT"
+fieldmsg=const "Enter the prompt message. Type \\\\\\\\ for each \\\\."
+choicemsg=const "Enter the prompt message. Type \\\\\\\\ for each \\\\."
+scroll=TRUE
+
+# $F18
+name=Disabled response message:
+nrow=13
+ncol=2
+frow=13
+fcol=30
+rows=1
+columns=38
+lininfo=tmdmsg
+value="$DMSG"
+fieldmsg=const "Enter the disabled response message. Type \\\\\\\\ for each \\\\."
+choicemsg=const "Enter the disabled response message. Type \\\\\\\\ for each \\\\."
+scroll=TRUE
+
+# $F19
+name=Comments:
+nrow=14
+ncol=2
+frow=14
+fcol=13
+rows=1
+columns=55
+lininfo=pscomments
+value="$COMMENTS"
+fieldmsg=Enter comments
+choicemsg=Enter comments
+scroll=true
+
+name=TTY line options:
+nrow=5
+ncol=2
+inactive=TRUE
+
+name=") "
+nrow=7
+ncol=67
+inactive=TRUE
+
+name=Modify the fields you want to change and press SAVE.
+nrow=16
+ncol=4
+inactive=TRUE
+
+name=" "
+nrow=17
+ncol=2
+inactive=TRUE
+show=FALSE

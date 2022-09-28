@@ -1,0 +1,22 @@
+#ident	"@(#)bnu.admin:Menu.lssys	1.5.2.1"
+
+
+################################################################################
+#
+#	Module Name:Menu.lssys
+#
+#	Functional Description: This menu is a popup menu for listing system
+#                               entries in /etc/uucp/Systems.
+#
+################################################################################
+menu="SYSTEM- TIME  TYPE  CLASS  PHONE  LOGIN"
+`bnunotab /etc/uucp/Systems Systems.notab`
+
+#`cat /etc/uucp/Systems | grep "^$ARG1" | regex '^([^ ^#][^ ^#]*)$0 (.*)$1'
+
+`cat /tmp/Systems.notab | grep "^$ARG1" | regex '^([^ ^#^	][^ ^#^	]*)$0 (.*)$1'
+'name="$m0"
+description="$m1"
+action=CLOSE'`
+`rm /tmp/Systems.notab`
+ 

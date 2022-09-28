@@ -1,0 +1,59 @@
+#ident	"@(#)bkrs:basic.d/sched/Text.addcfm	1.1"
+
+title=Confirmation
+altslks
+
+begrow=center
+begcol=center
+rows=13
+columns=70
+
+`message "Strike the CONT function key to confirm, or strike CANCEL to cancel."`
+
+text=" The following system backup will be scheduled:
+
+	Type of Backup: $ARG1
+	Month(s): $ARG2
+	Date(s): $ARG3
+	Weekday(s): $ARG4
+	Time: $ARG5:$ARG6
+
+ Remember to leave the cartridge tape inserted in the device,
+ before the backup occurs.
+
+ Strike CONT to confirm. If you strike CANCEL, the backup will
+ not be scheduled."
+
+name=""
+button=9
+action=nop
+
+name=""
+button=10
+action=nop
+
+name=CONT
+button=11
+action=`indicator -w; /usr/sadm/sysadm/bin/.chkuser -c "/usr/sadm/sysadm/bin/add_cron :$ARG1: :$ARG2: :$ARG3: :$ARG7: :$ARG5: :$ARG6:"`close $OBJ_DIR/sched/Text.addcfm $OBJ_DIR/sched/Form.add
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=CANCEL
+button=14
+action=close $OBJ_DIR/sched/Text.addcfm $OBJ_DIR/sched/Form.add
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=nop
+
+`indicator -w`

@@ -1,0 +1,77 @@
+
+/unitwidth 10 def
+/resolution 720 def
+/font /Times-Roman def
+
+%
+% Stuff borrowed from dpost.ps. If you make changes to S1defs make the same
+% changes here.
+%
+
+/cf {
+    dup length 2 idiv
+    /entries exch def
+    /chtab exch def
+    /newfont exch def
+
+    findfont dup length 1 add dict
+    /newdict exch def
+
+    {
+	1 index /FID ne
+	    {newdict 3 1 roll put}
+	    {pop pop}
+	ifelse
+    } forall
+
+    newdict /Metrics entries dict put
+    newdict /Metrics get
+    begin
+	chtab aload pop
+	1 1 entries {pop def} for
+	newfont newdict definefont pop
+    end
+} def
+
+/S1defs [
+    /underscore		[0 80 500 0]
+    /endash		[7 90 650 0]
+] def
+
+font /S1 S1defs cf
+/font /S1 def
+
+/encoding [
+	(# Times-Roman special font\n)
+	(name S1\n)
+	(internalname 1\n)
+	(special\n)
+	(charset\n)
+	(")	34
+	(#)	35
+	(<)	60
+	(>)	62
+	(@)	64
+	(\\)	92
+	(or)	124
+	(^)	195
+	(~)	196
+	(\\')	194
+	(aa	"\n)
+	(\\`)	193
+	(ga	"\n)
+	(ru)	95
+	(\\-)	177
+	(en	"\n)
+	(sc)	167
+	(dg)	178
+	(dd)	179
+	(ct)	162
+	(14)	75	2	1
+	(34)	75	2	1
+	(12)	75	2	1
+	(``)	170
+	('')	186
+] def
+
+buildfontfile

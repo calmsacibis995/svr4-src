@@ -1,0 +1,57 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/Form.rf_add2	1.4"
+form="Add A Name Server and Its Address"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=`/bin/rm /var/tmp/gone_$PID 2>/dev/null`unset -l PID -l LINES -l FRM
+
+`readfile $INTFBASE/form.msg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/rfs/system`
+
+done=`indicator -w;
+set -e ADDR="$F2";
+set -e SYS="$F1";
+"$INTFBASE/netservices/remote_files/other/rfs/system/bin/add_member" | set -l PID;
+if [ -f "/var/tmp/gone_$PID" ];
+then
+	set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/other/rfs/system/Text.generic 'Add A Name Server and Its Address' /var/tmp/gone_$PID";
+else
+	message "\"$SYS\" has been added as a $ROLE nameserver for $TRANS.";
+	getfrm | set -l FRM;
+	set -l KEYCMD="update $FRM 1";
+fi;
+`$!KEYCMD
+	
+name="System:"
+nrow=1
+ncol=1
+frow=1
+fcol=9
+rows=1
+columns=14
+lininfo=rf_add2:system
+valid=`[ "$F1" ]`
+value=""
+
+name="Address:"
+nrow=2
+ncol=1
+frow=2
+fcol=10
+rows=1
+columns=32
+lininfo=rf_add2:address
+valid=`[ $F2 ]`
+value=""
+
+name="WARNING:  Make sure you type in the correct address for the system"
+nrow=4
+ncol=1
+frow=4
+rows=1
+fcol=1
+
+name="you are adding to the rfmaster file."
+nrow=5
+ncol=1
+frow=5
+rows=1
+fcol=1

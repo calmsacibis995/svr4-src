@@ -1,0 +1,14 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/except/Help	1.2.1.1"
+
+ABSTRACT: Exception List Display/Modify
+	The "exception_list" menu allows you to display or modify the
+	entries in the backup exception list.  This list contains
+	cpio-style patterns that specify files and directories that
+	should not be backed up when an incremental backup is run.
+	Temporary files, scratch files and files that can easily be
+	recreated from other files are good candidates for the
+	exception list.  These are files that people would not need
+	to have restored in the event that they are accidentally
+	removed or damaged.
+
+TITLE: Exception List Display/Modify

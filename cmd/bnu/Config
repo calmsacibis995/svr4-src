@@ -1,0 +1,27 @@
+#ident	"@(#)bnu:Config	1.1"
+#
+#	Config provides a means of configuring certain parameters
+#	within BNU at run time.
+#
+#	FORMAT:
+#
+#	<parameter>=<value>
+#
+#	where <parameter> is the name of one of the configurable parameters,
+#	and <value> is the value to be assigned to that parameter.
+#	
+#	PARAMETERS:
+#
+#	The following list provides the names of the configurable parameters
+#	and describes the values which may be assigned to them. 
+#
+#		<parameter>	<value>
+#
+#		Protocol	prioritized subset of valid protocols provided
+#				at compile time, with optional protocol-specific
+#				parameters in parentheses.
+#
+#	EXAMPLE:
+#
+#		Protocol=G(7,512)g
+#

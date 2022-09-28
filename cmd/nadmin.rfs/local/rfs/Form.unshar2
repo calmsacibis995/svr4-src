@@ -1,0 +1,112 @@
+#ident	"@(#)nadmin.rfs:local/rfs/Form.unshar2	1.5"
+form="Terminates Automatic-Current Sharing of Local Resources via RFS"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=unset -el RESDIR -el DIR -el RES -el ACC -el DESC -el IMM -el AUTO -l PID
+done=`indicator -w;
+	 if [ "$F7" = "yes" ];
+	 then
+		"$INTFBASE/netservices/remote_files/local/rfs/bin/rf_unshare" | set -l PID;
+	else
+		set -l KEYCMD="CLOSE";
+	fi;
+	if [ "$IMM" = "no" ];
+	then
+		set -l KEYCMD="CLOSE";
+	else
+		"$INTFBASE/netservices/remote_files/local/rfs/bin/imm_attr" | set -l PID;
+		if [ -s "/usr/tmp/cmsg_$PID" ];
+		then
+			message "This resource is not shared currently.";
+			set -l KEYCMD="CLOSE";
+		else
+			/usr/bin/cut -s -d" " -f1 "/usr/tmp/c_attr$PID" | set -el RES;
+			/usr/bin/cut -s -d" " -f2 "/usr/tmp/c_attr$PID" | set -el DIR;
+			/usr/bin/cut -s -d" " -f3 "/usr/tmp/c_attr$PID" | set -el ACC;
+			/usr/bin/cut -s -d"\"" -f2 "/usr/tmp/c_attr$PID" | set -el DESC;
+			set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/local/rfs/Form.unshar3";
+		fi;
+	fi;
+	`$!KEYCMD
+
+`readfile "$INTFBASE/form.msg" | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/local/rfs`
+
+#F1
+name="The following resource will no longer be"
+nrow=1
+ncol=1
+frow=1
+fcol=41
+rows=1
+
+#F2
+name="automatically shared via RFS:"
+nrow=2
+ncol=1
+frow=2
+fcol=30
+rows=1
+
+#F3
+name="Resource Name:"
+nrow=4
+ncol=1
+frow=4
+fcol=16
+rows=1
+columns=30
+inactive=true
+value="$RES"
+
+#F4
+name="Directory:"
+nrow=5
+ncol=1
+frow=5
+fcol=12
+rows=1
+columns=50
+inactive=true
+value="$DIR"
+
+#F5
+name="Access:"
+nrow=6
+ncol=1
+frow=6
+fcol=9
+rows=1
+columns=10
+inactive=true
+value="$ACC"
+
+#F6
+name="Description:"
+nrow=7
+ncol=1
+frow=7
+fcol=14
+rows=1
+columns=32
+inactive=true
+value="$DESC"
+
+#F7
+name="OK to discontinue automatic sharing of the resource?"
+nrow=10
+ncol=1
+frow=10
+fcol=54
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+lininfo=unshar2:ok
+
+name=""
+button=4
+
+name=""
+button=5
+

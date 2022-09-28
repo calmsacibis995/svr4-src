@@ -1,0 +1,36 @@
+#ident	"@(#)oamintf:devices/remove/Text.rmnok	1.1.1.1"
+################################################################################
+#	Module Name: Text.rmnok
+################################################################################
+Title="Errors Removing Device"
+
+framemsg=`readfile $INTFBASE/nodev.msg`
+lifetime=shortterm
+
+`devfree $VPID $ARG1 2>/dev/null`
+
+rows=6
+columns=75
+
+text="	
+An error occurred while attempting to remove $ARG1 from
+the system:
+	`readfile $ERR`"
+
+altslks
+
+name=
+button=9
+action=nop
+
+name=
+button=10
+action=nop
+
+name=
+button=11
+action=nop
+
+name=CANCEL
+button=14
+action=CLEANUP

@@ -1,0 +1,131 @@
+#ident	"@(#)oamintf:usermgmt/add.Help	1.3.4.1"
+ABSTRACT:
+	The "add" task allows you to define either a new user or a
+	new group on your system.
+
+Form.add:add:User or Group
+	Enter "user" or "group".  If you select "user", you will see a
+	form that asks for all definition information for the new user.
+	If you select "group" you will see a form that asks for all
+	definition information for the new group.
+
+Form.addgrp:grpname:Group Name
+	Enter the name of the new group.  It must be a character string
+	from 1 to 8 characters in length.  It may not include a colon (:).
+	The group name must be unique (that is, it may not be the same as
+	a group name already defined on your system).
+
+Form.addgrp:grpid:Group ID
+	Enter the numeric ID to be assigned to the new group.  The numeric
+	group ID is a number that uniquely identifies the new group on the
+	system.  It must be a number between 100 and the MAXUID value
+	defined for your system (commonly 60000).  The system automatically
+	chooses a default value for this field by picking the next available 
+	nonreserved group id.
+
+Form.addgrp:primem:Primary Members
+	Enter the list (0 or more) of primary members of the new group,
+	separating each by a comma.  Primary members belong to this group
+	when they log in to the system.  The user definition for each login
+	listed will be updated to reflect the new group as the primary group.
+	Enter either login id's or numeric user id's in this list.
+
+Form.addgrp:supmem:Supplementary Members
+	Enter a list (0 or more) of supplementary members of the new group,
+	separating each by a comma.  Any supplementary members may execute
+	the newgrp(1M) command after they log in and become a member of the
+	group. Enter either login id's or numeric user id's in this list.
+
+
+Form.addpswd:pwstat:Password Status
+	Enter the password status for the login.  Pressing CHOICES will
+	give you the following choices:
+	         lock - locks the password so the login cannot be used.
+	         no password - assigns no password to the login
+	         password - assigns a new password to the login
+
+	If you choose "password" under "status", the screen will clear
+	and the prompt, "New password:" will appear.  Enter the
+	new password.  You will then be asked to verify the new password.
+	After the task completes, you should press <RETURN> to return to
+	the interface.
+
+	WARNING!  The login is not usable with its status set to "lock",
+	and the login is not secure with its status set to "no password".
+
+Form.addpswd:maximum:Maximum Number of Days the Password is Valid
+	Specify aging information associated with the password.  This is
+	the maximum time the password will be valid.  If left blank,
+	"infinity" is assumed.
+
+Form.addpswd:minimum:Minimum Number of Days Allowed Between Password Changes
+	Specify the length of time that must elapse before the password may
+	be changed again.  If left blank, "0" is the default.
+
+Form.addpswd:warn:Number of Days for Warning Message
+	Enter the number of days for warning message to be displayed
+	prior to login's password expiration.  This number should be in
+	days.
+
+Form.addusr:comments:Comments
+	Enter any comments about this user login.  Typically the name of
+	the new user is included here.  This information will appear in
+	the comment field of the new user's login definition entry.  It
+	must be a character string that does not include (:).
+
+Form.addusr:login:Login
+	Enter the login to be assigned to the new user.  The login
+	is the id the user types to log in to the system.  It must be a
+	character string from 1 to 8 characters in length.  It may not
+	include a colon (:).  The login must be unique (that is, it may
+	not be the same as a login already in use on your system).
+
+Form.addusr:useid:User ID
+	Enter the numeric ID to be assigned to the new user.  The numeric
+	user ID is a number that uniquely identifies the new user on the
+	system.  It must be a number between 100 and the MAXUID value
+	defined for your system (commonly 60000).  The system automatically
+	chooses a default value for this field by picking the next available 
+	nonreserved uid.
+
+Form.addusr:prigrp:Primary Group
+	Enter the primary group of the new user.  The primary group is the
+	group assigned to the user upon login.  It gets associated with all
+	files the user creates unless the user has executed the newgrp(1M)
+	command.  The value entered in the primary group field may be either
+	a valid group name or numerical group id.
+
+Form.addusr:supgrp:Supplementary Group
+	Enter a list of groups for which the user will have supplementary
+	memberships.  For any of these groups, the user may execute the
+	newgrp(1M) command after login and become a member of that group
+	for the duration of that login session.  There is no default value
+	for this field, and you may leave this field blank.
+
+Form.addusr:homedir:Home Directory
+	Enter the path name of the new user's home directory.  It must be
+	a unique home directory (i.e. it may not already be used).  The
+	default home directory is "default_base_home_dir/login", where
+	"default_base_home_dir" is "/home" unless you have changed
+	it with the "defaults" task, and "login" is the login of the
+	new user.
+
+Form.addusr:shell:Shell
+	Enter the full path name of an existing shell.  It must be an
+	existing executable file.  The shell is the program that gets
+	executed for the user upon login.
+
+Form.addusr:inact:Login Inactivity
+	Enter the number of days of login inactivity after which user cannot
+	login.
+
+Form.addusr:expire:Login Expiration Date
+	Enter the date beyond which a user cannot log in.  This date
+	must be a future date and must be in the following format:
+	mm/dd/yy.
+
+Form.addusr:admin:System Administration Privileges
+	Enter Yes or No. Yes will enable this user to perform
+	system administration functions within this interface.
+	No will restrict the user from performing any
+	system administration functions in this interface.

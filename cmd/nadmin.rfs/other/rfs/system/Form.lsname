@@ -1,0 +1,30 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/Form.lsname	1.4"
+###############################################################################
+#    Module Name:  Form.listname 
+#    Description:  
+#     Lists RFS Domain Name Servers
+#
+###############################################################################
+form="RFS Domain Name Servers"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/fcontmsg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/rfs/system`
+
+`"$INTFBASE/netservices/remote_files/other/rfs/system/bin/line_num" | set -l LINES`
+
+done=`indicator -w;
+"$INTFBASE/netservices/remote_files/other/rfs/system/bin/rfs_nserve" | set -l PID;
+`OPEN TEXT "$INTFBASE/netservices/remote_files/other/rfs/system/Text.generic" 'RFS Domain Name Servers' "/var/tmp/nsrv_$PID"
+
+name="Transport Provider:"
+nrow=1
+ncol=1
+frow=1
+fcol=21
+rows="$LINES"
+columns=14
+rmenu=OPEN MENU $INTFBASE/netservices/remote_files/other/rfs/system/Menu.transp
+valid=`[ "$TRANS" ]`
+lininfo=lsname:tp
+invalidmsg="Press CHOICES to select valid Transport Providers."

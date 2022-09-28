@@ -1,0 +1,19 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/bin/call_addr	1.1"
+
+
+TRANS=$1
+HOST=$2
+/usr/sadm/sysadm/menu/netservices/remote_files/other/rfs/system/bin/getaddr  $1 $2 $3 $4 
+RET=`echo $?`
+if [ $RET -eq 0 ]
+then
+	echo "$HOST has been added as a $F2 nameserver for $TRANS.">/var/tmp/add_err
+fi
+if [ $RET -eq 2 ]
+then
+	echo "Name to Address Mapping has not be set up correctly.  Select the Name to Address Mapping Management task from the remote_files menu to setup Name to Address mapping.">/var/tmp/add_err
+fi
+if [ $RET -eq 1 ]
+then
+	echo "$TRANS has not been installed as a transport on this machine." >/var/tmp/add_err 
+fi

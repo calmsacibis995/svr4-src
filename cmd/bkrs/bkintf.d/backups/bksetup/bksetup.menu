@@ -1,0 +1,11 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/bksetup.menu	1.3.1.1"
+#menu#Backup Control Table Management
+#life#permanent
+
+add^Add a New Backup Table Entry^add/Form.add
+exception_list^Backup Exception List Management^exception_list/except.menu
+full^Display a Full Backup Table Report^full/Form.full
+modify^Modify an Existing Backup Table Entry^modify/Form.modify
+remove^Remove an Existing Backup Table Entry^remove/Form.remove
+rotation^Set Backup Table Rotation Period^rotation/Form.rotate
+summary^Display a Summary Backup Table Report^summary/Form.summary

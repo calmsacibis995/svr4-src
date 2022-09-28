@@ -1,0 +1,4 @@
+ABSTRACT:
+	This task allows the administrator of a system to add the
+	default Spell Checker supplied with the FACE package to the
+	programs menu.

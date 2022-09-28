@@ -1,0 +1,55 @@
+#ident	"@(#)lp.admin:printers/printers/modify/Text.confirm	1.2.3.1"
+
+title="Printer $lp_printer: Successfully Modified."
+altslks=true
+
+init=`if [ -n "$TFADMIN" ]; then $TFADMIN lpstat -p $lp_printer -l > /tmp/lpstat$VPID
+else lpstat -p $lp_printer -l > /tmp/lpstat$VPID fi`
+	
+
+row=15
+columns=55
+
+begrow=distinct
+begcol=distinct
+
+text="
+    Press CANCEL to Continue. 
+
+   Information on $lp_printer:
+`readfile /tmp/lpstat$VPID`
+
+"
+
+name=HELP
+button=9
+action=help
+
+name=PREVPAGE
+button=10
+action=prevpage
+
+name=NEXTPAGE
+button=11
+action=nextpage
+
+name=PREV-FRM
+button=12
+action=prev-frm
+
+name=NEXT-FRM
+button=13
+action=next-frm
+
+name=CANCEL
+button=14
+action=`
+	set -e toclose="$toclose $OAMBASE/add-ons/lp/printers/printers/modify/Text.confirm";
+	message -w "End of successful printer modify.";
+	sleep 2;
+	echo "close $toclose";
+`
+
+name=CMD-MENU
+button=15
+action=cmd-menu

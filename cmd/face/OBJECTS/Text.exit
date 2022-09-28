@@ -1,0 +1,49 @@
+#ident	"@(#)face:OBJECTS/Text.exit	1.4"
+
+title="Confirm Exit"
+lifetime=shortterm
+
+altslks=true
+
+begrow=any
+begcol=any
+
+framemsg=const "Press CONT to exit or CANCEL to cancel the exit."
+
+text="
+        You are about to exit AT&T FACE.
+"
+rows=3
+columns=44
+
+name=""
+button=9
+action=nop
+
+name=""
+button=10
+action=nop
+
+name=CONT
+button=11
+action=exit_now
+
+name=""
+button=12
+action=nop
+
+name=""
+button=13
+action=nop
+
+name=CANCEL
+button=14
+action=cancel
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=nop

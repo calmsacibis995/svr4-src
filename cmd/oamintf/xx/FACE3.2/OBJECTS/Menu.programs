@@ -1,0 +1,10 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/Menu.programs	1.1"
+
+menu=Programs
+#help=open text $VMSYS/OBJECTS/Text.h "Programs" T.hprog
+
+`set -l VMSYS=/usr/vmsys`
+
+name=Mail Services
+action=nop
+show=false

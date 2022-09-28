@@ -1,0 +1,5 @@
+#ident	"@(#)alint:lib/llib-ly	1.1"
+/* LINTLIBRARY */
+/* PROTOLIB1 */
+
+extern int yyerror(char *);

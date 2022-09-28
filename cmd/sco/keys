@@ -1,0 +1,133 @@
+#ident	"@(#)sco:keys	1.1.1.1"
+#
+#                                                        alt
+# scan                      cntrl          alt    alt    cntrl   lock
+# code  base  shift  cntrl  shift   alt    shift  cntrl  shift   state
+0  nop    nop    nop    nop    nop    nop    nop    nop      O
+1  esc    esc    esc    esc    esc    esc    esc    esc      O
+2  '1'    '!'    '1'    '1'    fN     fN     nop    nop      O
+3  '2'    '@'    '2'    nul    fN     fN     nop    nop      O
+4  '3'    '#'    '3'    '3'    fN     fN     nop    nop      O
+5  '4'    '$'    '4'    '4'    fN     fN     nop    nop      O
+6  '5'    '%'    '5'    '5'    fN     fN     nop    nop      O
+7  '6'    '^'    '6'    rs     fN     fN     nop    nop      O
+8  '7'    '&'    '7'    '7'    fN     fN     nop    nop      O
+9  '8'    '*'    '8'    '8'    fN     fN     nop    nop      O
+10  '9'    '('    '9'    '9'    fN     fN     nop    nop      O
+11  '0'    ')'    '0'    '0'    fN     fN     nop    nop      O
+12  '-'    '_'    '-'    ns     fN     fN     nop    nop      O
+13  '='    '+'    '='    '='    fN     fN     nop    nop      O
+14  bs     bs     bs     bs     bs     bs     bs     bs       O
+15  ht     gs     ht     gs     ht     gs     ht     gs       O
+16  'q'    'Q'    dc1    dc1    fN     fN     nop    nop      C
+17  'w'    'W'    etb    etb    fN     fN     nop    nop      C
+18  'e'    'E'    enq    enq    fN     fN     nop    nop      C
+19  'r'    'R'    dc2    dc2    fN     fN     nop    nop      C
+20  't'    'T'    dc4    dc4    fN     fN     nop    nop      C
+21  'y'    'Y'    em     em     fN     fN     nop    nop      C
+22  'u'    'U'    nak    nak    fN     fN     nop    nop      C
+23  'i'    'I'    ht     ht     fN     fN     nop    nop      C
+24  'o'    'O'    si     si     fN     fN     nop    nop      C
+25  'p'    'P'    dle    dle    fN     fN     nop    nop      C
+26  '['    '{'    esc    nop    fN     fN     nop    nop      O
+27  ']'    '}'    gs     nop    fN     fN     nop    nop      O
+28  cr     cr     cr     cr     cr     cr     cr     cr       O
+29  lctrl  lctrl  lctrl  lctrl  lctrl  lctrl  lctrl  lctrl    O
+30  'a'    'A'    soh    soh    fN     fN     nop    nop      C
+31  's'    'S'    dc3    dc3    fN     fN     nop    nop      C
+32  'd'    'D'    eot    eot    fN     fN     debug  nop      C
+33  'f'    'F'    ack    ack    fN     fN     nop    nop      C
+34  'g'    'G'    bel    bel    fN     fN     nop    nop      C
+35  'h'    'H'    bs     bs     fN     fN     nop    nop      C
+36  'j'    'J'    nl     nl     fN     fN     nop    nop      C
+37  'k'    'K'    vt     vt     fN     fN     nop    nop      C
+38  'l'    'L'    np     np     fN     fN     nop    nop      C
+39  ';'    ':'    ';'    ':'    fN     fN     nop    nop      O
+40  '\''   '"'    '\''   '"'    fN     fN     nop    nop      O
+41  '`'    '~'    '`'    '~'    fN     fN     nop    nop      O
+42  lshift lshift lshift lshift lshift lshift lshift lshift   O
+    43  '\\'   '|'    fs     '|'    fN     fN     nop    nop      O
+    44  'z'    'Z'    sub    sub    fN     fN     nop    nop      C
+    45  'x'    'X'    can    can    fN     fN     nop    nop      C
+    46  'c'    'C'    etx    etx    fN     fN     nop    nop      C
+    47  'v'    'V'    syn    syn    fN     fN     nop    nop      C
+    48  'b'    'B'    stx    stx    fN     fN     nop    nop      C
+    49  'n'    'N'    so     so     fN     fN     nop    nop      C
+    50  'm'    'M'    cr     cr     fN     fN     nop    nop      C
+    51  ','    '<'    ','    '<'    fN     fN     nop    nop      O
+    52  '.'    '>'    '.'    '>'    fN     fN     nop    nop      O
+    53  '/'    '?'    '/'    ns     fN     fN     nop    nop      O
+    54  rshift rshift rshift rshift rshift rshift rshift rshift   O
+    55  '*'    '*'    '*'    '*'    fN     fN     nop    nop      O
+    56  lalt   lalt   lalt   lalt   lalt   lalt   lalt   lalt     O
+    57  ' '    ' '    nul    nul    fN     fN     nop    nop      O
+    58  clock  clock  clock  clock  clock  clock  clock  clock    O
+    59  fkey00 fkey12 fkey24 fkey36 fkey00 fkey12 fkey24 fkey36   O
+    60  fkey01 fkey13 fkey25 fkey37 fkey01 fkey13 fkey25 fkey37   O
+    61  fkey02 fkey14 fkey26 fkey38 fkey02 fkey14 fkey26 fkey38   O
+    62  fkey03 fkey15 fkey27 fkey39 fkey03 fkey15 fkey27 fkey39   O
+    63  fkey04 fkey16 fkey28 fkey40 fkey04 fkey16 fkey28 fkey40   O
+    64  fkey05 fkey17 fkey29 fkey41 fkey05 fkey17 fkey29 fkey41   O
+    65  fkey06 fkey18 fkey30 fkey42 fkey06 fkey18 fkey30 fkey42   O
+    66  fkey07 fkey19 fkey31 fkey43 fkey07 fkey19 fkey31 fkey43   O
+    67  fkey08 fkey20 fkey32 fkey44 fkey08 fkey20 fkey32 fkey44   O
+    68  fkey09 fkey21 fkey33 fkey45 fkey09 fkey21 fkey33 fkey45   O
+    69  nlock  nlock  nlock  nlock  nlock  nlock  nlock  nlock    O
+    70  slock  slock  break  break  slock  slock  break  break    O
+    71  fkey48 '7'    fkey48 '7'    fkey48 fN     nop    nop      N
+    72  fkey49 '8'    fkey49 '8'    fkey49 fN     nop    nop      N
+    73  fkey50 '9'    fkey50 '9'    fkey50 fN     nop    nop      N
+    74  fkey51 '-'    fkey51 '-'    fkey51 fN     nop    nop      N
+    75  fkey52 '4'    fkey52 '4'    fkey52 fN     nop    nop      N
+    76  fkey53 '5'    fkey53 '5'    fkey53 fN     nop    nop      N
+    77  fkey54 '6'    fkey54 '6'    fkey54 fN     nop    nop      N
+    78  fkey55 '+'    fkey55 '+'    fkey55 fN     nop    nop      N
+    79  fkey56 '1'    fkey56 '1'    fkey56 fN     nop    nop      N
+    80  fkey57 '2'    fkey57 '2'    fkey57 fN     nop    nop      N
+    81  fkey58 '3'    fkey58 '3'    fkey58 fN     nop    nop      N
+    82  fkey59 '0'    fkey59 '0'    fkey59 fN     nop    nop      N
+    83  del    '.'    del    '.'    del    fN     reboot nop      N
+    84  fkey59 fkey25 fkey59 nop    sysreq sysreq sysreq sysreq   O
+    85  fkey57 fkey57 fkey57 fkey57 fkey57 fkey57 fkey57 fkey57   O
+    86  fkey52 fkey52 fkey52 fkey52 fkey52 fkey52 fkey52 fkey52   O
+    87  fkey10 fkey22 fkey34 fkey46 fkey10 fkey22 fkey34 fkey46   O
+    88  fkey11 fkey23 fkey35 fkey47 fkey11 fkey23 fkey35 fkey47   O
+    89  nop    nop    nop    nop    nop    nop    nop    nop      O
+    90  nop    nop    nop    nop    nop    nop    nop    nop      O
+    91  nop    nop    nop    nop    nop    nop    nop    nop      O
+    92  nop    nop    nop    nop    nop    nop    nop    nop      O
+    93  nop    nop    nop    nop    nop    nop    nop    nop      O
+    94  nop    nop    nop    nop    nop    nop    nop    nop      O
+    95  nop    nop    nop    nop    nop    nop    nop    nop      O
+    96  nop    nop    nop    nop    nop    nop    nop    nop      O
+    97  nop    nop    nop    nop    nop    nop    nop    nop      O
+    98  nop    nop    nop    nop    nop    nop    nop    nop      O
+    99  nop    nop    nop    nop    nop    nop    nop    nop      O
+   100  nop    nop    nop    nop    nop    nop    nop    nop      O
+   101  nop    nop    nop    nop    nop    nop    nop    nop      O
+   102  nop    nop    nop    nop    nop    nop    nop    nop      O
+   103  nop    nop    nop    nop    nop    nop    nop    nop      O
+   104  nop    nop    nop    nop    nop    nop    nop    nop      O
+   105  nop    nop    nop    nop    nop    nop    nop    nop      O
+   106  nop    nop    nop    nop    nop    nop    nop    nop      O
+   107  fkey52 fkey52 fkey52 fkey52 fkey52 fkey52 fkey52 fkey52   O
+   108  nop    nop    nop    nop    nop    nop    nop    nop      O
+   109  nop    nop    nop    nop    nop    nop    nop    nop      O
+   110  nop    nop    nop    nop    nop    nop    nop    nop      O
+   111  fkey50 fkey50 nop    nop    nop    nop    nop    nop      O
+   112  nop    nop    nop    nop    nop    nop    nop    nop      O
+   113  nop    nop    nop    nop    nop    nop    nop    nop      O
+   114  ralt   ralt   ralt   ralt   ralt   ralt   ralt   ralt     O
+   115  rctrl  rctrl  rctrl  rctrl  rctrl  rctrl  rctrl  rctrl    O
+   116  nl     nl     nl     nl     nl     nl     nl     nl       O
+   117  '/'    '/'    nop    nop    fN     fN     nop    nop      O
+   118  nop    nop    nop    nop    nop    nop    nop    nop      O
+   119  break  break  break  break  break  break  break  break    O
+   120  fkey49 fkey49 nop    nop    nop    nop    nop    nop      O
+   121  del    del    del    del    del    del    del    del      O
+   122  fkey56 fkey56 nop    nop    nop    nop    nop    nop      O
+   123  fkey59 fkey59 nop    nop    nop    nop    nop    nop      O
+   124  nop    nop    nop    nop    nop    nop    nop    nop      O
+   125  fkey54 fkey54 nop    nop    nop    nop    nop    nop      O
+   126  fkey58 fkey58 nop    nop    nop    nop    nop    nop      O
+   127  fkey48 fkey48 nop    nop    nop    nop    nop    nop      O

@@ -1,0 +1,6 @@
+#ident	"@(#)portmgmt:port_quick/quick.menu	1.1"
+#menu#Quick Terminal Setup
+#life#permanent
+
+add^Add a Terminal to a Port^Form.add
+remove^Remove a Terminal from a Port^Form.rm

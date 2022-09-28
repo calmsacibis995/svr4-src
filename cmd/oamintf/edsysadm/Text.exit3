@@ -1,0 +1,26 @@
+#ident	"@(#)oamintf:edsysadm/Text.exit3	1.3"
+
+################################################################################
+#	Module Name: Text.exit3
+#	Date: August 1987
+################################################################################
+title="Duplicate Entries In Protoype File"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+close=`rm -f /tmp/${VPID}.dpf /tmp/${VPID}.adup`
+
+text="
+The following duplicate entries were detected:
+
+`readfile /tmp/127dpf | cut -d" " -f3 | cut -d"=" -f1`
+    
+If you wish to over-write ALL of these entries
+press [CHG-KEYS] and then press [CONT]."
+
+rows=15
+columns=75
+
+name=CONT
+button=11
+action=`shell "mv ${VPID} /tmp/${VPID}.adup prototype"`

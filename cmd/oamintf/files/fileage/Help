@@ -1,0 +1,40 @@
+#ident	"@(#)oamintf:files/fileage/Help	1.1.1.2"
+ABSTRACT:
+	
+	The "fileage" tasks prints the names of all files older than
+	the date you specify.  
+
+	In the first field, please enter the name of the directory 
+	you would like to search.  There is no default for this field.
+	The directory name must be an absolute path (beginning with
+	slash (/)) to an existing directory.  Warning:  Short path-
+	names such as "/" or "/usr" will take longer to search.
+
+	The second field allows you to enter a positive integer value 
+	that specifies how old files will be before they are reported.  
+	If you don't enter a number, all files older than 90 days will be 
+	reported.
+	
+TITLE:List files older than a particular date
+
+F1:Directory to be searched: 
+	Enter the complete path of the directory to be searched.  The
+	path must begin with "/".
+
+F2:Age of files to be reported, in days: 
+	Enter a value for the minimum number of days to have elapsed
+	since the last modification of the files.  The number of days
+	must be an integer between 0 and 999.  The default is 90 days.
+
+schnokhelp:
+	No files were found in the directory you specified that
+	were older than the number you specified.  You may
+	specify a different directory and number of days, or
+	you may quit the "fileage" task.
+
+schokhelp:the Lists Files Older than a Particular Date screen
+	These are all of the files in the specified directory
+	which have not had modifications in the past number of
+	specified days.  These files may have been modified at
+	various dates previous to this number of days.
+

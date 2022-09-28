@@ -1,0 +1,51 @@
+#ident	"@(#)face:src/oam/users/Form.undefine	1.3"
+
+form="Remove FACE Environment for a FACE User"
+done=open TEXT $OBJ_DIR/Text.undefine "$F1" `getfrm`
+
+close=`unset -l UID -l IMSG`
+
+init=`if $VMSYS/bin/chkperm -l > /dev/null;
+then
+	echo true;
+else
+	message "There are no FACE users defined on this system to remove.";
+	echo false;
+fi`
+
+help=open TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`fmlgrep '^vmsys:' /etc/passwd | fmlcut -f6 -d: | set -e VMSYS`
+
+name="User's Login ID:"
+nrow=1
+ncol=1
+rows=1
+columns=8
+frow=1
+fcol=28
+lininfo=`message -f "Enter the login ID of the user you wish to remove."`form:F1
+rmenu=vary { `indicator -w; $VMSYS/bin/chkperm -l | sort` }
+value=""
+valid=`indicator -w;
+fmlgrep "^${F1}:" /etc/passwd | fmlcut -f3 -d":" | set -l UID;
+if [ -z "${F1}" ];
+then
+	set -l IMSG="You must enter a value for this field.";
+	echo false;
+elif [ -z "${UID}" ];
+then
+	set -l IMSG="The login specified must exist in the /etc/passwd file first.";
+	echo false;
+elif [ "${UID}" -lt "100" ];
+then
+	set -l IMSG="The login specified has a uid less than 100, I will not modify this login.";
+	echo false;
+elif $VMSYS/bin/chkperm -v -u "${F1}";
+then
+	echo true;
+else
+	set -l IMSG="${F1} is not defined as a FACE user.";
+	echo false;
+fi`
+invalidmsg="${IMSG}"

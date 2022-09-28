@@ -1,0 +1,6 @@
+#ident	"@(#)devintf:devices/attrs/Help	1.2.1.1"
+
+ABSTRACT:
+	The items in the Device Attribute Management menu provide the
+	capability to list, add, remove and modify the device attribute
+	information stored in the device table.

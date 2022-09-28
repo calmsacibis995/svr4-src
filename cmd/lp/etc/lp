@@ -1,0 +1,38 @@
+#ident	"@(#)lp:etc/lp	1.6"
+
+##########
+#
+# If not invoked with at least one argument, assume we are
+# running on a pre-SVR3.0 machine. We'll check our name to
+# see what we do. Otherwise, the first argument tells what
+# to do.
+##########
+if [ $# = 0 ]
+then
+	case $0 in
+	*/lp-start )
+		state=start
+		;;
+	*/lp-stop )
+		state=stop
+		;;
+	esac
+else
+	state=$1
+fi
+
+
+set `who -r`
+case $state in
+
+'start')
+	if [ $9 = "2" -o $9 = "3" ]
+	then
+		exit
+	fi
+	[ -f /usr/lib/lpsched ] && /usr/lib/lpsched
+	;;
+'stop')
+	[ -f /usr/lib/lpshut ] && /usr/lib/lpshut
+	;;
+esac

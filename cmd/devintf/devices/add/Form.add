@@ -1,0 +1,494 @@
+#ident	"@(#)devintf:devices/add/Form.add	1.5.4.2"
+
+form="Add a Device"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+lifetime=longterm
+begrow=any
+begcol=any
+framemsg=`readfile $INTFBASE/form.msg`
+
+`
+    set -l OLDCDEVICE="" ;
+    set -l OLDBDEVICE="" ;
+    set -l OLDPATHNAME="" ;
+`
+
+done=`
+    indicator -w "" ;
+    getfrm | set -l FRAMENUM ;
+    set -l AV1="" ;
+    set -l AV2="" ;
+    set -l AV3="" ;
+    set -l AV4="" ;
+    set -l AV5="" ;
+    if [ "$F6" ] ;
+    then set -l AV1="$F6=$F7" ;
+    fi ;
+    if [ "$F8" ] ;
+    then set -l AV2="$F8=$F9" ;
+    fi ;
+    if [ "$F10" ] ;
+    then set -l AV3="$F10=$F11" ;
+    fi ;
+    if [ "$F12" ] ;
+    then set -l AV4="$F12=$F13" ;
+    fi ;
+    if [ "$F14" ] ;
+    then set -l AV5="$F14=$F15" ;
+    fi ;
+    if [ -n "$F4" -a -n "$F5" ];
+    then
+        putdev -a "$F1" type="$F3" desc="$F2" cdevice="$F4" bdevice="$F5" $AV1 $AV2 $AV3 $AV4 $AV5 ;
+    elif [ -n "$F5" ];
+    then
+        putdev -a "$F1" type="$F3" desc="$F2" bdevice="$F5" $AV1 $AV2 $AV3 $AV4 $AV5 ;
+    elif [ -n "$F4" ];
+    then
+        putdev -a "$F1" type="$F3" desc="$F2" cdevice="$F4" $AV1 $AV2 $AV3 $AV4 $AV5 ;
+    else
+        putdev -a "$F1" type="$F3" desc="$F2" $AV1 $AV2 $AV3 $AV4 $AV5 ;
+    fi;
+    if [ $RET -eq 0 ] ;
+    then set -l ENDMSG="A description for the device alias \"$F1\" was successfully added to the device table." ;
+    else if [ $RET -eq 3 ] ;
+	 then set -l ENDMSG="The device alias \"$F1\" is already defined." ;
+	 elif [ $RET -eq 2 ] ;
+	 then set -l ENDMSG="Unable to open or create device tables." ;
+	 else set -l ENDMSG="Internal error $RET" ;
+	 fi ;
+    fi ;
+    indicator "" ;
+`OPEN TEXT $OBJ_DIR/Text.c_add "$ENDMSG"
+	
+name="Device Alias:"
+lininfo="Form.add:Alias"
+nrow=1
+ncol=1
+frow=1
+fcol=35
+rows=1
+columns=14
+invalidmsg=$INVMSG
+valid=`
+    indicator -w "" ;
+    if [ -z "$F1" ] ;
+    then
+	set -l VALID=FALSE ;
+	set -l INVMSG="This field may not be blank." ;
+    else
+	regex -v "$F1" '^[a-zA-Z0-9]+$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+	if [ $VALID = "TRUE" ] ;
+	then
+	    devattr "$F1" alias >/dev/null ;
+	    if [ $RET -ne 3 ] ;
+	    then
+		if [ $RET -eq 0 ] ;
+		then set -l INVMSG="The device alias \"$F1\" is already defined." ;
+		else set -l INVMSG="Internal error $RET"  ;
+		fi ;
+		set -l VALID=FALSE ;
+	    fi ;
+	else set -l INVMSG="The value \"$F1\" is not a valid alias." ;
+	fi ;
+    fi ;
+    indicator "" ;
+`$VALID
+
+name="Description:"
+lininfo="Form.add:Description"
+nrow=2
+ncol=1
+frow=2
+fcol=35
+rows=1
+columns=40
+
+name="Type:"
+lininfo="Form.add:Type"
+nrow=3
+ncol=1
+frow=3
+fcol=35
+rows=1
+columns=40
+invalidmsg="This field may not be blank."
+valid=`if [ -z "$F3" ];
+       then 
+           echo FALSE;
+       else
+           echo TRUE;
+       fi;`
+
+name="Character special device pathname:"
+lininfo="Form.add:Cdevice"
+nrow=4
+ncol=1
+frow=4
+fcol=35
+rows=1
+columns=40
+invalidmsg=$ERRMSG
+valid=`
+    regex -v "$F4" '^/[^ :]*$' 'TRUE' '.+' 'FALSE' '.*' 'TRUE' | set -l VALID ;
+    if [ $VALID = "TRUE" ] ;
+    then if [ "$F4" = "" -o -c "$F4" ] ;
+	 then set -l VALID=TRUE ;
+	 else
+		set -l VALID=FALSE ;
+		set -l ERRMSG="\"$F4\" nonexistant or of incorrect type." ;
+	 fi ;
+    else set -l ERRMSG="The value \"$F4\" is not a valid filename." ;
+    fi ;
+`$VALID
+
+name="Block special device pathname:"
+lininfo="Form.add:Bdevice"
+nrow=5
+ncol=1
+frow=5
+fcol=35
+rows=1
+columns=40
+invalidmsg=$ERRMSG
+valid=`
+    regex -v "$F5" '^/[^ :]*$' 'TRUE' '.+' 'FALSE' '.*' 'TRUE' | set -l VALID ;
+    if [ $VALID = "TRUE" ] ;
+    then if [ "$F5" = "" -o -b "$F5" ] ;
+	 then set -l VALID=TRUE ;
+	 else
+		set -l VALID=FALSE ;
+		set -l ERRMSG="\"$F5\" nonexistant or of incorrect type." ;
+	 fi ;
+    else set -l ERRMSG="The value \"$F5\" is not a valid filename." ;
+    fi ;
+`$VALID
+
+name="Other attributes:
+ Attribute:"
+lininfo="Form.add:Attribute"
+nrow=6
+ncol=1
+frow=7
+fcol=12
+rows=1
+columns=14
+invalidmsg=$ERRMSG
+valid=`
+    regex -v "$F6" '^[0-9a-zA-Z]*$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+    if [ $VALID = "TRUE" ] ;
+    then
+	if [ -z "$F6" ] ;
+	then set -l VALID=TRUE ;
+	elif [ "$F6" = "alias" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"alias\" attribute is set in the first field of this form." ;
+	elif [ "$F6" = "cdevice" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"cdevice\" attribute is set in the fourth field of this form." ;
+	elif [ "$F6" = "bdevice" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"bdevice\" attribute is set in the fifth field of this form." ;
+	elif [ "$F6" = "type" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"type\" attribute is set in the third field of this form." ;
+	elif [ "$F6" = "desc" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"desc\" attribute is set in the second field of this form." ;
+	elif [ "$F6" = "$F8" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F6\" attribute is defined elsewhere in this form." ;
+	elif [ "$F6" = "$F10" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F6\" attribute is defined elsewhere in this form." ;
+	elif [ "$F6" = "$F12" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F6\" attribute is defined elsewhere in this form." ;
+	elif [ "$F6" = "$F14" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F6\" attribute is defined elsewhere in this form." ;
+	fi ;
+    else set -l ERRMSG="The value \"$F6\" is not a valid attribute name." ;
+    fi ;
+`$VALID
+
+name="Value:"
+lininfo="Form.add:Value"
+nrow=7
+ncol=28
+frow=7
+fcol=35
+rows=1
+columns=40
+
+name="Attribute:"
+lininfo="Form.add:Attribute"
+nrow=8
+ncol=1
+frow=8
+fcol=12
+rows=1
+columns=14
+invalidmsg=$ERRMSG
+valid=`
+    regex -v "$F8" '^[0-9a-zA-Z]*$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+    if [ $VALID = "TRUE" ] ;
+    then
+	if [ -z "$F8" ] ;
+	then set -l VALID=TRUE ;
+	elif [ "$F8" = "alias" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"alias\" attribute is set in the first field of this form" ;
+	elif [ "$F8" = "cdevice" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"cdevice\" attribute is set in the fourth field of this form" ;
+	elif [ "$F8" = "bdevice" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"bdevice\" attribute is set in the fifth field of this form" ;
+	elif [ "$F8" = "type" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"type\" attribute is set in the third field of this form" ;
+	elif [ "$F8" = "desc" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"desc\" attribute is set in the second field of this form" ;
+	elif [ "$F8" = "$F6" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F8\" attribute is defined elsewhere in this form." ;
+	elif [ "$F8" = "$F10" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F8\" attribute is defined elsewhere in this form." ;
+	elif [ "$F8" = "$F12" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F8\" attribute is defined elsewhere in this form." ;
+	elif [ "$F8" = "$F14" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F8\" attribute is defined elsewhere in this form." ;
+	fi ;
+    else set -l ERRMSG="The value \"$F8\" is not a valid attribute name." ;
+    fi ;
+`$VALID
+
+name="Value:"
+lininfo="Form.add:Value"
+nrow=8
+ncol=28
+frow=8
+fcol=35
+rows=1
+columns=40
+
+name="Attribute:"
+lininfo="Form.add:Attribute"
+nrow=9
+ncol=1
+frow=9
+fcol=12
+rows=1
+columns=14
+invalidmsg=$ERRMSG
+valid=`
+    regex -v "$F10" '^[0-9a-zA-Z]*$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+    if [ $VALID = "TRUE" ] ;
+    then
+	if [ -z "$F10" ] ;
+	then set -l VALID=TRUE ;
+	elif [ "$F10" = "alias" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"alias\" attribute is set in the first field of this form" ;
+	elif [ "$F10" = "cdevice" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"cdevice\" attribute is set in the fourth field of this form" ;
+	elif [ "$F10" = "bdevice" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"bdevice\" attribute is set in the fifth field of this form" ;
+	elif [ "$F10" = "type" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"type\" attribute is set in the third field of this form" ;
+	elif [ "$F10" = "desc" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"desc\" attribute is set in the second field of this form" ;
+	elif [ "$F10" = "$F8" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F10\" attribute is defined elsewhere in this form." ;
+	elif [ "$F10" = "$F6" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F10\" attribute is defined elsewhere in this form." ;
+	elif [ "$F10" = "$F12" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F10\" attribute is defined elsewhere in this form." ;
+	elif [ "$F10" = "$F14" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F10\" attribute is defined elsewhere in this form." ;
+	fi ;
+    else set -l ERRMSG="The value \"$F10\" is not a valid attribute name." ;
+    fi ;
+`$VALID
+
+name="Value:"
+lininfo="Form.add:Value"
+nrow=9
+ncol=28
+frow=9
+fcol=35
+rows=1
+columns=40
+
+name="Attribute:"
+lininfo="Form.add:Attribute"
+nrow=10
+ncol=1
+frow=10
+fcol=12
+rows=1
+columns=14
+invalidmsg=$ERRMSG
+valid=`
+    regex -v "$F12" '^[0-9a-zA-Z]*$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+    if [ $VALID = "TRUE" ] ;
+    then
+	if [ -z "$F12" ] ;
+	then set -l VALID=TRUE ;
+	elif [ "$F12" = "alias" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"alias\" attribute is set in the first field of this form" ;
+	elif [ "$F12" = "cdevice" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"cdevice\" attribute is set in the fourth field of this form" ;
+	elif [ "$F12" = "bdevice" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"bdevice\" attribute is set in the fifth field of this form" ;
+	elif [ "$F12" = "type" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"type\" attribute is set in the third field of this form" ;
+	elif [ "$F12" = "desc" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"desc\" attribute is set in the second field of this form" ;
+	elif [ "$F12" = "$F8" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F12\" attribute is defined elsewhere in this form." ;
+	elif [ "$F12" = "$F10" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F12\" attribute is defined elsewhere in this form." ;
+	elif [ "$F12" = "$F6" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F12\" attribute is defined elsewhere in this form." ;
+	elif [ "$F12" = "$F14" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F12\" attribute is defined elsewhere in this form." ;
+	fi ;
+    else set -l ERRMSG="The value \"$F12\" is not a valid attribute name." ;
+    fi ;
+`$VALID
+
+name="Value:"
+lininfo="Form.add:Value"
+nrow=10
+ncol=28
+frow=10
+fcol=35
+rows=1
+columns=40
+
+name="Attribute:"
+lininfo="Form.add:Attribute"
+nrow=11
+ncol=1
+frow=11
+fcol=12
+rows=1
+columns=14
+invalidmsg=$ERRMSG
+valid=`
+    regex -v "$F14" '^[0-9a-zA-Z]*$' 'TRUE' '.*' 'FALSE' | set -l VALID ;
+    if [ $VALID = "TRUE" ] ;
+    then
+	if [ -z "$F14" ] ;
+	then set -l VALID=TRUE ;
+	elif [ "$F14" = "alias" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"alias\" attribute is set in the first field of this form" ;
+	elif [ "$F14" = "cdevice" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"cdevice\" attribute is set in the fourth field of this form" ;
+	elif [ "$F14" = "bdevice" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"bdevice\" attribute is set in the fifth field of this form" ;
+	elif [ "$F14" = "type" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"type\" attribute is set in the third field of this form" ;
+	elif [ "$F14" = "desc" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"desc\" attribute is set in the second field of this form" ;
+	elif [ "$F14" = "$F8" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F14\" attribute is defined elsewhere in this form." ;
+	elif [ "$F14" = "$F10" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F14\" attribute is defined elsewhere in this form." ;
+	elif [ "$F14" = "$F12" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F14\" attribute is defined elsewhere in this form." ;
+	elif [ "$F14" = "$F6" ] ;
+	then
+	    set -l VALID=FALSE ;
+	    set -l ERRMSG="The \"$F14\" attribute is defined elsewhere in this form." ;
+	fi ;
+    else set -l ERRMSG="The value \"$F14\" is not a valid attribute name." ;
+    fi ;
+`$VALID
+
+name="Value:"
+lininfo="Form.add:Value"
+nrow=11
+ncol=28
+frow=11
+fcol=35
+rows=1
+columns=40
+
+name=RESET
+button=8
+action=reset

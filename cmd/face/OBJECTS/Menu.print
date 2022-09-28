@@ -1,0 +1,25 @@
+#ident	"@(#)face:OBJECTS/Menu.print	1.5"
+
+menu="Print `echo $ARG1|fmlcut -c3-16`"
+
+help=open text OBJECTS/Text.h "Print" T.f.propts
+
+framemsg="Move to an item with arrow keys and press ENTER to select the item."
+
+reread=`regex -v $PRACT "false" "false" ".*" "true"`
+
+name="`echo $PRINCMD1 | fmlcut -c1-40`"
+description="Print Command #1"
+action=`set -l PRACT=false ; run /bin/sh -c "$PRINCMD1 $ARG3"`nop
+
+name="`echo $PRINCMD2 | fmlcut -c1-40`"
+description="Print Command #2"
+action=`set -l PRACT=false ; run /bin/sh -c "$PRINCMD2 $ARG3"`nop
+
+name="`echo $PRINCMD3 | fmlcut -c1-40`"
+description="Print Command #3"
+action=`set -l PRACT=false ; run /bin/sh -c "$PRINCMD3 $ARG3"`nop
+
+name="Print Options"
+description="Change Print Options"
+action=`set -l PRACT=true`OPEN FORM OBJECTS/Form.prin

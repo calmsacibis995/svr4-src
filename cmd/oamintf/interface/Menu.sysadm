@@ -1,0 +1,24 @@
+#ident	"@(#)oamintf:interface/Menu.sysadm	1.1"
+`$OAMBASE/bin/object_gen $SYSDIR $SYSSTART`
+
+lifetime=immortal
+
+#
+#  This file is the object specified on the FMLI command line 
+#  by the sysadm script when it determines that a Menu is to be invoked.
+#
+#  The line `object_gen $SYSDIR $SYSSTART` is a backquoted expression
+#  that FMLI expands and causes it to execute the program "object_gen",
+#  (the object generator) with the two arguments $SYSDIR and $SYSSTART.
+#  Both variables are set by the sysadm script.  SYSDIR is the directory
+#  location of the object to be generated.  SYSSTART is the file name
+#  of the object to be generated.
+#
+#  The "lifetime" descriptor is set to "immortal" to indicate that this
+#  object cannot be closed with the "close" slk.
+#
+#  The contents of this file are identical to those of "Text.sysadm" and
+#  "Form.sysadm".  However three files must exist (one for Menu, Form and Text)
+#  because FMLI looks at the filename syntax before determining what type
+#  of object it is working with.
+#

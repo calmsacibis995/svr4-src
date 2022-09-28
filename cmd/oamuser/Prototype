@@ -1,0 +1,34 @@
+#ident	"@(#)oamuser:Prototype	1.1"
+
+!INTFBIN=usr/sadm/sysadm/bin
+
+## Files from local prototype: component=oamuser
+
+# foundation set (predecessor) directories
+
+d foundation usr 0755 root sys
+d foundation usr/sadm 0755 bin bin
+d foundation etc/skel 0755 bin bin
+d foundation usr/sadm/sysadm 0755 bin bin
+d foundation $INTFBIN 0755 bin bin
+d foundation usr/sbin 0755 root bin
+
+# foundation set files
+
+f foundation etc/skel/.profile 0644 root other
+f foundation $INTFBIN/addgrpmem 0500 root sys
+f foundation $INTFBIN/expdate 0500 root sys
+f foundation $INTFBIN/findgid 0500 root sys
+f foundation $INTFBIN/finduid 0500 root sys
+f foundation $INTFBIN/getngroups 0500 root sys
+f foundation $INTFBIN/getprimary 0500 root sys
+f foundation $INTFBIN/getusrdefs 0500 root sys
+f foundation $INTFBIN/putusrdefs 0500 root sys
+f foundation usr/sadm/ugdates 0444 bin bin
+
+f foundation usr/sbin/groupadd 0500 root sys
+f foundation usr/sbin/groupdel 0500 root sys
+f foundation usr/sbin/groupmod 0500 root sys
+f foundation usr/sbin/useradd 0500 root sys
+f foundation usr/sbin/userdel 0500 root sys
+f foundation usr/sbin/usermod 0500 root sys

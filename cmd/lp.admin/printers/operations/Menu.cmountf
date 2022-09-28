@@ -1,0 +1,52 @@
+#ident	"@(#)lp.admin:printers/operations/Menu.cmountf	1.2"
+
+menu=Choices
+lifeterm=shortterm
+framemsg="Move to your choice and press ENTER."
+
+close=`/usr/bin/rm -f $name_2;
+	unset -l $name_2`
+
+
+`set -l name_2="/tmp/lp.n2$VPID";
+if [ -s "/etc/lp/printers/$printer_f1/forms.allow" ];
+then
+	if fmlgrep "^any$" /etc/lp/printers/$printer_f1/forms.allow > /dev/null;
+	then
+		set -l choice_list=3;
+	elif fmlgrep "^all$" /etc/lp/printers/$printer_f1/forms.allow > /dev/null;
+	then
+		set -l choice_list=3;
+	else
+		set -l choice_list=1;
+	fi;
+elif [ -s "/etc/lp/printers/$printer_f1/forms.deny" ];
+then
+	if fmlgrep "^any$" /etc/lp/printers/$printer_f1/forms.deny > /dev/null;
+	then
+		set -l choice_list=4;
+	elif fmlgrep "^all$" /etc/lp/printers/$printer_f1/forms.deny > /dev/null;
+	then
+		set -l choice_list=4;
+	else
+		set -l choice_list=2;
+	fi;
+else
+	set -l choice_list=3;
+fi;
+regex -e -v "$choice_list"
+'1' '`readfile /etc/lp/printers/$printer_f1/forms.allow > $name_2`'
+'2' '`/usr/bin/ls -p /etc/lp/forms | fmlgrep \'^.*/$\' | fmlcut -f1 -d/ | /usr/bin/fgrep -v -f /etc/lp/printers/$printer_f1/forms.deny > $name_2`'
+'3' '`/usr/bin/ls -p /etc/lp/forms | fmlgrep \'^.*/$\' | fmlcut -f1 -d/ > $name_2`'
+'4' '`/usr/bin/rm -f $name_2`' > /dev/null`
+
+`if [ -s $name_2 ];
+then
+	echo "init=true";
+else
+	echo "init=false";
+	message -b "There are no suggested forms defined for printer $printer_f1.";
+	rm -f $name_2;
+fi;
+/usr/bin/sort $name_2 | regex '^(.*)$0$' 'name=$m0
+action=`set -l Form_Choice=$m0`close'`

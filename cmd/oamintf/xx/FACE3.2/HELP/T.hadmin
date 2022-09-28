@@ -1,0 +1,63 @@
+The System Administration Menu enables you to perform system
+administration tasks using menus and forms. Administration of your
+UNIX System includes setting up the system according to your specific
+hardware configuration and administering the correct operation of your
+system on a day-to-day basis.
+
+Some of these operations, because of their sensitive nature, and to
+ensure system security, can only be performed by one or a small set
+of users who are authorized to do so. These users have system
+administration privileges. System administration privileges can be
+granted to a user by another user who has system administration
+privileges. This can be done via "Change" on the "User Logins" menu.
+
+The items on the System Administration Menu are:
+
+      Backup to Removable Media:  You can make a floppy disk or
+      cartridge tape copy of the files you have on hard disk.
+
+      Change Password:  You can change your password.  Requiring
+      passwords as well as logins insures system security.
+
+      Date and Time:  You can change the system clock. You can
+      navigate beteeen the "Date:" fields (e.g., month, day, year)
+      on the form with the up-arrow and down-arrow keys.
+
+      Disk Operations:  You can format floppy disks and copy
+      important information from one floppy disk to another.
+
+      File System Operations:  You can create a file system on floppy
+      disk and then mount it on hard disk.
+
+      Mail Setup:  You can give your computer a node name so other
+      systems can send mail to your system and define other systems
+      to your system so you can send mail to them.
+
+      Peripherals Setup:  You can set up your computer to
+      support your printers, second hard disk, and additional parallel
+      and serial port connections.
+
+      Restore from Removable Media:  You can restore files to hard disk
+      that were backed up to removable media.
+
+      Schedule Automatic Tasks: Allows you to schedule tasks to run
+      at a later time.
+
+      Shutdown:  You can bring down the UNIX system before turning
+      off the power or rebooting the system.
+
+      Software Setup:  You can install, remove, display, and
+      administer UNIX and MS-DOS software packages.
+
+      System Information:  You can display user information for your
+      system such as: UNIX system version, disk (hard & floppy) space,
+      mounted file system space, and list of current users logged on.
+
+      Tape Operations:  When the Cartridge Tape Utilities are
+      installed, Tape Operations makes it possible to erase,
+      retension, reset, and rewind cartridge tapes.
+
+      User Logins:  You can add, change, delete, or display user
+      logins.
+
+

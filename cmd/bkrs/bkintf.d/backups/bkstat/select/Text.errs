@@ -1,0 +1,28 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkstat/select/Text.errs	1.4"
+
+title="Errors Displaying Selective Report of the Status of Backup Requests"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp "ERROR"
+
+begrow=any
+begcol=any
+rows=5
+columns=77
+
+text="   The following errors occurred trying to display selected backup requests:
+
+`readfile $ARG1`"
+
+close=`rm -f $ARG1`
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

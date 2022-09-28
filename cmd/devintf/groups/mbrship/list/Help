@@ -1,0 +1,20 @@
+#ident	"@(#)devintf:groups/mbrship/list/Help	1.2"
+
+list:ABSTRACT:
+	The "list" task lists the membership of a device group.  You will be
+	asked for the name of the device group to list.
+
+Form.list:Name:the Group Name field
+	This field names the device group whose members are to be listed.
+	
+	This field must be a valid device group name (i.e. only alphanumeric
+	characters and the characters '.', '-', '_', '$' and no more than 14
+	characters).  This field may not be blank.
+
+
+NONE:the Group Membership screen
+	This screen tells the user that the named device group contains no
+	members.
+
+LISTING:the Group Membership screen
+	This screen lists the members of the named device group.

@@ -1,0 +1,9 @@
+#ident	"@(#)devintf:devices/devices.menu	1.4"
+#menu#Device Description Management
+#life#permanent
+
+add^Add a Device^add/Form.add
+attributes^Device Attribute Management^attrs/attrs.menu
+list^List Devices^list/Text.list
+remove^Remove a Device^remove/Form.remove
+reservation^Device Reservation Management^reserve/reserve.menu

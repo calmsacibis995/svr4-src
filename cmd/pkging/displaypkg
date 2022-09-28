@@ -1,0 +1,106 @@
+#!/sbin/sh
+
+#	Copyright (c) 1987, 1988 Microsoft Corporation
+#	  All Rights Reserved
+
+#	This Module contains Proprietary Information of Microsoft 
+#	Corporation and should be treated as Confidential.
+#
+#ident	"@(#)pkging:displaypkg	1.2"
+#
+# PURPOSE: List installed software
+# ---------------------------------------------------------------------
+
+#  List any xenix packages along with the AT&T packages.  If the 
+#  directory /etc/perms is non-empty, then xenix sets exist.  Use
+#  fixperm to determine which packages within these sets have been
+#  installed.  This code is similar to the code in the custom command.
+list_xenix_pkgs()
+{
+	>$tmp.$sid				#  Empty this file
+
+	# List all packages in this directory
+	for perm in $perm_files
+	do
+		#  Call fixperm to list the installed packages for this set
+		(cd /; fixperm -iv $ignorepkgs /etc/perms/$perm) |
+		sed "s/^\(.*\)	.*$/s:^#!\1[ 	][ 	]*:	&	:p/" > $tmp.fl
+		#  Get the information and reformat it for display
+		#  Filter out packages not installed (not Yes or Part)
+		sed -n -f $tmp.fl /etc/perms/$perm   |  awk '
+			$2=="Part" || $2=="Yes" { 
+					#  For some reason, one line must be
+					#  first be printed or the spacing 
+					#  will be screwed up.
+					printf "\n"
+
+					#  Print the name and status
+					printf "%s\t%s\t", $1, $2
+
+					#  Rest of fields are the description
+					for (i = 4; i <= NF; i++)
+						printf "%s ", $i
+			   } ' >>$tmp.$sid
+	done
+
+	#  If the file exists, then there are XENIX packages to list.  Make
+	#  a new file suitable for cat'ing alon with the UNIX packages.
+	if [ -s $tmp.$sid ]
+	then
+		echo > $tmp.$sid.2 "\n\n\t\tXENIX  Packages\n\t\t-------------"
+		cat $tmp.$sid >>$tmp.$sid.2
+
+		#  Add this file to the list of files being cat'ed
+		list="$list $tmp.$sid.2"
+	fi
+
+	rm -f $tmp.$sid $tmp.fl
+}
+
+tmp=/tmp/CUSLIST			#  Temp file for xenix commands
+sid=$$
+list=
+PATH=/sbin:/usr/sbin:/etc:/usr/bin
+export PATH
+
+if [ "$1" = XENIX ]
+then perm_files=`cd /etc/perms; echo *`
+     if [ "/att/msoft/isc/*" != "/att/msoft/isc/$perm_files" ]
+     then
+	list_xenix_pkgs
+     fi
+     if [ -n "${list}" ]
+     then
+	cat ${list} 
+	echo
+     fi
+     rm -f $tmp.$sid.2 $tmp.$fl ${list}
+     exit 0
+fi
+
+if [ -d /usr/options ]
+then
+	cd /usr/options
+	list=`ls *.name 2>/dev/null`
+fi
+
+#  Use a bogus directory to check if /etc/perms is an empty 
+#  directory.  Used to be guaranteed not empty in XENIX.
+#  Avoids expansion of '*'.
+perm_files=`cd /etc/perms; echo *`
+if [ "/att/msoft/isc/*" != "/att/msoft/isc/$perm_files" ]
+then
+	list_xenix_pkgs
+fi
+
+if [ -n "$list" ]
+then
+	echo "\n\tThe following software packages have been installed:\n"
+	cat ${list} | pg
+
+	rm -f $tmp.$sid.2 $tmp.$fl
+	exit 0
+fi
+
+echo "There are currently no software applications installed."
+

@@ -1,0 +1,29 @@
+#ident	"@(#)oamintf:usermgmt/Menu.mlogins	1.3"
+
+################################################################################
+#	Module Name: Menu.mlogins
+#	Description: This menu provides the user with a multiselect pop-up
+#		     menu for login selection.  /etc/passwd is sorted
+#		     and piped through regex to set the name and description
+#		     fields.  Selecting only logins with user ids of 100 or
+#		     greater.  Form_Choice is set to the items the user selects.
+################################################################################
+menu="Valid User Logins"
+
+multiselect=TRUE
+
+framemsg=`readfile $INTFBASE/msmenu.msg`
+
+done=`getitems "," | set -l "Form_Choice"`CLOSE
+
+`sort +0 -1 -t: /etc/passwd |  regex '^([^:][^:]*)$0:[^:]*:([0-9][0-9][0-9][0-9]*)$1:.*$' 'name="$m0"
+description="$m1"'`
+
+name=
+button=1
+action=
+
+name=
+button=7
+action=
+

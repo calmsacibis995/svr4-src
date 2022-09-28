@@ -1,0 +1,105 @@
+Core.o:	Core.C
+	$(CPLUS_CMD) -c Core.C
+
+Frame.o:	Frame.C
+	$(CPLUS_CMD) -c Frame.C
+
+Reg1.o:	Reg1.C
+	$(CPLUS_CMD) -c Reg1.C
+
+RegAccess.o:	RegAccess.C
+	$(CPLUS_CMD) -c RegAccess.C
+
+DbregAccess.o:	DbregAccess.C
+	$(CPLUS_CMD) -c DbregAccess.C
+
+Seglist.o:	Seglist.C
+	$(CPLUS_CMD) -c Seglist.C
+
+Segment.o:	Segment.C
+	$(CPLUS_CMD) -c Segment.C
+
+oslevel.o:	oslevel.C
+	$(CPLUS_CMD) -c oslevel.C
+
+Assoccmds.o:	../common/Assoccmds.C
+	$(CPLUS_CMD) -c ../common/Assoccmds.C
+
+Breaklist.o:	../common/Breaklist.C
+	$(CPLUS_CMD) -c ../common/Breaklist.C
+
+Circlech.o:	../common/Circlech.C
+	$(CPLUS_CMD) -c ../common/Circlech.C
+
+Cmdstream.o:	../common/Cmdstream.C
+	$(CPLUS_CMD) -c ../common/Cmdstream.C
+
+EventTable.o:	../common/EventTable.C
+	$(CPLUS_CMD) -c ../common/EventTable.C
+
+Monitor.s.o:	../common/Monitor.s.C
+	$(CPLUS_CMD) -c ../common/Monitor.s.C
+
+Process.hx.o:	../common/Process.hx.C
+	$(CPLUS_CMD) -c ../common/Process.hx.C
+
+Process.lx.o:	../common/Process.lx.C
+	$(CPLUS_CMD) -c ../common/Process.lx.C
+
+Process.ev.o:	../common/Process.ev.C
+	$(CPLUS_CMD) -c ../common/Process.ev.C
+
+Process.st.o:	../common/Process.st.C
+	$(CPLUS_CMD) -c ../common/Process.st.C
+
+Process.io.o:	../common/Process.io.C
+	$(CPLUS_CMD) -c ../common/Process.io.C
+
+Reg.o:	../common/Reg.C
+	$(CPLUS_CMD) -c ../common/Reg.C
+
+Siglist.o:	../common/Siglist.C
+	$(CPLUS_CMD) -c ../common/Siglist.C
+
+Sigset.o:	../common/Sigset.C
+	$(CPLUS_CMD) -c ../common/Sigset.C
+
+Status.s.o:	../common/Status.s.C
+	$(CPLUS_CMD) -c ../common/Status.s.C
+
+TSClist.o:	../common/TSClist.C
+	$(CPLUS_CMD) -c ../common/TSClist.C
+
+Watchlist.o:	../common/Watchlist.C
+	$(CPLUS_CMD) -c ../common/Watchlist.C
+
+Watch2.o:	../common/Watch2.C
+	$(CPLUS_CMD) -c ../common/Watch2.C
+
+OBJECTS	=  \
+	Core.o \
+	Frame.o \
+	Reg1.o \
+	DbregAccess.o \
+	RegAccess.o \
+	Seglist.o \
+	Segment.o \
+	oslevel.o \
+	Assoccmds.o \
+	Breaklist.o \
+	Circlech.o \
+	Cmdstream.o \
+	EventTable.o \
+	Monitor.s.o \
+	Process.hx.o \
+	Process.lx.o \
+	Process.ev.o \
+	Process.st.o \
+	Process.io.o \
+	Reg.o \
+	Siglist.o \
+	Sigset.o \
+	Status.s.o \
+	TSClist.o \
+	Watchlist.o \
+	Watch2.o

@@ -1,0 +1,26 @@
+#ident	"@(#)oamintf:edsysadm/Text.exit7	1.2"
+
+################################################################################
+#	Module Name: Text.exit7
+#	Date: August 1987
+################################################################################
+title="Package Error"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+text="
+   Input given in location field is not correct, please correct it and
+   try again"
+
+rows=4
+columns=65
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

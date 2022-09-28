@@ -1,0 +1,29 @@
+#ident	"@(#)lp.admin:printers/priorities/Menu.prioritie	1.2"
+menu=Assign Print Queue Priorities to Users
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO 
+
+name=default
+description=Set System Default Priority
+lininfo="menu:L1"
+action=OPEN FORM $OBJ_DIR/Form.default
+
+name=list
+description=List Priority Limits for Users
+lininfo="menu:L2"
+action=OPEN TEXT $OBJ_DIR/Text.list
+
+name=remove
+description=Remove User(s) Priority Limit
+lininfo="menu:L3"
+action=OPEN FORM $OBJ_DIR/Form.remove
+
+name=system
+description=Set System Priority Limit
+lininfo="menu:L4"
+action=OPEN FORM $OBJ_DIR/Form.system
+
+name=users
+description=Set User(s) Priority Limit
+lininfo="menu:L5"
+action=OPEN FORM $OBJ_DIR/Form.users

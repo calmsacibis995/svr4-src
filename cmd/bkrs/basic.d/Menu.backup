@@ -1,0 +1,31 @@
+#ident	"@(#)bkrs:basic.d/Menu.backup	1.1.1.1"
+menu="Backup to Removable Media"
+help=open text /usr/vmsys/OBJECTS/Text.h "Backup to Removable Media" backup/T.hbackup
+
+name=Backup History
+itemmsg="Move to an item with the arrow keys and strike the ENTER key to select."
+action=`/usr/bin/backup -h > /usr/tmp/backup.$VPID`open $OBJ_DIR/Text.history /usr/tmp/backup.$VPID
+
+name=Personal Backup
+itemmsg="Move to an item with the arrow keys and strike the ENTER key to select."
+action=open menu $OBJ_DIR/private/Menu.private
+
+name=Schedule Backup to Tape
+show=`Ckdev mt | regex '^2$'`
+itemmsg="Move to an item with the arrow keys and strike the ENTER key to select."
+action=`indicator -w; shell "if /bin/ps -e | grep ' cron$' > /dev/null
+	       then echo 1
+	       else echo 0
+	       fi" | regex
+	       '^1$' "open menu $OBJ_DIR/sched/Menu.sched"
+	       '^0$' "open text $OBJ_DIR/sched/Text.nocron"`
+
+name=System Backup
+itemmsg="Move to an item with the arrow keys and strike the ENTER key to select."
+action=OPEN `.chkuser -u| regex 
+	'^0$' "$OBJ_DIR/system/Menu.system"
+	'.*' "$OBJ_DIR/Text.privil" `
+
+name=""
+button=8
+action=nop

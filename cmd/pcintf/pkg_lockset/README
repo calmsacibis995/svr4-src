@@ -1,0 +1,31 @@
+#ident	"@(#)pcintf:pkg_lockset/README	1.1"
+Lockset package - @(#)@(#)README	1.1	13:07:50	8/31/89
+
+OTHER REQUIRED PACKAGES:
+	(none)
+
+This directory contains all the headers and functions necessary to maintain
+a consistant locking mechanism among cooperating processes.  The following
+files are visible to the outside world:
+
+	lockset.h	- externally visable constants and declarations
+	liblset.a	- this is the actual library
+
+The other header files are only for internal use, and should never be accessed
+by an external user.  The source files are all available via the library
+itself, and should not be accessed directly.
+
+The internal files to this package are:
+
+	internal.h	- standard constant and type definitions, and tuning
+			  parameters.  i.e., there may be machine dependencies,
+			  but the file should be changed only for efficiency,
+			  it should compile as is.
+	lockset.c	- global variables
+	lset_estr.c	- error strings
+	lsetclr.c	- clear a given lockset
+	lsetcount.c	-  count the number of locks in a lockset
+	lsetnew.c	- create a new lockset
+	lsetrmv.c	- remove a lockset
+	lsetset.c	- set a lock in a lockset
+	lsetuse.c	- open a lockset for use

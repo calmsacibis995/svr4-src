@@ -1,0 +1,6 @@
+ABSTRACT:
+	This task allows the administrator of a system to install the
+	default Mail Services supplied with the FACE package.  When
+	FACE is installed, the default Mail Services are also installed.
+	Therefore, this task is only used to re-install Mail Services
+	after it has been removed.

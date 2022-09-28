@@ -1,0 +1,9 @@
+#ident	"@(#)lp:filter/postscript/filtdesc/postreverse.ds	1.1.1.1"
+
+Input types: postscript
+Output types: postscript
+Printer types: any
+Printers: any
+Filter type: slow
+Command: /usr/lib/lp/postscript/postreverse
+Options: PAGES * = -o*

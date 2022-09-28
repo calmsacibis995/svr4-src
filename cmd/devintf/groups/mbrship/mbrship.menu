@@ -1,0 +1,7 @@
+#ident	"@(#)devintf:groups/mbrship/mbrship.menu	1.2"
+#menu#Group Membership Management
+#life#permanent
+
+add^Add a Member^add/Form.add
+list^List Members^list/Form.list
+remove^Remove a Member^remove/Form.remove

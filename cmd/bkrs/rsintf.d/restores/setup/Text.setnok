@@ -1,0 +1,31 @@
+#ident	"@(#)bkrs:rsintf.d/restores/setup/Text.setnok	1.1"
+
+title="Errors Setting Restore Operator"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp "ABSTRACT"
+
+begrow=any
+begcol=any
+rows=18
+columns=77
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+wrap=FALSE
+text="
+
+Errors trying to set restore operator to $ARG1.`'; echo FALSE`
+
+`readfile $ERR`"
+
+close=`rm -f $ERR`
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

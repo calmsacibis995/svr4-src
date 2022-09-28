@@ -1,0 +1,62 @@
+#ident	"@(#)bkrs:rsintf.d/restores/rsoper/Help	1.3.2.1"
+
+ABSTRACT: Respond to Restore Requests
+	The "respond" task allows you to service restore requests by
+	responding to mail requesting operator assistance to fulfill the
+	request.  If there is backup history information available about
+	the backups from which the restore will be made, only the
+	destination device information is required to effect the restore.
+	If more information is required, you will be given the chance to
+	fill in more of the form and try the operation again.
+
+TITLE: Respond to Restore Requests
+
+F1:Destination Device Field
+	"Destination device:"  Enter the path name to the device you want
+	to use to satisfy the restore request.  This must be a device that
+	appears in the device table for this machine.  It is where you will
+	mount the archive volume from which the object will be restored.
+
+F2:Destination Characteristics Field
+	"Destination characteristics:"  Enter a comma-separated list of
+	device characteristics if you need to override the characteristics
+	for the device listed in the device table.
+
+F3:Destination Volume Labels Field
+	"Destination volume labels:"  Enter a list of labels for the
+	volumes from which the restore will be done.  These are the
+	volumes containing the archive from which the object will be
+	restored.
+
+F4:Job id(s) Field
+	"Job id(s):"  Enter a list of jobids whose requests you want to
+	service with the device and volumes entered in previous fields or
+	the keyword "all", if you want the restore service to satisfy as
+	many outstanding restore requests as these volumes will satisfy.
+
+F5:Users Field
+	"Users:"  Enter a list of users whose requests you want to service
+	with the device and volumes entered in previous fields or the
+	keyword "all".  The latter means that the restore service will try
+	to satisfy requests from any user which the specified volumes and
+	device can satisfy.
+
+F6:Method Field
+	"Method:"  Enter the method to use to satisfy the restore request.
+	Press [CHOICES] for a menu of available methods.  Select the one
+	the archive requires (i.e., the method which produced the archive).
+
+F7:Origination Name Field
+	"Origination name:"  Enter the name of the originating file system
+	or data partition to be restored.  This field is not required.
+
+F8:Origination Device Field
+	"Origination device:"  Enter the device name of the originating
+	device.  This field is required if the backup history log is not
+	available or does not include information about the specified
+	archive.
+
+F9:Display Mode Field
+	"Display mode:"  Enter "yes" if you want the names of files
+	restored to be printed out at your terminal.  Enter "no" if
+	you want this task to operate silently.

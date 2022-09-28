@@ -1,0 +1,43 @@
+
+#ident	"@(#)portmgmt:port_quick/Form.add	1.1.2.4"
+
+form= Quick Terminal Setup
+
+`q-add COLLECT`
+done=`message -w "Please wait, terminal setup in progress..."; q-add Terminal "$F2" "$F1" | regex -e
+     0 'open $OBJ_DIR/Text.cfa'
+     1 'open $OBJ_DIR/Text.priv'`
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+# $F1
+name=Port Number(s):
+nrow=1
+ncol=2
+frow=1
+fcol=18
+rows=8
+columns=26
+lininfo=portno
+wrap=true
+scroll=true
+rmenu=OPEN Menu $OBJ_DIR/Menu.ap
+menuonly=false
+valid=`echo $F1 | fmlgrep term`
+#choicemsg=const "Select the Port Number(s)."
+#fieldmsg=const "Select the Port Number(s)."
+fieldmsg=const `readfile $INTFBASE/form.msg`
+
+# $F2
+name=Speed:
+nrow=10
+ncol=2
+frow=10
+fcol=10
+rows=1
+columns=14
+rmenu={ "300" "1200" "2400" "4800" "9600" "19200" }
+value=9600
+lininfo=speed
+menuonly=true
+#choicemsg=const "Select the speed."
+#fieldmsg=const "Select the speed."
+fieldmsg=const `readfile $INTFBASE/form.msg`

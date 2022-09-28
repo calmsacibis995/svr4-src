@@ -1,0 +1,18 @@
+#ident	"@(#)bkrs:basic.d/system/Menu.users	1.1.1.1"
+menu="Backup Users"
+help=open text /usr/vmsys/OBJECTS/Text.h "Backup Users" backup/system/T.husers
+multiselect
+done=`run sh -c 'runbacku "/usr/tmp/markfls.$VPID" "$ARG1 $ARG2 $ARG3" '`close\
+$OBJ_DIR/system/Menu.system\
+$OBJ_DIR/system/Menu.users
+
+name=All
+action=`getitems " " > /usr/tmp/markfls.$VPID`
+itemmsg="Strike MARK to select login names, then strike ENTER."
+
+`awk -F: '$3 >= 100 { print $1 }' /etc/passwd | regex '^(.*)$0' '
+name=$m0
+action=`getitems " " > /usr/tmp/markfls.$VPID`
+itemmsg="Strike MARK to select login names, then strike ENTER."
+'`
+

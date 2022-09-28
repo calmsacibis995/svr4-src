@@ -1,0 +1,33 @@
+#ident	"@(#)bkrs:rsintf.d/restores/rsoper/Text.rsoper	1.4"
+
+title="Access Pending Restore Requests"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp "ABSTRACT"
+
+begrow=any
+begcol=any
+rows=18
+columns=77
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+lifetime=shortterm
+
+wrap=FALSE
+text="`readfile $ARG1`"
+
+close=`rm -f $ARG1`
+
+
+rows=4
+columns=60
+
+altslks
+
+name=CONT
+button=11
+action=update $ARG2 true
+
+name=CANCEL
+button=14
+action=CLEANUP

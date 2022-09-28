@@ -1,0 +1,27 @@
+#ident	"@(#)oamintf:usermgmt/Text.dfltok	1.5.3.1"
+################################################################################
+#	Module Name: Text.dfltok
+################################################################################
+Title="Define Defaults for Adding Users"
+`readfile $INTFBASE/trept.msg | message -t`
+lifetime=shortterm
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+rows=6
+columns=75
+
+text="
+The defaults have been defined as follows:
+
+   `getusrdefs -gbksfe`"
+
+altslks
+
+name=CONT
+button=11
+action=update $ARG1 true
+
+name=CANCEL
+button=14
+action=CLEANUP

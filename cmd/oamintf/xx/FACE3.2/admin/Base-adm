@@ -1,0 +1,18 @@
+#ident	"@(#)oamintf:xx/FACE3.2/admin/Base-adm	1.1"
+/usr/bin/backup
+/usr/bin/restore
+/usr/bin/installpkg
+/usr/bin/removepkg
+/usr/bin/menu_add
+/usr/bin/menu_del
+/bin/uname
+/usr/sadm/sysadm/bin/runbackf
+/etc/diskadd
+/etc/conf/bin/idreboot
+/bin/rm
+/usr/sadm/sysadm/bin/add_cron
+/usr/sadm/sysadm/bin/del_cron
+/usr/sadm/sysadm/bin/chg_cron
+/usr/sadm/sysadm/bin/prtask
+/usr/sadm/sysadm/bin/display
+/usr/vmsys/admin/swset/addprog

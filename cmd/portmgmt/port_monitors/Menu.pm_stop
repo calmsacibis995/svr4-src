@@ -1,0 +1,27 @@
+#ident	"@(#)portmgmt:port_monitors/Menu.pm_stop	1.5.1.1"
+
+menu="Pmtag    Pmtype (Stop Port Monitors)"
+multiselect=true
+close=` rm /var/tmp/cmd$PID; 
+	unset -l PID -l KEYCMD`
+`sacadm -L|egrep "ENABLED|DISABLED|STARTING">/dev/null;
+	regex -e -v "$RET"
+	   '^0$' '`message "MARK all port monitors you want to stop and then press ENTER."`'
+	   '^5$' '`message "No port monitor to stop."`'
+	   '^.*$' '`message "No port monitor to stop."`'`
+done=`getitems | tr -d '\0' > /var/tmp/cmd$PID;
+	if [ -s /var/tmp/cmd$PID ];
+	then
+		message "Stopping [MARK]ed port monitors.";
+		sh /var/tmp/cmd$PID;
+		message "All [MARK]ed port monitors are stopped.";
+		set -l KEYCMD="CLOSE";
+	else
+		message "No item is [MARK]ed.";
+		set -l KEYCMD="RESET";
+	fi`$KEYCMD
+
+`sacadm -L|egrep "ENABLED|DISABLED|STARTING"|sort +0 -1 -t:|  regex '^([^:][^:]*)$0:([^:][^:]*)$1:.*$' 
+ 'name="   $m0"
+  description="    $m1"
+  lininfo="sacadm -k -p $m0"'`

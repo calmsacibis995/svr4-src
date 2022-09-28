@@ -1,0 +1,13 @@
+#ident	"@(#)filemgmt:file.menu	1.1.2.2"
+#menu#Manage File Systems
+#help#file.help^Manage File Systems
+#life#permanent
+
+check^Check a File System^check/Form.check
+defaults^Manage Defaults^defaults/defaults.menu
+display^Display Installed Types^display/Text.dispfstyp
+identify^Identify File System Type^identify/Form.identify
+make^Create a File System^make/Form.make
+mount^Mount a File System^mount/Form.mount
+unmount^Unmount a File System^unmount/Form.unmount
+preSVR4^File System Operations^OBJECTS/fs/Menu.filsys

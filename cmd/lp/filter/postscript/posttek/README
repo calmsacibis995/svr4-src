@@ -1,0 +1,14 @@
+
+Source code for a program that translates tektronix 4014 files into PostScript.
+Much of the code was borrowed from the 5620 tektronix emulator. Defocused mode
+should work and code that ties lines to device space coordinates has been added
+to ../postscript/posttek.ps. Helps eliminate the variation in line widths that
+were often noticeable when a non-zero linewidth was selected (eg.  with the -w
+option).
+
+The graphics state line width (variable linewidth in ../postscript/posttek.ps)
+has been initialized to 0, which gets you one pixel wide lines. That gives good
+results on write-black engines, like the one used in the PS-800, but is lacking
+on write-white printers like the PS-2400. Use the -w option or redefine linewidth
+in file ../postscript/posttek.ps if you want a different line width.
+

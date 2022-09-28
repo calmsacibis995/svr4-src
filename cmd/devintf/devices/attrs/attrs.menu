@@ -1,0 +1,8 @@
+#ident	"@(#)devintf:devices/attrs/attrs.menu	1.2"
+#menu#Device Attribute Management
+#life#permanent
+
+add^Add an Attribute^add/Form.add
+list^List Attributes^list/Form.list
+modify^Modify an Attribute^modify/Form.modify
+remove^Remove an Attribute^remove/Form.remove

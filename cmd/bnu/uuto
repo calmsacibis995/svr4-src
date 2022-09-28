@@ -1,0 +1,108 @@
+#!/usr/bin/sh
+#ident	"@(#)bnu:uuto	2.8"
+
+uuto () {
+f=""
+d=""
+error="0"
+#	get file names
+#	files must be readable,
+#	directories must be readable/searchable
+#	otherwise increment error count and skip it.
+while test $#  -ge 1
+do
+	if test -d "$1" -a {"$1" = "." -o "$1" = ".."}
+		then shift; continue
+	elif test -r "$1" -a -f "$1"
+		then f="$f $1"
+	elif test -r "$1" -a -x "$1" -a -d "$1"
+		then d="$d $1"
+	else error=`expr 0$error + 1`
+		if test -f "$1"
+			then echo "$0: $UUP$1: file not readable" >&2
+		elif test -d "$1"
+			then echo "$0: $UUP$1: directory not readable/searchable" >&2
+		else
+			echo "$0: $UUP$1: file/directory not found" >&2
+		fi
+	fi
+	shift
+done
+if test -n "$d" -a -n "$user"
+then
+	for i in $d
+	do
+		( cd $i; UUP="$UUP$i/"
+		uuto * $1)
+		error=`expr 0$error + 0$?`
+	done
+fi
+
+if test -n "$f" -a -n "$user"
+then
+	uucp $a $f $remote!~/receive/$user/$mysys/$UUP
+	error=`expr 0$error + 0$?`
+fi
+
+return $error
+}
+
+# main uuto shell
+
+export IFS PATH
+IFS=" 	
+"
+PATH="/usr/bin"
+
+a=""
+temp=""
+sub=""
+mysys=`uuname -l`
+mesg="Usage: $0 [-m -p] files remote!user"
+if test  $# -lt 1
+	then
+		echo $mesg >&2
+		exit 1
+fi
+trap "trap '' 0; exit $?" 1 2 3 13 15
+copy=0
+#	get options
+while true
+do
+	case $1 in
+	 -m)	a="$a $1" sub="$sub -m" ;;
+	 -p)	a="$a -C" sub="$sub -p" copy=1 ;;
+	 -*)	echo $mesg >&2; exit 1;;
+	 *)	break ;;
+	esac
+	shift
+done
+#	be sure have both files and destination
+if test $# -eq 1
+then
+	echo $mesg >&2
+	exit 1
+fi
+#	skip file names to get to destination
+while test $#  -gt 1
+do
+	temp="$temp $1"
+	shift
+done
+#	the recipient arg: remote!user
+#	remote may be omitted (default is this machine)
+#	must have at least !user
+remote=`expr $1 : '\(.*\)!'`
+user=`expr $1 : '.*!\(.*\)'`
+if test -z "$user"
+then
+	echo "$0: incomplete destination -- must specify user" >&2
+	echo "$mesg" >&2
+	exit 1
+fi
+a="$a -d -n$user"
+
+UUP=""
+uuto $temp
+
+exit $error

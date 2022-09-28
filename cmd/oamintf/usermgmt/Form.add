@@ -1,0 +1,37 @@
+#ident	"@(#)oamintf:usermgmt/Form.add	1.2.1.1"
+
+################################################################################
+#	Module Name:  Form.add
+################################################################################
+form="Add Users or Groups"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`if [ "$F1" = "user" ];
+      then
+	set -l CMD="OPEN FORM $OBJ_DIR/Form.addusr";
+      else
+	set -l CMD="OPEN FORM $OBJ_DIR/Form.addgrp";
+      fi`$CMD
+
+name=User or group:
+lininfo=Form.add:add
+nrow=1
+ncol=3
+frow=1
+fcol=18
+rows=1
+columns=5
+value=user
+
+rmenu={ user group }
+menuonly=TRUE
+
+choicemsg=const "Select user or group."
+invalidmsg=const "ERROR: Choices are user and group."
+
+name=RESET
+button=8
+action=RESET

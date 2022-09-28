@@ -1,0 +1,143 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkhist/select/Form.select	1.11"
+form="Display a Selective Report of Backup History Information"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+# NOTE: the CLOSE is because if the user enters a new file, then leaves that
+# file name in the "Output to" field and presses SAVE again, that field is not
+# revalidated, so the file is silently overwritten.
+done=`message -w;
+	getfrm | set -l FNUM;
+	if [ "$F1" = 'terminal' ];
+	then
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.select "$F2" "$F3" "$F4" "$F5" $FNUM";
+	else
+		if [ "$BKHFILE" = 'old' ];
+		then
+			set -l CMD="OPEN FORM $OBJ_DIR/Form.oldfile $F1 "$F2" "$F3" "$F4" "$F5" $FNUM";
+		else
+			bkhtofile select overwrite $F1 "$F2" "$F3" "$F4" "$F5" | set -l ERR;
+			if [ "$ERR" = 'ok' ];
+			then
+				set -l CMD="OPEN TEXT $OBJ_DIR/Text.bkhok $F1 $FNUM";
+			else
+				set -l CMD="OPEN TEXT $OBJ_DIR/Text.bkherr /tmp/bkherr$ERR $FNUM";
+			fi;
+		fi;
+	fi`$CMD
+
+begrow=any
+begcol=any
+
+# Output to field - F1
+name=Output to:
+lininfo=select:F1
+nrow=2
+ncol=2
+
+frow=2
+fcol=14
+rows=1
+columns=56
+scroll=true
+
+value=terminal
+choicemsg="Enter 'terminal' or the name of a file to which the report will be written."
+invalidmsg=`errpath -gtw`
+
+valid=`shell "if [ "$F1" = "terminal" ]
+		then
+			exit 0;
+		else
+			valpath -n "$F1"
+			if [ $? -eq 0 ]
+			then
+				FILE=new
+			else
+				FILE=old
+			fi
+			valpath -gtw "$F1"
+			if [ $? -ne 0 ]
+			then
+				exit 1;
+			fi
+			echo $FILE
+		fi" | set -l BKHFILE; echo TRUE`
+
+# Form field - F2
+name=Form:
+lininfo=select:F2
+nrow=4
+ncol=2
+
+frow=4
+fcol=10
+rows=1
+columns=5
+
+value=short
+choicemsg="Enter 'long' or 'short', depending on which form of the report you want."
+invalidmsg="Enter either 'long' or 'short'."
+
+rmenu={ short long }
+menuonly
+
+# Names field - F3
+name=Object name(s):
+lininfo=select:F3
+nrow=6
+ncol=2
+
+value=all
+
+frow=6
+fcol=18
+rows=1
+columns=50
+scroll=true
+
+choicemsg="Enter file system or data partition names or 'all'."
+
+valid=true
+
+# Tags field - F4
+name=Tag(s):
+lininfo=select:F4
+nrow=8
+ncol=2
+
+frow=8
+fcol=10
+rows=1
+columns=60
+scroll=true
+
+value=all
+choicemsg="Enter backup register tags whose history you want to see or 'all'."
+
+# Date field - F5
+name=Date:
+lininfo=select:F5
+nrow=10
+ncol=2
+
+frow=10
+fcol=10
+rows=1
+columns=60
+
+value=all
+
+choicemsg="Enter a date for which you want to see the backup history or 'all'."
+
+valid=`shell "if [ "$F5" = "all" ]
+		then
+			exit 0;
+		else
+			validdate "$F5";
+		fi"`
+
+invalidmsg="Enter a valid date (mm/dd/yy hh:mm AM or PM), at least the month, or 'all'."
+

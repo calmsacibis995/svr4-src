@@ -1,0 +1,35 @@
+#ident	"@(#)adm:rc2	1.1.1.1"
+#	"Run Commands" executed when the system is changing to init state 2,
+#	traditionally called "multi-user".
+
+/etc/mountall /etc/vfstab
+. /etc/TIMEZONE
+
+#stty sane 2>/dev/null
+# 
+/usr/lib/expreserve -
+# clean up /tmp, /usr/tmp, /etc/wtmp and sulog
+rm -rf /tmp /usr/tmp
+for i in /tmp /usr/tmp
+do
+	if [ ! -d $i ]
+	then
+		mkdir $i
+	fi
+done
+chgrp sys /tmp /usr/tmp
+chown sys /tmp /usr/tmp
+chmod 777 /tmp /usr/tmp
+> /etc/wtmp
+mv /usr/adm/sulog /usr/adm/Osulog
+> /usr/adm/sulog
+chmod 600 /usr/adm/sulog
+#
+#	Pickup start-up packages for mounts, daemons, services, etc.
+for f in /etc/rc.d/*
+{
+	if [ -f ${f} ]
+	then
+		/bin/sh ${f}
+	fi
+}

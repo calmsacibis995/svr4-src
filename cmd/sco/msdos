@@ -1,0 +1,29 @@
+#ident	"@(#)sco:msdos	1.1"
+#
+# This file controls the mapping of UNIX 
+# devices to MS-DOS drive letters and types. 
+#
+#	These are fine for a 6386 WGS Running SVR3.2:
+#
+#		A=/dev/rdsk/f0t
+#		B=/dev/rdsk/f1t
+#	Remember that only MS-DOS files may have colons in them.
+#
+#	Only one colon per MS-DSO filename.
+#
+#	MS-DOS filenames are either:
+#
+#		[ABCD...]:filename
+#
+#			or
+#
+#		DEVICE:filename
+#
+#	Where DEVICE is any UNIX file capable of seeking.
+#	This means you can use regular unix files for MS-DOS
+#	filesystems. Just say FILE: and all is well.
+#
+#
+A=/dev/rdsk/f0t 
+B=/dev/rdsk/f1t 
+D=/dev/rdsk/0s5

@@ -1,0 +1,17 @@
+#ident	"@(#)lp:filter/postscript/font/devpost/charlib/README	1.1"
+
+Postscript definitions of some special troff characters. For now each file
+is named by its two character troff name and is copied to the output file,
+as is, when the character is first used. Each procedure is called with a
+single argument, namely the width of the character. The name of the PostScript
+procedure that builds the character must begin with the prefix build_ and
+end with the character's name.
+
+The following variables are defined in dpost.ps and may help when you're building
+a new character:
+
+  font		name of the current font
+  ptsize	and the point size
+  size		Postscript is using this size - it's scaled up from ptsize
+
+

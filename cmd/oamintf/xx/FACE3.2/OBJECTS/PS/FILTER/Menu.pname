@@ -1,0 +1,30 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FILTER/Menu.pname	1.1"
+menu="CHOICES"
+multiselect
+
+done=`indicator -w;getitems " " | set -l Form_Choice` close
+
+`cat $ARG1 | regex '^(.*)$0'
+'name="$m0" 
+itemmsg=MARK the printer names and strike ENTER.
+'`
+
+name=""
+button=1
+action=nop
+
+name=""
+button=4
+action=nop
+
+name=""
+button=5
+action=nop
+
+name=""
+button=7
+action=nop
+
+name=""
+button=8
+action=nop

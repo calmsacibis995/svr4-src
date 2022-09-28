@@ -1,0 +1,27 @@
+#ident	"@(#)oamintf:usermgmt/Text.agrpnok	1.2.3.1"
+################################################################################
+#	Module Name: Text.agrpnok
+################################################################################
+title="Errors Adding a Group"
+`readfile $INTFBASE/conf.msg | message -t`
+framemsg=`readfile $INTFBASE/conf.msg`
+
+close=`rm -f /tmp/gadderr`
+
+rows=6
+columns=70
+
+text="
+An error occurred attempting to add group $ARG1 to the system.
+
+   `readfile $/tmp/gadderr`"
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

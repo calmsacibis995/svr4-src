@@ -1,0 +1,7 @@
+#ident	"@(#)portmgmt:port_services/Menu.c_labels	1.1"
+
+menu="Existing ttylabels"
+
+`grep "^[^#]" /etc/ttydefs | cut -d: -f1 | regex '^(.*)$0$' '
+name=" $m0 "
+action=`set -l "Form_Choice=$m0"`CLOSE'`

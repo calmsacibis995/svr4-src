@@ -1,0 +1,33 @@
+#ident	"@(#)nadmin.nfs:local/nfs/bin/a_att	1.1"
+echo $RESDIR | /bin/grep "/" 1>/dev/null
+if [ $? -eq 0 ]
+then
+	/bin/sed "s/^#.*//g" /etc/dfs/dfstab | /usr/bin/tr -s '\011' '\040' | /usr/bin/egrep -e"-F rfs.*[ ]$RESDIR[ ]" >/var/tmp/temp_$$
+else
+	/bin/sed "s/^#.*//g" /etc/dfs/dfstab | /usr/bin/tr -s '\011' '\040' | /usr/bin/egrep -e"-F rfs.*[ ]$RESDIR$" >/var/tmp/temp_$$
+fi
+
+if [ ! -s "/var/tmp/temp_$$" ]
+then
+	echo "This directory is not shared automatically" >/var/tmp/amsg_$$
+else
+
+# get description before separating line into fields...if desc has spaces...
+# these will get separated.  translate spaces within desc to tabs, because
+
+
+		echo "\"" >/var/tmp/d$$
+		/usr/bin/cut -d"\"" -f2 </var/tmp/cut_$$ | /usr/bin/tr '\040' '\011' >>/var/tmp/d$$
+#		/usr/bin/cut -d"\"" -f2 </var/tmp/cut_$$  >>/var/tmp/d$$
+		echo "\"" >>/var/tmp/d$$
+		DESCR=`paste -s /var/tmp/d$$` 
+		echo $DESCR >/var/tmp/DESC
+		/bin/sed "s/-d\".*\"//" </var/tmp/cut_$$ >/var/tmp/cut$$
+
+	/usr/bin/tr -s '\040' '\012' </var/tmp/cut$$ > /var/tmp/attr_$$
+	ID=`/usr/bin/egrep  -v "[-.:/]" < /var/tmp/attr_$$`
+	MODE=`/usr/bin/egrep "^[/]" </var/tmp/attr_$$`
+
+echo "$ID" "$MODE"  > /var/tmp/a_attr$$ 
+fi
+echo $$

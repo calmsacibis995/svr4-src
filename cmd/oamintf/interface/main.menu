@@ -1,0 +1,21 @@
+#ident	"@(#)oamintf:interface/main.menu	1.8.2.1"
+#menu#UNIX System V Administration
+#help#main.help^UNIX System V Administration
+#rows#$DISPLAYH
+
+applications^Administration for Available Applications^placeholder^applmgmt/appl.menu
+backup_service^Backup Scheduling, Setup and Control^backup_service/ext.menu
+buses^Bus Information and Management^placeholder^buses/buses.menu
+diagnostics^Diagnosing System Errors^placeholder^diagnostics/diag.menu
+file_systems^File System Creation, Checking and Mounting^files/file.menu
+machine^Machine Configuration, Display and Shutdown^machinemgmt/machine.menu
+network_services^Network Services Administration^netservices/netserve.menu
+networks^Network Administration^placeholder^networks/networks.menu
+ports^Port Access Services and Monitors^ports/ports.menu
+preSVR4 ^Peripherals Setup^OBJECTS/hwset/Menu.hard
+restore_service^Restore From Backup Data^restores/ext.menu
+schedule_task^Schedule Automatic Task^sched/Menu.sched
+software^Software Installation and Removal^softwaremgmt/software.menu
+storage_devices^Storage Device Operations and Definitions^devices/devices.menu
+system_setup^System Name, Date/Time and Initial Password Setup^syssetup/syssetup.menu
+users^User Login and Group Administration^usermgmt/user.menu

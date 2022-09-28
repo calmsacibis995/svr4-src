@@ -1,0 +1,41 @@
+#ident	"@(#)oamintf:devices/Text.rsvrd	1.1.1.1"
+
+################################################################################
+#	Module Name: Text.rsvrd
+################################################################################
+title="Device Selected is Reserved"
+
+framemsg=`readfile $INTFBASE/nodev.msg`
+
+rows=6
+columns=65
+
+`devattr $ARG1 desc | set -l DESC;
+if [ "$ARG2" = "3" ];
+then
+	echo "text=\"
+$DESC is currently reserved and is not available for use by you at this time.\"";
+else
+	echo "text=\"
+An error occurred when attempting to reserve $DESC.  The text of the error message is displayed below:
+
+\`cat /tmp/$VPID.rsvrd\`\"";
+fi`
+
+altslks
+
+name=
+button=9
+action=nop
+
+name=
+button=10
+action=nop
+
+name=
+button=11
+action=nop
+
+name=CANCEL
+button=14
+action=`rm -f /tmp/$VPID.rsvrd`CLEANUP

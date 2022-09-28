@@ -1,0 +1,167 @@
+#ident	"@(#)nadmin.nfs:remote/nfs/Help	1.1"
+
+modify:TITLE:Modifies Automatic-Current Mounting of a Remote Resource via NFS
+modify2:TITLE:Modifies Automatic Mounting of a Remote Resource via NFS
+modify3:TITLE:Modifies Current Mounting of a Remote Resource via NFS
+list:TITLE:Lists Remote Resources Automatically-currently Mounted via NFS
+mount:TITLE:Mounts a Remote Resource Automatically-Immediately via NFS
+umount:TITLE:Terminates Automatic-Current Mounting of a Remote Resource via NFS
+unmnt2:TITLE:Terminates Automatic Mounting of a Remote Resource via NFS
+unmnt3:TITLE:Terminates Current Mounting of a Remote Resource via NFS
+
+list:auto:
+	Choose "yes" to see the remote resources
+	that are mounted automatically when Network File System
+	operation begins.
+
+mount:auto:
+	Choose "yes" to mount the resource
+	automatically when Network File
+	System operation begins.
+
+modify:auto:
+	Choose "yes" to modify how a remote resource
+	is mounted automatically when Network
+	File System operation begins.
+
+mount:retry:
+	Choose "background" if you want mounting retries to
+	continue in the background.  Otherwise, the
+	retries will occur in the foreground, causing
+	the mount operation to block until it is
+	successful or reaches the maximum number of
+	retries allowed.
+	
+list:curr:
+	Choose "yes" to see the remote resources that are currently mounted.
+
+modify:curr:
+	Choose "yes" to modify how a remote resource
+	is currently mounted.
+
+mount:imm:
+	Choose "yes" to mount the resource immediately.
+
+modify:mountpt:
+	Choose the pathname of a directory on the 
+	local system that is currently or 
+	automatically shared via NFS, or
+	choose the name of a remote system that
+	currently has a resource mounted via
+	NFS or from which a resource is
+	automatically monted via NFS.
+
+mount:remote_path:
+	Enter the full remote pathname of the resource 
+	that you want to mount.
+
+mount:mountpt:
+	Enter the name of the local directory at which
+	you want to make the remote resource available.
+
+mount:security:
+	Choose "yes" if you want NFS transactions
+	to use a more secure protocol.
+
+mount:server:
+	Enter the name of the remote system with
+	the resource that you want to mount.
+
+mount:setuid:
+	Choose "no" if you want to prevent
+	remote setuid programs from executing
+	setuid on your local system.
+
+mount:timeout:
+	Enter the number of tenths of a second
+	that nfs should wait between requests
+	while trying to mount a resource.
+	
+mount:max_rtry:
+	Enter the maximum number of times that
+	you want the mount operation to be retried.
+
+mount:access:
+	Choose "read-write" if you want your users
+	to be able to modify the resource.
+
+mount:remount:
+	Choose "yes" only if you want to mount "read-write"
+	a esource that is currently mounted "read-only".
+
+modify2:mount:
+	Enter the pathname of the directory at which you want
+	to mount the remote resource.
+
+modify2:acc:
+	Choose "read-only" if you want the resource to
+	be readable but not writable by loca lusers.
+	Choose "read-write" if you want the resource
+	to be readable and writable by local users.
+
+modify2:suid:
+	Choose "yes" only if you want remote setuid
+	programs to be able to run setuid on your system.
+
+modify2:rmnt:
+	Choose "yes" only if you want to mount
+	"read-write" a resource that is currently
+	mounted "read-only".
+
+modify2:rtry:
+	Choose "no" if you want mounting retries to
+	continue in the background.  Otherwise, the
+	retries will occur in the foreground, causing
+	the mount operation to block until it is
+	successful or reaches the maximum number of
+	retries allowed.
+
+modify2:mtry:
+	Enter the maximum number of times that you
+	want the mount operation to be retried.
+
+modify2:timeo:
+	Choose "yes" if you want each access to 
+	return an error if the server does not
+	respond (a "soft" mount).
+	Choose "no" if you want each access to be
+	retried until the server responds(a "hard"
+	mount).  Normally, directories that are
+	mounted read-write are mounted "hard".
+
+modify2:sec:
+	Choose "yes" if you want NFS transactions
+	to use a more secure protocol.
+
+umount:res:
+	Choose either the mountpoint or the server:pathname
+	designator of a remote resource
+	that is currently or automaticaly mounted
+	via NFS.
+
+umount:auto:
+	Choose "yes" to stop mounting the
+	resource automatically when
+	Network File System operation begins.
+
+umount:imm:
+	Choose "yes" to unmount the resource
+	immediately.
+
+unmnt2:ok:
+	Answer "yes" if you want the
+	displayed local resource no longer to
+	be made available autoaticaly to local
+	users via the Network File System.
+	current local use will not be affected.
+
+unmnt3:ok:
+	Answer "yes" if you want local
+	users not to use the remote resource
+	displayed above.  Previously arranged
+	automatic mounting of the resource
+	will occur unless you have just
+	discontinued automatic mounting of it.
+	Current access by local users systems
+	will not be affected.
+

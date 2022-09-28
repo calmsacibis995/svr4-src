@@ -1,0 +1,36 @@
+#ident	"@(#)sdb:util/CC.rules	1.4"
+
+.SUFFIXES: .C .C~
+
+#CPLUS = CC
+
+#CPLUS_CMD = $(CPLUS) $(CCFLAGS)
+
+.C:
+	$(CPLUS_CMD) -o $@ $<
+
+.C.o:
+	$(CPLUS_CMD) -c $<
+
+# The following handle SCCS rules
+
+.C~:
+	$(GET) $(GFLAGS) $<
+	$(CPLUS_CMD) $(LDFLAGS) -o $* $*.C
+	-rm -f $*.C
+
+.C~.C:
+	$(GET) $(GFLAGS) $<
+
+# Rules for making archives
+
+.C.a:
+	$(CPLUS_CMD) -c $<
+	$(AR) $(ARFLAGS) $@ $*.o
+	rm -f $*.o
+
+.C~.a:
+	$(GET) $(GFLAGS) $<
+	$(CPLUS_CMD) -c $*.C
+	$(AR) $(ARFLAGS) $@ $*.o
+	rm -f $*.[Co]

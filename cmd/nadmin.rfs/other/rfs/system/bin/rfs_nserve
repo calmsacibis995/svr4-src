@@ -1,0 +1,40 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/bin/rfs_nserve	1.4"
+rm /usr/tmp/ns_$$
+rm /usr/tmp/nsrv_$$
+
+# get domain name
+
+DOM=`dname -d`
+
+# for each transport provider, get the primary and secondary name servers
+# from  /etc/rfs/<transport>/rfmaster 
+
+for trans  in `echo $TRANS`;  do
+	{
+	echo "\nTransport Provider:" >> /usr/tmp/nsrv_$$
+	echo "$trans">> /usr/tmp/nsrv_$$
+	echo "\nPrimary:">> /usr/tmp/nsrv_$$
+
+	/bin/grep "^$DOM[ 	][Pp]" /etc/rfs/$trans/rfmaster | /usr/bin/tr -s '\040' '\011' > /usr/tmp/ns_$$
+
+	if [ $? -eq 0 ]
+	then
+		cat /usr/tmp/ns_$$ >> /usr/tmp/nsrv_$$
+	else
+		echo "none\n" >> /usr/tmp/nsrv_$$
+	fi
+	echo "\nSecondary:" >> /usr/tmp/nsrv_$$
+
+	/bin/grep "^$DOM[ 	][Ss]" /etc/rfs/$trans/rfmaster | /usr/bin/tr -s '\040' '\011' > /usr/tmp/ns_$$
+
+	if [ $? -eq 0 ]
+	then
+		cat /usr/tmp/ns_$$ >> /usr/tmp/nsrv_$$
+	else
+		echo "none\n" >> /usr/tmp/nsrv_$$
+	fi
+	}
+done
+
+#echo the process id so fmli can get the temp file name
+echo $$

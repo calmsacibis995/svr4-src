@@ -1,0 +1,11 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkrem/display/Help	1.2.1.1"
+
+ABSTRACT: Display Contents of Backup Reminder Schedule
+
+	The "display" task lists the contents of the backup reminder
+	schedule.  The display contains a line number for each entry, the
+	time the message is to appear, on which days and in which months
+	and the names of the originating objects you will be reminded to
+	back up.
+
+TITLE: Display Contents of Backup Reminder Schedule

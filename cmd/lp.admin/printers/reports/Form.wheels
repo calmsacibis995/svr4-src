@@ -1,0 +1,59 @@
+#ident	"@(#)lp.admin:printers/reports/Form.wheels	1.2.3.3"
+
+#######################################################
+#
+#       Module Name: Form.wheels
+#
+#######################################################
+
+form=Display Status of Printwheels and Character Sets
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO 
+
+
+init=`indicator -w; set -l name_2="/tmp/lp.n2$VPID";
+lpstat -Sall | sed -es/,/' '/ | cut -d' ' -f3 > $name_2;
+echo "all" >> $name_2;
+if [ -s "$name_2" ];
+then
+	echo "init=true";
+else
+	echo "init=false";
+	message -b "There are no print wheels or character sets available";
+fi`
+
+#close=`/usr/bin/rm -f $name_2;
+#	unset -l do_all -l name_2 -l name_valid -l bad_one`
+
+done=OPEN TEXT $OBJ_DIR/Text.wh.stat "$F1"
+
+name=Printwheels or Character sets:
+lininfo="wheels:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=32
+rows=1
+columns=30
+
+fieldmsg="Enter choices then press [SAVE] to display" 
+choicemsg="MARK choices then press ENTER"
+value=all
+rmenu=OPEN MENU $OBJ_DIR/Menu.wheel.ch
+
+valid=`indicator -w;
+	unset -l bad_one;
+	if [ -z "$F1" ];
+	then
+		set -l no_value=true -l name_valid=false;
+	else
+		set -l no_value=false -l name_valid=true;
+	fi;
+	echo "$F1" | tr " ," "[\012*]" | regex -e '^(.*)$0$'
+	'`fmlgrep "^$m0$" $name_2 || set -l bad_one="$m0" -l name_valid=false`' > /dev/null`$name_valid
+invalidmsg=`if [ "$no_value" = "true" ];
+	then
+		echo "You must enter a value for this field.";
+	else
+		echo "$bad_one Invalid - press [CHOICES] for selection";
+	fi`

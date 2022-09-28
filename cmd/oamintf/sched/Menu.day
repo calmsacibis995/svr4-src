@@ -1,0 +1,133 @@
+#ident	"@(#)oamintf:sched/Menu.day	1.1.1.1"
+
+menu=Choices
+multiselect
+lifetime=shortterm
+done=`getitems "," | /usr/sadm/sysadm/bin/format 31 | set -l Form_Choice`close
+
+name=01
+lininfo=1
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=02
+lininfo=2
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=03
+lininfo=3
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=04
+lininfo=4
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=05
+lininfo=5
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=06
+lininfo=6
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=07
+lininfo=7
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=08
+lininfo=8
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=09
+lininfo=9
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=10
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=11
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=12
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=13
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=14
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=15
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=16
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=17
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=18
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=19
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=20
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=21
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=22
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=23
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=24
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=25
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=26
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=27
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=28
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=29
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=30
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=31
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=all
+itemmsg=const "Mark day(s) of the month with the MARK function key, and strike the ENTER key."
+
+name=""
+button=1
+action=nop
+
+name=""
+button=4
+action=nop
+
+name=""
+button=5
+action=nop
+
+name=""
+button=7
+action=nop
+
+name=""
+button=8
+action=nop
+
+`indicator -w`

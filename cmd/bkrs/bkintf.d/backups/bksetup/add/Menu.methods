@@ -1,0 +1,11 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/add/Menu.methods	1.2.1.1"
+# menu of methods choices
+menu=Available Methods
+
+begrow=any
+begcol=any
+
+`message "Move the cursor to the method you want and press <RETURN>."`
+
+`cat /etc/bkup/.oam | regex '^(.*)$0' 'name="$m0"
+action=`set -l "Form_Choice=$m0"`CLOSE'`

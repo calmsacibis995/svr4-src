@@ -1,0 +1,55 @@
+#ident	"@(#)devintf:devices/add/Help	1.2.2.2"
+
+add:ABSTRACT:
+	The "add" task adds a device description to the Device Management
+	tables.  You will be asked to supply a device alias, along with other
+	device attributes such as pathnames to the device and the device's type.
+
+Form.add:Alias:the Device Alias field
+	Enter a unique device alias (i.e. one that does not currently
+        exist).
+	
+	The alias must contain only alphanumeric characters and may not 
+	contain more than 14 characters.
+
+Form.add:Description:the Description field
+	Enter a description of the device (e.g. Cartridge Tape Drive).
+	
+	This field is not validated.
+
+Form.add:Type:the Type field
+	Enter the type of the device.  Common types are 'ctape', 'disk',
+	'dpart' and 'diskette'.
+	
+	This field may not be blank but is not otherwise validated.
+
+Form.add:Cdevice:the Character Pathname field
+	This is the full character-device pathname of the device
+	being added.  Full pathnames always begin with a slash ('/').
+	
+	This field may be blank.  If it is not blank, it must begin
+	with a slash.  The task tests the data entered to ensure that
+	it is the pathname of a character device.
+
+Form.add:Bdevice:the Block Pathname field
+	This is the full block-device pathname of the device
+	being added.  Full pathnames always begin with a slash ('/').
+	
+	This field may be blank.  If it is not blank, it must begin
+	with a slash.  The task tests the data entered to ensure that
+	it is the pathname of a block device.
+
+Form.add:Attribute:the Attribute fields
+	This field is the name of an attribute being given to a device.
+	Examples of attribute names are 'pathname', 'fmtcmd', and
+        'capacity'.
+	
+	An attribute name must contain only alphanumeric characters and 
+	may not contain more than 14 characters.  The attributes 'alias',
+	'bdevice', 'cdevice', 'type', and 'desc' may not be named here.
+
+Form.add:Value:the Value fields
+	This field is the value of the attribute named in the previous
+        field.
+	
+	Attribute values are not validated.

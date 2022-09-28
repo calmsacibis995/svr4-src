@@ -1,0 +1,4 @@
+ABSTRACT:
+	This task allows the administrator of a system to remove the
+	default Spell Checker supplied with the FACE package from the
+	programs menu.

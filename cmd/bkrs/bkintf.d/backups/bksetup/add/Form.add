@@ -1,0 +1,193 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/add/Form.add	1.11.2.1"
+form="Add a New Backup Table Entry"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+lifetime=longterm
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+`set -l PID="$VPID"`;
+
+close=`rm -rf /tmp/_bkreg_$PID`
+
+`set -l CMD=""`
+
+done=`message -w;
+        getfrm | set -l FNUM;
+        set -l ERR=/tmp/$VPID.bea;
+        if [ $F5 = "" ] ;
+        then
+                set -l F5="." ;
+        fi;
+        if [ $F9 = "yes" ] ;
+        then
+                set -l CMD="OPEN FORM $OBJ_DIR/Form.add2 '$F1' '$F2' '$F5' '$F4' '$F6' '$F3' '$F7' '$F8' $FNUM" ;
+        else
+                message -w "Trying to add new entry.";
+                add "$F1" "$F2" "0" "$F5" "$F4" "" "$F7" "$F8" "$F3" "" "" "" "$F6" "" "" >$ERR 2>$ERR;
+                if [ $RET -eq 0 ] ;
+                then
+                        set -l CMD="OPEN TEXT $OBJ_DIR/Text.addok $F1 $FNUM $PID";
+                else
+                        set -l CMD="OPEN TEXT $OBJ_DIR/Text.addnok $F1";
+                fi;
+        fi`$!CMD
+
+begrow=any
+begcol=any
+
+# Table field - F1
+name=Table:
+lininfo=add:table
+nrow=1
+ncol=2
+# find default bkreg.tab path
+value=`bkregpath $PID`
+scroll=true
+
+frow=1
+fcol=9
+rows=1
+columns=68
+
+#choicemsg=`helppath -h "~Enter the path to the backup table." -gtw`
+choicemsg="Enter the path to the backup table."
+
+valid=`valpath -gtw "$F1"`
+
+invalidmsg=`errpath -gtw`
+
+# Tag field - F2
+name=Tag:
+lininfo=add:tag
+nrow=2
+ncol=2
+
+frow=2
+fcol=7
+rows=1
+columns=14
+
+choicemsg="Enter the tag (name) for the entry to be added."
+
+valid=`newtag "$F2" "$F1"`
+
+invalidmsg=`errnewtag "$F2" "$F1"`
+
+# Method field - F3
+name=Method:
+lininfo=add:method
+nrow=3
+ncol=2
+
+frow=3
+fcol=10
+rows=1
+columns=14
+
+choicemsg="Enter the name of the backup method to be used."
+
+rmenu=OPEN MENU $OBJ_DIR/Menu.methods
+
+valid=`valmeth $F3`
+invalidmsg="The backup method name must be one listed in the [CHOICES] menu."
+
+# Originating device field - F4
+name=Originating device:
+lininfo=add:odev
+nrow=4
+ncol=2
+
+frow=4
+fcol=22
+rows=1
+columns=55
+scroll=true
+
+choicemsg="Enter path to the device for object to be backed up."
+
+# Originating name field - F5
+name=Originating name:
+lininfo=add:oname
+nrow=5
+ncol=2
+
+frow=5
+fcol=20
+rows=1
+columns=57
+scroll=true
+
+show=`regex -v "$F3" 'fdisk' FALSE 'fdp' FALSE '^.*' TRUE`
+choicemsg="Enter name of object to be backed up - a nodename or pathname."
+valid=`valpath -oy "$F5"`
+invalidmsg=`errpath -oy`
+
+# Destination device field - F6
+name=Destination device:
+lininfo=add:ddev
+nrow=6
+ncol=2
+
+frow=6
+fcol=22
+rows=1
+columns=55
+scroll=true
+
+choicemsg="Enter path to the raw device for where the object is to be backed up to."
+
+#Weeks field - F7
+name=Week(s):
+lininfo=add:week
+nrow=7
+ncol=2
+
+frow=7
+fcol=11
+rows=1
+columns=66
+scroll=true
+
+choicemsg="Enter a list of week ranges or 'demand' or 'all'."
+
+valid=`valweeks "$F7" all "$F1"`
+
+invalidmsg=`errweeks all "$F1"`
+
+# Days field - F8
+name=Day(s):
+lininfo=add:day
+nrow=8
+ncol=2
+
+frow=8
+fcol=10
+rows=1
+columns=67
+
+show=`regex -v "$F7" 'demand' FALSE '^.*' TRUE`
+#show=FALSE
+choicemsg="Enter a list of day ranges or 'all'."
+
+valid=`valdays "$F8" all`
+
+invalidmsg=`errdays all`
+
+# Additional options? - F9
+name=Additional options:
+lininfo=add:opt
+nrow=9
+ncol=2
+
+frow=9
+fcol=22
+rows=1
+columns=6
+choicemsg="Enter 'yes' to provide additional options or 'no' to use the defaults."
+invalidmsg="You must enter either 'yes' or 'no'."
+value=yes
+rmenu={ yes no }
+menuonly
+

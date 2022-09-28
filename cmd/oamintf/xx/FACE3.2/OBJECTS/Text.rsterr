@@ -1,0 +1,53 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/Text.rsterr	1.1"
+title="Warning"
+lifetime=shortterm
+altslks
+
+begrow=any
+begcol=any
+
+`message "Strike the CONT function key to continue."`
+
+text="
+    No printers have been set up. Use the \"Parallel Printer Port 
+    Setup\"  or the \"Serial Printer Port Setup\" in \"Peripherals 
+    Setup\" under the \"System Administration\" menu to set up a   
+    printer. Please consult the Operations/System Administration 
+    Guide for additional details on Peripherals Setup.
+     "
+
+rows=7
+columns=68
+
+name=CANCEL
+button=14
+action=return cancel
+
+name=CONT
+button=11
+action=return cancel 
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=""
+button=10
+action=nop
+
+name=""
+button=9
+action=nop
+
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=return cancel

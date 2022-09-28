@@ -1,0 +1,58 @@
+#ident	"@(#)oamintf:devices/copy/Text.copy2	1.4.8.1"
+
+################################################################################
+#	Module Name: Text.copy2
+################################################################################
+title="Copying Volumes"
+
+lifetime=shortterm
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp Text.copy2:ABSTRACT
+
+# May need to do a devreserv in CONT?
+close=`devfree ${VPID} $ARG1 $ARG2`
+
+`devattr $ARG2 desc | set -l DESC`
+
+text="
+You may now remove the volume from $DESC.
+
+To make $ARG3 COPY of the original insert the new volume
+TO BE WRITTEN into $DESC and press CONT.
+To copy from a new original, press CANCEL.
+To exit the copy operation, press QUIT."
+
+rows=6
+columns=65
+
+altslks
+
+name=QUIT
+button=9
+action=`rm -f $CPFILE; devfree ${VPID} $ARG1 $ARG2`CLEANUP
+
+name=
+button=10
+action=nop
+
+name=CONT
+button=11
+action=`message -w "Copying from the system to a writable volume in $DESC.";
+
+	devattr $ARG2 cdevice | set -l DEV;
+
+	dd if=$ARG1 of=$DEV >/dev/null 2>/dev/null;
+
+	if [ "$RET" -eq 0 ];
+	then
+	  message -w "Copy is complete.";
+	  set -l ARG3=another;
+	  set -l CMD="UPDATE";
+	else
+	  message -w "";
+	  set -l CMD="OPEN TEXT $OBJ_DIR/Text.cperr2 $ARG2";
+	fi`$CMD
+
+name=CANCEL
+button=14
+action=`rm -f $CPFILE`CLOSE

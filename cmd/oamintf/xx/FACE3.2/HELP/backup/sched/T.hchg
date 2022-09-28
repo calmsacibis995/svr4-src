@@ -1,0 +1,27 @@
+The Change Scheduled System Backup menu enables you to change any field
+of an already scheduled backup.  Move to one of the entries and strike
+ENTER to select the backup you wish to change.
+
+Once you have chosen a backup to change, you will be given a form where
+you can make the changes.
+
+The following information is displayed for each scheduled backup.
+This is the information that can be changed.
+
+      I:  The letter "I" signifies an "incremental" backup.
+      If the first column is blank, the backup listed is a 
+      system backup.
+
+      Month:  One month, a combination of months, or "all" months
+      may be displayed.
+
+      Date:  This signifies the day(s) of the month. One day,
+      a combination of days, or "all" days may be displayed.
+
+      Day:  This signifies the day(s) of the week. One day, a
+      combination of days, or "all" days may be displayed.
+
+      The time in hours (00-24) and minutes (00-60) is displayed.
+
+      Device:  The destination device for the backup.
+

@@ -1,0 +1,23 @@
+#ident	"@(#)lp.admin:printers/printers/add/Text.error	1.1.1.1"
+
+title="Error: Printer Configuration Subtask"
+
+`set -e toclose="$OAMBASE/add-ons/lp/printers/printers/add/Form.add"`
+
+row=15
+columns=55
+
+begrow=distinct
+begcol=distinct
+
+text="
+    Press CANCEL to return to the form.
+
+    While configuring the printer, the
+    following error(s) occurred:
+
+`readfile $error`
+
+"
+
+cancel=`rm $error`close

@@ -1,0 +1,7 @@
+Input types: simple
+Output types: HP
+Printer types: any
+Printers: any
+Filter type: fast
+Command: /usr/lib/lp/bin/HP_filter
+Options: MODES portrait = -p,MODES landscape = -s,MODES courier = -c,MODES lp = -l,MODES medium = -m,MODES bold = -b,MODES light = -g,MODES upright = -u,MODES italic = -i,MODES resethp = -r,MODES resetHP = -r

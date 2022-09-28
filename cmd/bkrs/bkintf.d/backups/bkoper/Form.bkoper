@@ -1,0 +1,40 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkoper/Form.bkoper	1.8"
+form="Respond to Backup Job Prompts"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+done=`message -w "Trying to set operator.";
+	set -l ERR=/tmp/$VPID.bjp;
+	run bkoper -u $F1 2>$ERR;
+	if [ $RET -eq 0 ] ;
+	then
+		getfrm | set -l FNUM;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.bjpok $F1 $FNUM";
+	else
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.bjpnok $F1";
+	fi`$!CMD
+
+begrow=any
+begcol=any
+
+# User field - F1
+name=User:
+lininfo=F1
+nrow=2
+ncol=2
+
+value=$LOGNAME
+
+frow=2
+fcol=9
+rows=1
+columns=8
+
+choicemsg="Enter the login whose backup operation prompts you wish to access."
+
+valid=`fmlgrep "$F1" /etc/passwd >/dev/null `
+
+invalidmsg="Enter a valid login (one which appears in the password file)."
+

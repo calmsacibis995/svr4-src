@@ -1,0 +1,171 @@
+#ident	"@(#)oamintf:softwaremgmt/defaults/Form.sd_list	1.5"
+
+form="List Installation Defaults File"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+framemsg="`readfile $INTFBASE/form.msg`"
+
+`readfile $INTFBASE/frept.msg | set -l MSG2`
+`set -l PKGADM="/var/sadm/install"`
+
+done=`
+	message -f $MSG2 ;
+	set -l AFILE=$F1
+	set -l DEFFILE=$F1
+`UPDATE `getfrm` TRUE
+
+close=`
+	set -l AFILE="" ;
+	set -l DEFFILE=""
+`
+
+name=Installation defaults filename:
+lininfo=list-file
+nrow=1
+ncol=2
+frow=1
+fcol=35
+rows=1
+columns=14
+value=$DEFFILE
+rmenu={ `/usr/bin/ls $PKGADM/admin` }
+choicemsg=Select a filename and press ENTER.
+valid=`
+	if [ -z $F1 ] ;
+	then
+		echo FALSE ;
+	elif [ -f $PKGADM/admin/$F1 ] ;
+	then
+		echo TRUE ;
+	elif [ -f $F1 ] ;
+	then
+		echo TRUE ;
+	else
+		echo FALSE ;
+	fi
+`
+invalidmsg=Error - input must be an existing installation defaults filename.
+
+name=Default base directory for packages:
+lininfo=basedir
+inactive=TRUE
+scroll=TRUE
+nrow=2
+ncol=2
+frow=2
+fcol=40
+rows=1
+columns=30
+value=${($PKGADM/admin/$AFILE)basedir}
+
+name=List of users to notify:
+lininfo=mail
+inactive=TRUE
+scroll=TRUE
+nrow=3
+ncol=2
+frow=3
+fcol=28
+rows=1
+columns=42 
+value=${($PKGADM/admin/$AFILE)mail}
+	
+name=ACTION
+nrow=5
+ncol=2
+name=SITUATION
+nrow=5
+ncol=13
+
+name=Incorrect run level during installation or removal
+inactive=TRUE
+nrow=6
+ncol=13
+frow=6
+fcol=2
+rows=1
+columns=9
+value=${($PKGADM/admin/$AFILE)runlevel}
+
+name=Package contains a pathname in conflict with other packages
+inactive=TRUE
+nrow=7
+ncol=13
+frow=7
+fcol=2
+rows=1
+columns=9
+value=${($PKGADM/admin/$AFILE)conflict}
+
+name=Package contains a setuid/setgid process
+inactive=TRUE
+nrow=8
+ncol=13
+frow=8
+fcol=2
+rows=1
+columns=9
+value=${($PKGADM/admin/$AFILE)setuid}
+
+name=Package contains scripts which may affect security
+inactive=TRUE
+nrow=9
+ncol=13
+frow=9
+fcol=2
+rows=1
+columns=9
+value=${($PKGADM/admin/$AFILE)action}
+
+name=Package dependencies are not met during installation
+inactive=TRUE
+nrow=10
+ncol=13
+frow=10
+fcol=2
+rows=1
+columns=9
+value=${($PKGADM/admin/$AFILE)idepend}
+
+name=Package dependencies are not met during removal
+inactive=TRUE
+nrow=11
+ncol=13
+frow=11
+fcol=2
+rows=1
+columns=9
+value=${($PKGADM/admin/$AFILE)rdepend}
+
+name=Disk space requirements are not met
+inactive=TRUE
+nrow=12
+ncol=13
+frow=12
+fcol=2
+rows=1
+columns=9
+value=${($PKGADM/admin/$AFILE)space}
+
+name=Package is already partially installed
+inactive=TRUE
+nrow=13
+ncol=13
+frow=13
+fcol=2
+rows=1
+columns=9
+value=${($PKGADM/admin/$AFILE)partial}
+
+name=A different version of the package is already installed
+inactive=TRUE
+nrow=14
+ncol=13
+frow=14
+fcol=2
+rows=1
+columns=9
+value=${($PKGADM/admin/$AFILE)instance}
+
+name=RESET
+button=8
+action=reset

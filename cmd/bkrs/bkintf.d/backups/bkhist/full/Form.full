@@ -1,0 +1,66 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkhist/full/Form.full	1.6"
+form="Display a Full Report of Backup History Information"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+# NOTE: the CLOSE is because if the user enters a new file, then leaves that
+# file name in the "Output to" field and presses SAVE again, that field is not
+# revalidated, so the file is silently overwritten.
+done=`message -w;
+	getfrm | set -l FNUM;
+	if [ "$F1" = 'terminal' ];
+	then
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.full $FNUM";
+	else
+		if [ "$BKHFILE" = 'old' ];
+		then
+			set -l CMD="OPEN FORM $OBJ_DIR/Form.oldfile $F1 $FNUM";
+		else
+			bkhtofile full overwrite $F1 | set -l ERR;
+			if [ "$ERR" = 'ok' ];
+			then
+				set -l CMD="OPEN FORM $OBJ_DIR/Text.bkhok $F1 $FNUM";
+			else
+				set -l CMD="OPEN TEXT $OBJ_DIR/Text.bkherr /tmp/bkherr$ERR $FNUM";
+			fi;
+		fi;
+	fi`$CMD
+
+begrow=any
+begcol=any
+
+# Output to field - F1
+name=Output to:
+lininfo=full:F1
+nrow=2
+ncol=2
+
+frow=2
+fcol=14
+rows=1
+columns=56
+scroll=TRUE
+
+value=terminal
+choicemsg="Enter 'terminal' or the name of a file to which the report will be written."
+invalidmsg=`errpath -gtw`
+valid=`shell "if [ \"$F1\" = \"terminal\" ]
+		then
+			exit 0;
+		else
+			valpath -n \"$F1\"
+			if [ \$? -eq 0 ]
+			then
+				FILE=new
+			else
+				FILE=old
+			fi
+			valpath -gtw \"$F1\"
+			if [ \$? -ne 0 ]
+			then
+				exit 1;
+			fi
+			echo \$FILE
+		fi" | set -l BKHFILE; echo TRUE`

@@ -1,0 +1,5 @@
+#ident	"@(#)lp:filter/postscript/font/devpostaps/charlib/Fi	1.1"
+/build_Fi {
+    pop
+    size .05 mul neg 0 (ffi) ashow
+} def

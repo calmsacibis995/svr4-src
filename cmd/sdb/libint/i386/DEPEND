@@ -1,0 +1,13 @@
+Interface.o:	../common/Interface.C
+	$(CPLUS_CMD) -c ../common/Interface.C
+
+SrcFile.o:	../common/SrcFile.C
+	$(CPLUS_CMD) -c ../common/SrcFile.C
+
+printx.o:	../common/printx.C
+	$(CPLUS_CMD) -c ../common/printx.C
+
+OBJECTS	=  \
+	Interface.o \
+	SrcFile.o \
+	printx.o

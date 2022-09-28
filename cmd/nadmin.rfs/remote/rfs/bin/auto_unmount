@@ -1,0 +1,5 @@
+#ident	"@(#)nadmin.rfs:remote/rfs/bin/auto_unmount	1.2"
+/usr/bin/egrep -v "^$RES[ 	]+-[ 	]+$DIR[ 	]+rfs[ 	]+-[ 	]+yes" /etc/vfstab > /usr/tmp/vfstab$$
+echo "$RES" "$DIR" >>/usr/tmp/xxx
+cp /etc/vfstab /etc/o.vfstab
+mv /usr/tmp/vfstab$$ /etc/vfstab

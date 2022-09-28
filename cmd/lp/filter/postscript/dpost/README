@@ -1,0 +1,32 @@
+
+Source code for a program that translates device independent troff output into
+PostScript.
+
+Several new text encoding schemes, based on widthshow, have been added. Each can
+be accessed using the -e option and often reduce print time by 20% or more. Level
+0 is the slowest but most stable choice. Level 2 encoding (which right now is the
+default) is fast and does a good job placing text and justifying the right margin.
+You can change the default encoding scheme by adjusting the definition of ENCODING
+in ../Makefile. Levels 0, 1, and 2 are the only reasonable defaults, but at present
+only level 0 is guaranteed. The new encoding schemes are not thoroughly tested,
+but passed the tests I ran.
+
+Other interesting features include color support, the ability to treat complex
+paths built from the standard drawing commands as single entities (eg. for filling
+a polygon with a color), and reverse video printing as a special case of color.
+Also added, although using it is far from trivial, is the ability to set text
+along an arbitrary baseline (see ../postscript/baseline.ps). All are accessed via
+special device control escapes (from routine devcntrl() in dpost.c).
+
+ASCII font and description files for many standard PostScript fonts can be found
+in ../font/devpost. They should be installed in /usr/lib/font/devpost, and are
+read when you add the -Tpost option to troff. A typical command line would be,
+
+    pic file | tbl | eqn | troff -mm -Tpost | dpost >file.ps
+
+while,
+
+    pic -T720 file | tbl | eqn -r720 | troff -mm -Tpost | dpost >file.ps
+
+should work if you're using old versions of eqn and pic.
+

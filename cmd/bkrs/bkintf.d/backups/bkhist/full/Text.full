@@ -1,0 +1,40 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkhist/full/Text.full	1.4"
+
+title="Full Report of Backup History Information"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp "ABSTRACT"
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+lifetime=shortterm
+
+begrow=any
+begcol=any
+rows=18
+columns=77
+
+wrap=FALSE
+`bkhsel long all all all | set -l TFILE`
+# NOTE: the following is commented out because, although I would like to have
+# a message indicating error displayed if there is an error, the following does
+# not display the contents of $TFILE correctly.  It tries to do its own wrapping,
+# regardless of the value of "wrap".  When this is fixed, should probably do
+# something similar with bkmsg/display and bksched/display. SHK 9/2/88
+#text="`regex -e -v "$RET"
+#	'^0$' '`cat $TFILE`'
+#	'^.*$' '`echo The following errors occurred trying to display backup history:\\\n\\\n; readfile $TFILE`' `
+#
+#   Press [CANCEL] to return to previous frame."
+text="`readfile $TFILE`"
+
+close=`rm -f $TFILE`
+
+altslks
+
+name=CONT
+button=11
+action=update $ARG1 true
+
+name=CANCEL
+button=14
+action=CLEANUP

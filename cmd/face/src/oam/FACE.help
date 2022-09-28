@@ -1,0 +1,5 @@
+ABSTRACT:
+	This task allows the administrator of a system to manage the
+	FACE environment for users on the system and to maintain the
+	set of applications available to all FACE users through the
+	Programs entry in their FACE main menu.

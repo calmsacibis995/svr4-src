@@ -1,0 +1,18 @@
+#ident	"@(#)bkrs:rbasic.d/private/Menu.private	1.1.1.1"
+menu="Personal Restore"
+help=open text /usr/vmsys/OBJECTS/Text.h "Personal Restore" restore/T.hprivate
+
+`message "Move to an item with the arrow keys and strike ENTER key to select"`
+
+name=Restore Files under $HOME
+action=`Ckdev f1_or_mt | regex -e
+    0 'open form $OBJ_DIR/private/Form.overwr $HOME -d /dev/rdsk/f0t'
+    2 'open menu $OBJ_DIR/private/Menu.device $HOME' `
+
+name=Selective Restore of Files under $HOME
+action=`Ckdev f1_or_mt | regex -e
+    0 'open form $OBJ_DIR/private/Form.overwr2 -d /dev/rdsk/f0t'
+    2 'open menu $OBJ_DIR/private/Menu.device2'`
+
+name=""
+button=16

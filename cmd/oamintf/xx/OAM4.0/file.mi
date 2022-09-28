@@ -1,0 +1,6 @@
+#ident	"@(#)oamintf:xx/OAM4.0/file.mi	1.1"
+#status#new
+main:file_systems:diskuse^Display Disk Usage^Text.diskuse
+main:file_systems:fileage^List Files by Age^Form.fileage
+main:file_systems:filesize^List Files by Size^Form.filesize
+main:file_systems:list^List Mounted File Systems^Text.listfiles

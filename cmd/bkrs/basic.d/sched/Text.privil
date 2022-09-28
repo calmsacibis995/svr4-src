@@ -1,0 +1,53 @@
+#ident	"@(#)bkrs:basic.d/sched/Text.privil	1.1"
+
+title=Warning
+lifetime=shortterm
+altslks
+
+begrow=center
+begcol=center
+rows=6
+columns=60
+
+`message "Strike the CONT function key to continue."`
+
+text="
+ You must have system administration privileges to $ARG1 a 
+ scheduled system backup. System administration privileges
+ may be assigned to a user by a privileged user through
+ \"User Logins\" on the \"System Administration\" menu.
+"
+
+name=""
+button=9
+action=nop
+
+name=""
+button=10
+action=nop
+
+name=CONT
+button=11
+action=return cancel
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=CANCEL
+button=14
+action=return cancel
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=nop
+
+`indicator -w`

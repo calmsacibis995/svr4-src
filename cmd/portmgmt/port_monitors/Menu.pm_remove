@@ -1,0 +1,32 @@
+#ident	"@(#)portmgmt:port_monitors/Menu.pm_remove	1.5.1.1"
+
+#menu="0123456789012345678901234567890"
+menu="Pmtag          Pmtype (Remove Port Monitors)"
+multiselect=true
+close=` rm /var/tmp/cmd$PID; 
+	unset -l PID -l KEYCMD`
+`sacadm -L>/dev/null;
+	regex -e -v "$RET"
+	   '^0$' '`message "MARK all port monitors you want to remove and then press ENTER."`'
+	   '^5$' '`message "No port monitor configured."`'
+	   '^.*$' '`message "No port monitor configured."`'`
+done=`getitems | tr -d '\0' > /var/tmp/cmd$PID;
+	if [ -s /var/tmp/cmd$PID ];
+	then
+		message "Removing [MARK]ed port monitors.";
+		sh /var/tmp/cmd$PID;
+		message "All [MARK]ed port monitors are removed.";
+		set -l KEYCMD="CLOSE";
+	else
+		message "No item is [MARK]ed.";
+		set -l KEYCMD="RESET";
+	fi`$KEYCMD
+
+name="              "
+inactive=TRUE
+
+`sacadm -L | regex '^([^:][^:]*)$0:([^:][^:]*)$1:(.*)$2$'
+ 'name="$m0"
+  description="$m1"
+  lininfo="sacadm -r -p $m0"'`
+

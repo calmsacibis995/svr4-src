@@ -1,0 +1,249 @@
+#ident	"@(#)make:defs	1.14.1.1"
+/*	@(#)make:defs	1.9 of 5/1/89	*/
+
+#include <stdio.h>
+#include <string.h>
+#include <sys/types.h>	/* time_t */
+#include <dirent.h>
+#include <sys/param.h>
+
+/***	defs.h	-	global make header file	***/
+
+/**		Function Macros			**/
+
+/* CHKARY expands into either "chkary", a function used for array
+ *	bounds checking, or "null".  To compile make with bounds
+ *	checking, use the following   
+ *		make -f build.mk CC="cc -DBNDCHK"
+ */
+#ifdef BNDCHK
+
+#ifdef __STDC__
+#define CHKARY(func,array,size)	chkary(array,size,# func ":" # array );
+#else
+#define CHKARY(func,array,size)	chkary(array,size,"func:array");
+#endif
+
+#else
+#define CHKARY(func,array,size)
+#endif
+
+#define ALLOC(x)	(struct x *)intalloc(sizeof(struct x))
+#ifndef MAXPATHLEN
+#define MAXPATHLEN 1024
+#endif
+#define ANY(a, b)	strchr(a, b)
+#define	SRCHNAME(s)	hashfind(s)
+#define STREQ(a, b)	(strcmp((a), (b)) == 0)
+#define IS_ON(a)	( Mflags & (a) )
+#define IS_OFF(a)	( !IS_ON(a) )
+
+/**		Macros for array sizes			**/
+
+#define ARY20   20
+#define ARY30   30
+#define ARY50   50
+#define ARY64   64
+#define ARY70   70
+#define ARY128 128
+#define ARY200 200
+#define ARY256 256
+#define ARY400 400
+
+/**		Macros for special characters		**/
+
+#define NEWLINE	'\n'
+#define CNULL	'\0'
+#define BLANK	' '
+#define TAB	'\t'
+#define DOT	'.'
+#define WIGGLE	'~'
+#define AT	'@'
+#define MINUS	'-'
+#define EQUALS	'='
+#define SLASH	'/'
+#define STAR	'*'
+#define LCURLY	'{'
+#define RCURLY	'}'
+#define LPAREN	'('
+#define RPAREN	')'
+#define LSQUAR	'['
+#define RSQUAR	']'
+#define QUESTN	'?'
+#define KOLON	':'
+#define SKOLON	';'
+#define DOLLAR	'$'
+#define GREATR	'>'
+#define POUND	'#'
+#define EXCLAM	'!'
+#define BACKSLASH	'\\'
+
+/**		Flags		**/
+
+#define CORRECT 0000001		/* enforce makefile correctness */
+#define ENVOVER	0000002		/* environ overides file defines */
+#define EXPORT	0000004		/* export current variable to env */
+#define PRTR	0000010		/* print macros and target descriptions */
+#define SIL	0000020		/* execute silently */
+#define NOEX	0000040		/* don't execute commands */
+#define INTRULE	0000100		/* use internal rules */
+#define TOUCH	0000200		/* touch (update) out-of-date files */
+#define GET	0000400		/* do a $(GET) if file not found */
+#define QUEST	0001000		/* set `-q' flag */
+#define INARGS	0002000		/* currently reading cmd args */
+#define IGNERR	0004000		/* ignore errors */
+#define KEEPGO	0010000		/* continue on other branches */
+#define GF_KEEP	0020000		/* keep auto get files */
+#define MH_DEP	0040000		/* use old question about whether cmd exists */
+#define UCBLD	0100000		/* unconditional build */
+#define TRACK	0200000		/* track the object files */
+#ifdef GETU
+#define MEMMAP	0400000		/* print memory map */
+#endif
+
+/*  debugging information can be installed by compiling in MKDEBUG
+**	i.e.	cc -DMKDEBUG
+*/
+#ifdef MKDEBUG
+#define DBUG	0400000		/* debug flag */
+#endif
+
+/*	flags for get()		*/
+
+#define CD	0
+#define NOCD	1
+
+#ifdef unix
+/*  to install metering, add a statement like
+**	#define METERFILE "/usr/sif/make/Meter"
+** to turn metering on, set external variable meteron to 1
+*/
+#endif
+
+#define NO 	0
+#define YES 	1
+
+#define NCHARS   500
+#define NINTS    250
+#define OUTMAX  5000
+#define MAXVPATH	 MAXNAMLEN*3
+#define MAXDIR	10	/* Max number of viewpath directories */
+#define LRGINT 077777
+
+#define ALLDEPS  	1
+#define SOMEDEPS 	2
+
+#define META 		01
+#define TERMINAL	02
+
+/* define FSTATIC to be static on systems with C compilers
+ * supporting file-static; otherwise define it to be null
+ */
+#define FSTATIC static
+
+/**		Type definitions		**/
+
+typedef char *	CHARSTAR;
+typedef struct lineblock *	LINEBLOCK;
+typedef struct depblock *	DEPBLOCK;
+
+typedef struct shblock {
+	struct shblock *nextsh;
+	CHARSTAR shbp;
+} *SHBLOCK;
+
+typedef struct bldblock {
+	struct bldblock *nxtbldblock;
+	CHARSTAR bldecp;
+} *BLDBLOCK;
+
+typedef struct nameblock {
+
+	struct nameblock *nextname,	/* pointer to next nameblock */
+			 *backname;	/* pointer to predecessor */
+	CHARSTAR namep,		/* ASCII name string and*/
+		alias;		/*  alias, when namep translates to
+				 * 	another pathstring.
+				 */
+	LINEBLOCK linep;	/* pointer to dependents */
+	time_t	modtime;	/* set by exists() */
+	int	flevel;		/* level at which file resides */
+	char	done,		/* 	finished?		*/
+		septype,	/*	single or double ':' 	*/
+		rundep,		/* 	runtime translation done? */
+		lnkdfl,		/* 	is this a linked file? 	*/
+		cpydfl;		/* 	is this a copied file? 	*/
+
+} *NAMEBLOCK;
+
+struct lineblock {
+	LINEBLOCK nextline;
+	DEPBLOCK depp;
+	SHBLOCK shp;
+	BLDBLOCK bldecn;
+};
+
+struct depblock {
+	DEPBLOCK nextdep;
+	NAMEBLOCK depname;
+};
+
+typedef struct chain {
+	struct chain *nextchain;
+	union {
+		CHARSTAR charstar;
+		NAMEBLOCK nameblock;
+	} datap;
+} *CHAIN;
+
+typedef struct varblock {
+	struct varblock *nextvar;
+	CHARSTAR varname;
+	union {
+		CHARSTAR charstar;
+		CHAIN chain;
+	} varval;
+
+	char	noreset,
+		used,
+		envflg,
+		v_aflg;
+} *VARBLOCK;
+
+typedef struct pattern {
+	struct pattern *nextpattern;
+	CHARSTAR patval;
+} *PATTERN;
+
+typedef struct s_opendir {
+	struct s_opendir *nextopendir;
+	DIR	*dirfc;
+	CHARSTAR dirn;
+} *OPENDIR;
+
+CHARSTAR copys(), copstr(), concat(), compath(),
+	dname(), sname(), strrchr(), strchr();
+
+void cat();
+
+int *intalloc(), vpget();		/* misc.c */
+NAMEBLOCK makename();			/* misc.c */
+NAMEBLOCK hashfind();			/* misc.c */
+VARBLOCK varptr();			/* misc.c */
+void	mkexit();			/* misc.c */
+void	fatal(), fatal1();		/* misc.c */
+
+extern NAMEBLOCK firstname;
+extern OPENDIR	firstod;
+extern CHARSTAR *environ;
+/*
+extern CHARSTAR *linesptr;
+*/
+extern int	Mflags,
+		BLDCALL,	/* if invoked as build, BLDCALL = 1 */
+		okdel,
+		end;		/* loader value for end of core */
+
+extern FILE 	*fin;
+extern char	Nullstr[];
+

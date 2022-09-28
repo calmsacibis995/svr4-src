@@ -1,0 +1,23 @@
+#ident	"@(#)filemgmt:unmount/Form.unmount	1.1.2.1"
+Form="Unmount a File System"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+ 
+framemsg=`readfile $INTFBASE/form.msg`
+`set -l ERRTLE="Unmount-Error"`
+
+done=`indicator -w;
+	set -l FS=$F1;
+		set -l CMD="OPEN $OBJ_DIR/Form.umountfs";
+	`$CMD
+
+name="Mountpoint or Device to be unmounted:"
+lininfo=Form.unmount:F1
+nrow=1
+ncol=1
+frow=1
+fcol=39
+rows=1
+columns=30
+rmenu=OPEN MENU $OBJ_DIR/Menu.umntdev
+#rmenu={ `/sbin/mount | /usr/bin/cut -d" " -f1,3 |/usr/bin/tr '\040' '\012' ` } 
+invalidmsg="Press CHOICES to select valid response."

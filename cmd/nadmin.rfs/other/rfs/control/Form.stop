@@ -1,0 +1,32 @@
+#ident	"@(#)nadmin.rfs:other/rfs/control/Form.stop	1.6"
+#
+form="Stops Remote File Sharing"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=unset -l PID
+
+`readfile $INTFBASE/form.msg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/rfs/control`
+
+done=`indicator -w;
+	if [ "$F1" = "yes" ];
+	then
+		"$INTFBASE/netservices/remote_files/other/rfs/control/bin/rfs_stop" | set -l PID;
+		set -l KEYCMD="OPEN TEXT $INTFBASE/netservices/remote_files/other/rfs/control/Text.msg 'Stops Remote File Sharing' '/var/tmp/rfstop$PID'";
+	else
+		message "No option selected.  Press CANCEL to return to the menu.";
+		set -l KEYCMD="NOP"; 
+	fi;
+	`$!KEYCMD
+
+name="Confirm:"
+nrow=1
+ncol=1
+frow=1
+fcol=10
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+invalidmsg="Press CHOICES to select valid response."
+lininfo=stop:confirm

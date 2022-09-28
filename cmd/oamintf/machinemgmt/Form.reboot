@@ -1,0 +1,42 @@
+#ident	"@(#)oamintf:machinemgmt/Form.reboot	1.4.4.1"
+
+################################################################################
+#	Module Name: Form.reboot
+################################################################################
+form="Reboot the Machine"
+
+`indicator -w`
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`chgstate $F1 6`exit
+
+name=Number of seconds before shutdown starts:
+lininfo=Form.reboot:reboot
+nrow=2
+ncol=1
+frow=2
+fcol=52
+rows=1
+columns=4
+
+value=const 60
+choicemsg=Please input a number from 0 to 9999.
+valid=`regex -v $F1 '^[0-9]{1,4}$'`
+
+invalidmsg=const `errange -l0 -u 9999`
+
+name=""
+nrow=4
+ncol=2
+frow=4
+fcol=3
+rows=2
+columns=68
+value=const "WARNING: Once started, this procedure CANNOT BE STOPPED!\n         Strike SAVE to proceed with reboot and exit OA&M."
+inactive
+
+name=RESET
+button=8
+action=RESET

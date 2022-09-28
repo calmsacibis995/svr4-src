@@ -1,0 +1,285 @@
+#ident	"@(#)lp.admin:printers/operations/Help	1.2.1.1"
+ABSTRACT:Perform Daily Printer Service Operations
+	The operations menu gives you several tasks that allow you to:
+	enable and disable printers; turn on or off the acceptance
+	status of printers; start and stop the Printer Service; mount 
+	and unmount forms; set the system default printer destination.
+
+menu:L1:Allow Class(es) and/or Printer(s) to Accept Print Requests
+	You use the accept task to let print requests be accepted
+	for a printer or class of printers. You must do this after
+	adding a new printer because the Line Printer Service holds off
+	accepting any requests for the printer until you've finished
+	defining it. You tell the print service you're done using
+	the accept task. You may also need to stop accepting
+	requests at a later time, perhaps because you wish to take
+	the printer out of service for repair or because too many
+	requests are backed up in queue for the printer. When the
+	printer is ready for service again you'll use the accept
+	task.
+
+accept:F1:Printer(s) and/or Class(es)
+	You are expected to enter the name of the printer or printer
+	class that is now ready to accept print requests. You can give
+	more than one name by separating them with spaces or commas.
+	You may also enter the word all to force all printers not
+	currently accepting requests to accept requests.
+	
+	If you do not know the name of a printer or class, press CHOICES
+	and a list of those printers and classes not currently accepting
+	requests will be presented to you to select from.  Once the
+	Choices menu appears, move to each choice that you wish to select
+	and press MARK.  When you are done marking your choices, press ENTER.
+	
+	Note that accepting print requests for a printer is not enough
+	to cause them to print. The printer must also be enabled, using
+	the enable.
+	
+	The Line Printer Service does not start printing requests until
+	it is told by you that the printer is ready: powered on, with
+	paper loaded, with the proper form loaded, etc.
+
+menu:L7:Set Default Print Destination
+	You use the set default task when you want to assign the default
+	destination. This is the printer or class of printers that all
+	print requests will be sent to if they are not explicitly sent
+	to a different destination.  You do not need to define a default
+	destination, but it is usually a good idea because it makes it
+	easier on the people using the print service.
+
+default:F1:Default Printer or Printer Class
+	You are expected to enter the name of the printer or class
+	of printers that you want as the default destination. The
+	printer or class must already exist. 
+	
+	If you do not know the name of a printer or class, press CHOICES
+	and a list of the printers and classes defined on your system
+	will be presented to you to select from.  Once the Choices menu
+	appears, move to the choice that you wish to select and press
+	ENTER.
+
+menu:L3:Disable Printer(s) from Printing
+	You use the disable task to keep print requests from printing
+	on a printer. This does not discard or move any requests
+	currently in the queue, nor does it refuse further requests. All
+	requests will remain in queue until the printer is enabled again.
+	
+	Use the reject task to reject further requests for a printer.
+
+disable:F1:Printer(s)
+	You are expected to enter the name of an enabled printer you
+	want to disable.  You can give several names if you separate
+	them with spaces or commas. You can also enter the word all to
+	disable all of the enabled printers.
+	
+	If you do not know the name of a printer, press CHOICES and a
+	list of the enabled printers on your system will be presented
+	to you to select from.  Once the Choices menu appears, move to
+	each choice that you wish to select and press MARK. When you
+	are done marking your choices, press ENTER.
+
+	A disabled printer is prevented from printing further requests
+	but requests can continue to queue up for the printer. You will
+	be able to specify whether any request currently printing be
+	stopped and put back in the queue, be canceled and discarded,
+	or be allowed to finish printing before the printer is disabled.
+	
+	If you also want to stop further requests from being queued, when
+	you are done with the disable task go back to the operations menu
+	and select the reject task. This is a good idea if the printer
+	will be disabled for a long time.
+
+disable:F2:What should happen to any requests currently printing?
+	Enter cancel if any requests currently printing on the printer(s)
+	you identified should be canceled. This will destroy those print
+	requests.
+	
+	Enter wait if any requests currently printing on the printer(s)
+	you identified should be allowed to finish printing. You will not
+	have to wait, since the Line Printer Service will mark the
+	printers as being disabled and will prevent any other request
+	from printing also.
+	
+	Enter restart if they should be stopped but left in queue to be
+	printed later. When later printed, these requests will be
+	restarted from the beginning, unless someone modifys the request
+	and gives a subset of pages to print. You can do this by selecting
+	the modify task from the requests menu later.
+
+disable:F3:Reason for disabling
+	Enter a reason for disabling the printer(s). The only purpose of
+	the reason is to give an explanation to the users who inquire
+	about a disabled printer.
+
+menu:L4:Enable Printer(s) for Printing
+	You use the enable task to allow one or more printers to start
+	printing requests queued for them. You need to do this after you
+	have added a new printer and are ready to bring it on line, after
+	you have finished servicing a printer that you had earlier
+	disabled, and if you need to manually re-enable a printer that
+	was automatically disabled because of a problem.
+	
+	If new print requests had also been refused for a printer, which
+	is the case with new printers, you may also want to use the accept
+	task to allow requests to be accepted for the printer you enable.
+
+enable:F1:Printer(s)
+	You are expected to enter the name of an disabled printer you
+	want to enable.  You can give several names if you separate
+	them with spaces or commas. You can also enter the word all to
+	enable all of the disabled printers.
+	
+	If you do not know the name of a printer, press CHOICES and a
+	list of the disabled printers on your system will be presented
+	to you to select from.  Once the Choices menu appears, move to
+	each choice that you wish to select and press MARK. When you
+	are done marking your choices, press ENTER.
+
+menu:L5:Mount a Form or Font On a Printer
+	You use the mount task to mount a form or print wheel on a
+	printer.  You must do this before print requests queued for
+	the form or print wheel will be printed. (You do not have to
+	manually mount character sets. The Line Printer Service
+	automatically selects the correct character set on printers
+	that have selectable character sets.)
+	
+	When you mount a form, you can get an alignment pattern printed
+	(if one has been defined). This will help you line up the form
+	in the printer for proper registration of printed data.
+	
+	WARNING: It is assumed that you have disabled the printer
+	before you mount a form or print wheel or font cartridge, and
+	the form, print wheel, or cartridge are already in place when
+	you finish the mount task. The Line Printer Service will
+	immediately ready print requests for printing when it is told
+	that the mount is finished. If you want to disable the printer
+	first (you do not HAVE to) use the disable task.
+
+mount:F1:Printer
+	You are expected to enter the name of the printer on which
+	you want to mount a form or print wheel. If you do not know
+	the name press CHOICES to get a list of known printers.
+
+mount:F2:Form to be mounted
+	You are expected to enter the name of the form you want
+	mounted on the printer. If you are only mounting a print
+	wheel or font cartridge, leave this field blank.
+	
+	Press CHOICES to get a list of forms available on this printer.
+
+mount:F3:Print wheel to be mounted
+	You are expected to enter the name of the print wheel or
+	font cartridge you want mounted. If you are only mounting
+	a form, leave this field blank.
+	
+	Press choices to get a list of printwheels for this printer.
+	
+	NOTE: The print wheel or font cartridge should already be IN the
+	printer when you answer this question.
+
+mount:F4:Print an alignment pattern
+	Enter yes to get an alignment pattern printed or no otherwise.
+	After you press SAVE, if you have selected yes here, the screen
+	will clear and the first alignment pattern will be printed in
+	several seconds. A prompt will appear on the screen to allow you
+	to print additional alignment patterns. Press ENTER to print 
+	another alignment pattern or q to return to this form.
+
+menu:L6:Stop Printer From Accepting Print Requests
+	You use the reject task to keep additional print requests from
+	being queued for a printer or printer class. This does not
+	discard or move any requests currently in the queue, nor does
+	it stop requests currently in the queue from printing.
+	
+	You may need to reject additional print requests or a printer
+	if you want to take the printer out of service for a long time,
+	or if too many requests are in queue already and you want the
+	backlog to reduce itself before more requests are allowed.
+	
+	Use the disable task if you also want to stop printing; use the
+	move subtask in the requests task if you want to move requests
+	currently queued to another printer.
+
+reject:F1:Printer(s) and/or Class(es)
+	You are expected to enter the name of the printer or class of
+	printers for which you want no further print requests accepted.
+	You may enter a list of printers and classes seperated by spaces
+	or commas.  The word all will cause all accepting printers to be
+	affected.
+	
+	If you do not know the name of a printer or class, press CHOICES
+	and a list of those printers and classes currently accepting
+	requests will be presented to you to select from.  Once the
+	Choices menu appears, move to each choice that you wish to select
+	and press MARK.  When you are done marking your choices, press ENTER.
+
+	When you are ready to let print requests be queued again, use the
+	accept task.
+
+reject:F2:Reason for rejecting
+	You are expected to enter a reason for disabling the printer(s) or
+	printer class(es). The only purpose of the reason is to give an
+	explanation to the users who inquire about a printer or printer
+	class that's no longer accepting print requests.
+
+menu:L2a:Start the Printer Service
+	You use the control task to start the Line Printer Service after
+	it has been stopped. Normally the print services are automatically
+	started when you start the UNIX system, so you generally do not
+	need to use this task.
+
+menu:L2b:Stop the Printer Service
+	You use the stop task to stop the Line Printer Service. Normally
+	the print services are automatically stopped when you stop the
+	UNIX system, so you generally do not need to use this task.
+	
+	NOTICE: You do not have to stop the print services to modify any
+	printers, forms, filters, or to move print requests. In fact, if
+	you DO stop the print services you'll be unable to properly
+	affect SOME modifys.
+
+menu:L3a:Set Lp to Always/Optionally Copy Print Request Files
+	If you select the task "Set Lp to Always Copy Print Request Files,"
+	you can administrate the LP system to always make copies of users'
+	source-files at the time print-jobs are submitted.
+	
+	If you select the task "Set Lp to Optionally Copy Print Request Files"
+	you can administrate the LP system to not make copies of users' 
+	source-files at the time that print-jobs are submitted unless 
+	the user has specified the -c option in the lp command.
+	Selecting this task will leave the option to copy files in the hands 
+	of the user.
+
+menu:L8:Unmount a Form or Printwheel From a Printer
+	You use the unmount task to unmount a form or print wheel from
+	a printer. The printer must be idle when you unmount a form or
+	print wheel. If a request is printing you can use the disable
+	task from this menu to idle the printer prior to performing the
+	unmount. Note that you do not manually unmount character sets as
+	the Line Printer Service will automatically select the correct
+	character set on printers that have selectable character sets.
+	
+	Upon completion of the unmount any requests not needing the
+	unmounted form and/or print wheel will begin printing as soon as
+	the printer is enabled ( or immediately if you did not disable
+	the printer before the unmount).
+
+unmount:F1:Printer
+	You are expected to enter the name of the printer on which you
+	want to unmount a form or print wheel. If you do not know the
+	name, press CHOICES, to get a list of printers that currently
+	have a form or print wheel mounted.
+
+unmount:F2:Unmount the current form
+	Enter yes if you want to unmount the form that is currently
+	mounted on the printer, or no if not. Note that if the printer
+	is currently printing a request, the unmount will have no
+	effect.  To avoid this problem use the disable task in the
+	printers menu to insure that the printer is not active.
+
+unmount:F3:Unmount the current print wheel
+	Enter yes if you want to unmount the print wheel that is currently
+	mounted on the printer, or no if not. Note that if the printer is
+	currently printing a request, the unmount will have no effect. To
+	avoid this problem use the disable task menu to insure that the
+	printer is not active.

@@ -1,0 +1,87 @@
+#ident	"@(#)nadmin.nfs:remote/nfs/Form.unmnt3	1.1"
+form="Terminates Current Mounting of a Remote Resource via NFS"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`set -l OBJ_DIR="$INTFBASE/netservices/remote_files/remote/nfs"`
+
+done=`if [ "$F7" = "yes" ];
+	then
+		shell "/sbin/umount $SERV:$RDIR";
+		echo "\"$SERV:$RDIR\" has been unmounted." |message;
+	else
+		echo "\"$SERV:$RDIR\" will not be unmounted." |message;
+	fi;
+	`CLOSE
+
+#F1
+name="The following resource will no longer be"
+nrow=1
+ncol=1
+frow=1
+fcol=41
+rows=1
+
+#F2
+name="available for local use via NFS:"
+nrow=2
+ncol=1
+frow=2
+fcol=30
+rows=1
+
+#F3
+name="Mountpoint:"
+nrow=4
+ncol=1
+frow=4
+fcol=16
+rows=1
+columns=30
+inactive=true
+value="$RES"
+
+#F4
+name="Server:"
+nrow=5
+ncol=1
+frow=5
+fcol=12
+rows=1
+columns=30
+inactive=true
+value="$SERV"
+
+#F5
+name="Remote Directory:"
+nrow=6
+ncol=1
+frow=6
+fcol=19
+rows=1
+columns=20
+inactive=true
+value="$RDIR"
+
+#F6
+name="Access:"
+nrow=7
+ncol=1
+frow=7
+fcol=9
+rows=1
+columns=10
+inactive=true
+value="$ACCESS"
+
+name="OK to make the resource unavailable immediately?"
+nrow=10
+ncol=1
+frow=10
+fcol=50
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value=yes
+lininfo=unmnt3:ok
+invalidmsg="Press CHOICES to select valid response."

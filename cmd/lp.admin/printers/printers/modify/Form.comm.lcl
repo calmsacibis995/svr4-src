@@ -1,0 +1,502 @@
+#ident	"@(#)lp.admin:printers/printers/modify/Form.comm.lcl	1.4.3.2"
+
+form='Printer Communication Setup Subtask'
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO 
+framemsg="Press \[SAVE\] after completing the form."
+
+done=`
+    message -w "Saving Printer communication setup information, please wait.";
+	if [ -n "$TFADMIN" ]; then $TFADMIN lpadmin -p $lp_printer -o "stty='$F2 $lp_F3 $lp_F4 $lp_F5 $lp_F6 $lp_F7 $lp_F8 $lp_F9 $lp_F10 $lp_F11 $lp_F12 $lp_F13 $lp_F14 $lp_F15 $lp_F16 $lp_F17 $lp_F18'" > /dev/null 2> $error;
+	else lpadmin -p $lp_printer -o "stty='$F2 $lp_F3 $lp_F4 $lp_F5 $lp_F6 $lp_F7 $lp_F8 $lp_F9 $lp_F10 $lp_F11 $lp_F12 $lp_F13 $lp_F14 $lp_F15 $lp_F16 $lp_F17 $lp_F18'" > /dev/null 2> $error; fi;
+	if [ "$RET" != "0" -a -s $error ];
+	then
+	    echo "OPEN TEXT $OAMBASE/add-ons/lp/printers/printers/modify/Text.comm";
+	else
+	    cosend lpdata "get_printer/n$lp_printer" > /dev/null 2>/dev/null;
+	    if [ -n "$TFADMIN" ]; then $TFADMIN lpstat -p $lp_printer -l > /usr/tmp/stat$$;
+	    else lpstat -p $lp_printer -l > /tmp/stat$$; fi;
+    	    cat /tmp/stat$$ | sed 's/: /=/gp' | 
+	    sed 's/^	//gp' | sed 's/After fault/recover/gp' |
+	    sed 's/Content types/content/gp'  >> $datafile;
+	    rm -f /tmp/stat$$;
+	    cat /etc/lp/printers/$lp_printer/configuration | 
+	    sed 's/: /=/gp' >> $datafile;
+	    message -w "Printer communication setup successful - Printer modify complete.";
+	    rm -f $error;
+	fi;
+`close $OAMBASE/add-ons/lp/printers/printers/modify/Form.comm.lcl
+
+close=`
+	codestroy -R printers.add.comm lpdata;
+	unset	-l lp_valtmp
+		-l lp_errtmp;
+`
+
+#F1
+name='Printer:'
+lininfo="comm.lcl:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=10
+value=$lp_printer
+columns=14
+inactive=TRUE
+fieldmsg="Press \[SAVE\] after completing the form."
+
+#F2
+name=Baud rate:
+lininfo="comm.lcl:F2"
+nrow=2
+ncol=1
+frow=2
+fcol=40
+rows=1
+columns=6
+rmenu={ 110 300 600 1200 1800 2400 4800 9600 19200 38400 }
+value=${($datafile)baud:-9600}
+menuonly=TRUE
+fieldmsg="Press \[SAVE\] after completing the form."
+
+#F3
+name=Parity:
+lininfo="comm.lcl:F3"
+nrow=3
+ncol=1
+frow=3
+fcol=40
+rows=1
+columns=6
+rmenu={ odd even none }
+value=${($datafile)parity:-none}
+#	if fmlgrep parodd=no $datafile > /dev/null;
+#	then
+#		if fmlgrep parenb=no $datafile > /dev/null;
+#		then
+#			echo none;
+#		else
+#			echo even;
+#		fi;
+#	else
+#		echo odd;
+#	fi
+#`
+valid=`
+	regex -v "$F3"
+	'^odd$'	'parodd parenb'
+	'^even$'	'-parodd parenb'
+	'^none$'	'-parodd -parenb'
+	'^.*$'	'fail'
+	| set -l lp_errtmp;
+	if [ "$lp_errtmp" != 'fail' ];
+	then
+	    echo true;
+	else
+	    echo false;
+	fi;
+	set -l lp_F3="$lp_errtmp";
+`
+invalidmsg='Invalid entry:  please enter one of the CHOICES.'
+
+#F4
+name=Stop bits:
+lininfo="comm.lcl:F4"
+nrow=4
+ncol=1
+frow=4
+fcol=40
+rows=1
+columns=6
+rmenu={ 1 2 }
+value=${($datafile)stopbits:-1}
+valid=`
+	regex -v "$F4"
+	'^1$'	'-cstopb'
+	'^2$'	'cstopb'
+	'^.*$'	'fail'
+	| set -l lp_errtmp;
+	if [ "$lp_errtmp" != 'fail' ];
+	then
+	    echo true;
+	else
+	    echo false;
+	fi;
+	set -l lp_F4="$lp_errtmp"
+`
+invalidmsg='Invalid entry:  please enter one of the CHOICES.'
+
+#F5
+name=Character size:
+lininfo="comm.lcl:F5"
+nrow=5
+ncol=1
+frow=5
+fcol=40
+rows=1
+columns=6
+rmenu={ 5 6 7 8 }
+value=${($datafile)cs:-8}
+valid=`
+	regex -v "$F5"
+	'^5$'	'cs5'
+	'^6$'	'cs6'
+	'^7$'	'cs7'
+	'^8$'	'cs8'
+	'^.*$'	'fail'
+	| set -l lp_errtmp;
+	if [ "$lp_errtmp" != 'fail' ];
+	then
+	    echo true;
+	else
+	    echo false;
+	fi;
+	set -l lp_F5="$lp_errtmp"
+`
+invalidmsg='Invalid entry:  please enter one of the CHOICES.'
+
+#F6
+name=Hangup on loss of carrier:
+lininfo="comm.lcl:F6"
+nrow=6
+ncol=1
+frow=6
+fcol=40
+rows=1
+columns=6
+rmenu={ yes no }
+value=${($datafile)hupcl:-yes}
+valid=`
+	regex -v "$F6"
+	'^yes$'	'hupcl'
+	'^no$'	'-hupcl'
+	'^.*$'	'fail'
+	| set -l lp_errtmp;
+	if [ "$lp_errtmp" != 'fail' ];
+	then
+	    echo true;
+	else
+	    echo false;
+	fi;
+	set -l lp_F6="$lp_errtmp"
+`
+invalidmsg='Invalid entry:  please enter one of the CHOICES.'
+
+#F7
+name=XON/XOFF output control:
+lininfo="comm.lcl:F7"
+nrow=7
+ncol=1
+frow=7
+fcol=40
+rows=1
+columns=6
+rmenu={ yes no }
+value=${($datafile)ixon:-yes}
+valid=`
+	regex -v "$F7"
+	'^yes$'	'ixon'
+	'^no$'	'-ixon'
+	'^.*$'	'fail'
+	| set -l lp_errtmp;
+	if [ "$lp_errtmp" != 'fail' ];
+	then
+	    echo true;
+	else
+	    echo false;
+	fi;
+	set -l lp_F7="$lp_errtmp"
+`
+invalidmsg='Invalid entry:  please enter one of the CHOICES.'
+
+#F8
+name=Allow any character to restart output:
+lininfo="comm.lcl:F8"
+nrow=8
+ncol=1
+frow=8
+fcol=40
+rows=1
+columns=6
+rmenu={ yes no }
+value=${($datafile)ixany:-no}
+valid=`
+	regex -v "$F8"
+	'^yes$'	'ixany'
+	'^no$'	'-ixany'
+	'^.*$'	'fail'
+	| set -l lp_errtmp;
+	if [ "$lp_errtmp" != 'fail' ];
+	then
+	    echo true;
+	else
+	    echo false;
+	fi;
+	set -l lp_F8="$lp_errtmp";
+`
+invalidmsg='Invalid entry:  please enter one of the CHOICES.'
+
+#F9
+name=Postprocess output:
+lininfo="comm.lcl:F9"
+nrow=9
+ncol=1
+frow=9
+fcol=40
+rows=1
+columns=6
+rmenu={ yes no }
+value=${($datafile)opost:-yes}
+valid=`
+	regex -v "$F9"
+	'^yes$'	'opost'
+	'^no$'	'-opost'
+	'^.*$'	'fail'
+	| set -l lp_errtmp;
+	if [ "$lp_errtmp" != 'fail' ];
+	then
+	    echo true;
+	else
+	    echo false;
+	fi;
+	set -l lp_F9="$lp_errtmp";
+`
+invalidmsg='Invalid entry:  please enter one of the CHOICES.'
+
+#F10
+name=Map NL to CR-NL on output:
+lininfo="comm.lcl:F10"
+nrow=10
+ncol=1
+frow=10
+fcol=40
+rows=1
+columns=6
+rmenu={ yes no }
+value=${($datafile)onlcr:-yes}
+valid=`
+	regex -v "$F10"
+	'^yes$'	'onlcr'
+	'^no$'	'-onlcr'
+	'^.*$'	'fail'
+	| set -l lp_errtmp;
+	if [ "$lp_errtmp" != 'fail' ];
+	then
+	    echo true;
+	else
+	    echo false;
+	fi;
+	set -l lp_F10="$lp_errtmp";
+`
+invalidmsg='Invalid entry:  please enter one of the CHOICES.'
+
+#F11
+name=Map lowercase to uppercase on output:
+lininfo="comm.lcl:F11"
+nrow=11
+ncol=1
+frow=11
+fcol=40
+rows=1
+columns=6
+rmenu={ yes no }
+value=${($datafile)olcuc:-no}
+valid=`
+	regex -v "$F11"
+	'^yes$'	'olcuc'
+	'^no$'	'-olcuc'
+	'^.*$'	'fail'
+	| set -l lp_errtmp;
+	if [ "$lp_errtmp" != 'fail' ];
+	then
+	    echo true;
+	else
+	    echo false;
+	fi;
+	set -l lp_F11="$lp_errtmp";
+`
+invalidmsg='Invalid entry:  please enter one of the CHOICES.'
+
+#F12
+name=Carriage Return Delay:
+lininfo="comm.lcl:F12"
+nrow=12
+ncol=1
+frow=12
+fcol=40
+rows=1
+columns=6
+rmenu={ none 0 1 2 3 }
+value=${($datafile)cr:-none}
+valid=`
+	regex -v "$F12"
+	'^none$'	'cr0'
+	'^0$'	'cr0'
+	'^1$'	'cr1'
+	'^2$'	'cr2'
+	'^3$'	'cr3'
+	'^.*$'	'fail'
+	| set -l lp_errtmp;
+	if [ "$lp_errtmp" != 'fail' ];
+	then
+	    echo true;
+	else
+	    echo false;
+	fi;
+	set -l lp_F12="$lp_errtmp";
+`
+invalidmsg='Invalid entry:  please enter one of the CHOICES.'
+
+#F13
+name=Newline Delay:
+lininfo="comm.lcl:F13"
+nrow=13
+ncol=1
+frow=13
+fcol=40
+rows=1
+columns=6
+rmenu={ yes no }
+value=${($datafile)nldelay:-no}
+valid=`
+	regex -v "$F13"
+	'^yes$'	'nl1'
+	'^no$'	'nl0'
+	'^.*$'	'fail'
+	| set -l lp_errtmp;
+	if [ "$lp_errtmp" != 'fail' ];
+	then
+	    echo true;
+	else
+	    echo false;
+	fi;
+	set -l lp_F13="$lp_errtmp";
+`
+invalidmsg='Invalid entry:  please enter one of the CHOICES.'
+
+#F14
+name=Backspace Delay:
+lininfo="comm.lcl:F14"
+nrow=14
+ncol=1
+frow=14
+fcol=40
+rows=1
+columns=6
+rmenu={ yes no }
+value=${($datafile)bsdelay:-no}
+valid=`
+	regex -v "$F14"
+	'^yes$'	'bs1'
+	'^no$'	'bs0'
+	'^.*$'	'fail'
+	| set -l lp_errtmp;
+	if [ "$lp_errtmp" != 'fail' ];
+	then
+	    echo true;
+	else
+	    echo false;
+	fi;
+	set -l lp_F14="$lp_errtmp";
+`
+invalidmsg='Invalid entry:  please enter one of the CHOICES.'
+
+#F15
+name=Formfeed Delay:
+lininfo="comm.lcl:F15"
+nrow=15
+ncol=1
+frow=15
+fcol=40
+rows=1
+columns=6
+rmenu={ yes no }
+value=${($datafile)ffdelay:-no}
+valid=`
+	regex -v "$F15"
+	'^yes$'	'ff1'
+	'^no$'	'ff0'
+	'^.*$'	'fail'
+	| set -l lp_errtmp;
+	if [ "$lp_errtmp" != 'fail' ];
+	then
+	    echo true;
+	else
+	    echo false;
+	fi;
+	set -l lp_F15="$lp_errtmp"
+`
+invalidmsg='Invalid entry:  please enter one of the CHOICES.'
+
+#F16
+name=Vertical Tab Delay:
+lininfo="comm.lcl:F16"
+nrow=16
+ncol=1
+frow=16
+fcol=40
+rows=1
+columns=6
+rmenu={ yes no }
+value=${($datafile)vtdelay:-no}
+valid=`
+	regex -v "$F16"
+	'^yes$'	'vt1'
+	'^no$'	'vt0'
+	'^.*$'	'fail'
+	| set -l lp_errtmp;
+	if [ "$lp_errtmp" != 'fail' ];
+	then
+	    echo true;
+	else
+	    echo false;
+	fi;
+	set -l lp_F16="$lp_errtmp"
+`
+invalidmsg='Invalid entry:  please enter one of the CHOICES.'
+
+#F17
+name=Horizontal Tab Delay:
+lininfo="comm.lcl:F17"
+nrow=17
+ncol=1
+frow=17
+fcol=40
+rows=1
+columns=6
+rmenu={ 0 1 2 expand }
+value=${($datafile)tab:-expand}
+valid=`
+	regex -v "$F17"
+	'^0$'	'tab0'
+	'^1$'	'tab1'
+	'^2$'	'tab2'
+	'^expand$'	'tab3'
+	'^.*$'	'fail'
+	| set -l lp_errtmp;
+	if [ "$lp_errtmp" != 'fail' ];
+	then
+	    echo true;
+	else
+	    echo false;
+	fi;
+	set -l lp_F17="$lp_errtmp"
+`
+invalidmsg='Invalid entry:  please enter one of the CHOICES.'
+
+#F18
+name=Other options:
+lininfo="comm.lcl:F18"
+nrow=18
+ncol=1
+frow=18
+fcol=40
+rows=1
+columns=6
+scroll=true
+valid=`
+	indicator -w;
+	rm -r $error;
+	$OAMBASE/add-ons/lp/printers/printers/add/chkstty.sh "$F18";
+`
+invalidmsg="`readfile $error`"

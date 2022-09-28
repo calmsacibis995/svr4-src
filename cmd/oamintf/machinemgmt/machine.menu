@@ -1,0 +1,9 @@
+#ident	"@(#)oamintf:machinemgmt/machine.menu	1.4.1.1"
+#menu#Machine Configuration Display and Shutdown
+#help#machine.help^Machine Configuration Display and Shutdown
+#life#permanent
+
+configuration^System Configuration Display^configmgmt/cfgmgmt.menu
+reboot^Stops All Running Programs and Reboots Machine^reboot/Text.reboot
+shutdown^Stops All Running Programs and Halts Machine^power/Text.power
+whos on^Displays List of Users Logged onto Machine^whoson/Text.whoson

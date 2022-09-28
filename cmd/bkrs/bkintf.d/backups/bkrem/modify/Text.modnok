@@ -1,0 +1,27 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkrem/modify/Text.modnok	1.1"
+################################################################################
+#	Module Name: Text.modnok
+################################################################################
+title="Errors Modifying a Backup Table Entry"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+close=`rm -f $ERR`
+
+rows=6
+columns=75
+
+text="
+Unable to modify entry.
+
+   `readfile $ERR`"
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

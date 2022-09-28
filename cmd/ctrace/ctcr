@@ -1,0 +1,152 @@
+#ident	"@(#)ctrace:ctcr	1.4"
+# ctc, ctcr - ctrace, compile, and optionally run a C program
+#
+
+if test $# = 0
+then	cat <<!
+Usage:	ctc  [ ctrace options ] file ... [ makefile target ] [ make macros ]
+	ctcr [ ctrace options ] file ... [ makefile target ] [ make macros ]
+!
+	exit
+fi
+
+# get any initial parameter values:
+
+if test -f .ctcr_init
+then	. .ctcr_init
+fi
+
+# default parameter values:
+
+MAKE=${MAKE-make}
+
+# get the arguments:
+
+for i
+do	case $i in
+	*.[cly])	if test "$lastarg" != -r
+			then	firstfile=$i
+				break
+			fi
+			;;
+	-r)		CTRACEFLAGS="$CTRACEFLAGS $i '$2'"
+			shift 2
+			;;
+	*)		CTRACEFLAGS="$CTRACEFLAGS '$i'"
+			shift
+	esac
+	lastarg=$i
+done
+
+for i
+do	case $i in
+	*.[cly])	files="$files $i"
+			;;
+			# note: $i may contain embedded blanks.
+	*)		if expr "$i" : '[^=]*=' >/dev/null
+			then	MAKEFLAGS="$MAKEFLAGS $i" # don't quote make args
+			else	TARGET=$i
+			fi
+	esac
+done
+
+if [ $firstfile ]
+then	:
+else	echo missing file parameter
+	exit 1
+fi
+
+# check for a makefile:
+
+for i in [Mm]akefile s.[Mm]akefile *.mk
+do	case $i in
+	ctcr_temp.mk)	;;
+	Makefile|makefile|s.Makefile|s.makefile|[!*]*.mk)	makefile=$i ;;
+	esac
+done
+
+# make sure that the makefile is for the traced files:
+
+prefix=`expr $firstfile : '\(.*\)\..$'`
+
+if [ $makefile ] && egrep "^$prefix.o[^a-z]|[^a-z]$prefix.o[^a-z]|[^a-z]$prefix.o$" $makefile >/dev/null
+then	# change the TARGET name in a copy of the makefile:
+	pwd=`pwd`
+	TARGET=${TARGET-`basename $pwd`}
+	patterns="
+s/^$TARGET\([^a-z.]\)/$TARGET.t\1/g
+s/\([^a-z]\)$TARGET\([^a-z.]\)/\1$TARGET.t\2/g
+s/\([^a-z]\)$TARGET$/\1$TARGET.t/g
+s/^$TARGET\.b\([^a-z]\)/$TARGET.t.b\1/g
+s/\([^a-z]\)$TARGET.b\([^a-z]\)/\1$TARGET.t.b\2/g
+s/\([^a-z]\)$TARGET.b$/\1$TARGET.t.b/g"
+
+	# change a copy of the makefile to trace each file:
+
+	for i in $files
+	do	prefix=`expr $i : '\(.*\)\..$'`
+		patterns="$patterns
+s/^$prefix\.o\([^a-z]\)/$prefix\.t.o\1/g
+s/\([^a-z]\)$prefix\.o\([^a-z]\)/\1$prefix\.t.o\2/g
+s/\([^a-z]\)$prefix\.o$/\1$prefix\.t.o/g"
+	done
+
+	sed "$patterns" $makefile >ctcr_temp.mk
+	
+	# change a copy of any 3bldp spec file to trace each file:
+
+	if test -f $TARGET.b
+	then	sed "$patterns" $TARGET.b >$TARGET.t.b
+	fi
+
+	# force relinking because the traced file's .t.o file may be up-to-date.
+
+	rm -f $TARGET.t
+
+else	# create a makefile:
+	TARGET=${TARGET-a.out}
+	cat >ctcr_temp.mk <<!
+$TARGET.t: $prefix.t.o
+	cc $LDFLAGS $prefix.t.o -o $TARGET.t
+!
+fi
+
+# Add the transformation rules for tracing C, lex, and yacc files:
+# Note: Can't use $*.t.c in place of temp.c because editing $*.c will not remake $*.t.c.
+cat >>ctcr_temp.mk <<!
+.SUFFIXES: .t.o
+.c.t.o:
+	ctrace $CTRACEFLAGS $< >ctcr_temp.c
+	$(CC) $(CFLAGS) -c ctcr_temp.c
+	rm ctcr_temp.c
+	mv ctcr_temp.o \$@
+.l.t.o:
+	ltrace $(LTRACEFLAGS) $< >ctcr_temp.l
+	$(LEX) $(LFLAGS) ctcr_temp.l
+	rm ctcr_temp.l
+	$(CC) $(CFLAGS) -c lex.yy.c
+	rm lex.yy.c
+	mv lex.yy.o \$@
+.y.t.o:
+	ltrace $(LTRACEFLAGS) $< | yaccer $(YACCERFLAGS) >ctcr_temp.y
+	$(YACC) $(YFLAGS) ctcr_temp.y
+	rm ctcr_temp.y
+	$(CC) $(CFLAGS) -c y.tab.c
+	rm y.tab.c
+	mv y.tab.o \$@
+!
+# trace and compile the file:
+
+command="$MAKE -f ctcr_temp.mk $MAKEFLAGS $TARGET.t"
+echo $command
+$command
+
+# Run target file if no errors and this script was not called as ctc.
+
+if [ $? -eq 0 ]
+then	rm -f ctcr_temp.* $TARGET.t.b
+	if [ $0 != ctc ]
+	then	set -x
+		$TARGET.t $RUNFLAGS
+	fi
+fi

@@ -1,0 +1,103 @@
+#ident	"@(#)nadmin.rfs:local/rfs/bin/ls_resource	1.4"
+# List the local resources that are shared automatically - etc/dfs/dfstab
+
+echo "$CURRENT" "$AUTO" >/usr/tmp/val
+
+if [ "$CURRENT" = "yes" ]
+then
+	/usr/sbin/share -F rfs | /usr/bin/tr -s '\011' '\040' > /usr/tmp/cshare_$$
+	if [ -s /usr/tmp/cshare_$$ ]
+	then
+# get resource and directory
+		/usr/bin/cut -d" " -f1,2 </usr/tmp/cshare_$$ >/usr/tmp/dir_$$
+#The next line has wrong field now.  Replace it with lines following it...
+#		/usr/bin/cut -d" " -f3 </usr/tmp/cshare_$$ >/usr/tmp/acc_$$
+		/usr/bin/cut -d" " -f3 </usr/tmp/cshare_$$ | /usr/bin/nawk '
+BEGIN	{ FS = "," }
+{	default = "yes"
+        for (i = 1; i <= NF; i++)
+        	if ($i == "ro") {
+        		print "read-only" >"/usr/tmp/acc_'$$'"
+        		print "unrestricted" >"/usr/tmp/cli_'$$'"
+	                default = "no"
+        	}
+                else if ($i == "rw") {
+        		print "read/write" >"/usr/tmp/acc_'$$'"
+        		print "unrestricted" >"/usr/tmp/cli_'$$'"
+			default = "no"
+        	}
+                else if (index($i, "ro=") == 1) {
+        		print "read-only" >"/usr/tmp/acc_'$$'"
+        		print substr($i, 4) >"/usr/tmp/cli_'$$'"
+			default = "no"
+        	}
+                else if (index($i, "rw=") == 1) {
+        		print "read/write" >"/usr/tmp/acc_'$$'"
+        		print substr($i, 4) >"/usr/tmp/cli_'$$'"
+			default = "no"
+        	}
+        if (default == "yes") {
+                print "read/write" >"/usr/tmp/acc_'$$'"
+                print "unrestricted" >"/usr/tmp/cli_'$$'"
+        }
+}'
+#end replacement
+#get description
+		/usr/bin/cut -d"\"" -f2 </usr/tmp/cshare_$$>/usr/tmp/desc_$$
+# clients
+#The next line is now unnecessary, since the awk script grabbed clients too!
+#		/usr/bin/cut -d"\"" -f3 </usr/tmp/cshare_$$ >/usr/tmp/cli_$$
+		echo "Currently Shared Resources, displayed in the following order:\nResource,Pathname,Description,Access,Clients\n"> /usr/tmp/cshare_$$
+		/usr/bin/paste -d"\"\" "  /usr/tmp/dir_$$ /usr/tmp/desc_$$ /usr/tmp/acc_$$ /usr/tmp/cli_$$ | /bin/sed -e "s/\"/ \"/1" -e "s/\"/\" /2" >>/usr/tmp/cshare_$$
+#		/usr/bin/paste -d" "  /usr/tmp/dir_$$ /usr/tmp/desc_$$ /usr/tmp/acc_$$ /usr/tmp/cli_$$ >>/usr/tmp/cshare_$$
+#		/bin/rm /usr/tmp/dir_$$  /usr/tmp/desc_$$ /usr/tmp/acc_$$ /usr/tmp/cli_$$ 2>/dev/null
+	else
+		echo "There are no local resources currently shared\n">/usr/tmp/cshare_$$
+	fi
+fi
+
+if [ "$AUTO" = "yes" ]
+then
+	/bin/sed "s/^#.*//g" /etc/dfs/dfstab | /bin/grep "share[ 	]*-F[ 	]*rfs" >/usr/tmp/auto_$$
+
+	if [ ! -s /usr/tmp/auto_$$ ]
+	then
+#Something makes the following line bomb...
+		echo "There are no automatically advertised resources" >>/usr/tmp/ashare_$$
+	else
+	echo "\nAutomatically Shared Resources, displayed in the following order:\nResource,Pathname,Description,Access,Clients\n"> /usr/tmp/ashare_$$
+	/usr/bin/tr -s '\011' '\040' </usr/tmp/auto_$$ | /bin/sed -e "s/-d[ ]*/-d/gp" -e "s/-o[ ]*r/-or/gp" -e "s/[/usr/sbin/]*share[ ]*-F[ ]*rfs//gp" >/usr/tmp/s$$
+
+# get lines without descriptions, substitute -d"" for no desc
+	/usr/bin/egrep -v -e "-d" </usr/tmp/s$$ | /bin/sed "s/.*/\"\"&/gp" >/usr/tmp/des_$$
+
+# lines with descriptions, append to other file
+	/usr/bin/egrep -e "-d" </usr/tmp/s$$ | /bin/sed -e "s/^[ ]//gp" -e "s/-d//gp" >> /usr/tmp/des_$$ 
+
+ 	/usr/bin/nawk '{  
+		{ for (i = NF; i > NF - 2; --i) printf "%s ", $i  }
+			 	acc=""
+			 	client=""
+			 	for (i = 1; i < NF - 1; i++) {
+				{ if  ( substr($i,1,4) == "-orw" ) {
+					acc="read-write"
+					if (substr($i,5,1) == "=" ) client=substr($i,6)
+					else client="unrestricted"
+					}
+				else
+				if ( substr($i,1,4) == "-oro" ) {
+					acc="read-only"
+					if (substr($i,5,1) == "=" ) client=substr($i,6)
+					else client="unrestricted"
+					}
+				else printf "%s ", $i }
+				}
+	
+		if ( i = NF - 2 ) printf "%s %s \n", acc,client }' /usr/tmp/des_$$ >>/usr/tmp/ashare_$$
+#	/usr/bin/tr -s '\040' '\011' < /usr/tmp/auto$$ >/usr/tmp/list_$$
+	fi
+fi
+cat /usr/tmp/cshare_$$ /usr/tmp/ashare_$$ > /usr/tmp/share_$$
+
+echo $$
+

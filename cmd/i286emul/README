@@ -1,0 +1,37 @@
+
+
+#ident	"@(#)i286emu:README	1.1"
+
+These are the files needed to make the 286 emulator, and what they
+contain:
+
+	i286emul.mk             the makefile
+	Sbreak.c                (s)brk interface
+	Signal.c                signal interface
+	exec.c                  loads 286 binary
+	gethead.c               used by exec.c
+	i286sys                 286 header files
+	ipc.c                   IPC interface
+	main.c
+	miscsys.c               interfaces for various system calles
+	run286.s                starts execution in 286 mode
+	sendsig.s               delivers signals to 286 code
+	setdscr.c               manipulates GDT and LDT
+	syscall.c               dispatches system calls
+	syscalla.s              286 syscall call gate points here
+	sysent.c                table telling how to handle system calls
+	sysent.h
+	text.c                  used by exec.c
+	utils.c                 random routines
+	vars.h                  defines and declares globals
+
+Note that the kernel expects the emulator to be names /bin/i286emul.
+When someone attempts to exec a 286 binary, the exec is changed to
+an exec of the emulator as follows:
+
+	prog286 arg1 arg2 arg3 ... argN
+
+becomes
+
+	/bin/i286emul arg1 arg2 arg3 ... argN prog286
+

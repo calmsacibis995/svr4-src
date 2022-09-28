@@ -1,0 +1,121 @@
+#ident	"@(#)portmgmt:tty_settings/Form.tty_add	1.4"
+
+`pmgetpid |set -l PID`
+form= Create TTY Line Settings and Hunt Sequences
+lifetime=shorterm
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=`rm /var/tmp/err$PID /var/tmp/m$PID;
+	unset -l PID;`
+done=`message -w "Adding ttylabel <$F1> to the system.";
+	if [ $F2 = "Yes" ];
+	then
+		sttydefs -a $F1 -b -i "$F5" -f "$F6" -n $F4  2>/var/tmp/err$PID;
+	else
+		sttydefs -a $F1 -i "$F3 $F5" -f "$F3 $F6" -n $F4 2>/var/tmp/err$PID;
+	fi`OPEN TEXT $OBJ_DIR/Text.tty_add "$RET" "$F1" `getfrm`
+
+# $F1
+name=Ttylabel:
+nrow=1
+ncol=2
+frow=1
+fcol=14
+rows=1
+columns=15
+lininfo=ttylabel
+valid=`set -l RET=0 && regex -v "$F1" '^[A-Za-z0-9]+$' && uniq_label "$F1"`
+invalidmsg=`regex -v "$RET"
+		'^2$'	'Error - ttylabel already exists.'
+		'.*' 	'Error - ttylabel must be alphanumeric.'`
+choicemsg=const "Enter a unique label for the new TTY line setting."
+fieldmsg=const "Enter a unique label for the new TTY line setting."
+
+# $F2
+name=Enable autobaud?
+nrow=2
+ncol=2
+frow=2
+fcol=20
+rows=1
+columns=3
+lininfo=autobaud
+value=No
+rmenu={ Yes No }
+menuonly=true
+choicemsg=const "Select \"Yes\" if baud rate is to be determined automatically."
+fieldmsg=const "Select \"Yes\" if baud rate is to be determined automatically."
+invalidmsg=const "Invalid input - select Yes/No only"
+
+# $F3
+name=Baud rate:
+nrow=3
+ncol=2
+frow=3
+fcol=14
+rows=1
+columns=15
+lininfo=baudrate
+rmenu=OPEN MENU $OBJ_DIR/Menu.tty_baud
+valid=`ckbaud $F2 $F3`
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - baud rate not available, select from the choice menu only.'
+		'^2$'	'Error - autobaud is enabled, this field must be empty.'
+		'.*' 	'Invalid input - select from the choice menu only.'`
+choicemsg=const "Move cursor to the desired baud rate and press <RETURN>."
+fieldmsg=const "Select a baud rate. (If autobaud is enabled, skip this field.)"
+
+# $F4
+name=Nextlabel:
+nrow=4
+ncol=2
+frow=4
+fcol=14
+rows=1
+columns=15
+lininfo=nextlabel
+value="$F1"
+rmenu=OPEN MENU $OBJ_DIR/Menu.c_labels
+valid=`regex -v "$F4" '^[A-Za-z0-9]+$'`
+choicemsg=const "Move cursor to the desired ttylabel and press <RETURN>."
+fieldmsg=const "Enter the nextlabel for hunt sequence."
+invalidmsg=const "Error - input string must be alphanumeric."
+
+# $F5
+name=Initial line settings
+nrow=6
+ncol=2
+frow=7
+fcol=5
+rows=1
+columns=64
+scroll=true
+lininfo=iflag
+value="hupcl erase ^h"
+fieldmsg=const "Enter the initial line settings."
+choicemsg=const "Enter the initial line settings."
+
+# $F6
+name=Final line settings
+nrow=9
+ncol=2
+frow=10
+fcol=5
+rows=1
+columns=64
+scroll=true
+lininfo=fflag
+value="sane ixany hupcl tab3 erase ^h" 
+fieldmsg=const "Enter the final line settings."
+choicemsg=const "Enter the final line settings."
+
+name=Fill in the form and press [SAVE].
+nrow=13
+ncol=5
+inactive=TRUE
+
+name=" "
+nrow=14
+ncol=2
+inactive=TRUE
+show=FALSE
+

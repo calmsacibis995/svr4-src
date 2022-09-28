@@ -1,0 +1,29 @@
+#	Copyright (c) 1990 UNIX System Laboratories, Inc.
+#	Copyright (c) 1984, 1986, 1987, 1988, 1989, 1990 AT&T
+#	  All Rights Reserved
+
+#	THIS IS UNPUBLISHED PROPRIETARY SOURCE CODE OF
+#	UNIX System Laboratories, Inc.
+#	The copyright notice above does not evidence any
+#	actual or intended publication of such source code.
+
+#ident	"@(#)terminfo:hardcopy.ti	1.5"
+# # HARDCOPY - various hard copy terminals.
+#
+# Manufacturer:	Generic Hard copy Terminals
+# Class:	I
+# 
+cdi|cdi1203|,
+	am, cub1=^H, hc, os, cols#80,
+	cr=^M$<200>, cud1=^J, ind=^J, bel=^G,
+ep48|ep4080|execuport 4080,
+	am, cub1=^H, os, cols#80, hu=\036, hd=\034,
+	cr=^M, cud1=^J, ind=^J, bel=^G,
+ep40|ep4000|execuport 4000,
+	am, cub1=^H, os, cols#136, hu=\036, hd=\034,
+	cr=^M, cud1=^J, ind=^J, bel=^G,
+mw2|multiwriter 2,
+	cr=^M, cud1=^J, ind=^J, bel=^G, cols#132, hc, os,
+terminet1200|terminet300|tn1200|tn300|terminet|ge terminet 1200,
+	cols#120, hc, os,
+	cr=^M, cud1=^J, ind=^J, bel=^G,

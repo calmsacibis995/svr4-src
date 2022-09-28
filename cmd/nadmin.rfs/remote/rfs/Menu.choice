@@ -1,0 +1,5 @@
+#ident	"@(#)nadmin.rfs:remote/rfs/Menu.choice	1.1"
+menu="Select Resource"
+
+`cat "/usr/tmp/RES.$ARG1" | /usr/bin/tr -s '\011' '\040' | /bin/cut -d" " -f1 | regex '^(.*)$0$' 'name="$m0"
+action=`set -l Form_Choice="$ARG1.$m0"`CLOSE "$ARG2" `getfrm`'`

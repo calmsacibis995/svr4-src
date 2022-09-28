@@ -1,0 +1,49 @@
+#ident	"@(#)oamintf:syssetup/nodename.Help	1.2.2.1"
+
+TITLE:Display and Set System Name and Network Node Name of the Machine
+
+display:TITLE:Display System Name and Network Node Name of the Machine
+set:TITLE:Set System Name and Network Node Name of the Machine
+
+ABSTRACT:
+	This procedure allows you to display and/or change the system name
+	and the network node name of this machine.  The system name is used
+	to identify this machine.  The node name is used by various 
+	communications networks to identify this machine.  Some system 
+	architectures require that the system name and the network node name
+	be the same.  
+
+display:ABSTRACT:
+	This procedure displays the system name and the network node name
+	of this machine.  The system name is used by this system to identify
+	this machine.  The node name is used by various communications
+	networks to identify this machine.  Some system architectures 
+	require that the system name and the network node name be the same.
+
+set:ABSTRACT:
+	This procedure sets the system name and the network node name
+	of this machine.  The system name is used by this system to identify
+	this machine.  The node name is used by various communications
+	networks to identify this machine.  Some system architectures 
+	require that the system name and the network node name be the same.
+
+Form.nodeset:sysname:System Name
+	Enter the system name to call this machine. The system name is used 
+	to identify this machine.  The name can be up to 14 alphanumeric 
+	characters - ( A through Z, a through z, 0 through 9 ) and can 
+	include a dash and an underbar.
+
+Form.nodeset:nodename:Network Node Name
+	Enter the network node name. The node name is used by various 
+	communications networks to identify this machine.  The name can be 
+	up to 14 alphanumeric characters - ( A through Z, a through z, 0 
+	through 9 ) and can include a dash and an underbar.
+
+Text.nodeokay:ABSTRACT:
+	The system name and node name for your machine have been set as you 
+	requested.  If the node name was set for the first time, simply 
+	provide it to others in your network that need to communicate with
+	your machine.  Otherwise, if the node name was reset, make sure
+	any references to the old node name within the network are changed 
+	as well.
+

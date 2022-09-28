@@ -1,0 +1,45 @@
+#ident	"@(#)devintf:groups/mbrship/list/Text.list	1.4"
+
+title="Group Membership"
+help=OPEN TEXT $INTFBASE/Text.itemhelp "LISTING"
+begrow=any
+begcol=any
+framemsg=`readfile $INTFBASE/trept.msg`
+wrap=FALSE
+`
+    set -l LIFE=longterm ;
+`
+lifetime=$LIFE
+altslks=TRUE
+
+`
+    echo $ARG2 | tr ' ' '\012' | sort | set -l LIST ;
+    echo "$LIST" | wc -l | tr -d ' ' | set -l NROWS ;
+    echo "$LIST" | awk -f $OBJ_DIR/maxcol.awk | set -l NCOLS ;
+    if [ $NCOLS -gt 60 ] ;
+    then set -l NCOLS=60 ;
+    else expr $NCOLS + 1 | set -l NCOLS ;
+    fi ;
+`
+
+rows=`
+    if [ $NROWS -gt 15 ] ;
+    then set -l NROWS=15 ;
+    fi;
+`$NROWS
+columns=$NCOLS
+text="$LIST"
+
+name="HELP"
+button=9
+action=help
+
+name="CONT"
+button=11
+action=`
+    set -l LIFE=shortterm ;
+`update $FRAMENUM true
+
+name="CANCEL"
+button=14
+action=cleanup

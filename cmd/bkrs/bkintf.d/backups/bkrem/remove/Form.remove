@@ -1,0 +1,48 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkrem/remove/Form.remove	1.6"
+form="Remove Entries from the Schedule of Backup Reminder Messages"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+init=`set -l CT=/tmp/$VPID.ct; crontab -l | fmlgrep \#bkmsg\# >$CT; cat $CT | wc -l | sed -e "s/ *//" | set -l NLINES; echo TRUE`
+
+done=`message -w Trying to remove entries.;
+	set -l ERR=/tmp/$VPID.err;
+	delscd $CT bkmsg "$F1" >$ERR 2>$ERR;
+	if [ $RET -eq 0 ] ;
+	then
+		getfrm | set -l FNUM;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.remok $FNUM";
+	else
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.remnok";
+	fi`$!CMD
+
+close=`rm -f $CT`
+
+begrow=any
+begcol=any
+
+# Line numbers field - F1
+name=Line Number(s):
+lininfo=F1
+nrow=2
+ncol=2
+
+frow=2
+fcol=18
+rows=1
+columns=5
+scroll=true
+
+valid=`shell "for i in \`echo \"$F1\" | sed -e \"s/,/ /g\"\`
+	do
+		valrange -l 1 -u $NLINES \$i
+		if [ \$? -ne 0 ]
+		then
+			exit 1
+		fi
+	done
+	exit 0;"`
+invalidmsg=`errange -l 1 -u $NLINES -e "~You must enter numbers between 1 and $NLINES."`
+rmenu=OPEN TEXT $OBJ_DIR/Text.remove $CT

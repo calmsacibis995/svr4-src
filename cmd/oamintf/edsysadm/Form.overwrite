@@ -1,0 +1,99 @@
+#ident	"@(#)oamintf:edsysadm/Form.overwrite	1.4"
+
+################################################################################
+#	Module Name: Form.overwrite
+#	Date: March 1988
+#
+#	ARGS PASSED IN:
+#			ARG1 -> menu/task flag
+#			ARG2 -> package description file name
+#			ARG3 -> menu/task name
+#			ARG4 -> menu/task description
+#			ARG5 -> menu/task location
+#			ARG6 -> menu/task help
+#			ARG7 -> task action file (TASK ONLY)
+#			ARG8 -> comma separated task files (TASK ONLY)
+#			ARG9 -> original location (LOCATION:NAME)
+#
+#	ARGS PASSED OUT:
+#			ARG1 -> menu/task flag
+#			ARG2 -> package description file name
+#			ARG3 -> menu/task name
+#			ARG4 -> menu/task description
+#			ARG5 -> menu/task location
+#			ARG6 -> menu/task help
+#			ARG7 -> task action file (TASK ONLY)
+#			ARG8 -> comma separated task files (TASK ONLY)
+#			ARG9 -> original location (LOCATION:NAME)
+################################################################################
+form="Duplicate Package Description File Name"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`message " ";
+      if [ "$F2" = "overwrite" ];
+      then
+	    message -w "Creating package description, menu information, and prototype files.";
+	    mkpkg "overwrite" "$ARG2" "$ARG3" "$ARG4" "$ARG5" "$ARG6" "$ARG7" "$ARG8" "$ARG9" > /dev/null;
+ 	    if [ $RET -eq 0 ];
+	    then
+		set -l CMD="OPEN TEXT $EDSYSADM/Text.ok";
+	    else if [ $RET -eq 127 ];
+	         then
+		     set -l CMD="OPEN TEXT $EDSYSADM/Text.dups";
+	         else
+		     set -l CMD="OPEN TEXT $EDSYSADM/Text.pkgerr $RET";
+		 fi;
+	    fi;
+      else if [ "$F2" = "do not overwrite" ];
+           then
+	         message "fill in";
+	         set -l CMD=CLOSE;
+           else if [ "$F2" = "add" ];
+                then
+	         message -w "Updating package description, menu information, and prototype files.";
+	         mkpkg "$ARG1" "$ARG2" "$ARG3" "$ARG4" "$ARG5" "$ARG6" "$ARG7" "$ARG8" "$ARG9" > /dev/null;
+ 	         if [ $RET -eq 0 ];
+	         then
+		     set -l CMD="OPEN TEXT $EDSYSADM/Text.ok";
+	         else if [ $RET -eq 127 ];
+	              then
+		          set -l CMD="OPEN TEXT $EDSYSADM/Text.dups";
+	              else
+		          set -l CMD="OPEN TEXT $EDSYSADM/Text.pkgerr $RET";
+	              fi;
+                 fi;
+		fi;
+           fi;
+      fi`$CMD
+
+
+name=""
+nrow=1
+ncol=3
+frow=1
+fcol=3
+rows=1
+columns=60
+value=const ""$ARG2" already exist."
+inactive=true
+
+name="Do you want to overwrite or add to its contents?"
+lininfo=Form.overwrite:owrite
+nrow=3
+ncol=3
+frow=3
+fcol=52
+rows=1
+columns=16
+
+rmenu={ add "do not overwrite" overwrite }
+menuonly=true
+
+invalidmsg=const "Choose between overwrite, do not overwrite, add."
+
+name=RESET
+button=8
+action=reset

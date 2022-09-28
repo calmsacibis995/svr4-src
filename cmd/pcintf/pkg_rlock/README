@@ -1,0 +1,46 @@
+#ident	"@(#)pcintf:pkg_rlock/README	1.1"
+Record and file locking package -@(#)README	1.1	13:33:54	8/31/89 
+
+OTHER REQUIRED PACKAGES:
+	1) lockset
+
+This directory contains all the headers and functions necessary to maintain
+DOS style file and record locking mechanisms on a Unix host.  The following
+list has the names of the information files that deal with using the library,
+and the actual files that the user would normally see:
+
+	README		- this file
+	USAGE		- a terse description of how to use the package
+	rlock.h		- user visible definitions and declarations
+	librlock.a	- this is the actual library
+	rlockshm	- program to control the RLOCK package's shared memory
+
+The other header files are only for internal use, and should never be accessed
+by an external user.  The source files are all available via the library
+itself, and should not be accessed directly.
+
+Note that there is nothing visible to the user (or rather, that is meant to
+be visible to the user), that prevents shared memory from being stored as
+a file or file set on disk.  Well, other than the performance hit, that is.
+
+The internal files for this package are:
+
+	internal.h	- standard constant and type definitions, and tuning
+			  parameters.  i.e., there may be machine dependencies,
+			  but the file should be changed only for efficiency,
+			  it should compile as is.
+	multi_cfg.h	- multi-segment (archaic) configuration parameters
+	rlock_cfg.h	- configuration parameters
+	sccs.h		- standard SCCS header definitions
+
+	multi_init.c	- multi-segment (archaic) shared memory initialization
+	multi_lock.c	- multi-segment (archaic) record locking table access
+	multi_open.c	- multi-segment (archaic) open file table access
+	rlock_estr.c	- error strings
+	rlock_init.c	- initialization/creation functions, global variables
+	rlock_prim.c	- shared memory locking primitives (internal use)
+	rlockshm.c	- source for the rlockshm program
+	shm_lock.c	- record locking table access functions
+	shm_open.c	- open file table access
+
+	state.c		- handle file state change (may be redefined by user)

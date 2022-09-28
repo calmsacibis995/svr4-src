@@ -1,0 +1,13 @@
+#ident	"@(#)initpkg:init.d/MOUNTFSYS	1.1.4.1"
+
+#	Mount file systems
+
+cd /
+/sbin/mountall -l
+
+# make sure /usr subtree is present by testing for /usr/sbin
+if [ ! -d /usr/sbin ]
+then
+	echo "/usr sub-tree is not present - changing to single user mode"
+	/etc/init S
+fi

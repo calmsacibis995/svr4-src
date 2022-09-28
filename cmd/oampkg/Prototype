@@ -1,0 +1,50 @@
+#ident	"@(#)oampkg:Prototype	1.8.1.1"
+
+!PKGSCR=usr/sadm/install/scripts
+!PKGBIN=usr/sadm/install/bin
+
+## Files from local prototype: component=oampkg
+
+# foundation set (predecessor) directories
+
+d foundation usr 0755 root sys
+d foundation usr/bin 0755 root sys
+d foundation usr/sbin 0755 root bin
+d foundation var 0755 root sys
+d foundation usr/sadm 0755 bin bin
+d foundation usr/sadm/install 0755 bin bin
+d foundation $PKGBIN 0755 bin bin
+d foundation $PKGSCR 0755 bin bin
+d foundation var/sadm 0755 root sys
+d foundation var/sadm/install 0755 bin bin
+d foundation var/sadm/install/admin 0555 bin bin
+d foundation var/sadm/pkg 0755 bin bin
+
+# foundation set files
+
+f foundation usr/bin/pkginfo 0555 bin sys
+f foundation usr/bin/pkgmk 0555 bin bin
+f foundation usr/bin/pkgparam 0555 root sys
+f foundation usr/bin/pkgproto 0555 bin bin
+f foundation usr/bin/pkgtrans 0555 bin bin
+
+f foundation $PKGBIN/pkginstall 0500 root sys
+f foundation $PKGBIN/pkgremove 0500 root sys
+f foundation $PKGBIN/pkgname 0555 root sys
+f foundation $PKGSCR/i.build 0500 root sys
+f foundation $PKGSCR/i.sed 0500 root sys
+f foundation $PKGSCR/i.awk 0500 root sys
+f foundation $PKGSCR/r.sed 0500 root sys
+f foundation $PKGSCR/r.awk 0500 root sys
+f foundation $PKGSCR/r.build 0500 root sys
+f foundation $PKGSCR/cmdexec 0500 root sys
+
+f foundation usr/sbin/installf 0500 root sys
+s foundation usr/sbin/removef=/usr/sbin/installf
+f foundation usr/sbin/pkgadd 0500 root sys
+s foundation usr/sbin/pkgask=/usr/sbin/pkgadd
+f foundation usr/sbin/pkgchk 0555 root sys
+f foundation usr/sbin/pkgrm 0500 root sys
+
+f foundation var/sadm/install/admin/default 0444 root sys
+

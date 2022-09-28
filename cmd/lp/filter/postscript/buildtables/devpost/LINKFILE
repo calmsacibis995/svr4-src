@@ -1,0 +1,20 @@
+
+#
+# This file is used to link any missing .out files to appropriate existing
+# .out files.
+#
+
+rm -f G.out
+ln H.out G.out
+
+rm -f GI.out
+ln HI.out GI.out
+
+rm -f HM.out
+ln H.out HM.out
+
+rm -f HK.out
+ln H.out HK.out
+
+rm -f HL.out
+ln H.out HL.out

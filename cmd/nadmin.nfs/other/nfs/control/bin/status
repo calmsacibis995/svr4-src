@@ -1,0 +1,35 @@
+#ident	"@(#)nadmin.nfs:other/nfs/control/bin/status	1.2"
+
+ps -ef >/var/tmp/ps$$
+
+/bin/grep "nfsd" /var/tmp/ps$$ >/dev/null
+
+if [ $? -eq 0 ]
+then
+	NFSD=1
+else
+	NFSD=0
+fi
+
+/bin/grep "mountd" /var/tmp/ps$$ >/dev/null
+if [ $? -eq 0 ]
+then
+	MNTD=1
+else
+	MNTD=0
+fi
+
+
+if [ $NFSD -eq 1 -a $MNTD -eq 1 ]
+then
+	echo "NFS File Service is running.\n">/var/tmp/nfs_stat$$
+	echo "" >/var/tmp/start_stat$$
+else
+	if [ $NFSD -eq 0 -a $MNTD -eq 0 ]
+	then
+		echo "NFS File Service is not running.  To start, select 'start' from the Network File System Control screen.\n">/var/tmp/nfs_stat$$
+	else
+		echo "NFS File Service is not running.  To restart, first select 'stop' from the Network File System Control screen, then 'start'.\n">/var/tmp/nfs_stat$$
+	fi
+fi
+echo $$

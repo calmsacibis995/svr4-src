@@ -1,0 +1,33 @@
+#ident	"@(#)oamintf:syssetup/Text.agrpnok	1.2.1.1"
+################################################################################
+#	Module Name: Text.agrpnok
+#	Author: Michael Coufal - modified pjp May 1988
+#	Date: 4/88
+################################################################################
+title="Add Group"
+
+`message "" `
+
+help=OPEN TEXT $INTFBASE/Text.oamhelp $OBJ_DIR/HELP/addgrp.help "the Setup Task"
+
+rows=10
+columns=70
+
+text="
+   Error - group $ARG1 was not added to the system.
+
+   `readfile $INTFBASE/reptmsg`
+
+   `readfile $INTFBASE/nextstep`"
+
+name=QUIT
+button=9
+action=`set -l setup=0`CLEANUP
+
+name=NEXTSTEP
+button=10
+action=OPEN FORM $OBJ_DIR/Form.setup4
+
+name=CONT
+button=11
+action=CLOSE `getfrm`

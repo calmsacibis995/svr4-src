@@ -1,0 +1,16 @@
+#!/sbin/sh
+
+#
+#ident	"@(#)pkging:removepkg	1.2"
+#
+PATH=/sbin:/usr/sbin:/etc:/usr/bin
+export PATH
+RC=`/usr/vmsys/admin/.chkuser -u`
+if [ "$RC" = "1" ]
+then
+	message -d "You (${LOGNAME}) do not have permission to perform software \
+removal.  Please consult your Operations/System Administration Guide for more \
+information on assigning permissions to privileged operations."
+	exit 1
+fi
+exec /usr/vmsys/admin/.chkuser -c "/usr/lbin/removepkg.r $*"

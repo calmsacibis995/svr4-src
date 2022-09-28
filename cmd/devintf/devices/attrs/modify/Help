@@ -1,0 +1,29 @@
+#ident	"@(#)devintf:devices/attrs/modify/Help	1.2.4.1"
+
+modify:ABSTRACT:
+	The "modify" task modifies an existing attribute of a device described
+	in the Device Management tables.  You will be asked to supply the
+	device alias, the attribute you wish to modify, and the new value of
+	the attribute.
+
+Form.modify:Alias:the Alias field
+	This field names the alias of the device entry that is to be modified.
+	
+	The value must be a valid alias (i.e. containing only alphanumeric
+	characters, '.', '-', '_', and '$', and no more than 14 characters in
+	length) and must already be defined in the device tables.  This field
+	may not be blank.
+
+Form.modify:Attribute:the Attribute field
+	This field names the attribute to be modified in the definition of
+	the previously named device alias.
+	
+	The value must be an attribute name (i.e. containing only 
+	alphanumeric characters), '.', '-', '_', and '$', and no more
+	than 14 characters in alias.  The attribute must already be
+	defined for the named device.
+
+Form.modify:Value:the Value field
+	This field is the value of the attribute previously named.
+	
+	The data in this field is not validated.

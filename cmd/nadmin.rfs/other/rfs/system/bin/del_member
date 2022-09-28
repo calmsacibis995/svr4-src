@@ -1,0 +1,18 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/bin/del_member	1.4"
+DOM=`dname -d`
+
+echo "The following hosts have been deleted from the rfmaster file for transport $TRANS:\n" >/usr/tmp/gone_$$
+
+	echo "^$DOM[ 	][SsPp][	 ]$DOM.$HOST" >> /usr/tmp/temp_$$
+	echo "^$DOM.$HOST[ 	][Aa][	 ]" >> /usr/tmp/temp_$$
+	echo "$HOST" >>/usr/tmp/gone_$$
+
+/usr/bin/egrep -v -f/usr/tmp/temp_$$  /etc/rfs/$TRANS/rfmaster  > /usr/tmp/master_$$
+
+cp /etc/rfs/$TRANS/rfmaster /etc/rfs/$TRANS/o.rfmaster
+mv /usr/tmp/master_$$ /etc/rfs/$TRANS/rfmaster
+
+chmod 644 /etc/rfs/$TRANS/rfmaster
+chown root /etc/rfs/$TRANS/rfmaster
+
+echo $$

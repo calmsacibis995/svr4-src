@@ -1,0 +1,32 @@
+#ident	"@(#)oamintf:devices/add/Help	1.1"
+
+ABSTRACT:
+	The "Add Storage Device" task interactively defines the
+	software configuration for a particular device. It can
+	be used to configure the 2nd integral disk, a SCSI device,
+	or other hardware that requires software configuration.
+	
+	It supports configuration of an empty (new) or reconfiguration
+	of non-empty (existing) storage device.  It operates in
+	conjunction with aliases stored in /etc/device.tab that
+	have the "addcmd" attribute defined.  The "addcmd" attribute
+	must contain a valid path name that coincides with the command
+	to be run which performs the configuration.
+	
+	The hardware must be present before this task is invoked.
+	Some hardware devices such as the integral cartridge tape
+	do not require you to invoke this task.
+	
+	WARNING\: Reconfiguration may overwrite all data on the device.
+
+devnm:Device Name
+	Enter the name of the device you wish to set-up.
+	Press CHOICES for a list of valid device names.
+
+nodev:Add Storage Device
+	The /etc/device.tab file does not contain any entries
+	with the 'addcmd' attribute. This attribute is used to
+	identify the presence of configurable devices.
+	
+	Please review the device installation procedures and try again.
+

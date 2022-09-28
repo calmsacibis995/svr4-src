@@ -1,0 +1,94 @@
+#ident	"@(#)lp.admin:printers/classes/Form.add	1.4.3.3"
+form='Add a New Class'
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+
+init=`indicator -w; message "Enter the name for a new class";
+set -l name_2="/tmp/lp.n2$VPID"`
+
+close=`
+    unset -l badval;
+    /usr/bin/rm -f $name_2;
+	unset -l do_all -l name_2 -l name_valid -l bad_one`
+
+done=`
+    message -w "Creating the new class $F1";  
+	echo "$F2" | tr -s "," " " | set -l list;
+    shell "
+	set -x;
+	for p in $list
+	do
+	$TFADMIN lpadmin -p \$p -c $F1;
+	done
+    " > $error;
+	sleep 2; 
+    message -w "New class $F1 has been added."; 
+	sleep 2; 
+     `update
+
+name='New class:'
+lininfo="add:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=12
+rows=1
+columns=14
+fieldmsg='Enter the name for the new class.'
+valid=`
+	regex -v "$F1"
+	    '^[Aa][Ll][Ll]$'		'"all" is a reserved word'
+	    '^[Aa][Nn][Yy]$'		'"any" is a reserved word'
+	    '^[Nn][Oo][Nn][Ee]$'	'"none" is a reserved word'
+	    '^([_A-Za-z0-9]){1,14}$'	'ok'
+	    '.*'  'It must consist of 1-14 letters, digits, and "_"'
+	| set -l badval;
+	if [ "$badval" != "ok" ];
+	then
+	    false;
+	elif [ -f /etc/lp/classes/$F1 ];
+	then
+	    set -l badval="\"$F1\" already exists";
+	    false;
+	elif [ -d /etc/lp/printers/$F1 ];
+	then
+	    set -l badval="\"$F1\" is the name of a printer";
+	    false;
+	else
+	    true;
+	fi;
+`
+invalidmsg="Class name invalid:  $badval."
+
+name='Printers:'
+lininfo="add:F2"
+nrow=2
+ncol=1
+frow=2
+fcol=12
+rows=1
+columns=42
+scroll=true
+fieldmsg='Enter the printers in the class then press [SAVE]'
+choicemsg='MARK printers then press [ENTER]'
+rmenu=OPEN MENU $OBJ_DIR/Menu.pr.ch 
+
+valid=`indicator -w;
+	unset -l bad_one;
+	ls /etc/lp/printers > $name_2;
+	if [ -z "$F2" ];
+	then
+		set -l no_value=true -l name_valid=false;
+	else
+	echo "all" >> $name_2;
+		set -l no_value=false -l name_valid=true;
+	fi;
+	echo "$F2" | tr " ," "[\012*]" | regex -e '^(.*)$0$'
+	'`fmlgrep "^$m0$" $name_2 || set -l bad_one="$m0" -l name_valid=false`' > /dev/null`$name_valid
+invalidmsg=`if [ "$no_value" = "true" ];
+	then
+		echo "You must enter a value for this field.";
+	else
+		echo "$bad_one invalid printer - press [CHOICES] for selection";
+	fi`

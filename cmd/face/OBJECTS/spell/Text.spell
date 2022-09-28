@@ -1,0 +1,40 @@
+#ident	"@(#)face:OBJECTS/spell/Text.spell	1.3"
+
+title="Spell Checker Output"
+framemsg=const "Press CANCEL to cancel this display."
+lifetime=longterm
+
+begrow=any
+begcol=any
+
+close=`unset -l HMSG -l LL -l TT; rm -f /tmp/f.sp.${VPID}`
+
+`pathconv -t -v "${ARG1}"|set -l TT;
+/usr/bin/spell "$ARG1" > /tmp/f.sp.${VPID};
+if [ -s /tmp/f.sp.${VPID} ];
+then
+	set -l HMSG="
+Spelling errors for ${TT}:
+";
+	echo "rows=18";
+else
+	set -l HMSG="
+Spell Checker detected no errors in
+${TT}.
+";
+	echo "rows=5";
+fi`
+
+header="${HMSG}"
+
+text="`readfile /tmp/f.sp.${VPID}`"
+columns=`longline | set -l LL;
+if [ "${LL}" -gt "72" ];
+then
+	echo 72;
+elif [ "${LL}" -lt "48" ];
+then
+	echo 48;
+else
+	echo ${LL};
+fi`

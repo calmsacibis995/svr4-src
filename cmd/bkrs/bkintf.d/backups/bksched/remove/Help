@@ -1,0 +1,21 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksched/remove/Help	1.2.1.1"
+
+ABSTRACT: Remove Entries from the Backup Schedule
+	The "remove" task allows you to remove entries from the backup
+	schedule.  Press the [CHOICES] key to display the current backup
+	schedule, then write down or remember the line numbers of the lines
+	you want to remove.  Press [CANCEL] to return to the line number
+	form, then enter the list of numbers corresponding to the entries
+	you want removed from the backup schedule.  You may separate line
+	numbers by spaces or commas.  Press [SAVE] to carry out the
+	deletion of the lines or, if you decide you do not want to delete
+	the lines, press the [CANCEL] key to leave the backup schedule as
+	it was.
+
+TITLE: Remove Entries from the Backup Schedule
+
+F1:
+	"Line Number(s):"  Enter the list of line numbers corresponding to
+	the entries you want to remove from the backup schedule.  Press
+	[CHOICES] to display the current backup schedule with line numbers.
+	You may separate line numbers by commas or spaces.

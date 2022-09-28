@@ -1,0 +1,31 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FILTER/Menu.input	1.1"
+menu="CHOICES"
+multiselect
+
+done=`indicator -w;getitems " " | set -l Form_Choice` close
+
+name=any
+itemmsg=MARK the content types of the input files and strike ENTER.
+					      
+name=simple
+itemmsg=MARK the content types of the input files and strike ENTER.
+
+name=""
+button=1
+action=nop
+
+name=""
+button=4
+action=nop
+
+name=""
+button=5
+action=nop
+
+name=""
+button=7
+action=nop
+
+name=""
+button=8
+action=nop

@@ -1,0 +1,30 @@
+#ident	"@(#)lp.admin:printers/priorities/Form.default	1.1.1.1"
+
+#######################################################
+#
+#       Module Name: printer_service/priorities/Form.priority
+#
+#######################################################
+
+form=Set System Default Priority
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg="Enter an integer in the range 0 to 39 and press SAVE."
+
+done=`message -w "Setting default priority, please wait...";
+shell "$TFADMIN lpusers -d $F1 > /dev/null 2>&1";
+message "Default priority changed to $F1."`close
+
+name=Priority level to use as a system default:
+lininfo="default:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=44
+rows=1
+columns=2
+value=20
+rmenu={ 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 }
+menuonly=true
+invalidmsg="Only an integer in the range 0 to 39 is valid here."

@@ -1,0 +1,9 @@
+#ident	"@(#)devintf:devices/list/Help	1.2"
+
+list:ABSTRACT:
+	This task lists all of the device aliases that are currently
+	administered in the Device Management Feature.
+
+LISTING:the Devices List screen
+	This screen contains all of the device aliases that are currently
+	administered in the Device Management data files.

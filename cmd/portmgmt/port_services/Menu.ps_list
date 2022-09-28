@@ -1,0 +1,23 @@
+#ident	"@(#)portmgmt:port_services/Menu.ps_list	1.5.2.1"
+
+menu=List Port Service Information & Status
+
+`pmadm -L>/dev/null;
+	regex -e -v "$RET"
+	   '^5$' '`message "No services configured."`'`
+`pmadm -L>/dev/null;
+	regex -v "$RET"
+	   '^0$' '
+name="all"
+description="List all port services"
+action=OPEN TEXT $OBJ_DIR/Text.ps_lsall 
+
+name="by pmtag"
+description="List port services under a particular port monitor"
+action=OPEN MENU $OBJ_DIR/Menu.ps_lstag
+
+name="by type"
+description="List port services under a particular type of port monitor"
+action=OPEN MENU $OBJ_DIR/Menu.ps_lstype'
+	   '^5$' '`message "No services configured."`'
+	   '^.*$' '`message "No services configured."`'`

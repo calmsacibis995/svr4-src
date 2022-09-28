@@ -1,0 +1,57 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkstat/modify/Form.control	1.5"
+form="Specify Backup Jobs to Modify"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+done=`message -w "Trying to $ARG1 backup job(s).";
+	set -l ERR=/tmp/$VPID.bea;
+	bkschg $ARG1 $ARG2 $F1 1>$ERR 2>$ERR;
+	if [ $RET -eq 0 ] ;
+	then
+		getfrm | set -l FNUM;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.modok $FNUM";
+	else
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.modnok";
+	fi`$!CMD
+
+begrow=any
+begcol=any
+
+# Jobid or User field - F1
+name=$ARG2:
+lininfo=control:F1
+nrow=2
+ncol=2
+
+frow=2
+fcol=10
+rows=1
+columns=10
+
+choicemsg=`regex -v "$ARG2"
+	'^user$' 'Enter a login whose backup job status you wish to modify or \'all\'.'
+	'^jobid$' 'Enter the backup jobid whose status you wish to modify.'`
+
+valid=`shell "if [ \"$ARG2\" = 'user' ]
+		then
+			if [ \"$F1\" = 'all' ]
+			then
+				exit 0;
+			else
+				fmlgrep \"^$F1:\" /etc/passwd >/dev/null;
+				exit \$?;
+			fi
+		else
+			if [ \"$ARG2\" = 'jobid' ]
+			then
+				valbkids \"$F1\";
+				exit \$?;
+			fi
+		fi
+		exit 1"`
+
+invalidmsg=`regex -v "$ARG2"
+	'^user$' 'Error - enter an existing login or \'all\'.'
+	'^jobid$' 'Error - enter a valid backup jobid of the form back-N where N is a number.'`

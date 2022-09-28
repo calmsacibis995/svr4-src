@@ -1,0 +1,6 @@
+#ident	"@(#)oamintf:syssetup/nodename.menu	1.1"
+#menu#Display and Set System Name and Network Node Name of the Machine
+#life#permanent
+
+display^Display System Name and Network Node Name of the Machine^Text.nodedisp
+set^Set System Name and Network Node Name of the Machine^Form.nodeset

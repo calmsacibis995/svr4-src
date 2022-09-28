@@ -1,0 +1,33 @@
+#ident	"@(#)nadmin.rfs:other/rfs/id_map/bin/uid_map	1.2"
+
+if [ ! -d "/etc/rfs/auth.info" ]
+then
+	/bin/mkdir -p /etc/rfs/auth.info;
+	/bin/chmod 755 /etc/rfs/auth.info;
+	/bin/chgrp bin /etc/rfs/auth.info;
+fi;
+
+case "$UMAP" in
+"allguest") 	echo "global" > /etc/rfs/auth.info/uid.rules
+		/bin/chmod 644 /etc/rfs/auth.info/uid.rules
+		/usr/bin/idload
+		break
+		;;
+
+"0guest")	echo "global" > /etc/rfs/auth.info/uid.rules
+		echo "default transparent" >> /etc/rfs/auth.info/uid.rules
+		echo "exclude 0" >> /etc/rfs/auth.info/uid.rules
+		/bin/chmod 644 /etc/rfs/auth.info/uid.rules
+		/usr/bin/idload
+		break
+		;;
+
+"0to99guest")	echo "global" > /etc/rfs/auth.info/uid.rules
+		echo "default transparent" >> /etc/rfs/auth.info/uid.rules
+		echo "exclude 0-99" >> /etc/rfs/auth.info/uid.rules
+		/bin/chmod 644 /etc/rfs/auth.info/uid.rules
+		/usr/bin/idload
+		break
+		;;
+
+esac

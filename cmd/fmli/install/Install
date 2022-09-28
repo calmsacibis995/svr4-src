@@ -1,0 +1,26 @@
+#ident	"@(#)fmli:install/Install	1.5"
+
+trap "" 1 2 3 15
+
+echo "\n\nCopyright (C) 1987, 1988 AT&T"
+echo "     All Rights Reserved     "
+
+echo "\n\nInstalling FMLI package ..."
+
+if [ 0 -ne `ps -e | cut -c 22-25 | grep "fmli" | wc -l` ]
+then
+ 	message -d "AT&T FMLI is currently in use.  You may not
+install a new version while FMLI is being used.
+Please try again later."
+	exit 1
+fi
+
+for i in fmli vsig
+do
+	mv $i /usr/bin
+	chown bin /usr/bin/$i 
+	chgrp bin /usr/bin/$i 
+	chmod 755 /usr/bin/$i 
+done
+
+exit 0

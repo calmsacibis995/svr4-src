@@ -1,0 +1,11 @@
+#ident	"@(#)lp:filter/postscript/font/devpostaps/charlib/sc	1.1"
+/build_sc {
+	pop
+	gsave
+	newpath
+	0 0 moveto
+	(\247) false charpath flattenpath pathbbox pop pop exch pop .50 mul neg
+	grestore
+	0 exch rmoveto
+	(\247) show
+} bind def

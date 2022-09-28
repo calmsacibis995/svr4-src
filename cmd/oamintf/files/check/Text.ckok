@@ -1,0 +1,15 @@
+#ident	"@(#)filemgmt:check/Text.ckok	1.1.2.1"
+Title="File System Check"
+
+done=`/bin/rm /tmp/check.err 2>/dev/null`
+
+`readfile $INTFBASE/display.msg | message`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp ckokhelp
+
+begrow=distinct
+begcol=distinct
+rows=12
+columns=65
+
+text="`readfile /tmp/check.err`"

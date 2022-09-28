@@ -1,0 +1,12 @@
+#ident	"@(#)tar:tar.dfl	1.1.1.1"
+
+#	   device     		block    size
+archive0=/dev/rfd048ds9		18	360
+archive1=/dev/rfd148ds9		18	360
+archive2=/dev/rfd096ds15	10	1200
+archive3=/dev/rfd196ds15	10	1200
+archive4=/dev/rfd048ss9		18	180
+archive5=/dev/rfd048ds8		16	320
+archive6=/dev/rfd048ss8		16	160
+archive7=./tarfile		1	0
+archivef=/dev/null		1	0

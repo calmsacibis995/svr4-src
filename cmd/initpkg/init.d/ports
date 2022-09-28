@@ -1,0 +1,7 @@
+#ident	"@(#)initpkg:init.d/ports	1.1"
+# pump the ports board
+if [ ! -s /etc/rc2.d/.ports.sem ]
+then
+	/sbin/ports
+	echo "ports completed" > /etc/rc2.d/.ports.sem
+fi

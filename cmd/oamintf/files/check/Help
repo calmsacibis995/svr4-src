@@ -1,0 +1,97 @@
+#ident	"@(#)oamintf:files/check/Help	1.1"
+ABSTRACT:
+	The "check" task checks a file system on a removable medium 
+	or on a disk partition for errors.  If there are errors, 
+	this procedure attempts to repair them.
+
+TITLE:Checking File Systems
+Form.check:F1:Device that contains the file system
+	Devices that contain file systems are usually partitions on
+	the hard disk. For example the partition /dev/dsk/1s3 is
+	the fourth partition on the second (numbering from 0) hard disk.
+ 	Among other devices which can contain file systems, floppy 
+	diskette drives are the most common. It is recommended that
+	a file system be unmounted when it is checked.
+	
+Form.check:F2:File System Type (IMPORTANT: DO NOT GUESS): 
+	The Unix system provides file systems of different types.
+	Different file system types provide different functionalities
+	for different applications. Your system may have file systems 
+	of one or more types. For a listing of file system types 
+	available on your system use the "Display" task.
+	
+	It is very important for you to specify the correct file system
+	type while performing these operations. Specifying the wrong 
+	type may cause corruption of the file system. If you are
+	unsure of the file system type, type unknown at the prompt and
+	the interface will run heuristics which will try and determine
+	the type of the file system.
+
+Form.checkfs:F1:Device to be checked:
+	Devices that contain file systems are usually partitions on
+	the hard disk. For example, the partition /dev/dsk/1s3 is
+	the fourth partition on the second (numbering from 0) hard disk.
+ 	Among other devices which can contain file systems, floppy 
+	diskette drives are the most common. 
+	
+	Devices can be accessed via either of block or character
+	interfaces. The block interface to the device causes data
+	on the device to be accessed in a buffered manner. The 
+	character interface provides character input/output to the 
+	device. For example, buffered I/O can be performed on a floppy 
+	device by specifying the block interface "/dev/dsk/f0t"
+	and character I/O can be performed by the character device
+	"/dev/rdsk/f0t".
+
+Form.checkfs:F2:Type of checking:
+	The form you are looking at displays the device to check.  
+	There is a single prompt for you to select the type of 
+	checking to do.  There are three options:
+	
+	The "check only" option looks for file system damage but does 
+	not attempt to fix it. 
+	
+	The "interactive fix" option asks you to decide what should be
+	done for each error.  When you choose this option and press
+	[SAVE], the screen will clear and the interactive fix
+	will run in "full screen" mode.  When the task has completed
+	you will be returned to the interface.
+
+	The "automatic fix" option makes standard repairs when it 
+	finds errors.  Occasionally it will encounter
+	problems it cannot handle.  In those cases, you should consult
+	your System Administrator's Guide for details.
+
+	Most users will be satisfied using the "automatic fix" option. 
+	For particularly sensitive or non-reproducible data, we recommend 
+	that you use the "check only" option first and then use either 
+	the "interactive fix" or "automatic fix" option.
+
+ckerrhelp:
+	You are looking at an error that occurred while trying
+	to verify the device medium.  The error is probably the
+	result of one of the following conditions:
+	
+	- the device management table doesn't know about the device
+	- the device is not properly initialized as a file system
+	- the device may not be properly inserted (includes conditions
+	  where the device is upside down, or the door is not closed)
+	- the medium is not formatted
+	
+	Please correct the problem indicated by the error message,
+	and try again.
+	
+cknokhelp:
+	An error has occurred while checking the file system.
+	Please correct the problem indicated by the error message,
+	and try again.
+	
+ckokhelp:
+	You are looking at the output from performing the file
+	system check you requested.  
+  	 
+findtypetask:
+	The Identification of File System Type task has deduced
+	the type of file system on the device selected. You must
+	now return to the File System Check form and complete the
+	form using the information displayed and type [SAVE].

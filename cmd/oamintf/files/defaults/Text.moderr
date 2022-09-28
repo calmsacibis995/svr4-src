@@ -1,0 +1,14 @@
+#ident	"@(#)oamintf:files/defaults/Text.moderr	1.1"
+Title="Modify defaults for File systems"
+lifetime=shortterm
+
+`readfile $INTFBASE/display.msg | message`
+
+close=`CLOSE $OBJ_DIR/Text.moderr`
+
+begrow=distinct
+begcol=distinct
+rows=3
+columns=45
+
+text="\nDefaults do not exist. Use add task to add defaults."

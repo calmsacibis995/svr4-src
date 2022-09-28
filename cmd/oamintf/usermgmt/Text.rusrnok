@@ -1,0 +1,27 @@
+#ident	"@(#)oamintf:usermgmt/Text.rusrnok	1.2.3.1"
+################################################################################
+#	Module Name: Text.rusrnok
+################################################################################
+title="Errors Removing a User Login"
+`readfile $INTFBASE/conf.msg | message -t`
+framemsg=`readfile $INTFBASE/conf.msg`
+
+close=`rm -f $URMERR`
+
+rows=6
+columns=55
+
+text="
+An error occurred attempting to remove user $ARG1.
+
+   `readfile $URMERR`"
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

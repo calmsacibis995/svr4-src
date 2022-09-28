@@ -1,0 +1,20 @@
+#ident	"@(#)nadmin.rfs:remote/rfs/bin/auto_attr	1.2"
+# If RESDIR is the res name, then it is the first field of the vfstab entry
+rm /usr/tmp/attr_$$ 2>/dev/null
+
+echo $RESDIR | /bin/grep "\/" 1>/dev/null 
+if [ $? -eq 0 ]
+then
+	/usr/bin/egrep "[ 	]+$RESDIR[ 	]+" /etc/vfstab >/usr/tmp/auto$$
+	if [ -s "/usr/tmp/auto$$" ]
+	then
+		/usr/bin/tr -s '\011' '\040' </usr/tmp/auto$$ | /bin/sed -e "s/ro[, ]*/read-only /" -e "s/rw[, ]*/read-write /" >/usr/tmp/attr_$$
+	fi
+else
+	/usr/bin/egrep "^$RESDIR[ 	]+" /etc/vfstab >/usr/tmp/auto$$
+	if [ -s "/usr/tmp/auto$$" ]
+	then
+		/usr/bin/tr -s '\011' '\040' </usr/tmp/auto$$  | /bin/sed -e "s/ro[, ]*/read-only /" -e "s/rw[, ]*/read-write /" -e "s/,/ /" >/usr/tmp/attr_$$
+	fi
+fi
+echo $$

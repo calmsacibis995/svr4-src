@@ -1,0 +1,29 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/Menu.h0.toc	1.1"
+
+menu="Help Facility: Overview of Contents"
+
+#help=OPEN TEXT OBJECTS/Text.help T.h1.help 'Using Help'
+begrow=13
+begcol=26
+
+name=Commands
+action=OPEN TEXT OBJECTS/Text.help T.h7.cmd 'Commands'
+itemmsg="Move to an item with arrow keys and strike the ENTER key to select."
+
+name=Frames and Function Keys
+action=nop
+show=false
+
+name=The Help Facility
+action=OPEN TEXT OBJECTS/Text.help T.h1.help 'The Help Facility'
+itemmsg="Move to an item with arrow keys and strike the ENTER key to select."
+
+name=Filecabinet, File Folders, and Files
+action=nop
+show=false
+
+name=The Screen
+action=nop
+show=false
+
+`indicator -w`

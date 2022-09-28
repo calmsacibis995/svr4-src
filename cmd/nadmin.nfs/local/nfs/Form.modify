@@ -1,0 +1,101 @@
+#ident	"@(#)nadmin.nfs:local/nfs/Form.modify	1.1"
+form="Modifies Automatic-Current Sharing of A Local Resource via NFS"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+`readfile $INTFBASE/form.msg | message -p`
+`set -l OBJ_DIR="$INTFBASE/netservices/remote_files/local/nfs`
+
+done=`indicator -w;
+	set -l IMM="$F2" -l AUTO="$F3";
+	set -e DIR="$F1";
+	unset -l KEYCMD;
+	if [ "$AUTO" = "yes" ];
+	then
+		"$INTFBASE/netservices/remote_files/local/nfs/bin/auto_attr" | set -l PID;
+		if [ -s "/var/tmp/amsg_$PID" ];
+		then
+			cat "/var/tmp/amsg_$PID" |message;
+			rm "/var/tmp/amsg_$PID" 2>/dev/null;
+		else
+			/usr/bin/cut -s -d" " -f1 "/var/tmp/a_attr$PID" | set -el ID;
+			/usr/bin/cut -s -d" " -f2 "/var/tmp/a_attr$PID" | set -el MODE;
+			/usr/bin/cut -s -d" " -f3 "/var/tmp/a_attr$PID" | /usr/bin/tr -s '\072' '\012' | set -el RWCLIENT;
+			/usr/bin/cut -s -d" " -f4 "/var/tmp/a_attr$PID" | /usr/bin/tr -s '\072' '\012' | set -el ROCLIENT;
+			/usr/bin/cut -s -d" " -f5 "/var/tmp/a_attr$PID" | /usr/bin/tr -s '\072' '\012' | set -el ROOTCLIENT;
+			set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/local/nfs/Form.modify2";
+			if [ "$RWCLIENT" = "$ROCLIENT" = "all" ];
+			then
+				set -el ROCLIENT="";
+			fi;
+			if [ "$ROOTCLIENT" = "all" ];
+			then
+				set -el ROOTCLIENT="";
+			fi;
+
+			rm "/var/tmp/a_attr$PID" 2>/dev/null;
+		fi;
+	fi;
+	if [ ! "$KEYCMD" ];
+	then
+		if [ "$IMM" = "yes" ];
+		then
+			"$INTFBASE/netservices/remote_files/local/nfs/bin/imm_attr" | set -l PID;
+			if [ -s "/var/tmp/cmsg_$PID" ];
+			then
+				message "This resource is not shared currently.";
+				set -l KEYCMD="NOP";
+			else
+				/usr/bin/cut -s -d" " -f1 "/var/tmp/a_attr$PID" | set -el ID;
+				/usr/bin/cut -s -d" " -f2 "/var/tmp/a_attr$PID" | set -el MODE;
+				set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/local/nfs/Form.modify3";
+			fi;
+		else
+			message "No options selected.  Press CANCEL to return to the menu.";
+			set -l KEYCMD="NOP";
+		fi;
+	fi;
+	`$KEYCMD
+
+name="Directory Name:"
+lininfo=modify:directory
+nrow=2
+ncol=1
+frow=2
+fcol=17
+rows=1
+columns=40
+invalidmsg="Press CHOICES to select valid response."
+rmenu=`indicator -w;
+	"$INTFBASE/netservices/remote_files/local/nfs/bin/nf_list";
+	if [ -s /var/tmp/s_list ];
+	then
+		cat /var/tmp/s_list;
+	else
+		message "There are no resources currently or automatically shared.";
+	fi`
+menuonly=true
+
+name="Modify how the resource is shared currently?"
+lininfo=modify:curr
+nrow=4
+ncol=1
+frow=4
+fcol=46
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+invalidmsg="Press CHOICES to select valid response."
+
+name="Modify how the resource is shared automatically?"
+lininfo=modify:auto
+nrow=5
+ncol=1
+frow=5
+fcol=50
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+invalidmsg="Press CHOICES to select valid response."

@@ -1,0 +1,29 @@
+#ident	"@(#)initpkg:init.d/osm	1.1.2.1"
+
+#	/dev/osm control
+pid=`/usr/bin/ps -ef | /usr/bin/grep "/dev/osm" | \
+	/usr/bin/grep "cat" | /usr/bin/awk '{print $2}'`
+
+case $1 in
+'start')
+	if [ "${pid}" = "" ]
+	then
+		if [ -f /etc/.osm ]
+		then
+			rm /etc/.osm.old > /dev/null 2>&1
+			mv /etc/.osm /etc/.osm.old > /dev/null 2>&1
+		fi
+
+		cat /dev/osm > /etc/.osm &
+	fi
+	;;
+'stop')
+	if [ "${pid}" != "" ]
+	then
+		/usr/bin/kill ${pid}
+	fi
+	;;
+*)
+	echo "usage: /etc/init.d/osm {start|stop}"
+	;;
+esac

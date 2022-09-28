@@ -1,0 +1,6 @@
+#ident	"@(#)bkrs:bkintf.d/backups/ext.menu	1.1"
+#menu#Backup Scheduling, Setup, and Control
+#life#permanent
+
+basic^Backup to Removable Media^backup/basic/Menu.backup
+preSVR4^Backup to Removable Media^OBJECTS/backup/Menu.backup

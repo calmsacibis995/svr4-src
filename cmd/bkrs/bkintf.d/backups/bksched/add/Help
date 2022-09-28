@@ -1,0 +1,50 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksched/add/Help	1.2.2.2"
+
+ABSTRACT: Add Entries to Backup Schedule
+	The "add" task allows you to add entries to the backup schedule.
+	Each entry contains when the backup should be run (time, days of
+	the week and month) as well as how the backup is to be run (using
+	which backup register, whether you are to be notified by mail when
+	the entire backup job completes and whether the backup should be
+	run in background or in automated mode).  Once you have set up a
+	backup schedule, the backup command will be run automatically, as
+	you have scheduled it.
+
+TITLE: Add Entries to Backup Schedule
+
+F1:
+	"Time:"  Enter the time of day at which the backup command should
+	run.  The time is represented by a string of the form hh:mm, where
+	hh is 00-23 and mm is 00-59.  For example, to run the backup
+	command at 8:15pm, enter "20:15".
+
+F2:
+	"Day(s):"  Enter a list of weekdays on which this backup is to run.
+	Days are represented by the digits 0 (=Sunday) to 6 (=Saturday).
+	You may enter the keyword "all" if this backup command is to run
+	every day.
+
+F3:
+	"Month(s):"  Enter a list of months (1-12) in which this backup is
+	to run.  You may represent ranges of months by month numbers
+	separated by a "-".  For example, to run this backup from July
+	through December, enter "7-12".  You may enter the keyword "all"
+	to run this backup in all months.
+
+F4:
+	"Table:"  Enter the path to the backup register table this backup
+	is to use.  This register must exist when the backup actually runs.
+	The invoked backup command will read this table to determine which
+	backup operations are to be run.
+
+F5:
+	"Mode:"  Enter the mode in which you want the backup to run.  The
+	choices are "background" or "automated".  In background mode, you
+	will be notified by mail whenever a backup operation requires
+	operator intervention.  In automated mode, it is assumed that there
+	is no operator available, so any operation that requires operator
+	intervention fails.
+
+F6:
+	"Notify:"  Enter "yes" to receive mail when the backup job has
+	completed.  Enter "no" if you do not wish to be notified.

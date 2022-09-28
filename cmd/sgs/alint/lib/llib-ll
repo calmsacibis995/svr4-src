@@ -1,0 +1,18 @@
+#ident	"@(#)alint:lib/llib-ll	1.1"
+/* LINTLIBRARY */
+/* PROTOLIB1 */
+
+/* from libl/common/allprint.c */
+extern int allprint(char);
+extern int sprint(char *);
+extern int printable(int);
+
+/* from libl/common/reject.c */
+extern int yyreject(void);
+extern int yyracc(int);
+
+/* from libl/common/yyless.c */
+extern int yyless(int);
+
+/* from libl/common/yywrap.c */
+extern int yywrap(void);

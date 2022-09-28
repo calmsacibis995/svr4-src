@@ -1,0 +1,30 @@
+#ident	"@(#)oamintf:syssetup/Text.nodedisp	1.1.1.1"
+################################################################################
+#	Module Name: Text.nodedisp
+#	Calling Sequence: nodename.menu
+#	Functional Description: This Text object displays the System-Name and
+#				the Network Node-Name
+#	How:
+#	Inputs:
+#	Functions Called:
+#	Issues:
+################################################################################
+
+Title=Display System Name and Network Node Name
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp "display:ABSTRACT"
+
+rows=5
+columns=58
+
+framemsg=`readfile $INTFBASE/display.msg`
+
+`uname -s | set -l SYSNM ;
+ uname -n | set -l NODENM`
+
+text="
+   System-Name:       $SYSNM
+
+   Network Node-Name: $NODENM
+   "
+

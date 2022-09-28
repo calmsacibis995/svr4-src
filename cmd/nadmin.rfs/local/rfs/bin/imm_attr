@@ -1,0 +1,61 @@
+#ident	"@(#)nadmin.rfs:local/rfs/bin/imm_attr	1.4"
+echo $RESDIR | /bin/grep "/" 1>/dev/null
+if [ $? -eq 0 ]
+then
+	/usr/sbin/share -F rfs | /bin/grep "[ 	][ 	]*$RESDIR[	 ][ 	]*" >/usr/tmp/c_adv$$
+else
+	/usr/sbin/share -F rfs | /bin/grep "^$RESDIR" >/usr/tmp/c_adv$$
+fi
+
+if [ ! -s "/usr/tmp/c_adv$$" ]
+then
+	echo "This resource is not shared currently" >/usr/tmp/cmsg_$$
+else
+	/usr/bin/tr -s '\011' '\040' </usr/tmp/c_adv$$ >/usr/tmp/c_list$$
+	RES=`/usr/bin/cut -d" " -f1 </usr/tmp/c_list$$`
+#The next line is affected by the introduction of fstype and specific options:
+#	ACC=`/usr/bin/cut -d" " -f3 </usr/tmp/c_list$$ | /usr/bin/tr '\057' '\055'`
+	DIR=`/usr/bin/cut -d" " -f2 </usr/tmp/c_list$$`
+	/bin/sed -e "s/^[^ \"][ ]\"//" -e "s/\"[ ].*$//" /usr/tmp/c_list$$ | /usr/bin/tr -s '\040' '\011' >/usr/tmp/d$$
+	DESC=`/usr/bin/cut -d"\"" -f2 </usr/tmp/c_list$$`
+	
+#The next line is affected by the introduction of fstype and specific options:
+#	CLIENT=`/usr/bin/cut -d"\"" -f3 </usr/tmp/c_list$$`
+#The following section is patterned after the first awk script in ls_resource:
+		/usr/bin/cut -d" " -f3 </usr/tmp/c_list$$ | /usr/bin/nawk '
+BEGIN	{ FS = "," }
+{	default = "yes"
+        for (i = 1; i <= NF; i++)
+        	if ($i == "ro") {
+        		print "read-only" >"/usr/tmp/a'$$'"
+        		print "unrestricted" >"/usr/tmp/c'$$'"
+	                default = "no"
+        	}
+                else if ($i == "rw") {
+        		print "read-write" >"/usr/tmp/a'$$'"
+        		print "unrestricted" >"/usr/tmp/c'$$'"
+			default = "no"
+        	}
+                else if (index($i, "ro=") == 1) {
+        		print "read-only" >"/usr/tmp/a'$$'"
+        		print substr($i, 4) >"/usr/tmp/c'$$'"
+			default = "no"
+        	}
+                else if (index($i, "rw=") == 1) {
+        		print "read-write" >"/usr/tmp/a'$$'"
+        		print substr($i, 4) >"/usr/tmp/c'$$'"
+			default = "no"
+        	}
+        if (default == "yes") {
+                print "read-write" >"/usr/tmp/a'$$'"
+                print "unrestricted" >"/usr/tmp/c'$$'"
+        }
+}'
+ACC=`/usr/bin/cat /usr/tmp/a$$`
+#CLIENT=`/usr/bin/tr ':' '\040' </usr/tmp/c$$`
+CLIENT=`/usr/bin/cat /usr/tmp/c$$`
+#end replacement
+	echo "$RES" "$DIR" "$ACC" "\"""$DESC""\"" "$CLIENT" > /usr/tmp/c_attr$$
+	/bin/rm /usr/tmp/d$$ /usr/tmp/c_list$$ /usr/tmp/c_adv$$ /usr/tmp/a$$ /usr/tmp/c$$ 2>/dev/null
+fi
+echo $$

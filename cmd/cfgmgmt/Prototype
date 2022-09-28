@@ -1,0 +1,22 @@
+#ident	"@(#)cfgmgmt:Prototype	1.1"
+
+!MENU=usr/sadm/sysadm/menu
+
+## Files from local prototype: component=cfgmgmt
+
+# foundation set (predecessor) directories
+
+d foundation usr 0755 root sys
+d foundation usr/sadm 0755 bin bin
+d foundation usr/sadm/sysadm 0755 bin bin
+d foundation $MENU 0755 bin bin
+
+# basic and extended OAM directories
+
+d OAM_basic $MENU/machinemgmt 0755 bin bin
+d OAM_basic $MENU/machinemgmt/configmgmt 0755 bin bin
+
+# basic and extended interface
+
+f OAM_bhelp $MENU/machinemgmt/configmgmt/Help 0640 bin bin
+f OAM_basic $MENU/machinemgmt/configmgmt/cfgmgmt.menu 0640 bin bin

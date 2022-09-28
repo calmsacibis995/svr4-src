@@ -1,0 +1,66 @@
+#ident	"@(#)oamintf:devices/add/Form.adddevice	1.1.1.1"
+
+################################################################################
+#	Module Name: Form.adddevice
+################################################################################
+
+form="Add Storage Device"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`devattr $F1 removable | set -l REM;
+      echo "REM = $REM" > out;
+      if [ "$REM" = "true" ];
+      then
+          echo "inside if" >> out;
+          set -l CMD="open text $OBJ_DIR/Text.addrem $F1";
+      else
+          set -l CMD="run devtabcmd $F1 addcmd";
+      fi`$CMD
+
+`getdev addcmd: | tr "\012" " " | set -l LIST ;
+
+	if [ ! -z "$LIST" ];
+	then
+		echo name=Device Name: ;
+		echo lininfo=devnm;
+		echo nrow=1;
+		echo ncol=1;
+		echo frow=1;
+		echo fcol=25;
+		echo rows=1;
+		echo columns=16;
+		echo rmenu={ $LIST };
+		echo menuonly=true;
+		echo \`message -w "Strike CHOICES to complete the form followed by SAVE."\`;
+	else
+		echo name=add - Selection Not Available;
+		echo lininfo=nodev;
+		echo nrow=1;
+		echo ncol=1;
+		echo frow=0;
+		echo fcol=0;
+		echo rows=0;
+		echo columns=0;
+		echo \`message -w "Strike HELP or CANCEL."\`;
+
+		echo name=;
+		echo button=2;
+		echo action=nop;
+
+		echo name=;
+		echo button=3;
+		echo action=nop;
+
+	fi`
+name=
+button=4
+action=nop
+
+name=
+button=5
+action=nop
+
+name=
+button=7
+action=nop

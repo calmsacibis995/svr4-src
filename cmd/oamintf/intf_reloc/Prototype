@@ -1,0 +1,6 @@
+#ident	"@(#)oamintf:intf_reloc/Prototype	1.2.1.1"
+!PKGBIN=/usr/sadm/install/bin
+
+f intf $PKGBIN/intf_reloc 0755 bin bin
+f intf $PKGBIN/reloc_menus 0755 bin bin
+

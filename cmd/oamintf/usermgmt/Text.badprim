@@ -1,0 +1,28 @@
+#ident	"@(#)oamintf:usermgmt/Text.badprim	1.2.3.1"
+################################################################################
+#	Module Name: Text.badprim
+################################################################################
+title="Errors Adding a Group"
+`readfile $INTFBASE/conf.msg | message -t`
+framemsg=`readfile $INTFBASE/conf.msg`
+
+rows=7
+columns=68
+
+close=`rm -f /tmp/gadderr`
+
+text="
+Group $ARG1 has been added to the system but was unable to
+add primary user(s).  Please check entry.
+
+   `readfile /tmp/gadderr`"
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

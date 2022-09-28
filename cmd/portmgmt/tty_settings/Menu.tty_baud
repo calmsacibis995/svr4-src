@@ -1,0 +1,8 @@
+#ident	"@(#)portmgmt:tty_settings/Menu.tty_baud	1.1"
+
+menu="Available Baud Rates"
+
+`sed 's/	.*$//' $OBJ_DIR/../ttyvalues | sort -n | 
+regex '^([1-9][0-9]*)$0$'
+ 'name="$m0"
+  action=`set -l "Form_Choice=$m0"`CLOSE'`

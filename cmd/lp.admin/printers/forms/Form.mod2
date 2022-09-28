@@ -1,0 +1,635 @@
+#ident	"@(#)lp.admin:printers/forms/Form.mod2	1.6.4.2"
+
+#######################################################
+#
+#       Module Name: Form.modify
+#
+#######################################################
+
+form=Add/Modify Form $ARG2
+
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO 
+
+init=`indicator -w;
+	set -e closeit="$closeit $OAMBASE/add-ons/lp/printers/forms/Form.mod2" -e attributes="/tmp/lp.fm$VPID"`
+
+`if [ $ARG1 = "default_form" ];
+then
+	set -e form_dir="/usr/sadm/sysadm/add-ons/lp/printers/forms";
+
+else 
+	set -e form_dir="/etc/lp/forms/$ARG1";
+fi`
+
+`message -w "loading form $ARG1";
+fmlgrep -i 'page length:' $form_dir/describe | fmlcut -f3 -d' ' - 
+	| set -l length;
+fmlgrep -i 'page width:' $form_dir/describe | fmlcut -f3 -d' ' - 
+	| set -l width;
+fmlgrep -i 'number of pages:' $form_dir/describe | fmlcut -f4 -d' ' - 
+	| set -l pages;
+fmlgrep -i 'line pitch:' $form_dir/describe | fmlcut -f3 -d' ' - 
+	| set -l lpitch;
+fmlgrep -i 'character pitch:' $form_dir/describe | fmlcut -f3 -d' ' - 
+	| set -l cpitch;
+fmlgrep -i 'character set choice:' $form_dir/describe | fmlcut -f2 -d',' - 
+	| set -l cmand;
+if [ $cmand != "mandatory" ]; 
+	then 
+		set -l cmand="optional"; 
+fmlgrep -i 'character set choice:' $form_dir/describe | fmlcut -f4 -d' ' - 
+	| set -l cset;
+fi;
+if [ $cmand = "mandatory" ]; 
+then
+fmlgrep -i 'character set choice:' $form_dir/describe | fmlcut -f4 -d' ' - 
+	| fmlcut -f1 -d',' - 
+	| set -l cset;
+fi;
+fmlgrep -i 'ribbon color:' $form_dir/describe | fmlcut -f3 -d' ' - 
+	| set -l ribbon;
+
+if [ -s $form_dir/align_ptrn ];
+	then	
+	set -l align_ptrn_file="$form_dir/align_ptrn";
+	readfile $form_dir/align_ptrn | set -l align_ptrn;
+	fmlgrep -i 'alignment pattern:' $form_dir/describe | fmlcut -f3 -d' ' - 
+	| set -l align_type;
+fi;
+
+readfile $form_dir/comment | set -l comment;
+
+fmlgrep -i '^mail ' $form_dir/alert.sh | set -l alert;
+if [ -z $alert ];
+then
+fmlgrep -i '^write ' $form_dir/alert.sh | set -l alert;
+fi;
+if [ -z $alert ];
+then
+fmlgrep -i '^/' $form_dir/alert.sh | set -l alert;
+fi;
+fmlgrep -n '[0123456789]' $form_dir/alert.vars | fmlgrep '2:' 
+	| fmlcut -f2 -d':' - 
+	| set -l requests;
+fmlgrep -n '[0123456789once]' $form_dir/alert.vars | fmlgrep '3:' 
+	| fmlcut -f2 -d':' - 
+	| set -l falert;
+readfile $form_dir/allow | tr "\012" " " | set -l allow;
+readfile $form_dir/deny | tr "\012" " " | set -l deny;
+	`
+	
+
+close=`
+	/usr/bin/rm -f $attributes;
+	unset -e attributes;
+	unset -e form_dir;
+	unset -l length;
+	unset -l width;
+	unset -l pages;
+	unset -l lpitch;
+	unset -l cpitch;
+	unset -l cset;
+	unset -l cmand;
+	unset -l ribbon;
+	unset -l align_ptrn;
+	unset -l align_ptrn_file;
+	unset -l align_type;
+	unset -l alert;
+	unset -l requests;
+	unset -l falert;
+	unset -l comment;
+	`
+
+done=`message -w;
+
+/usr/bin/rm -f $attributes;
+if [ $ARG1 = $ARG2 ];
+	then
+	message "Updating form $ARG2";
+fi;
+if [ $ARG1 != $ARG2 ];
+	then
+	message "Adding form $ARG2";
+fi;
+	
+if [ -n $F1 ];
+then
+echo 'page length:'$F1 >> $attributes; 
+fi;
+if [ -n $F2 ];
+then
+echo 'page width:'$F2 >> $attributes; 
+fi;
+if [ -n $F3 ];
+then
+echo 'line pitch:'$F3 >> $attributes; 
+fi;
+if [ -n $F4 ];
+then
+echo 'character pitch:'$F4 >> $attributes; 
+fi;
+if [ -n $F5 ];
+then
+echo 'number of pages:'$F5 >> $attributes; 
+fi;
+if [ "$F7" != 'mandatory' -a -n $F6 ]; 
+	then 
+echo 'character set choice:'$F6 >> $attributes; 
+fi;
+if [ "$F7" = 'mandatory' -a -n $F6 ]; 
+	then 
+echo 'character set choice:'$F6',mandatory' >> $attributes; 
+fi;
+if [ -n $F8 ];
+then
+echo 'ribbon color:'$F8 >> $attributes; 
+fi;
+if [ -n $F9 ];
+then
+	echo 'comment:' >> $attributes;
+	echo $F9 >> $attributes;
+fi;
+if [ -n $F10 ];
+	then
+echo 'alignment pattern:'$F11 >> $attributes; 
+cat $F10 >> $attributes; 
+fi;
+shell "
+$TFADMIN lpforms -f$ARG2 -F $attributes" > /dev/null 2> $error;
+if [ -s $error ];
+then echo "OPEN TEXT $OBJ_DIR/Text.error $error";
+fi;
+
+if [ "$F12" = "none" -o "$F12" = "" ];
+then
+	if [ -n "$TFADMIN" ]; then $TFADMIN lpforms -f$ARG2 -Anone;
+	else lpforms -f$ARG2 -Anone; fi;
+else
+	if [ -n $F12 -o -n $F13 -o $F14 ];
+	then
+		if [ "$F12" = "mail " -o "$F12" = "mail" ];
+		then
+			set -l mailit="mail lp";
+		elif [ "$F12" = "write" -o "$F12" = "write " ];
+		then
+			set -l mailit="write lp";
+		else
+			set -l mailit=$F12;
+		fi;
+
+		if [ "$F14" = "once" ];
+		then 
+			if [ -n "$TFADMIN" ]; then $TFADMIN lpforms -f$ARG2 -A"$mailit" -Q$F13 -W1;
+			else lpforms -f$ARG2 -A"$mailit" -Q$F13 -W1; fi;
+		else
+			if [ -n "$TFADMIN" ]; then $TFADMIN lpforms -f$ARG2 -A"$mailit" -Q$F13 -W$F14;
+			else lpforms -f$ARG2 -A"$mailit" -Q$F13 -W$F14; fi;
+		fi;
+	fi;
+fi;
+if [ -n $F15 -a $F16 != 'all' ];
+then
+	if [ -n "$TFADMIN" ]; then $TFADMIN lpforms -f$ARG2 -u deny:$F15;
+	else lpforms -f$ARG2 -u deny:$F15; fi;
+fi;
+if [ -n $F16 -a $F15 != 'all' ];
+then
+	if [ -n "$TFADMIN" ]; then $TFADMIN lpforms -f$ARG2 -u allow:$F16;
+	else lpforms -f$ARG2 -u allow:$F16; fi;
+fi;
+	message"";
+	echo "close $closeit";
+	`
+
+#F1
+name=Page length:
+lininfo="mod2:F1"
+nrow=1
+ncol=1
+frow=1
+fcol=14
+rows=1
+columns=15
+value=$length
+valid=`
+	indicator -w;
+	regex -v "$F1"
+	'^0$'			'fail'
+	'^0i$'			'fail'
+	'^0c$'			'fail'
+	'^[.0-9]+[ci]$'	'ok'
+	'^[.0-9]+$'			'ok'
+	'^.*$'				'fail'
+	| set -l lp_errtmp;
+
+	if [ "$lp_errtmp" = 'ok' ];
+	then
+    		echo true;
+	else
+    		echo false;
+	fi;
+`
+invalidmsg='Invalid: must be a positive decimal number and can be followed by "c" or "i".'
+fieldmsg='Enter a positive decimal number. It can be followed by "c" or "i".'
+
+#F2
+name=Page width:
+lininfo="mod2:F2"
+nrow=1
+ncol=31
+frow=1
+fcol=48
+rows=1
+columns=15
+value=$width
+valid=`
+	indicator -w;
+	regex -v "$F2"
+	'^0$'			'fail'
+	'^0i$'			'fail'
+	'^0c$'			'fail'
+	'^[.0-9]+[ci]$'	'ok'
+	'^[.0-9]+$'			'ok'
+	'^.*$'				'fail'
+	| set -l lp_errtmp;
+
+	if [ "$lp_errtmp" = 'ok' ];
+	then
+    		echo true;
+	else
+    		echo false;
+	fi;
+`
+invalidmsg='Invalid: must be a positive decimal number and can be followed by "c" or "i".'
+fieldmsg='Enter a positive decimal number.  It can be followed by "c" or "i".'
+
+
+#F3
+name=Line Pitch:
+lininfo="mod2:F3"
+nrow=2
+ncol=1
+frow=2
+fcol=14
+rows=1
+columns=15
+value=$lpitch
+valid=`
+	indicator -w;
+	regex -v "$F3"
+	'^0$'			'fail'
+	'^0i$'			'fail'
+	'^0c$'			'fail'
+	'^[.0-9]+[ci]$'	'ok'
+	'^[.0-9]+$'			'ok'
+	'^.*$'				'fail'
+	| set -l lp_errtmp;
+
+	if [ "$lp_errtmp" = 'ok' ];
+	then
+    		echo true;
+	else
+    		echo false;
+	fi;
+`
+invalidmsg='Invalid: must be a positive decimal number and can be followed by "c" or "i".'
+fieldmsg='Enter a positive decimal number.  It can be followed by "c" or "i".'
+
+
+#F4
+name=Character Pitch:
+lininfo="mod2:F4"
+nrow=2
+ncol=31
+frow=2
+fcol=48
+rows=1
+columns=15
+value=$cpitch
+valid=`
+	indicator -w;
+	regex -v "$F4"
+	'^0$'			'fail'
+	'^0i$'			'fail'
+	'^0c$'			'fail'
+	'^[.0-9]+[ci]$'	'ok'
+	'^[.0-9]+$'			'ok'
+	'^.*$'				'fail'
+	| set -l lp_errtmp;
+
+	if [ "$lp_errtmp" = 'ok' ];
+	then
+    		echo true;
+	else
+    		echo false;
+	fi;
+`
+invalidmsg='Invalid: must be a positive decimal number and can be followed by "c" or "i".'
+fieldmsg='Enter a positive decimal number.  It can be followed by "c" or "i".'
+
+
+#F5
+name="Number of pages:" 
+lininfo="mod2:F5"
+nrow=3
+ncol=1
+frow=3
+fcol=18
+rows=1
+columns=4
+value=$pages
+choicemsg=
+invalidmsg="Enter a positive decimal number"
+fieldmsg="Enter number of pages in the form"
+
+valid=`indicator -w; regex -v "$F5" '^[0123456789]+$' ''  `
+# positive decimal number, mandatory.
+
+
+
+#F6
+name=Character set choice: 
+lininfo="mod2:F6"
+nrow=4
+ncol=1
+frow=4
+fcol=23
+rows=1
+columns=14
+value=$cset
+choicemsg=
+fieldmsg="Enter character set to use with the form"
+valid=`indicator -w;
+	regex -v "$F6" 
+	'^[_a-zA-Z0-9]{1,14}$'	'true'
+	'^.*$'			'false'`
+invalidmsg="Invalid Entry: Limit character sets to 14 letters, numbers and underscores."
+
+#F7
+name=mandatory/optional?
+lininfo="mod2:F7"
+nrow=4
+ncol=38
+frow=4
+fcol=58
+rows=1
+columns=9
+show=`
+    indicator -w;
+	if [ "$F6" = 'any' -o -z $F6 ];
+    then
+	false;
+    else
+	true;
+    fi;
+`
+value=$cmand
+menuonly=true
+rmenu={ `indicator -w; echo mandatory; echo optional` }
+fieldmsg="Is character set/printwheel \"mandatory\" or \"optional\"?"
+invalidmsg="Enter either \"optional\" or \"mandatory\"."
+
+#F8
+name=Ribbon color: 
+lininfo="mod2:F8"
+nrow=5
+ncol=1
+frow=5
+fcol=15
+rows=1
+columns=14
+value=$ribbon
+valid=`
+	indicator -w;
+	regex -v "$F8" 
+	'^[_a-zA-Z0-9]{1,14}$'	'true'
+	'^.*$'			'false'`
+fieldmsg="Enter ribbon color to use with the form"
+invalidmsg="Invalid Entry: Limit ribbon colors to 14 letters, numbers and underscores."
+
+#F9
+name=Comment:
+lininfo="mod2:F9"
+nrow=6
+ncol=1
+frow=7
+fcol=2
+rows=1
+columns=40
+scroll=true
+value=$comment
+fieldmsg="Enter a one-line description of this form for form users"
+
+valid=`indicator -w; regex -v "$F9" 'unknown pattern' '' '.*'`
+# optional.
+
+
+name=Alignment pattern file:
+lininfo="mod2:F10"
+nrow=9
+ncol=1
+frow=10
+fcol=2
+rows=1
+columns=40
+scroll=true
+value=$align_ptrn_file
+fieldmsg='Enter the pathname of the file containing the alignment pattern.'
+valid=`
+	indicator -w; 
+	rm -f /tmp/unread;
+	if [ -z $F10 ];
+	then
+		echo true;
+	elif [ -f /tmp/unread ];
+	then
+		echo false;
+	else
+		echo true;
+	fi;
+	rm -f /tmp/unread;
+	`
+invalidmsg="Invalid Entry: Alignment pattern file must be a pathname to an lp readable file";
+
+name=Alignment content-type:
+lininfo="mod2:F11"
+nrow=11
+ncol=1
+frow=11
+fcol=26
+rows=1
+columns=14
+show=`indicator -w;
+	if [ -n $F10 ];
+	then true;
+	else false;
+	fi`
+value=`indicator -w; 
+	if [ -n $align_type ];
+	then echo $align_type;
+	else echo simple;
+	fi`
+fieldmsg="Enter content-type of file containing alignment pattern"
+valid=`
+	indicator -w;
+	regex -v "$F11" 
+	'^[a-zA-Z0-9]{1,14}$'	'true'
+	'^.*$'			'false'`
+invalidmsg="Invalid Entry: Limit content types to 14 letters and numbers."
+
+
+name=Alert Command:
+lininfo="mod2:F12"
+nrow=13
+ncol=1
+frow=13
+fcol=16
+rows=1
+columns=26
+scroll=true
+value=`
+	if [ -n $alert ];
+	then
+		echo $alert;
+	else
+		echo none;
+	fi
+`
+valid=`
+	indicator -w;
+	regex -v "$F12" 
+	'^[m][a][i][l][ ]([_A-Za-z0-9]{1,14})'	'okay'
+	'^[m][a][i][l]$'	'okay'
+	'^[m][a][i][l][ ]$'	'okay'
+	'^[w][r][i][t][e][ ]([_A-Za-z0-9]{1,14})'	'okay'
+	'^[w][r][i][t][e]$'	'okay'
+	'^[w][r][i][t][e][ ]$'	'okay'
+	'^[/]([_A-Za-z0-9]{1,14}/)*'	'path'
+	'^[n][o][n][e]$'	'okay'
+	'^.*$'			'false' | set -l checkval;
+	if [ $checkval = 'okay' ];
+	then
+		echo true;
+	elif [ $checkval = 'path' ];
+	then
+		if [ -x $F12 ];
+		then
+			echo true;
+		else
+			set -l msg="Invalid Entry:  Please specify full path name of alert command.";
+			echo false;
+		fi;
+	else
+		echo false;
+		set -l msg="Invalid entry: Entry must be an executable command or \"none\".";
+	fi
+`
+rmenu={ "mail lp" "write lp" none }
+fieldmsg="Enter command to run to alert you when the form needs mounting"
+invalidmsg=$msg
+
+name=Number of Requests:
+lininfo="mod2:F13"
+nrow=14
+ncol=1
+frow=14
+fcol=22
+rows=1
+columns=5
+show=`indicator -w;
+	if [ -n "$F12" -a "$F12" != "none" ];
+	then true;
+	else false;
+	fi;`
+value=$requests
+invalidmsg="Enter a positive integer"
+fieldmsg="How many print requests should be waiting before you are alerted?"
+valid=`indicator -w;regex -v "$F13" '^[0123456789]+$' ''  `
+
+name=Frequency of alerts in minutes:
+lininfo="mod2:F14"
+nrow=15
+ncol=1
+frow=15
+fcol=34
+rows=1
+columns=5
+show=`indicator -w;
+	if [ -n "$F12" -a "$F12" != "none" ];
+	then true;
+	else false;
+	fi;`
+value=$falert
+valid=`indicator -w;regex -v "$F14" 
+	'^0$'			'false'
+	'^[0-9]{1,14}$'	'true'
+	'^[o][n][c][e]$'	'true'
+	'^.*$'			'false'`
+fieldmsg="Enter a positive integer or \"once\"."
+invalidmsg="Invalid Entry: Enter a positive integer or \"once\"."
+
+name=Users denied:
+lininfo="mod2:F15"
+nrow=17
+ncol=1
+frow=17
+fcol=15
+rows=1
+columns=30
+show=`indicator -w;
+	if [ $F16 = 'all' -o $F16 = 'any' ];
+	then false;
+	else true;
+	fi;`
+scroll=true
+value=$deny
+fieldmsg="Enter the users who are denied access to this form"
+invalidmsg="Invalid user name $badval - please reenter"
+valid=`indicator -w;
+	if -z $F15 ];
+	then true;
+	else
+	echo "$F15" | tr -d ', _![a-z][0-9][A-Z]' | fmlcut -c1 - 
+	| set -l badchar;
+	if [ -n $badchar ];
+	then echo "$F15" | tr " ,"  "[\012]" | grep "$badchar"
+	| set -l badval;
+	false;
+	else true;
+	fi;
+	fi;
+	`
+
+name=Users allowed:
+lininfo="mod2:F16"
+nrow=18
+ncol=1
+frow=18
+fcol=15
+rows=1
+columns=30
+show=`indicator -w;
+	if [ $F15 = 'all' -o $F15 = 'any' ];
+	then false;
+	else true;
+	fi;`
+scroll=true
+value=$allow
+fieldmsg="Enter the users who are allowed access to this form"
+invalidmsg="Invalid user name $badval - please reenter"
+
+valid=`indicator -w;
+	if -z $F16 ];
+	then true;
+	else
+	echo "$F16" | tr -d ', _![a-z][0-9][A-Z]' | fmlcut -c1 - 
+	| set -l badchar;
+	if [ -n $badchar ];
+	then echo "$F15" | tr " ," "[\012*]" | grep "$badchar"
+	| set -l badval;
+	false;
+	else true;
+	fi;
+	fi;
+	`

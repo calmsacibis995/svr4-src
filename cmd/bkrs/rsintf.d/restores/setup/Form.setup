@@ -1,0 +1,43 @@
+#ident	"@(#)bkrs:rsintf.d/restores/setup/Form.setup	1.8"
+form="Set and Display the Restore Operator"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+`set -l CMD=""`
+
+done=`message -w;
+	set -l ERR=/tmp/$VPID.bea;
+	message -w "Trying to set restore operator.";
+	shell "rsnotify -u \"$F1\" 1>$ERR 2>$ERR";
+	if [ $RET -eq 0 ] ;
+	then
+		getfrm | set -l FNUM;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.setok $F1 $FNUM";
+	else
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.setnok $F1";
+	fi`$!CMD
+
+begrow=any
+begcol=any
+
+# Operator field - F1
+name=Restore operator `rsnotify | fmlcut -f4- -d" " | sed -e "s/^.*assigned[.]*/assigned/"`:
+lininfo=F1
+nrow=2
+ncol=2
+
+frow=2
+fcol=48
+rows=1
+columns=8
+
+value=`rsnotify | fmlcut -f4- -d" " | sed -e "s/assigned.*$//" | set -l Login; regex -e -v "$Login"
+	'^no one$' '        '
+	'^.*$' '$Login'`
+
+choicemsg="Enter the restore request operator login (must be in password file)."
+invalidmsg="Error - $F1 is not in the password file.  Enter a valid login id."
+valid=`fmlgrep "^$F1:" /etc/passwd >/dev/null`
+

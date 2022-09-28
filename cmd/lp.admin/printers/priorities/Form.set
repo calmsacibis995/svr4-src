@@ -1,0 +1,59 @@
+#ident	"@(#)lp.admin:printers/priorities/Form.set	1.2"
+
+#######################################################
+#
+#       Module Name: printer_service/priorities/Form.set
+#
+#######################################################
+
+form=Set User Priorities
+
+help=OPEN TEXT $INTFBASE/Text.oamhelp $PRINTSERV/HELP/priorities/set.help "Set User Priorities"
+
+name=Priority level (maximum):
+nrow=1
+ncol=1
+frow=1
+fcol=26
+rows=1
+columns=2
+value=20
+
+#valid=`regex -v "$F1" '[0-3][0-9]' || regex -v "$F1" '[0-9]'`
+# An integer in the range [0..39], mandatory
+
+#choicemsg="N/A"
+invalidmsg="Enter an integer in the range 0 to 39."
+fieldmsg="Enter the highest priority allowed for a set of users ( 0-35 )."
+
+
+name=Priority level (default):
+nrow=2
+ncol=1
+frow=2
+fcol=26
+rows=1
+columns=2
+value=20
+#valid=`regex -v "$F1" '[0-3][0-9]' || regex -v "$F1" '[0-9]'`
+# An integer in the range of [0..39], but greater than or equal to the previous field, mandatory.
+
+choicemsg="N/A"
+invalidmsg="Enter an integer in the range 0 to 39."
+fieldmsg="Enter the default priority given to users that don\'t specify a priority."
+
+
+name=User list:
+nrow=3
+ncol=1
+frow=3
+fcol=11
+rows=1
+columns=64
+
+#valid=`regex -v "$F3" '?user-list?'`
+# \fILegal user-list\fR [USERS], or ALL, mandatory.
+
+#choicemsg="N/A"
+#invalidmsg="N/A"
+fieldmsg="Enter users to assign the priority limits entered above."

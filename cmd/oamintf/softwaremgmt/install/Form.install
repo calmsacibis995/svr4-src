@@ -1,0 +1,179 @@
+#ident	"@(#)oamintf:softwaremgmt/install/Form.install	1.3.3.3"
+
+form="Install a Software Package"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+framemsg="`readfile $INTFBASE/form.msg`"
+
+`readfile $INTFBASE/frept.msg | set -l MSG2`
+`set -l PKGADM="/var/sadm/install/admin"`
+`set -l PKGBIN="/usr/sadm/install/bin"`
+
+done=`
+	message -w ;
+	[ -n $F3 ] &&
+		opts="-r $F3" ;
+	isoam.ins $F1 | set -l ISOAM ;
+	if [ $ISOAM = "false" ]; then
+		run sh -cf "installpkg" ;
+	else
+	run sh -cf "
+		pkgadd -d $F1 -a $F4 $opts \`echo \"$F2\" | sed 's/[ ,]/ /g\`
+	";
+	fi;
+	message -f $MSG2;
+	echo FALSE
+`
+
+name=Package location:
+lininfo=pkgloc
+scroll=TRUE
+nrow=1
+ncol=2
+frow=1
+fcol=21
+rows=1
+columns=28
+value=spool
+rmenu={ `getdev 'mountpt:*' 'pathname:*'` }
+choicemsg=Select package location and press ENTER.
+# can't use devattr to check pathnames since it always
+# returns a zero for a pathname attribute request
+valid=`
+	message -w;
+	if [ -z $F1 ] ;
+	then
+		set -l DEVTYPE="" ;
+		echo FALSE ;
+	elif [ $F1 = spool ] || valpath -aoy $F1 ;
+	then
+		set -l DEVTYPE="online" ;
+	elif devattr $F1 mountpt || devattr $F1 norewind ;
+	then
+		set -l DEVTYPE="offline" ;
+	else
+		set -l DEVTYPE="" ;
+		echo FALSE ;
+	fi
+`
+
+invalidmsg=Error - must be an absolute directory/device pathname, or valid device alias.
+
+name=Package name(s):
+lininfo=pkgid
+scroll=TRUE
+nrow=2
+ncol=2
+frow=2
+fcol=20
+rows=1
+columns=29
+value=
+rmenu=vary `
+	if [ $DEVTYPE = online ] ;
+	then
+		set -l CMD="OPEN MENU $OBJ_DIR/../Menu.pkg -d$F1" ;
+	else
+		set -l CMD="" ;
+	fi`$CMD
+choicemsg=vary `
+	message -w ;
+	if [ $DEVTYPE = offline ] ;
+	then
+		echo "No choices available for off-line devices" ;
+	else
+		if [ $DEVTYPE = online ] ;
+		then
+			$OBJ_DIR/../pkg $F1 ;
+			if [ $RET = 1 ];
+			then
+				echo "MARK the items you want and press ENTER to select them." ;
+			else
+				echo "No choices available" ;
+			fi ;
+		else
+			echo "No choices available" ;
+		fi ;
+	fi ;
+`
+valid=`
+	message -w;
+	if [ -z $F2 ] ;
+	then
+		echo FALSE ;
+	else 
+		if [ $DEVTYPE = online ] ;
+		then
+			shell "	
+				for arg in \`echo \"$F2\" | sed 's/,/ /g'\`
+				do
+					$OBJ_DIR/../pkg $F1 \"\$arg\" >/dev/null 2>&1 
+					if [ \"\$?\" -eq 0 ]
+					then
+						exit 1
+					fi
+				done
+				exit 0
+			" ;
+		else
+			echo TRUE ;
+		fi ;
+	fi
+`
+invalidmsg=Error - invalid package instance identifier.
+
+name=Path to response file:
+lininfo=rspfile
+scroll=TRUE
+nrow=4
+ncol=2
+frow=4
+fcol=26
+rows=1
+columns=23
+value=
+choicemsg=`
+	if expr $F2 : '.*[, ]' >/dev/null ;
+	then 
+		echo Enter absolute pathname of the directory which contains the response files. ;
+	else
+		echo Enter absolute pathname of the response file. ;
+	fi
+`
+valid=`
+	message -w;
+	if [ -n $F3 ] ;
+	then
+		if expr $F2 : '.*[, ]' >/dev/null ;
+		then
+			valpath -aoy $F3 ;
+		else
+			valpath -ang $F3 || valpath -aoy $F3 ;
+		fi ;
+	fi
+`
+invalidmsg=`
+	message -w;
+	if expr $F2 : '.*[, ]' >/dev/null ;
+	then 
+		echo Error - input is not an absolute pathname to an existing directory. ;
+	else
+		echo Error - input is not an absolute pathname to an existing directory or file ;
+	fi
+`
+
+name=Installation defaults filename:
+lininfo=dfltfile
+nrow=5
+ncol=2
+frow=5
+fcol=35
+rows=1
+columns=14
+value=default
+rmenu={ none `ls $PKGADM` }
+menuonly=TRUE
+choicemsg=Select filename which contains desired installation defaults and press ENTER.
+
+name=RESET
+button=8
+action=reset

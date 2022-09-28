@@ -1,0 +1,182 @@
+#ident	"@(#)portmgmt:port_monitors/Form.pm_add	1.6"
+
+`pmgetpid | set -l PID`
+form= Add A Port Monitor
+lifetime=shorterm
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=` rm /var/tmp/cmd$PID /var/tmp/err$PID;
+	unset -l PID`
+done=`message -w "Adding port monitor <$F1> to the system.";
+	echo sacadm -a -p "$F1" -t "$F2" -c \""$F3"\" -v "$F4" \\ >/var/tmp/cmd$PID;
+	sacopts "$F5" "$F6" "$F7" "$F8" "$F9" >> /var/tmp/cmd$PID;
+	sh /var/tmp/cmd$PID >/var/tmp/err$PID 2>/var/tmp/err$PID;
+   	regex -e -v "$RET"
+		'^0$'  '`message "Port Monitor <$F1> is added successfully."`'
+		'^4$'  '`message "Port Monitor <$F1> is added successfully."`'
+		'^.*$' '`message "Port Monitor <$F1> is not added."`'`UPDATE
+
+# $F1
+name=Port monitor tag:
+nrow=1
+ncol=2
+frow=1
+fcol=22
+rows=1
+columns=14
+lininfo=pmtag
+valid=`set -l RET=0 && regex -v "$F1" '^[A-Za-z0-9]+$' && uniq_pmtag "$F1"`
+invalidmsg=`regex -v "$RET"
+		'^2$'	'Error - tag already exists.'
+		'.*' 	'Error - tag must be alphanumeric.'`
+choicemsg=const "Enter the tag associated with the port monitor."
+fieldmsg=const "Enter the tag associated with the port monitor."
+
+# $F2
+name=Port monitor type:
+nrow=2
+ncol=2
+frow=2
+fcol=22
+rows=1
+columns=14
+lininfo=pmtype
+valid=`regex -v "$F2" '^[A-Za-z0-9]+$'`
+choicemsg=const "Enter the type of port monitor, e.g. listen."
+fieldmsg=const "Enter the type of port monitor, e.g. listen."
+invalidmsg=const "Invalid input - enter 1 to 14 alphanumeric characters"
+
+# $F3
+name=Command to start the port monitor:
+nrow=3
+ncol=2
+frow=4
+fcol=6
+rows=1
+columns=40
+lininfo=pmcmd
+valid=`ckfile command "$F3"`
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - enter full pathname of the command'
+		'^2$'	'Error - must specify full pathname.'
+		'^3$'	'Error - file does not exist.'
+		'^4$'	'Error - command is not executable.'
+		'.*'	'Error - invalid command'`
+choicemsg=const "Enter the command for starting the port monitor."
+fieldmsg=const "Enter the command for starting the port monitor."
+scroll=TRUE
+
+# $F4
+name=Version number:
+nrow=5
+ncol=2
+frow=5
+fcol=18
+rows=1
+columns=3
+lininfo=pmversion
+value=`regex -e -v "$F2"
+		'^ttymon$' '`/usr/sbin/ttyadm -V`'
+		'^listen$' '`/usr/sbin/nlsadmin -V`'
+		'.*'  ' '`
+valid=`regex -v "$F4" '^[0-9]+$'`
+choicemsg=const "Enter the version number of port monitor."
+fieldmsg=const "Enter the version number of port monitor."
+invalidmsg=const "Invalid input - enter a positive number or zero."
+
+# $F5
+name=Start port monitor immediately?
+nrow=6
+ncol=2
+frow=6
+fcol=34
+rows=1
+columns=3
+lininfo=pmxflag
+value=Yes
+rmenu={ Yes No }
+menuonly=true
+choicemsg=const "Select "Yes" to start port monitor immediately"
+fieldmsg=const "Select "Yes" to start port monitor immediately"
+invalidmsg=const "Invalid input - select Yes/No only"
+
+# $F6
+name=Start state:
+nrow=7
+ncol=2
+frow=7
+fcol=16
+rows=1
+columns=8
+lininfo=pmstate
+value=ENABLED
+rmenu={ DISABLED ENABLED }
+menuonly=true
+choicemsg=const "Select ENABLED/DISABLED"
+fieldmsg=const "Select initial starting state for the port monitor."
+invalidmsg=const "Invalid input - select ENABLED/DISABLED only."
+
+# $F7
+name=Restart count:
+nrow=7
+ncol=27
+frow=7
+fcol=43
+rows=1
+columns=5
+lininfo=pmcount
+value=0
+valid=`regex -v "$F7" '^[0-9]+$'`
+choicemsg=const "Enter number of restart allowed."
+fieldmsg=const "Enter number of restart allowed."
+invalidmsg=const "Invalid input - enter a positive number, or zero"
+
+# $F8
+name=File name of the port monitor configuration script:
+nrow=10
+ncol=5
+frow=11
+fcol=9
+rows=1
+columns=40
+lininfo=pmscript
+valid=`ckfile regular "$F8"`
+invalidmsg=`regex -v "$RET"
+		'^1$'	'Error - enter full pathname of the script file'
+		'^2$'	'Error - must specify full pathname.'
+		'^3$'	'Error - file does not exist.'
+		'^6$'	'Error - file is not regular file.'
+		'.*'	'Error - invalid file name'`
+fieldmsg=const "Enter full path name of the script file."
+choicemsg=const "Enter full path name of the script file."
+scroll=true
+
+# $F9
+name=Comments:
+nrow=12
+ncol=5
+frow=13
+fcol=9
+rows=1
+columns=40
+lininfo=pmcomments
+fieldmsg=const "Enter comments"
+choicemsg=const "Enter comments"
+wrap=true
+scroll=true
+
+name=(Optional fields)
+nrow=9
+ncol=2
+inactive=true
+
+name=Fill in the form and then press SAVE.
+nrow=15
+ncol=4
+inactive=TRUE
+
+name=" "
+nrow=16
+ncol=2
+inactive=TRUE
+show=FALSE
+

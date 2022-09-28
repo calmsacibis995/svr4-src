@@ -1,0 +1,22 @@
+#ident	"@(#)nadmin.nfs:local/nfs/bin/imm_attr	1.1"
+echo $RESDIR | /bin/grep "/" 1>/dev/null
+if [ $? -eq 0 ]
+then
+	/usr/sbin/share -F rfs | /bin/grep "[ 	][ 	]*$RESDIR[	 ][ 	]*" >/var/tmp/c_adv$$
+else
+	/usr/sbin/share -F rfs | /bin/grep "^$RESDIR" >/var/tmp/c_adv$$
+fi
+
+if [ ! -s "/var/tmp/c_adv$$" ]
+then
+	echo "This resource is not shared currently" >/var/tmp/cmsg_$$
+else
+	/usr/bin/tr -s '\011' '\040' </var/tmp/c_adv$$ >/var/tmp/c_list$$
+	RES=`/usr/bin/cut -d" " -f1 </var/tmp/c_list$$`
+	ACC=`/usr/bin/cut -d" " -f3 </var/tmp/c_list$$ | /usr/bin/tr '\057' '\055'`
+	DIR=`/usr/bin/cut -d" " -f2 </var/tmp/c_list$$`
+	DESC=`/usr/bin/cut -d"\"" -f2 </var/tmp/c_list$$`
+	CLIENT=`/usr/bin/cut -d"\"" -f3 </var/tmp/c_list$$`
+	echo "$RES" "$DIR" "$ACC" "$DESCR" "$CLIENT" > /var/tmp/c_attr$$ 
+fi
+echo $$

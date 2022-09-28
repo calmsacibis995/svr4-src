@@ -1,0 +1,42 @@
+#ident	"@(#)bkrs:basic.d/Text.history	1.1"
+title="Backup History"
+lifetime=shortterm
+altslks
+
+begrow=any
+begcol=any
+
+`message "Strike the CONT function key to continue."`
+
+text="`readfile $ARG1`"
+rows=5
+columns=42
+
+name=CANCEL
+button=14
+action=`rm -f $ARG1`return cancel
+
+name=CONT
+button=11
+action=`rm -f $ARG1`return cancel 
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=""
+button=10
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+name=""
+button=9
+action=nop

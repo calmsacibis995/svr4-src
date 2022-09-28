@@ -1,0 +1,263 @@
+#ident	"@(#)lp.admin:printers/forms/Help	1.3.2.1"
+ABSTRACT: Manage Pre-Printed Forms
+	[GENERAL]
+	The "forms" menu gives you several tasks: for adding new
+	preprinted forms to the print service; for changing form
+	definitions; for mounting forms on printers; for adjusting
+	the alerting schedule for unmounted forms; and for examining
+	the forms recognized by the print service.
+	
+	Preprinted forms, by the way, include the various kinds of
+	paper stock you may want to use in your printers. The Line 
+	Printer Service lets you define enough of the form so that the
+	print service can prescreen users' requests, route users'
+	print requests to the proper destination, caution against
+	using a form with the wrong printer, and remind you that it
+	is time to mount a new form.
+	
+menu:L1:add
+	[GENERAL]
+	You use the "add" task to add a new
+	preprinted form to the Line Printer Service. A preprinted
+	form is the special paper you want to print on such as blank
+	checks, blank vouchers, labels, company letter-head, etc.
+	By telling the Line Printer Service a few details about the
+	forms you'll be using, the service will keep track of them
+	and will: alert you when a form needs to be mounted, verify
+	that a printer can handle a form, and initialize a printer
+	to print correctly on the form.
+
+add:F1:New Form:
+	[Name of new form:]
+	You are expected to enter the name of the new form. You
+	should choose any name that makes sense to you and will be
+	understood by your users, as long as you limit it to 14
+	characters or less, and use only letters, digits, and
+	underscores. You must name every form you add to the print
+	service.
+
+add:F2:Model Form:
+	[Name of existing form:]
+	You are expected to enter the name of an existing form
+	that you want to use  as a model for your new form.  If you
+	specify a model form, the page length, page width and other
+	configurations will be used to define your new form.
+
+mod2:F1:Page length:
+	[Page length:]
+	You are expected to enter a number, possibly followed by a
+	"i" or "c", that specifies the length of the page on which
+	to print. A trailing "i" would scale the number to inches,
+	a trailing "c" would scale it to centimeters; leaving out
+	either letter means the value is the number of lines.
+	
+mod2:F2:Page width:
+	[Page width:]
+	You are expected to enter a number, possibly followed by a
+	"i" or "c", that specifies the width of the page on which
+	to print. A trailing "i" would scale the number to inches,
+	a trailing "c" would scale it to centimeters; leaving out
+	either letter means the value is the number of columns.
+	
+mod2:F3:Line Pitch:
+	[Lines Per Inch:]
+	You are expected to enter a number, possibly followed by a
+	"i" or "c", that specifies the line spacing (line pitch) to
+	be used to print your files. A trailing "i" would scale the
+	number to lines per inch, a trailing "c" would scale it to
+	lines per centimeter; leaving out either letter also scales
+	it to lines per inch.
+	
+mod2:F4:Character Pitch:
+	[Characters Per Inch:]
+	You are expected to enter a number, possibly followed by a
+	"i" or "c", that specifies the column spacing (character
+	pitch) to be used to print your files. A trailing "i" would
+	scale the number to columns per inch, a trailing "c" would
+	scale it to columns per centimeter; leaving out either
+	letter also scales it to columns per inch.
+	
+mod2:F5:"Number of pages:" 
+	[Number of pages in the form:]
+	You are expected to enter a single number that gives the
+	length of the form in pages. This information is only used
+	to truncate alignment patterns to fit on a single form.
+	
+mod2:F6:Character set choice: 
+	[Character set to use with the form:]
+	If a particular character set, print wheel, or font
+	cartridge should be used when printing files on this form,
+	enter its name here. You define the ones available when you
+	add printers. This name will be used to automatically
+	select a character set when the form is used on a printer
+	that has selectable character sets, or will be used in a
+	message to you when the Line Printer Service reminds you to
+	mount the form.
+	
+	If you leave this field blank, it will be assumed that any font may be
+	used with this form.
+	
+mod2:F7:mandatory/optional?
+	[Mandatory or optional character set:]
+	If you enter "mandatory" the character set you named in
+	the previous field will be required when the form is used.
+	Otherwise, enter "optional" and the character set will be
+	recommended only. The difference is that if the set is
+	mandatory, a user cannot override the choice; if it is not
+	mandatory, the character set named will be used by default,
+	but a user can pick a different one to print his or her
+	files.
+	
+mod2:F8:Ribbon color: 
+	[Ribbon color to use with the form:]
+	You should enter the color of ribbon that should be used
+	when printing on this form. This is informational only; it
+	will be shown when you are reminded to mount a form. Please
+	limit the name of the color to 14 letters, digits, and
+	underscores.
+	
+mod2:F9:Comment:
+	[Enter a one-line description of this form for your users:]
+	You are expected to enter a single line of text that will be
+	displayed to people whenever they ask for a description of
+	the form. It's a good idea to keep it short so that it will
+	fit across the screen.
+	
+mod2:F10:Alignment pattern file:
+	[Enter the name of a file containing an alignment pattern:]
+	You are expected to enter the name of a file that contains a
+	sample print-out that can be used to help you align the form
+	in a printer. When you mount the form later, you can ask to
+	get this file printed repeatedly, with a pause between
+	forms, so that you can adjust the printer until the print-
+	out looks correct on the form.
+	
+	WARNING
+	The file you give will be printed as an alignment pattern EXACTLY as it
+	looks now. You should prepare the file so that no sensitive data is shown.
+	A copy of the file will be stored safely on disk so no other user can see
+	it, but sensitive data or real data that is printed as an alignment pattern
+	may be a problem.
+	
+	Just leave this field blank if you don't want an alignment pattern.
+	
+mod2:F11:Alignment content-type:
+	[What type of file is this?:]
+	So that the alignment pattern in the file you just gave can
+	be properly printed, you should enter its type. The type
+	name you give will be used to ensure that the alignment
+	pattern will be reproduced correctly on the printer where
+	the form is mounted. The Line Printer Service will use a filter
+	to do this if necessary and one is available.
+	
+	Your choice of type here should conform to the type of
+	printer, types of files acceptable by the printers, or types
+	acceptable to the filters, that you have on your system.
+	
+mod2:F12:Alert Command:
+	[Enter a command to run to alert you when the form needs mounting:]
+	You are expected to enter: the word "mail" if you want a
+	message mailed to you when the form needs to be mounted; the
+	word "write" if you want the message sent to whatever
+	terminal you are logged in to; or leave this field blank if you
+	don't want to be reminded. You can also give a shell
+	command if you want to be reminded but not by mail or a
+	written message, or if you want someone else notified.
+	
+	For instance, if you want a message written to the user
+	"pat" enter the following:
+	
+	write pat
+	
+mod2:F13:Number of Requests:
+	[How many print requests should be waiting before you are alerted?:]
+	You are expected to enter a single number that gives the
+	size the queue for this form should reach before you are
+	reminded to mount the form. Enter a "1" if you want to be
+	reminded as soon as someone submits a print request for this
+	form.
+	
+
+mod2:F14:Frequency of alerts in minutes:
+	[How frequently should you be alerted?:]
+	You are expected to enter the number of minutes that should
+	elapse between repeated reminders. To keep you informed
+	that a form still needs to be mounted, the Line Printer Service
+	will keep issuing reminders until the form is mounted (or
+	enough print requests needing the form have been canceled or
+	changed to use a different form). Entering ONCE will mean you
+	want to reminded just once.
+	
+mod2:F15:Users denied:
+	[List the users who are denied access to this form:]
+	You are expected to list the users who are NOT allowed to
+	use this form. Please give the login names or user-ID's of the users,
+	not their proper names. Separate several names with commas.
+	
+	If it is easier to specify access
+	restrictions by listing just those who ARE allowed to use
+	the form, leave this field blank and fill in the next.
+	
+	You can deny EVERYBODY by entering the word "all."
+	
+mod2:F16:Users allowed:
+	[List the only users who are allowed access to this form:]
+	You are expected to list the users who ARE allowed to use
+	this form. Please give the login names or user-ID's of the users, not
+	their proper names. Separate several names with commas.
+	
+	You can allow EVERYBODY by entering the word "all."
+
+
+menu:L2:list
+	[GENERAL]
+	You use the "list" task to see
+	the definitions of one or more forms. You can examine a
+	particular form, or can see all the forms on the system.
+
+list:F1:"Forms:"
+	[Enter form names:]
+	You are expected to enter the name of the form you'd like to
+	examine. You can enter the names of several forms by separating the
+	names with commas.
+	
+menu:L3:modify
+	[GENERAL]
+	You use the "modify" task to modify the definition of a
+	form. The same information you gave when you added the form
+	will provide the defaults for each item you are asked to
+	respecify, so you can quickly step through the definition to
+	find the item you want to modify.
+
+modify:F1:"Forms:"
+	[Name of form:]
+	You are expected to enter the name of the form you want to
+	modify. If you don't know the name, press CHOICES for a
+	list of known forms.
+	
+modify:F1:"Forms:"
+	[Page length:]
+	You are expected to enter a number, possibly followed by a
+	"i" or "c", that specifies the length of the page on which
+	to print. A trailing "i" would scale the number to inches,
+	a trailing "c" would scale it to centimeters; leaving out
+	either letter means the value is the number of lines.
+
+menu:L4:remove
+	[GENERAL]
+	You use the "remove" task to remove a form from the print
+	service. No more print requests will be accepted for it
+	and the form definition will be destroyed. Any print
+	requests currently queued to print on this form will be
+	CANCELED.
+
+remove:F1:Forms:
+	[Enter the names of the forms to remove:]
+	You are expected to enter the name of the form you want to
+	remove. You can give a list of forms to remove by
+	separating the names with commas. If you don't
+	know a form name, press CHOICES, to get a list of known forms.
+	
+	NOTE
+	If any print requests are currently queued to print on the form(s), 
+	you will not be able to remove them.

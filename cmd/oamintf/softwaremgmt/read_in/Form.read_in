@@ -1,0 +1,140 @@
+#ident	"@(#)oamintf:softwaremgmt/read_in/Form.read_in	1.4.3.3"
+
+form="Read in a Package Without Installing"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+framemsg="`readfile $INTFBASE/form.msg`"
+
+`readfile $INTFBASE/frept.msg | set -l MSG2`
+`set -l PKGBIN="/usr/sadm/install/bin"`
+
+done=`
+	message -w ;
+	devattr $F1 cdevice | set -l DEVICE ;
+	isoam.ins $DEVICE | set -l ISOAM ;
+	if [ $ISOAM = "false" ]; then
+		run sh -cf "isoam.read" ;
+	else
+	run sh -cf "
+		pkgadd -d$F1 -s$F3 \`echo \"$F2\" | sed 's/[ ,]/ /g\`
+	";
+	fi;
+	message -f $MSG2 ;
+	echo FALSE
+`
+
+name=Location of the software to be read in:
+lininfo=pkgloc
+scroll=TRUE
+nrow=1
+ncol=2
+frow=1
+fcol=43
+rows=1
+columns=22
+rmenu={ `getdev 'mountpt:*' 'pathname:*'` }
+choicemsg=Select location of package to be read in and press ENTER.
+# can't use devattr to check pathnames since it always
+# returns a zero for a pathname attribute request
+valid=`
+	message -w;
+	if [ -z $F1 ] ;
+	then
+		set -l DEVTYPE="" ;
+		echo FALSE ;
+	elif [ $F1 = spool ] || valpath -aoy $F1 ;
+	then
+		set -l DEVTYPE="online" ;
+	elif devattr $F1 mountpt || devattr $F1 norewind ;
+	then
+		set -l DEVTYPE="offline" ;
+	else
+		set -l DEVTYPE="" ;
+		echo FALSE ;
+	fi
+`
+invalidmsg=Error - must be an absolute directory/device pathname, or valid device alias.
+
+name=Package name(s):
+lininfo=pkgid
+scroll=TRUE
+nrow=2
+ncol=2
+frow=2
+fcol=20
+rows=1
+columns=45
+value=
+rmenu=vary ` 
+	if [ $DEVTYPE = online ] ;
+	then
+		set -l CMD="OPEN MENU $OBJ_DIR/../Menu.pkg -d$F1" ;
+	else
+		set -l CMD="" ;
+	fi`$CMD
+choicemsg=vary `
+	message -w ;
+	if [ $DEVTYPE = offline ] ;
+	then
+		echo "No choices available for off-line devices" ;
+	else
+		if [ $DEVTYPE = online ] ;
+		then
+			$OBJ_DIR/../pkg $F1 ;
+			if [ $RET = 1 ];
+			then
+				echo "MARK the items you want and press ENTER to select them." ;
+			else
+				echo "No choices available" ;
+			fi ;
+		else
+			echo "No choices available" ;
+		fi ;
+	fi ;
+`
+valid=`
+	message -w;
+	if [ -z $F2 ] ;
+	then
+		echo FALSE ;
+	else 
+		if [ $DEVTYPE = online ] ;
+		then
+			shell "	
+				for arg in \`echo \"$F2\" | sed 's/,/ /g'\`
+				do
+						$OBJ_DIR/../pkg $F1 \"\$arg\" >/dev/null 2>&1 
+					if [ \"\$?\" -eq 0 ]
+					then
+						exit 1
+					fi
+				done
+				exit 0
+			" ;
+		else
+			echo TRUE ;
+		fi ;
+	fi
+`
+invalidmsg=Error - invalid package instance identifier.
+
+name=Directory where package should be spooled:
+lininfo=spool
+scroll=TRUE
+nrow=4
+ncol=2
+frow=4
+fcol=46
+rows=1
+columns=19
+value=spool
+rmenu={ `getdev 'pathname:*'` }
+choicemsg=Select location to store package and press ENTER.
+valid=` 
+	message -w;
+	valpath -aoy $F3 || devattr $F3 pathname
+`
+invalidmsg=Error - not an existing directory or device alias which represents a directory.
+
+name=RESET
+button=8
+action=reset

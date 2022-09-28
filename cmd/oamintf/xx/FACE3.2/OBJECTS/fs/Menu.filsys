@@ -1,0 +1,20 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/fs/Menu.filsys	1.1"
+
+menu="File System Operations"
+#help=open text $VMSYS/OBJECTS/Text.h "File System" fs/T.hfilsys
+
+name="Create File System"
+action=nop
+show=false
+
+name="Mount File System"
+action=nop
+show=false
+
+name="Unmount File System"
+action=nop
+show=false
+
+name=""
+button=16
+action=nop

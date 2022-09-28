@@ -1,0 +1,19 @@
+#ident	"@(#)face:src/oam/programs/Text.amail	1.6"
+
+title="Installation of Mail Services"
+
+init=false
+
+`indicator -w;
+fmlgrep '^vmsys:' /etc/passwd | fmlcut -f6 -d: |set -e VMSYS;
+if fmlgrep 'name="Mail Services"' $VMSYS/lib/services > /dev/null;
+then
+	message "Mail Services are already in the Programs Menu.";
+else
+	if $VMSYS/bin/addmenu "Mail Services" "OBJECTS/Menu.mail" > /dev/null;
+	then
+		message "Mail Services have been added.";
+	else
+		message "Mail Services have not been added.";
+	fi;
+fi`

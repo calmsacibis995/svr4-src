@@ -1,0 +1,174 @@
+#ident	"@(#)oamintf:edsysadm/Form.redo	1.2"
+################################################################################
+#	Name: Form.redo
+#	Date July 1988
+################################################################################
+form="Rename or Relocate a Task"
+
+# set last two fields inactive for menu
+`if [ $ARG1 = "addmenu" -o $ARG1 = "chgmenu" ] ;
+      then
+	set -l S1="false";
+      else
+	set -l S1="true";
+fi`
+
+# set proper variables for rename/relocate
+`if [ $ARG8 = "rename" ];
+    then
+	set -l RENM="false";
+	set -l RELC="true";
+    else if [ $ARG8 = "relocate" ];
+	then
+		set -l RENM="true";
+		set -l RELC="false";
+    	else
+		set -l RENM="false";
+		set -l RELC="false";
+	fi;
+fi`
+
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+close=`rm -f $GETINFO /tmp/${VPID}.nf 2> /dev/null`
+
+#done=OPEN FORM $EDSYSADM/Form.save $ARG1 $ARG2 $F1 $F2 $F3 $F4 $F5 $F6 $LOC:$NAME
+done=`message "Please Wait - Installing online changes in the Interface";
+      mkchgs $ARG1 $ARG2 $ARG3 $ARG4 $ARG5 $ARG6 $ARG7 >/dev/null;
+      if [ $RET = 0 ];
+         then 
+	     set -l KEYCMD="OPEN TEXT $EDSYSADM/Text.success \"$ARG1\"
+             \"$ARG2\" \"$ARG3\" \"$ARG4\" \"$ARG5\" \"$ARG6\" \"$ARG7\"";
+         else if [ $RET = 1 ];
+              then
+                  set -l KEYCMD="OPEN FORM $EDSYSADM/Form.collision
+                  \"$ARG1\" \"$ARG2\" \"$ARG3\" \"$ARG4\" \"$ARG5\" \"$ARG6\" \"$ARG7\"";
+              else set -l KEYCMD="OPEN TEXT $EDSYSADM/Text.mkchgerr \"$RET\"";                fi;
+fi`$!KEYCMD
+
+# F1
+name=Name:
+lininfo=Form.task:name
+nrow=1
+ncol=1
+frow=1
+fcol=7
+rows=1
+columns=16
+value=$NAME
+inactive=$RENM
+
+valid=`regex -v "$F1" '^[\_a-z0-9]{1,16}$'`
+
+choicemsg="For Task Name use 16 or less lower case, number and underbar characters."
+invalidmsg="Error: Task Name must be lower case, numbers, and underbars only."
+
+# F2
+name=Description:
+lininfo=descrp
+nrow=2
+ncol=1
+frow=2
+fcol=14
+rows=1
+columns=58
+value=$DESC
+inactive=true
+
+valid=`regex -v "$F2" '^[A-Z][^\@\^\~\`\'\"]*$'`
+#valid=`regex -v "$F2" '^[A-Z][\_\ A-Za-z0-9]+$'`
+
+choicemsg="Task Description may be 58 characters or less."
+invalidmsg="Capitalize 1st letter of each word. Don't use special characters."
+
+
+# F3
+name=Location:
+lininfo=loc
+nrow=3
+ncol=1
+frow=3
+fcol=11
+rows=1
+columns=61
+scroll=true
+value=$LOC
+inactive=$RELC
+
+valid=`regex -v "$F3" '^[m][a][i][n][\:][\_A-Za-z0-9][\_\:A-Za-z0-9]*[\_A-Za-z0-9]$' 'true' '^main$' 'true' && 
+      shell " dc=\`echo \"$F3\" | awk '/::/ { exit 1 }'\` 
+      "`
+
+choicemsg="Start with 'main' and separate menu location levels with ':'."
+invalidmsg="Start with 'main', use a through z & underbars. Separate levels with ':'."
+# uses "a-zA-Z0-9_:", but can't end with ":", must start with "main:" and can't have "::"
+
+# F4
+name=Help message:
+lininfo=help
+nrow=4
+ncol=1
+frow=4
+fcol=15
+rows=1
+columns=57
+scroll=true
+value=$HELP
+inactive=true
+
+valid=`valpath -n $F4;
+	
+	if [ $RET -eq 0 ];
+	then
+		run edhelp $F4;
+	else
+		echo true;
+	fi`
+
+choicemsg="Use absolute or relative path name and standard filename characters."
+invalidmsg="Error: must contain the name of a file using standard filename characters."
+
+# F5
+name=Action:
+lininfo=Form.task:action
+nrow=5
+ncol=1
+frow=5
+fcol=9
+rows=1
+columns=63
+scroll=true
+value=$ACTION
+inactive=true
+
+valid=`valpath -o "$F5"`
+
+choicemsg="Task Action is the file that is executed when this item is selected from a menu."
+invalidmsg="Error: "$F5" does not exist."
+show=$S1
+
+# F6
+name=Task files:
+lininfo=Form.task:tfiles
+nrow=6
+ncol=1
+frow=6
+fcol=13
+rows=10
+columns=59
+scroll=true
+value=$FILES
+inactive=true
+
+valid=`indicator -w; valfiles "$F6"`
+
+choicemsg="Task Files must be separated by commas."
+invalidmsg="Error: `readfile /tmp/${VPID}.nf` does not exist."
+show=$S1
+
+name=RESET
+button=8
+action=reset

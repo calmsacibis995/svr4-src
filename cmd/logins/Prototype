@@ -1,0 +1,12 @@
+#ident	"@(#)logins:Prototype	1.1"
+
+## Files from local prototype: component=logins
+
+# foundation set (predecessor) directories
+
+d foundation usr 0755 root sys
+d foundation usr/bin 0755 root sys
+
+# foundation set files
+
+f foundation usr/bin/logins 0755 bin bin

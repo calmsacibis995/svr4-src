@@ -1,0 +1,212 @@
+#ident	"@(#)oamintf:usermgmt/Form.addusr	1.2.5.1"
+################################################################################
+#	Module Name:  Form.addusr
+#
+#	Command Used:
+#	 useradd [-u uid [-o] | -g group | -G group[[,group]...] | -d dir [-m] |
+#        -s shell | -c comment | -k skel_dir] -f inactive -e expire login
+#
+################################################################################
+form="Add a User"
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+	
+close=`rm -f $UADDERR`
+
+done=`set -l UADDERR=/tmp/$VPID.aue;
+
+   message -w "Adding "$F2" to the system.";
+
+   rm -f /tmp/sgrp;
+
+   getusrdefs -k | sed -n -e "s/.*skel=\([^ ]*\).*/\1/p" | set -l SKELDIR;
+
+   useradd -c"$F1" -u$F3 -g$F4 -G "$F5" -d$F6 -m -s$F7 -k$SKELDIR
+           -f "$F8" -e "$F9" $F2 >/dev/null 2> $UADDERR;
+
+   if [ $RET -eq 0 ];
+   then
+	set -l CMD="OPEN FORM $OBJ_DIR/Form.addpswd $F2";
+	admpriv "$F2" "$F10";
+   else
+	set -l CMD="OPEN TEXT $OBJ_DIR/Text.ausrnok $F2";
+   fi`$CMD
+
+#  $F1
+name=Comments:
+lininfo=Form.addusr:comments
+nrow=1
+ncol=3
+frow=1
+fcol=13
+rows=1
+columns=64
+scroll=true
+
+valid=`valstr -r '^[ -9;-z]\{1,\}$' "$F1"`
+
+invalidmsg=const "ERROR: Enter a character string, cannot include a (:)."
+
+#  $F2
+name=Login:
+lininfo=Form.addusr:login
+nrow=2
+ncol=3
+frow=2
+fcol=10
+rows=1
+columns=8
+
+valid=`valstr -r '^[!-9;-z]\{0,8\}$' "$F2" && uniq_lnam "$F2"`
+invalidmsg=`if [ $RET != 0 ];
+	    then
+		echo "ERROR: Enter 1-8 characters, cannot include a (:) and
+		must be unique.";
+	    fi`
+
+
+# $F3
+name=User ID:
+lininfo=Form.addusr:useid
+nrow=3
+ncol=3
+frow=3
+fcol=12
+rows=1
+columns=5
+
+value=const `finduid`
+`getmaxuid | set -l MAXUID`
+valid=`valrange -l100 -u$MAXUID $F3 && uniq_uid $F3`
+invalidmsg=`if [ $RET -eq 2 ];
+	    then
+		echo "ERROR: User ID must be unique.";
+	    else
+		errange -l100 -u$MAXUID;
+	    fi`
+
+# $F4
+name=Primary group:
+lininfo=Form.addusr:prigrp
+nrow=4
+ncol=3
+frow=4
+fcol=18
+rows=1
+columns=8
+
+value=`getusrdefs -g | sed -n -e "s/.*group=\([^ ]*\).*/\1/p" | fmlcut -d, -f1`
+rmenu=OPEN MENU $OBJ_DIR/Menu.pgrp
+valid=`shell "	if [ \"$F4\" = "other" -o \"$F4\" = "1" ]
+		then
+			exit 0;
+		else
+			chk_pgrp \"$F4\"
+fi"`
+
+invalidmsg=const "ERROR: Enter an existing group name or group id."
+
+# $F5
+name=Supplementary group(s):
+lininfo=Form.addusr:supgrp
+nrow=5
+ncol=3
+frow=5
+fcol=27
+rows=1
+columns=50
+scroll=true
+
+rmenu=OPEN MENU $OBJ_DIR/Menu.sgrp "$F4"
+valid=`chk_sgrp "$F4" "$F5"`
+`readfile /tmp/sgrp | set -l BSG`
+invalidmsg=`if [ $RET -eq 1 ];
+	    then
+		echo "ERROR: Cannot enter same group name or group id as Primary group";
+	    else
+		echo "ERROR: Cannot find group $BSG";
+	    fi`
+
+#  $F6
+name=Home directory:
+lininfo=Form.addusr:homedir
+nrow=6
+ncol=3
+frow=6
+fcol=19
+rows=1
+columns=58
+scroll=true
+
+value=`getusrdefs -b | sed -n -e "s/.*basedir=\([^ ]*\).*/\1/p"`/"$F2"
+valid=`valpath -a "$F6"`
+
+invalidmsg=const `errpath -e "It must be a full path to the directory."`
+
+#  $F7
+name=Shell:
+lininfo=Form.addusr:shell
+nrow=7
+ncol=3
+frow=7
+fcol=10
+rows=1
+columns=67
+scroll=true
+
+value=const `getusrdefs -s | sed -n -e "s/.*shell=\([^ ]*\).*/\1/p"`
+valid=`valpath -ox "$F7"`
+
+invalidmsg=const "ERROR: Shell entered must exist and be executable."
+
+#  $F8
+name=Login inactivity:
+lininfo=Form.addusr:inact
+nrow=8
+ncol=3
+frow=8
+fcol=21
+rows=1
+columns=7
+
+value=const `getusrdefs -f | sed -n -e "s/.*inactive=\([^ ]*\).*/\1/p"`
+valid=`valint $F8`
+
+invalidmsg=const `errint`
+
+#  $F9
+name=Login expiration date:
+lininfo=Form.addusr:expire
+nrow=9
+ncol=3
+frow=9
+fcol=26
+rows=1
+columns=18
+
+value=const `getusrdefs -e | sed -n -e "s/.*expire=\([^ ]*\).*/\1/p"`
+valid=`expdate $F9 || [ ! $F9 ]`
+invalidmsg="Must be a future date."
+
+# $F10
+name=System Administration Privileges:
+lininfo=Form.addusr:admin
+nrow=10
+ncol=3
+frow=10
+fcol=38
+rows=1
+columns=3
+
+value=No
+rmenu={ Yes No }
+menuonly=true
+choicemsg="Strike the CHOICES function key. Strike SAVE when you have completed the form."
+invalidmsg="Strike the CHOICES function key. Strike SAVE when you have completed the form."
+
+name=RESET
+button=8
+action=RESET

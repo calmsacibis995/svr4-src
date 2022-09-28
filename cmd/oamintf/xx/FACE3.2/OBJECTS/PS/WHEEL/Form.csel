@@ -1,0 +1,38 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/WHEEL/Form.csel	1.1"
+form="Printwheel Name"
+lifetime=longterm
+
+#help=open text $VMSYS/OBJECTS/Text.h "Printwheel Name" "PS/WHEEL/T.hcsel1"
+
+
+`ls /usr/spool/lp/admins/lp/pwheels > /usr/tmp/allwheel.$VPID`
+
+close=`rm -rf /usr/tmp/allwheel.$VPID`
+
+done=`indicator -w; /usr/vmsys/admin/.chkuser -c "/usr/vmsys/admin/PS/WHEEL/getall.sh :$F1: " `open form /usr/vmsys/OBJECTS/PS/WHEEL/Form.wchg $F1
+
+
+`message "Strike the CHOICES function key.  Strike SAVE when you complete the form."`
+
+name=Printwheel Name:
+nrow=1
+ncol=2
+rows=1
+columns=8
+frow=1
+fcol=19
+rmenu={ `readfile /usr/tmp/allwheel.$VPID` }
+menuonly=true
+fieldmsg="Strike CHOICES for choices. Strike SAVE when you complete the form."
+invalidmsg=`regex -e -v "$F1" '^$'  '\"Printwheel Name\" is a mandatory field. Strike CHOICES for choices.'
+	'.*'  '$F1 is not a valid printwheel. Strike CHOICES for choices.'`
+choicemsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+name=CMD-MENU
+button=7
+action=cmd-menu
+
+
+name=""
+button=8
+actio=nop

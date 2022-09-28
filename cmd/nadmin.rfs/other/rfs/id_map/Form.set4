@@ -1,0 +1,94 @@
+#ident	"@(#)nadmin.rfs:other/rfs/id_map/Form.set4	1.4"
+###############################################################################
+#    Date:    10/88
+#    Description:  
+###############################################################################
+form="Sets Current Group ID Mappings"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`readfile $INTFBASE/form.msg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/rfs/id_map`
+
+done=`indicator -w;
+	set -e GMAP="$F9";
+	getfrm | set -l FRM;
+	message "Group ID Mapping has been changed to $GMAP";
+	"$INTFBASE/netservices/remote_files/other/rfs/id_map/bin/gid_map";
+	`CLOSE $ARG1 $FRM
+#F1
+name="The following group id mappings are available:"
+nrow=1
+ncol=1
+frow=1
+fcol=47
+rows=1
+
+#F2
+name="allguest    Maps each remote numeric group id to the local guest"
+nrow=3
+ncol=1
+frow=3
+fcol=52
+rows=1
+
+#F3
+name="            numeric id MAXGID + 1"
+nrow=4
+ncol=1
+frow=4
+fcol=20
+rows=1
+
+#F4
+name="0guest      Maps each remote numeric group id to the same local"
+nrow=6
+ncol=1
+frow=6
+fcol=52
+rows=1
+
+#F5
+name="            numeric group id, but maps ids 0 (root) to MAXUID + 1."
+nrow=7
+ncol=1
+frow=7
+fcol=52
+rows=1
+
+#F6
+name="0to9guest   Maps each remote numeric group id to the same local"
+nrow=9
+ncol=1
+frow=9
+fcol=52
+rows=1
+
+#F7
+name="            numeric group id, but maps ids 0-9 (the system ids)"
+nrow=10
+ncol=1
+frow=10
+fcol=52
+rows=1
+
+#F8
+name="            to MAXGID + 1."
+nrow=11
+ncol=1
+frow=11
+fcol=30
+rows=1
+
+#F9
+name="Group mapping:"
+nrow=13
+ncol=13
+frow=13
+fcol=28
+rows=1
+columns=10
+rmenu={ allguest 0guest 0to9guest }
+menuonly=true
+value="0to9guest"
+lininfo=set4:gmap
+invalidmsg="Press CHOICES to select valid responses."

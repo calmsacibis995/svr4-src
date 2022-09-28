@@ -1,0 +1,27 @@
+#ident	"@(#)devintf:devices/attrs/modify/Text.c_modify	1.4"
+
+title="Completion Message"
+
+begrow=any
+begcol=any
+rows=4
+columns=60
+altslks=TRUE
+framemsg=`readfile $INTFBASE/trept.msg`
+`
+	set -l LIFE=longterm ;
+`
+lifetime=$LIFE
+
+text="
+$ARG1"
+
+name="CONT"
+button=11
+action=`
+    set -l LIFE=shortterm ;
+`update $FRAMENUM true
+
+name="CANCEL"
+button=14
+action=cleanup

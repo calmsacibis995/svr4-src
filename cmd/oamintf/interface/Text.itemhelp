@@ -1,0 +1,20 @@
+#ident	"@(#)oamintf:interface/Text.itemhelp	1.3"
+#
+#  This is the text object used for per-item help within the OAM Interface.
+#
+
+begrow=distinct
+begcol=distinct
+
+framemsg=`readfile $INTFBASE/display.msg`
+
+title=`$OAMBASE/bin/itemhelp -t "$ARG1" "$OBJ_DIR/Help"`
+rows=`$OAMBASE/bin/itemhelp -l "$ARG1" "$OBJ_DIR/Help"`
+columns=76
+
+#lifetime=longterm
+text="`$OAMBASE/bin/itemhelp "$ARG1" "$OBJ_DIR/Help"`"
+
+name=
+button=1
+action=

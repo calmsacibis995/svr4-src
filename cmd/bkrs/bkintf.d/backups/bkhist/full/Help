@@ -1,0 +1,25 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkhist/full/Help	1.2.1.1"
+
+ABSTRACT: Full Report of Backup History Information
+	The "full" task displays a full report of backup history 
+	information. The following information is displayed: backup 
+	operation tag, backup operation date, the method used, the
+	destination device type, destination volume labels, number
+	of volumes in the backup and location of the table of
+	contents, if one was created.  If the table of contents
+	exists online, then an "ls -l" listing of files backed up
+	will be included.
+	
+TITLE: Full Report of Backup History Information
+
+ERROR:
+	The file you have entered already exists.  Please specify whether the
+	summary report is to be appended to the existing contents of the file
+	or whether the report is to overwrite the current contents.  If you
+	would prefer to choose another file name instead, press [CANCEL] to
+	return to the previous form without writing anything to the file.
+
+full:F1:Output to
+	Enter "terminal" for data to be sent to the screen, or a 
+	filename if data is to be sent to a file. Please specify
+	a file that does not exist.

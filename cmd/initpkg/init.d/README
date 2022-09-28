@@ -1,0 +1,43 @@
+#ident	"@(#)initpkg:init.d/README	1.4.1.1"
+
+/etc/init.d contains initialization and termination scripts
+for changing init states.  These scripts are linked when appropriate
+to files in the rc?.d directories.
+File names in rc?.d directories are of the form [SK]nn<init.d filename>
+where 'S' means start this job, 'K' means kill this job, and 'nn' is
+the relative sequence number for killing or starting the job.
+When entering a state (init 0,2,3,etc.)
+the rc[0-6] script executes those scripts in /etc/rc[0-6].d that are 
+prefixed with 'K' followed by those scripts prefixed with 'S'.
+
+EXAMPLE: When changing to init state 2 (default multi-user mode),
+	/sbin/rc2 is initiated by the init process. The following
+	steps are performed by /sbin/rc2.
+
+	1. In the directory /etc/rc2.d are files used to stop processes 
+	that should not be running in state 2.  The filenames
+	are prefixed with 'K'.  Each 'K'  file in the directory is
+	executed (by /sbin/rc2) in alpha-numeric order when the system 
+	enters init state 2.  (see example under next item).
+
+	2. Also in the rc2.d directory are files used to start
+	processes that should be running in state 2.  As in the step
+	above, each 'S' file is executed.
+
+	Example:
+
+		The file /etc/netdaemon is a script that will initiate
+		networking daemons when given the argument 'start',
+		and will terminate the daemons if given the argumant
+		'stop'.  It is linked to /etc/rc2.d/S68netdaemon,
+		and to /etc/rc0.d/K67netdaemon.  
+		It file is executed by '/etc/rc2.d/S68netdaemon start'
+		when init state 2 is entered and by
+		'/etc/rc0.d/S67netdaemon stop' when shutting the 
+		system down.
+
+NOTE:
+/sbin/rc2 has references to the obsolescent 'rc.d' directory.  These
+references are for compatibility with old INSTALL scripts. New
+INSTALL scripts should use the init.d directory for related executables.
+The same is true for the shutdown.d directory.

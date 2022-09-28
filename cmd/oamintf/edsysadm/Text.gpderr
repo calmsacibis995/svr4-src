@@ -1,0 +1,41 @@
+#ident	"@(#)oamintf:edsysadm/Text.gpderr	1.2"
+
+################################################################################
+#	Module Name: Text.mkchgerr
+#	Date: August 1988
+################################################################################
+title="Installation of Online Changes in Interface"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+begrow=any
+begcol=any
+
+#   Need to add in for 4,5 the following warning
+#   WARNING: Existing task files may be corrupted.
+
+`regex -e -v "$ARG8"
+	'^2$' '`set -l MKERR="Cannot create menu information file."`'
+	'^3$' '`set -l MKERR="Cannot copy task files into interface structure."`'
+	'^4$' '`set -l MKERR="Cannot modify interface menu file(s)."`'
+	'^5$' '`set -l MKERR="Cannot modify express mode lookup file."`'
+	'^8$' '`set -l MKERR="Cannot complete changes to menu file or directory."`'
+	'^9$' '`set -l MKERR="Installation script error. Please try again."`'`
+
+text="   The installation of the online changes 
+   in the Interface was NOT successful.
+
+   Error : $MKERR"
+
+rows=6
+columns=75
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

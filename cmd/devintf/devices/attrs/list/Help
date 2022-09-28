@@ -1,0 +1,18 @@
+#ident	"@(#)devintf:devices/attrs/list/Help	1.2"
+
+list:ABSTRACT:
+	The "list" task lists the attributes of a device described in the
+	Device Management tables.  You will be asked to enter either the alias
+	or a pathname of the device you wish to list.
+
+Form.list:Device:the Device field
+	This is the name of the device (alias or a pathname to the device)
+	whose attributes you wish to see.
+	
+	This field may not be blank and must reference a device that is
+	administered in the Device Management tables.
+
+LISTING:the Attribute List screen
+	This screen contains all of the attributes defined for the named
+	device.  The first column is the attribute name and the second column
+	is the value of the attribute.

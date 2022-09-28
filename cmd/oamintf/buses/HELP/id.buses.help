@@ -1,0 +1,5 @@
+#ident	"@(#)oamintf:buses/HELP/id.buses.help	1.1.1.1"
+Bus Information and Management administers hardware that require a
+seperate bus interface.  For example, if you have SCSI installed on
+your system, SCSI Bus Administration forms and menus will appear as
+a sub-item within this menu selection.

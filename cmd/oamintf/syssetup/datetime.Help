@@ -1,0 +1,79 @@
+#ident	"@(#)oamintf:syssetup/datetime.Help	1.1.1.1"
+
+TITLE: Displaying and/or Setting System Date and Time
+
+display:TITLE: Displaying System Date and Time
+
+set:TITLE: Setting System Date and Time
+
+display:ABSTRACT:
+	The "display" task displays the computer date, time, time zone and 
+	whether your location observes Daylight Savings Time (DST).  The 
+	"display" task may be run at any time to check the system date and 
+	time information.  
+
+ABSTRACT:
+	The "datetime" menu displays and/or sets the computer date, 
+	time, time zone and whether your location observes Daylight Savings 
+	Time (DST).  The set task is normally run once when the machine is 
+	first set up. The display task may be run at any time to check the 
+	system date and time information.  If you observe DST, the computer 
+	will automatically start to observe it in the spring and return to 
+	Standard Time in the fall.
+
+	When you execute the datetime "set" task, all logins and processes
+	already running will continue to see the old time.  cron(1M)
+	will be restarted with the new time and time zone if it was
+	already running.
+
+Form.dateset:date:
+	"Date:"  This prompt has three separate fields:
+
+Form.dateset:month:
+	       Month: Enter a valid month.  Choices are Jan-Dec or
+	              January-December.  The default is the current month.
+Form.dateset:day:
+	       Day:   Enter the day of the month.  A valid day falls
+	              within the range 01-31 or 1-31.  The default is
+	              the current day of the month.
+Form.dateset:year:
+	       Year:  Enter the year.  The year must be greater than 1970
+	              and less than 2038.  The default is the current year.
+
+Form.dateset:time:
+	"Time:"  This prompt has two separate fields:
+Form.dateset:hour:
+	       Hour:    Enter the hour of the day.  A valid hour falls
+	                within the range 0-12.  The default is the
+	                current hour.
+Form.dateset:minute:
+	       Minute:  Enter the minute of the hour.  A valid minute
+	                falls within the range 0-59.  The default is the
+	                current minute.
+
+Form.dateset:meridian:
+	"AM/PM:"  Enter either AM or PM.  The default is the current
+	          setting.
+
+Form.dateset:timezone:
+	Valid time zone choices for both Standard and Daylight Savings
+	Time are: Greenwich, Atlantic, Eastern, Central, Mountain, Pacific,
+	Yukon, Alaska, Bering, Hawaii and the current time zone. The default 
+	is the current time zone.
+
+Form.dateset:daylight:
+	"Is daylight savings time in effect?:"  Enter "yes" or "no" to 
+	indicate whether or not daylight savings time (DST) is used in your
+	location.  The default is the current setting.
+
+Text.datenok:ABSTRACT:
+	The system was unable to change the date and time as you
+	requested.  Verify that the system date and time are legitimate.
+	To see the current date and time, run the "date(1)" command.
+
+Text.dateok:ABSTRACT:
+	The "datetime" task has successfully changed the system date
+	and time information.  You may need to log out and log in again
+	to see any time zone changes.  The change will be reflected in all
+	new processes invoked after this time.
+

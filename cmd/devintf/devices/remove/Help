@@ -1,0 +1,14 @@
+#ident	"@(#)devintf:devices/remove/Help	1.2.2.1"
+
+remove:ABSTRACT:
+	The "remove" task removes a device description from the Device
+	Management tables.  After a device is removed, it can no longer
+	be used by applications which depend upon Device Management.
+	You will be asked for the alias of the device to remove.
+
+Form.remove:Device:the Device field
+	Enter the name of the device (alias to the device) whose
+	description you wish to remove from the device table.
+	
+	This field may not be blank and must reference a device that is
+	currently in the Device Management tables."

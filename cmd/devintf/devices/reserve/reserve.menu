@@ -1,0 +1,7 @@
+#ident	"@(#)devintf:devices/reserve/reserve.menu	1.3"
+#menu#Device Reservation Management
+#life#permanent
+
+free^Free a Reserved Device^free/Form.free
+list^List Device Reservations^list/Text.list
+reserve^Reserve a Device^reserve/Form.reserve

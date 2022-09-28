@@ -1,0 +1,21 @@
+#ident	"@(#)devintf:devices/list/Text.list	1.4"
+
+title="Devices List"
+begrow=any
+begcol=any
+framemsg=`readfile $INTFBASE/display.msg`
+help=OPEN TEXT $INTFBASE/Text.itemhelp "LISTING"
+lifetime=longterm
+wrap=FALSE
+
+`
+    getdev | set -l LIST ;
+    echo "$LIST" | wc -l | set -l NROWS ;
+    if [ $NROWS -gt 15 ] ;
+    then set -l NROWS=15 ;
+    fi ;
+`
+
+rows=$NROWS
+columns=14
+text=$LIST

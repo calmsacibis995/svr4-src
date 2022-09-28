@@ -1,0 +1,8 @@
+#ident	"@(#)oamintf:softwaremgmt/software.menu	1.5.2.1"
+#menu#Software Installation and Information Management
+#help#software.help^Software Installation and Information Management
+#life#permanent
+
+install^Installs Software Packages^install/Form.install
+list^Displays Information about Packages^list/Form.list
+remove^Removes Packages^remove/Form.remove

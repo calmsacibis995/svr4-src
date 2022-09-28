@@ -1,0 +1,22 @@
+The Schedule a Task Menu enables you to schedule tasks to run
+automatically at a later time or at regular times.
+
+The items on the Schedule a Task Menu are:
+
+      Add:  Enables you to set up the parameters for scheduling tasks.
+
+      Change:  Enables you to change the schedule parameters for a
+      scheduled task.
+
+      Delete:  Deletes the scheduled task(s) you specify.
+
+      Display:  Displays the tasks you have scheduled.
+
+You will not be able to use this feature unless you are able to use
+cron as described on the manual page for cron (1). See the User's
+Reference Manual for the cron (1) manual page.
+
+If the task scheduler (cron) is not currently running, you may
+schedule a task but the task will not run until the scheduler
+is started.
+

@@ -1,0 +1,35 @@
+#ident	"@(#)oampkg:pkgscripts/r.build	1.6"
+
+error=no
+while read dest
+do
+	if [ -d $dest ]
+	then
+		echo "$dest"
+		rmdir $dest || error=yes
+	elif [ -f $dest ]
+	then
+		echo "Modifying $dest"
+
+		savepath=$PKGSAV/build${dest}
+		chmod +x $savepath
+		if $savepath remove $dest > /tmp/$$build
+		then
+			if [ ! -s /tmp/$$build ]
+			then
+				rm -f $dest
+			else
+				cp /tmp/$$build $dest || error=yes
+			fi
+		else
+			error=yes
+		fi
+		rm -f /tmp/$$build
+	else
+		[ -r $dest ] && echo "$dest"
+		rm -f $dest || error=yes
+	fi
+done
+[ "$error" = yes ] &&
+	exit 2
+exit 0

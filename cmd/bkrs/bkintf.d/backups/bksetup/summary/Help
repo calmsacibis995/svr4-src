@@ -1,0 +1,39 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/summary/Help	1.2.1.1"
+
+ABSTRACT: Rotation Period Modification
+	The "rotation" task allows you to modify the rotation period (in
+	weeks) for a backup register.  You may also modify the value of the
+	current week of the rotation.  If you do not change it, but you do
+	modify the rotation period, the current week will default to the
+	value displayed.  In general, when you change the rotation period,
+	you will want the current week of the rotation to be 1.
+	
+	The rotation period and current week are used to determine which
+	backups will be run on a given day.  For example, if today is
+	Tuesday of the third week of the rotation period, then backups
+	to be run today are those in the backup register for week 3, day 
+	2.
+	
+	The default for each of these values is the value currently in the
+	backup register.
+	
+	This form displays the values of the rotation period and current
+	week in the backup register you specified.
+
+TITLE: Rotation Period Modification
+
+rotate:F1:Table Field
+	"Table:"  Enter the name of the backup register whose rotation
+	period you want to set.  The name must be a path to an existing
+	file.
+
+values:F1:
+	"Rotation Period:"  Enter the rotation period for the specified
+	backup register.  The period must be an integer number of weeks
+	between 1 and 52.
+
+values:F2
+	"Current Week:"  Enter an integer between 1 and the period value
+	which represents which week of the rotation this current week is.
+	Normally, you would enter 1 here, unless the current week is in the
+	middle of the rotation period.

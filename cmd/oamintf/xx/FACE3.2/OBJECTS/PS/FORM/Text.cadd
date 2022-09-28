@@ -1,0 +1,46 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FORM/Text.cadd	1.1"
+title=Confirmation
+lifetime=shortterm
+altslks=true
+
+rows=4
+columns=55
+
+`message  Strike the CONT function key to continue.`
+
+text="
+  Form $ARG1 has been added to the list 
+  of available forms on your system.
+"
+
+name=CANCEL
+button=14
+action=close /usr/vmsys/OBJECTS/PS/FORM/Text.cadd /usr/vmsys/OBJECTS/PS/FORM/Form.add /usr/vmsys/OBJECTS/PS/FORM/Form.asel
+
+name=CONT
+button=11
+action=close /usr/vmsys/OBJECTS/PS/FORM/Text.cadd /usr/vmsys/OBJECTS/PS/FORM/Form.add /usr/vmsys/OBJECTS/PS/FORM/Form.asel
+
+name=PREV-FRM
+button=12
+action=return prev-frm
+
+name=NEXT-FRM
+button=13
+action=return next-frm
+
+name=""
+button=10
+action=nop
+
+name=""
+button=9
+action=nop
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+`indicator -w`

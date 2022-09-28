@@ -1,0 +1,121 @@
+#ident	"@(#)initpkg:init.d/rpc	1.1.7.3"
+
+if [ ! -d /usr/bin ]
+then			# /usr not mounted
+	exit
+fi
+case "$1" in
+'start')
+	set `who -r`
+	if [ $9 = "S" -o $9 = "1" -o $9 = "?" ]
+	then
+		if [ -x /usr/sbin/rpcbind ]
+		then
+			/sbin/sh /etc/init.d/rpc rpcstart&
+		else
+			exit # nothing else can do anything
+		fi
+	fi
+	;;
+'rpcstart')
+		/usr/sbin/rpcbind > /dev/console 2>&1&
+		pid=$!
+		# if rpcbind fails and hangs for any reasons,
+		# kill the process after 30 seconds, so that
+		# system can start up during boot time
+		for i in 1 2 3 4 5 6
+		do
+			ppid=`/usr/bin/ps -e | /usr/bin/grep "$pid" | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+			if [ "$ppid" != "" ]
+			then	sleep 5
+			else	break
+			fi
+		done
+		if [ "$ppid" != "" ]
+		then	 echo "rpcbind failed"
+			/usr/bin/kill "${ppid}"
+		fi
+	
+		if [ -x /usr/lib/netsvc/rwall/rpc.rwalld ]
+		then
+			/usr/lib/netsvc/rwall/rpc.rwalld > /dev/console 2>&1
+		fi
+		if [ -x /usr/lib/netsvc/rusers/rpc.rusersd ]
+		then
+			/usr/lib/netsvc/rusers/rpc.rusersd  > /dev/console 2>&1
+		fi
+		if [ -x /usr/lib/netsvc/spray/rpc.sprayd ]
+		then
+			/usr/lib/netsvc/spray/rpc.sprayd > /dev/console 2>&1
+		fi
+
+#		uncomment for secure RPC
+
+#		if [ -x /usr/sbin/keyserv ]
+#		then
+#			/usr/sbin/keyserv > /dev/console 2>&1
+#		fi
+#		if [ -x /usr/lib/netsvc/yp/ypbind ]
+#		then
+#			/usr/lib/netsvc/yp/ypbind > /dev/console 2>&1
+#		fi
+#		if [ -x /usr/lib/netsvc/yp/ypupdated ]
+#		then
+#			/usr/lib/netsvc/yp/ypupdated > /dev/console 2>&1
+#		fi
+#		if [ -x /usr/lib/netsvc/yp/ypserv ]
+#		then
+#			/usr/lib/netsvc/yp/ypserv > /dev/console 2>&1
+#		fi
+
+		;;
+'stop')
+	#stop all the daemons
+	pid=`/usr/bin/ps -e | /usr/bin/grep rpc.spra | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+	if [ "${pid}" != "" ]
+	then
+		/usr/bin/kill ${pid}
+	fi
+	pid=`/usr/bin/ps -e | /usr/bin/grep rpc.ruse | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+	if [ "${pid}" != "" ]
+	then
+		/usr/bin/kill ${pid}
+	fi
+	pid=`/usr/bin/ps -e | /usr/bin/grep rpc.rwal | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+	if [ "${pid}" != "" ]
+	then
+		/usr/bin/kill ${pid}
+	fi
+	pid=`/usr/bin/ps -e | /usr/bin/grep rpcbind | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+	if [ "${pid}" != "" ]
+	then
+		/usr/bin/kill ${pid}
+	fi
+
+#		uncomment for secure RPC
+
+#	pid=`/usr/bin/ps -e | /usr/bin/grep keyserv | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+#	if [ "${pid}" != "" ]
+#	then
+#		/usr/bin/kill ${pid}
+#	fi
+#	pid=`/usr/bin/ps -e | /usr/bin/grep ypbind | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+#	if [ "${pid}" != "" ]
+#	then
+#		/usr/bin/kill ${pid}
+#	fi
+#	pid=`/usr/bin/ps -e | /usr/bin/grep ypupdated | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+#	if [ "${pid}" != "" ]
+#	then
+#		/usr/bin/kill ${pid}
+#	fi
+#	pid=`/usr/bin/ps -e | /usr/bin/grep ypserv | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+#	if [ "${pid}" != "" ]
+#	then
+#		/usr/bin/kill ${pid}
+#	fi
+	;;
+*)
+	echo "Usage: /etc/init.d/rpc { start | stop }"
+	;;
+esac

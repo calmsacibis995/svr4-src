@@ -1,0 +1,17 @@
+#ident	"@(#)oamintf:syssetup/Menu.setpgrp	1.2.1.1"
+
+################################################################################
+#	Module Name: Menu.setpgrp - was Menu.pgrp
+#	Author: Mike Coufal
+#	Date: 2/88
+#	Description: This menu provides the user with a pop-up menu for
+#		     user group selection.  /etc/group is sorted and piped
+#		     through regex to set the name and description fields
+#		     while selecting only group ids that are less 100. 
+#		     Form_Choices is set to the item the user selects.
+################################################################################
+menu="Existing User Groups"
+
+`sort +0 -1 -t: /etc/group | regex '^([^:][^:]*)$0:[^:]*:([0-9][0-9][0-9][0-9]*)$1:.*$' 'name="$m0"
+description="$m1"
+action=`set -l "Form_Choice=$m0"`CLOSE'`

@@ -1,0 +1,13 @@
+#ident	"@(#)bkrs:bkintf.d/backups/Help	1.3.2.2"
+
+ABSTRACT: Backup Service
+	The "backup_service" menu allows you to manage the backup side 
+	of the backup and restore service.  Functions are provided to 
+	determine the backup rotation period, to specify how backups 
+	are to be done for file systems and data partitions, to display
+	the backup history and backup status logs, to establish lists of
+	files that should not be backed up, to respond to operator prompts
+	from backup jobs and to schedule backups and the reminder messages
+	that backups should be done.
+
+TITLE: Backup Service

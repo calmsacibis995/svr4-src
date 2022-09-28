@@ -1,0 +1,101 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/WHEEL/Form.wchg	1.1"
+form="Change A Printwheel"
+lifetime=longterm
+altslks=true
+
+#help=open text $VMSYS/OBJECTS/Text.h "$T" "$F"
+
+`ls /usr/spool/lp/admins/lp/pwheels > /usr/tmp/allwheel.$VPID`
+
+done=`indicator -w; /usr/vmsys/admin/.chkuser -c "/usr/vmsys/admin/PS/WHEEL/mkwheel.sh :$F1: :$F2: :$F3: :$F4: "  | regex 
+	0	"open text /usr/vmsys/OBJECTS/PS/WHEEL/Text.cchg \"$F1\" "
+	1	"open text /usr/vmsys/OBJECTS/PS/WHEEL/Text.nchg \"$F1\" "`
+
+close=`/usr/vmsys/admin/.chkuser -c "/bin/rm :-rf: :/usr/tmp/wheel.$VPID: :/usr/tmp/err.$VPID: " `
+
+`message "Strike the CHOICES function key.  Strike SAVE when you complete the form."`
+
+name=Printwheel name:
+nrow=1
+ncol=2
+rows=1
+columns=8
+frow=1
+fcol=19
+value=$ARG1
+inactive=true
+
+name=Mount printwheel alert action:
+nrow=3
+ncol=2
+rows=1
+columns=40
+frow=3
+fcol=33
+rmenu=OPEN Menu /usr/vmsys/OBJECTS/PS/WHEEL/Menu.alert
+menuonly=false
+value=${(/usr/tmp/wheel.$VPID)fault}
+valid=`/usr/vmsys/admin/PS/WHEEL/vcmount.sh "$F2"`
+fieldmsg=`set -l T="Mount Printwheel Alert Type" -l F=PS/WHEEL/T.hwadd2`const "Strike the CHOICES function key or type a command to execute for alert."
+invalidmsg=`readfile /usr/tmp/err.$VPID`
+
+name=Frequency of alert in minutes:
+nrow=5
+ncol=2
+rows=1
+columns=4
+frow=5
+fcol=33
+value=${(/usr/tmp/wheel.$VPID)freq}
+rmenu={ once 1  5 30 60 }
+menuonly=true
+fieldmsg=`set -l T="Frequency of Alert in Minutes" -l F=PS/WHEEL/T.hwadd3`const "Strike the CHOICES function key. Strike SAVE when you complete the form."
+invalidmsg="$F3 is not a valid frequency. Strike CHOICES for valid choices."
+choicemsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+
+name=Number of requests to wait before alert:
+nrow=7
+ncol=2
+rows=1
+columns=2
+frow=7
+fcol=43
+value=${(/usr/tmp/wheel.$VPID)requests}
+rmenu={ 1 3 5 10 15 20 }
+menuonly=true
+fieldmsg=`set -l T="Number of Requests to Wait Before Alert" -l F=PS/WHEEL/T.hwadd4`const "Strike the CHOICES function key. Strike SAVE when you complete the form."
+invalidmsg="$F4 is not a valid frequency. Strike CHOICES for valid choices."
+choicemsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+name=CANCEL
+button=14
+action=close /usr/vmsys/OBJECTS/PS/WHEEL/Form.wchg /usr/vmsys/OBJECTS/PS/WHEEL/Form.csel
+
+name=CHOICES
+button=10
+action=CHOICES
+
+name=SAVE
+button=11
+action=done
+
+name=PREV-FRM
+button=12
+action=prev-frm
+
+name=NEXT-FRM
+button=13
+action=next-frm
+
+name=HELP
+button=9
+action=help
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+action=nop

@@ -1,0 +1,29 @@
+#ident	"@(#)portmgmt:port_services/Menu.ps_lstype	1.7.3.1"
+
+`pmgetpid | set -l PID`
+menu="Valid Port Monitor Types"
+multiselect=true
+close=`rm /var/tmp/cmd$PID /var/tmp/list$PID;
+       unset -l PID -l KEYCMD`
+
+`pmadm -L>/dev/null;
+	regex -e -v "$RET"
+	   '^0$' '`message "MARK all types you want to list and then press ENTER."`'
+	   '^5$' '`message "No services configured."`'
+	   '^.*$' '`message "No services configured."`'`
+
+done=`getitems | tr -d '\0' > /var/tmp/cmd$PID;
+	if [ -s /var/tmp/cmd$PID ];
+	then
+		message "Preparing the listings ...";
+		sh /var/tmp/cmd$PID > /var/tmp/list$PID;
+		set -l KEYCMD="OPEN TEXT $OBJ_DIR/Text.ps_list /var/tmp/list$PID";
+		message " ";
+	else
+		message "No item is [MARK]ed.";
+		set -l KEYCMD="RESET";
+	fi`$KEYCMD
+
+`pmadm -L | cut -d: -f2 | sort -u |  regex '^(.*)$0$' '
+  name="$m0  "
+  lininfo="echo --------------- Port Monitor Type = $m0 ---------------; pmadm -l -t $m0 | sed \'s/./~&/\'| tr ~ \'\\12\'"'`

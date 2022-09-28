@@ -1,0 +1,42 @@
+#ident	"@(#)oamintf:devices/Text.rsvrd2	1.1"
+
+################################################################################
+#	Module Name: Text.rsvrd2
+################################################################################
+title="Devices Selected are Reserved"
+
+framemsg=`readfile $INTFBASE/nodev.msg`
+
+rows=7
+columns=65
+
+`devattr $ARG1 desc | set -l DESC1;
+ devattr $ARG2 desc | set -l DESC2;
+if [ "$ARG3" = "3" ];
+then
+	echo "text=\"
+$DESC1 and/or $DESC2 are currently reserved and are not available for use by you at this time.\"";
+else
+	echo "text=\"
+An error occurred when attempting to reserve $DESC1 and $DESC2.  The text of the error message is displayed below:
+
+\`cat /tmp/$VPID.rsvrd\`\"";
+fi`
+
+altslks
+
+name=
+button=9
+action=nop
+
+name=
+button=10
+action=nop
+
+name=
+button=11
+action=nop
+
+name=CANCEL
+button=14
+action=`rm -f /tmp/$VPID.rsvrd`CLEANUP

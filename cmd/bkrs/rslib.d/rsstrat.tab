@@ -1,0 +1,46 @@
+#ident	"@(#)bkrs:rslib.d/rsstrat.tab	1.2.1.1"
+#
+# This file specifies the restore strategy for selecting archives for
+# completing restore requests.
+#
+# The model for completing restore requests is one of the backup history
+# log forming a Turing machine tape.  Each square on the tape is represented
+# by a backup operation in the backup history log.  This table describes
+# a Turing machine algorithm for navigating through the tape selecting 
+# archives with which to try to complete the restore request.
+#
+# FILES
+F:start.>:rsdate:start.>:one
+F:start.>:archive.f?:a.<:
+F:start.>:archive.p?:a.<:
+F:start.>:end:a.<:
+F:a.<:rsdate:a.<:
+F:a.<:archive.p:a.<:
+F:a.<:archive.f:a.<:
+#
+# DIRECTORYS
+D:start.>:rsdate:start.>:all
+D:start.>:archive.f?:a.<:
+D:start.>:archive.p?:a.<:
+D:start.>:end:a.<:
+D:a.<:rsdate:a.<:
+D:a.<:archive.p:a.<:
+D:a.<:archive.f:a.<:
+#
+# PARTITIONS
+P:start.<:archive.f:a.>:all
+P:start.<:!archive.p:start.<:
+P:start.<:rsdate:start.<:
+P:a.>:archive.p:a.>:
+#
+# FILE SYSTEMS
+S:start.<:archive.f:a.>:all
+S:start.<:!archive.p:start.<:
+S:start.<:rsdate:start.<:
+S:a.>:archive.p:a.>:
+#
+# DISKS
+A:start.<:archive.f:a.>:all
+A:start.<:!archive.p:start.<:
+A:start.<:rsdate:start.<:
+A:a.>:archive.p:a.>:

@@ -1,0 +1,113 @@
+#ident	"@(#)devintf:Prototype	1.1"
+
+!MENU=usr/sadm/sysadm/menu
+!INTFBIN=usr/sadm/sysadm/bin
+
+## Files from local prototype: component=devintf
+
+# foundation set (predecessor) directories
+
+d foundation usr 0755 root sys
+d foundation usr/sadm 0755 bin bin
+d foundation usr/sadm/sysadm 0755 bin bin
+d foundation $INTFBIN 0755 bin bin
+d foundation $MENU 0755 bin bin
+
+# foundation set files
+
+f foundation $INTFBIN/mkdtab 0755 bin bin
+
+# basic and extended OAM directories
+
+d OAM_basic $MENU/devices 0755 bin bin
+d OAM_basic $MENU/devices/devices 0755 bin bin
+d OAM_basic $MENU/devices/devices/add 0755 bin bin
+d OAM_basic $MENU/devices/devices/attrs 0755 bin bin
+d OAM_basic $MENU/devices/devices/attrs/add 0755 bin bin
+d OAM_basic $MENU/devices/devices/attrs/list 0755 bin bin
+d OAM_basic $MENU/devices/devices/attrs/modify 0755 bin bin
+d OAM_basic $MENU/devices/devices/attrs/remove 0755 bin bin
+d OAM_basic $MENU/devices/devices/list 0755 bin bin
+d OAM_basic $MENU/devices/devices/remove 0755 bin bin
+d OAM_basic $MENU/devices/devices/reserve 0755 bin bin
+d OAM_basic $MENU/devices/devices/reserve/free 0755 bin bin
+d OAM_basic $MENU/devices/devices/reserve/list 0755 bin bin
+d OAM_basic $MENU/devices/devices/reserve/reserve 0755 bin bin
+d OAM_extended $MENU/devices/groups 0755 bin bin
+d OAM_extended $MENU/devices/groups/add 0755 bin bin
+d OAM_extended $MENU/devices/groups/list 0755 bin bin
+d OAM_extended $MENU/devices/groups/mbrship 0755 bin bin
+d OAM_extended $MENU/devices/groups/mbrship/add 0755 bin bin
+d OAM_extended $MENU/devices/groups/mbrship/list 0755 bin bin
+d OAM_extended $MENU/devices/groups/mbrship/remove 0755 bin bin
+d OAM_extended $MENU/devices/groups/remove 0755 bin bin
+
+# basic and extended interface
+
+f OAM_ehelp $MENU/devices/devices/Help 0644 bin bin
+f OAM_basic $MENU/devices/devices/add/Form.add 0644 bin bin
+f OAM_ehelp $MENU/devices/devices/add/Help 0644 bin bin
+f OAM_basic $MENU/devices/devices/add/Text.c_add 0644 bin bin
+f OAM_ehelp $MENU/devices/devices/attrs/Help 0644 bin bin
+f OAM_basic $MENU/devices/devices/attrs/add/Form.add 0644 bin bin
+f OAM_ehelp $MENU/devices/devices/attrs/add/Help 0644 bin bin
+f OAM_basic $MENU/devices/devices/attrs/add/Text.c_add 0644 bin bin
+f OAM_basic $MENU/devices/devices/attrs/attrs.menu 0644 bin bin
+f OAM_basic $MENU/devices/devices/attrs/list/Form.list 0644 bin bin
+f OAM_ehelp $MENU/devices/devices/attrs/list/Help 0644 bin bin
+f OAM_basic $MENU/devices/devices/attrs/list/Text.list 0644 bin bin
+f OAM_basic $MENU/devices/devices/attrs/list/fmt.awk 0644 bin bin
+f OAM_basic $MENU/devices/devices/attrs/list/maxcol.awk 0644 bin bin
+f OAM_basic $MENU/devices/devices/attrs/modify/Form.modify 0644 bin bin
+f OAM_ehelp $MENU/devices/devices/attrs/modify/Help 0644 bin bin
+f OAM_basic $MENU/devices/devices/attrs/modify/Text.c_modify 0644 bin bin
+f OAM_basic $MENU/devices/devices/attrs/remove/Form.remove 0644 bin bin
+f OAM_ehelp $MENU/devices/devices/attrs/remove/Help 0644 bin bin
+f OAM_basic $MENU/devices/devices/attrs/remove/Text.c_rem 0644 bin bin
+f OAM_basic $MENU/devices/devices/devices.menu 0644 bin bin
+f OAM_ehelp $MENU/devices/devices/list/Help 0644 bin bin
+f OAM_basic $MENU/devices/devices/list/Text.list 0644 bin bin
+f OAM_basic $MENU/devices/devices/remove/Form.remove 0644 bin bin
+f OAM_ehelp $MENU/devices/devices/remove/Help 0644 bin bin
+f OAM_basic $MENU/devices/devices/remove/Text.c_remove 0644 bin bin
+f OAM_ehelp $MENU/devices/devices/reserve/Help 0644 bin bin
+f OAM_basic $MENU/devices/devices/reserve/free/Form.free 0644 bin bin
+f OAM_ehelp $MENU/devices/devices/reserve/free/Help 0644 bin bin
+f OAM_basic $MENU/devices/devices/reserve/free/Text.c_free 0644 bin bin
+f OAM_basic $MENU/devices/devices/reserve/free/getkey 0750 bin bin
+f OAM_ehelp $MENU/devices/devices/reserve/list/Help 0644 bin bin
+f OAM_basic $MENU/devices/devices/reserve/list/Text.list 0644 bin bin
+f OAM_basic $MENU/devices/devices/reserve/reserve.menu 0644 bin bin
+f OAM_basic $MENU/devices/devices/reserve/reserve/Form.reserve 0644 bin bin
+f OAM_ehelp $MENU/devices/devices/reserve/reserve/Help 0644 bin bin
+f OAM_basic $MENU/devices/devices/reserve/reserve/Text.c_rsv 0644 bin bin
+f OAM_basic $MENU/devices/devices/reserve/reserve/listavails 0750 bin bin
+f OAM_ehelp $MENU/devices/groups/Help 0644 bin bin
+f OAM_extended $MENU/devices/groups/add/Form.add 0644 bin bin
+f OAM_ehelp $MENU/devices/groups/add/Help 0644 bin bin
+f OAM_extended $MENU/devices/groups/add/Text.c_add 0644 bin bin
+f OAM_extended $MENU/devices/groups/groups.menu 0644 bin bin
+f OAM_ehelp $MENU/devices/groups/list/Help 0644 bin bin
+f OAM_extended $MENU/devices/groups/list/Text.list 0644 bin bin
+f OAM_ehelp $MENU/devices/groups/mbrship/Help 0644 bin bin
+f OAM_extended $MENU/devices/groups/mbrship/add/Form.add 0644 bin bin
+f OAM_ehelp $MENU/devices/groups/mbrship/add/Help 0644 bin bin
+f OAM_extended $MENU/devices/groups/mbrship/add/Text.c_add 0644 bin bin
+f OAM_extended $MENU/devices/groups/mbrship/add/xisinlist 0750 bin bin
+f OAM_extended $MENU/devices/groups/mbrship/add/xorlists 0750 bin bin
+f OAM_extended $MENU/devices/groups/mbrship/list/Form.list 0644 bin bin
+f OAM_ehelp $MENU/devices/groups/mbrship/list/Help 0644 bin bin
+f OAM_extended $MENU/devices/groups/mbrship/list/Text.list 0644 bin bin
+f OAM_extended $MENU/devices/groups/mbrship/list/Text.none 0644 bin bin
+f OAM_extended $MENU/devices/groups/mbrship/list/maxcol.awk 0644 bin bin
+f OAM_extended $MENU/devices/groups/mbrship/mbrship.menu 0644 bin bin
+f OAM_extended $MENU/devices/groups/mbrship/remove/Form.remove 0644 bin bin
+f OAM_ehelp $MENU/devices/groups/mbrship/remove/Help 0644 bin bin
+f OAM_extended $MENU/devices/groups/mbrship/remove/Text.c_remove 0644 bin bin
+f OAM_extended $MENU/devices/groups/mbrship/remove/xisinlist 0750 bin bin
+f OAM_extended $MENU/devices/groups/remove/Form.remove 0644 bin bin
+f OAM_ehelp $MENU/devices/groups/remove/Help 0644 bin bin
+f OAM_extended $MENU/devices/groups/remove/Text.c_remove 0644 bin bin
+
+# .mi files for devintf menu subsumed by oamintf Prototype.
+

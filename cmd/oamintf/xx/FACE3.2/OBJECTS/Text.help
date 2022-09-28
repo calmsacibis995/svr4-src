@@ -1,0 +1,26 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/Text.help	1.1"
+
+title=Help Facility: $ARG2
+
+init="$RETVAL"
+`shell test -r $VMSYS/HELP/$ARG1 && set -l RETVAL=true || set -l RETVAL=false; 
+ regex -e -v "$RETVAL" 
+	'^true$' '`message "Strike the CANCEL function key to cancel."`' 
+	'^false$' '`message "No HELP text is available for this item."`'`
+
+rows=12
+columns=72
+begrow=current
+begcol=current
+lifetime=shortterm
+text="`pathconv -f -v "HELP/$ARG1" | readfile`"
+
+name=""
+button=1
+action=nop
+
+name="CONTENTS"
+button=8
+action=OPEN MENU OBJECTS/Menu.h0.toc
+
+`indicator -w`

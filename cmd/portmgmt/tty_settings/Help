@@ -1,0 +1,60 @@
+#ident	"@(#)portmgmt:tty_settings/Help	1.5.2.1"
+
+ABSTRACT:
+	The subcommands in the "tty_settings" menu provide functions
+	for managing TTY line settings.
+	This menu includes such subtasks as creating new TTY settings 
+	and hunt sequences, displaying the settings, and removing 
+	the settings.
+	Currently there is no modify task. However, a TTY setting can be 
+	modified by first removing it and then adding the entry back with 
+	the modifications.
+
+ttylabel:Ttylabel
+	Ttylabel is a label associated with a speed and tty definition.
+	The definition tells ttymon at what speed to initially run,
+	what initial tty settings to use, and what speed to try next 
+	should the user indicate the speed is inappropriate.
+
+autobaud:Autobaud
+	If autobaud is enabled, the line speed will be determined
+	automatically when the user types <carriage return>.
+	If autobaud is not enabled, speed hunting will be used to
+	cycle through the hunt sequences. Currently autobaud can
+	only recognize baud rates 110 1200 2400 4800 and 9600.
+
+baudrate:Baud rate
+	Press [CHOICE] to see a list of valid baud rates.
+
+nextlabel:Nextlabel
+	The nextlabel specifies a ttylabel that will be tried when
+	the current baudrate is incorrect.
+
+iflag:Initial line settings
+	The initial line settings for a ttylabel specify the terminal
+	line characteristics that take effect when a user first accesses
+	a port with that ttylabel. These settings remain in effect 
+	until the service associated with the port is executed.
+	The settings must be in the same format as the arguments to the
+	stty command. 
+
+fflag:Final line settings
+	The final line settings for a ttylabel specify the terminal
+	line characteristics that take effect just before the
+	system starts the service associated with a port with a given
+	ttylabel. The settings must be in the same format as the 
+	arguments to the stty command.
+
+add:ABSTRACT:
+	The "add" task adds new line setting entries to /etc/ttydefs.
+
+list:ABSTRACT:
+	The "list" task checks and lists hunt sequences.
+	It also provides detailed listings for individual line settings.
+
+remove:ABSTRACT:
+	The "remove" task removes line setting entries from /etc/ttydefs.
+	If the entry removed was part of a hunt sequences, adjustments 
+	should be made to other entries in the sequence to maintain a
+	proper sequence.
+

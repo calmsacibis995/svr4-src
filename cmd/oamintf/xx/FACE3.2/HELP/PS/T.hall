@@ -1,0 +1,25 @@
+After you have set up your port (parallel or serial) for use with a
+printer, the Filters, Forms, and Printwheels Menu enables you to
+inform your system of filters, forms, and printwheels that are
+available for your printers.
+
+
+The items on the Filters, Forms, and Printwheels Menu are:
+
+      Filters:  You can add, change, delete, and display filters for
+      your printers. Default filters are delivered with your system to
+      support certain types of printers and their functionalities.
+      These filters cannot be changed or deleted.  Filters are used to
+      convert a file to an acceptable output to a given printer.  This
+      is not a tool to assist you in writing the filter.
+
+      Forms:  You can add, change, delete, or display forms.  This
+      feature makes the form known to your system. The actual
+      description of the form is provided with an application
+      package or is created by you and stored in a file.
+
+      Printwheels:  You can add, change, delete, or display 
+      printwheels that can be used when printing requests. 
+      Printwheels are actual wheels/fonts that can be mounted to
+      produce certain printing types.
+

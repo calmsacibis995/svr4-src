@@ -1,0 +1,41 @@
+#ident	"@(#)face:OBJECTS/lp/Text.nsched	1.3"
+
+title=Warning
+lifetime=shortterm
+
+framemsg=const "Press the CANCEL function key to continue."
+
+begrow=any
+begcol=any
+
+rows=4
+columns=60
+
+text="
+     The Print Scheduler is not running. No printer 
+     queue or status information is available.
+"
+
+name=""
+button=1
+action=badchar
+
+name=""
+button=2
+action=badchar
+
+name=""
+button=3
+action=badchar
+
+name=""
+button=4
+action=badchar
+
+name=""
+button=5
+action=badchar
+
+name=""
+button=8
+action=badchar

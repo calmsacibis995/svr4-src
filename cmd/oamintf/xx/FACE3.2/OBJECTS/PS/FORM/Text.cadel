@@ -1,0 +1,47 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FORM/Text.cadel	1.1"
+title=Confirmation
+lifetime=shortterm
+altslks=true
+
+rows=5
+columns=63
+
+`message  Strike the CONT function key to confirm, or strike CANCEL to cancel.`
+
+text="
+  If you confirm, all forms on your system will be deleted.
+  This means that your system will not recognize any forms.
+  If you strike CANCEL, the forms will not be deleted."
+
+
+name=CANCEL
+button=14
+action=close /usr/vmsys/OBJECTS/PS/FORM/Text.cadel /usr/vmsys/OBJECTS/PS/FORM/Menu.fdelete
+
+name=CONT
+button=11
+action=`/usr/vmsys/admin/.chkuser -c "/usr/vmsys/admin/PS/FORM/rmform.sh :$ARG1:" `close /usr/vmsys/OBJECTS/PS/FORM/Text.cadel /usr/vmsys/OBJECTS/PS/FORM/Menu.fdelete
+
+name=PREV-FRM
+action=return prev-frm
+button=12
+
+name=NEXT-FRM
+action=return next-frm
+button=13
+
+name=""
+button=10
+action=nop
+
+name=""
+button=9
+action=nop
+
+name=CMD-MENU
+button=15
+action=cmd-menu
+
+name=""
+button=16
+`indicator -w`

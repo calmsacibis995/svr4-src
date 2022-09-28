@@ -1,0 +1,151 @@
+#ident	"@(#)sdb:cfront/README	1.1"
+ident	"@(#)cfront:README	1.12"
+This is the AT&T C++ Translator, Release 1.2
+
+0. The function overload mechanism is sensitive to unsigned integers beginning 
+   with Release 1.2.  That is,
+
+   overload f;
+   f( int );
+   f( unsigned );
+   
+   f( 1 );	// matches f( int )
+   f( 1u );	// matches f( unsigned )
+
+   The C++ I/O output operator << is overloaded in Release 1.2 to recognize
+   unsigned integers and longs.   If you are building Release 1.2 from an
+   earlier Release of the Translator, the lib/stream portion of the build
+   may complain regarding these overloads.  If this occurs, first do a
+
+	make cfront
+
+   This will generate a new front end.  Next, you will need to make
+   the CC command aware that it is this Release 1.2 cfront that
+   you wish to use to build the rest of the Translator with.
+
+	cfrontC=<directory to the new cfront>/cfront
+	export cfrontC
+
+   For example,
+
+	mv src/cfront .
+	cfrontC=`pwd`/cfront
+	export cfrontC
+
+   Now, build the library,
+
+	make libC.a
+
+   Also, be sure to use the Release 1.2 include files when building
+   the library.  One way of doing this is to say, presuming you are
+   in the root C++ directory where this README sits,
+
+	I=`pwd`/incl
+	export I
+
+   For more discussion of environment variables, see item 11 below.
+
+1. There are some circumstances (usually involving calls to a constructor of the 
+   form X(X&)) that may require recompilation of previously generated object
+   files.  The function encoding scheme has been changed in these cases.
+
+   The giveaway, so to speak, is undefined symbol reference errors in the
+   link-edit phase.  If these errors occur, recompile all of your files with 
+   this release of the Translator.
+
+2. The CC command now always defines the c_plusplus macro.
+   This allows the mixing of C and C++ in the same header.
+
+	#ifdef c_plusplus
+		int printf(char* ...);	//c++ function declaration
+	#else
+		int printf();		/*c function declaration*/
+	#endif
+
+3. The file suffix .C is now recognized, permitting tools such as make
+   to distinquish between C and C++ files.  See the Addendum for an
+   example of using make with .C and .c files.
+
+4. A +e option has been added to CC, permitting optimization of class
+   virtual tables.  Object and executable file size reductions can 
+   be as great as 25%.  Refer to the Addendum for complete details 
+   and an example.
+
+5. make patch automates the building of a System V patch version of
+   the Translator. 
+
+6. Given the declaration 
+
+	int (* pf)() = &foo;
+
+   the invocation of the function pointed to by pf requires the
+   following syntax,
+
+	(* pf)();
+
+   The C++ Translator will recognize instances of the form,
+
+	pf();
+
+   and generate the proper (* pf)() expression.
+
+7. The CC man page (file CC.1) is a part of the distribution tape
+   and of AT&T 3B2 diskettes.
+
+8. There are lots of bug fixes and source changes to enhance portability.
+   Two changes that relate particularly to increased portability are
+   (a) a new error() avoids machine-dependent varargs handling, and
+   (b) sizeof expressions are in most cases no longer evaluated but,
+   rather, emitted to the generated C intermediate files.   This is
+   always the case with calls to the new operator.
+
+   For example,
+
+   int * i = new int [ sizeof( int ) * 10 ];
+
+   will not evaluate sizeof.  However, uses such as the following will
+   continue to be evaluated.
+
+   int i[ sizeof( int ) * 10 ];
+
+9. The Addendum has a new section with a good deal of information on
+   porting the Translator.  Please read this section before building 
+   the Translator for the first time! 
+
+10. BSD users should first run the shell script "bsd.fix", which is found
+   in the root directory.  This script makes changes to the scratch files, 
+   some header files, and the makefile.  See the comments in the script for
+   details.  After running the script, follow the regular bootstrapping procedures.
+   BSD users should read p.16 of the Addendum regarding changes necessary to
+   signal.h and/or sys/signal.h in order to build the C++ Translator.
+
+11. If you wish to use private copies of any of the C++ Translator components,
+    you will want to set and export one or more of the following environment 
+    variables.
+
+    a. 	LIBRARY :: set and exported to specify a new path for the C++
+	library, libC.a.  Be sure to include libC.a at the end of the path.
+
+	LIBRARY=/usr/my_dir/my_lib/my_libC.a; export LIBRARY
+
+    b.  I :: set and exported to specify an alternative path for the C++
+        header files other than /usr/include/CC.
+
+ 	I=/usr/my_dir/my_include; export I
+
+    c.  cfrontC :: set and exported to specify an alternative path for
+        cfront.  Again, be sure to include cfront at the end of the
+        path.
+
+	cfrontC=/usr/my_dir/my_bin/my_cfront; export cfrontC		
+
+    Additional variables include munchC, patchC, ccC, ccpC.  For more details,
+    look at the CC command.
+
+12. The C++ task library now includes a sun_swap.s that is written for SUN
+    workstations.  If you are on a SUN, unless your system contains a u3b
+    environment variable, remove the elif u3b line under the ck_task makefile
+    target in the root makefile.
+
+
+	

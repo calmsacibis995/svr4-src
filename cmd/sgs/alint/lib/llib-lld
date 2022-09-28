@@ -1,0 +1,16 @@
+#ident	"@(#)alint:lib/llib-lld	1.1"
+/* LINTLIBRARY */
+/*
+** Don't want prototype in stdio.h showing up in ths library.
+*/
+#include <stdio.h>
+/* PROTOLIB1 */
+
+#include <ldfcn.h>
+
+/*
+** Undocumented ...
+*/
+extern LDFILE *allocldptr(void);
+extern int freeldptr(LDFILE *);
+extern int vldldptr(LDFILE *);

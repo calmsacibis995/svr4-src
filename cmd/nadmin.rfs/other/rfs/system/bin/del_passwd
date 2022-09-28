@@ -1,0 +1,20 @@
+#ident	"@(#)nadmin.rfs:other/rfs/system/bin/del_passwd	1.5"
+
+DOM=`dname -d`
+
+echo "The following systems have been deleted from the domain password file:\n" >/usr/tmp/gone_$$
+
+for system  in `echo $MEMBERS`;  do
+	{
+	echo "^$system:" >> /usr/tmp/temp_$$
+	echo "$system" >>/usr/tmp/gone_$$
+	}
+done
+/usr/bin/egrep -v -f/usr/tmp/temp_$$  /etc/rfs/auth.info/$DOM/passwd  > /usr/tmp/passwd_$$
+
+cp /etc/rfs/auth.info/$DOM/passwd /etc/rfs/auth.info/$DOM/o.passwd
+mv /usr/tmp/passwd_$$ /etc/rfs/auth.info/$DOM/passwd
+
+chmod 0600 /etc/rfs/auth.info/$DOM/passwd
+
+echo $$

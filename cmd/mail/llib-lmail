@@ -1,0 +1,37 @@
+#ident	"@(#)mail:llib-lmail	1.3"
+/* @(#)llib-lmail	1.5 'attmail mail(1) command' */
+/* LINTLIBRARY */
+/* PROTOLIB1 */
+
+#include <libmail.h>
+
+#ifdef SVR3
+int casncmp(s1, s2, n) char *s1, *s2; int n; { return 0; }
+int copystream(infp, outfp) FILE *infp, *outfp; { return 0; }
+int delempty(m, f) mode_t m; char *f; { return 0; }
+char *maildomain() { return 0; }
+int maillock(user, retrycnt) char *user; int retrycnt; { return 0; }
+int mailunlock() { return 0; }
+int pclosevp(fp) FILE *fp; { return 0; }
+FILE *popenvp(file, argv, mode, resetid) char *file, **argv, *mode; int resetid; { return 0; }
+string *s_append(to, from) string *to; char *from; { return 0; }
+string *s_array(x, len) char *x; int len; { return 0; }
+string *s_copy(x) char *x; { return 0; }
+void s_free(s) string *s; { return 0; }
+int s_grow(sp, c) string *sp; int c; { return 0; }
+string *s_new() { return 0; }
+string *s_parse(from, to) string *from; string *to; { return 0; }
+char *s_read_line(fp, to) FILE *fp; string *to; { return 0; }
+int s_read_to_eof(fp, to) FILE *fp; string *to; { return 0; }
+string *s_seq_read(fp, to, lineortoken) FILE *fp; string *to; int lineortoken; { return 0; }
+void s_skipwhite(from) string *from; { return 0; }
+string *s_tok(from, split) string *from; char *split; { return 0; }
+char **setup_exec(s) char *s; { return 0; }
+char *skipspace(p) char	*p; { return 0; }
+int substr(string1, string2) char *string1, *string2; { return 0; }
+int systemvp(file, argv, resetid) char *file, **argv; { return 0; }
+int trimnl(s) char *s; { return 0; }
+char *Xgetenv(env) char *env; { return 0; }
+char *xgetenv(env) char *env; { return 0; }
+int xsetenv(file) char *file; { return 0; }
+#endif

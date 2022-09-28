@@ -1,0 +1,14 @@
+#ident	"@(#)devintf:groups/remove/Help	1.2"
+
+remove:ABSTRACT:
+	The "remove" task removes a device group definition from the Device
+	Management tables.  You will be asked to supply the name of the device
+	group to remove.
+
+Form.remove:Name:the Group Name field
+	This field names the device group that is to be removed from the device
+	group table.
+	
+	This field must be a valid device group name (i.e. only alphanumeric
+	characters and the characters '.', '-', '_', '$' and no more than 14
+	characters).  This field may not be blank.

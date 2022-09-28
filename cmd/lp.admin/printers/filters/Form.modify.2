@@ -1,0 +1,41 @@
+#ident	"@(#)lp.admin:printers/filters/Form.2.modify	1.1.1.1"
+
+form=Modify a Filter
+lifetime=shortterm
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`
+    if [ "$F1" = 'yes' ];
+    then
+	message -w "Restoring filter to default values.  Please wait.";
+	if [ -n "$TFADMIN" ]; then $TFADMIN lpfilter -f "$filter" -i;
+	else lpfilter -f "$filter" -i; fi;
+    fi;
+`OPEN FORM $PRINTSERV/filters/Form.modify.3
+
+name=Filter name:
+nrow=1
+ncol=1
+page=1
+frow=1
+fcol=16
+rows=1
+inactive=true
+columns=14
+value=$filter
+
+name=Restore to factory settings?
+nrow=2
+ncol=1
+page=1
+frow=2
+fcol=33
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=TRUE
+value=no
+choicemsg='Select your response and press ENTER.'
+invalidmsg='Please answer "yes" or "no".'
+fieldmsg='Enter yes to reset the filter to its original state.'

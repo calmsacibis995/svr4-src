@@ -1,0 +1,84 @@
+#ident	"@(#)nadmin.nfs:local/nfs/Form.share	1.2"
+form="Shares a Local Resource Automatically-Immediately via NFS"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`set -e DIR="$F1" -e ID="$F4" -e AUTH="$F5";
+	set -el IMM="$F2" -el AUTO="$F3";
+	unset -l KEYCMD;
+	if [ "$IMM" = "yes" -o "$AUTO" = "yes" ];
+	then
+		set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/local/nfs/Form.share2";
+	else
+		message "No option selected.  Press CANCEL to return to the menu.";
+		set -l KEYCMD="NOP";
+	fi;
+	`$KEYCMD
+
+`echo "Fill in the form and press SAVE to continue" | message -p`
+`set -l OBJ_DIR="$INTFBASE/netservices/remote_files/local/nfs"`
+
+# F1
+name="Directory:"
+nrow=1
+ncol=1
+frow=1
+fcol=12
+rows=1
+columns=60
+lininfo=share:directory
+valid=`test -d $F1`
+invalidmsg="Must be the name of an existing directory on the local system."
+
+# F2
+name="Share resource immediately?"
+nrow=2
+ncol=1
+frow=2
+fcol=29
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+invalidmsg="Press CHOICES to select valid response."
+lininfo=share:imm
+
+#F3
+name="Share resource automatically?"
+nrow=3
+ncol=1
+frow=3
+fcol=31
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+invalidmsg="Press CHOICES to select valid response."
+lininfo=share:auto
+
+#F4
+name="ID for unknown users:"
+nrow=4
+ncol=1
+frow=4
+fcol=23
+rows=1
+columns=6
+lininfo=share:id
+value="nobody"
+rmenu= { nobody }
+
+#F5
+name="Mode of authentication:"
+nrow=5
+ncol=1
+frow=5
+fcol=25
+rows=1
+columns=7
+lininfo=share:auth
+rmenu={ default secure }
+value=default
+menuonly=true
+invalidmsg="Press CHOICES to select valid response."

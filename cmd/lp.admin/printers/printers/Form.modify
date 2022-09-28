@@ -1,0 +1,45 @@
+#ident	"@(#)lp.admin:printers/printers/Form.modify	1.2"
+
+#######################################################
+#
+#       Module Name: printer_service/printers/configure/Form.modify
+#
+#######################################################
+
+form=Modify a Printer Configuration
+
+help=OPEN TEXT $INTFBASE/Text.oamhelp $PRINTSERV/HELP/printers/configure/modify.help "Modify a Printer Configuration"
+
+name=Printer Name:
+nrow=1
+ncol=1
+frow=1
+fcol=15
+rows=1
+columns=14
+
+#valid=`regex -v "$F1" '[a-zA-Z0-9_]{1,14}'`
+# \fIKnown printer\fR [PRINTERS], mandatory.
+
+#choicemsg="N/A"
+#invalidmsg="N/A"
+fieldmsg="Enter the name of the printer that you wish to modify."
+
+
+name=System name:
+nrow=2
+ncol=1
+frow=2
+fcol=14
+rows=1
+columns=20
+
+# default=Current value.
+
+#valid=`regex -v "$F2" '[a-zA-Z0-9_]{1,14}' '' '.*'`
+# \fIKnown class\fR [CLASSES], optional.
+
+choicemsg="A list of the classes known to the system."
+invalidmsg="A list of the classes known to the system."
+fieldmsg="Enter the name of the system which this printer is physically connected."
+

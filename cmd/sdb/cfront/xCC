@@ -1,0 +1,337 @@
+#!/bin/sh
+#ident	"@(#)sdb:cfront/xCC	1.2"
+
+trap 'rm -fr $TEMPDIR; exit' 1 2 3 15
+
+if [ -x ./xcfront ]
+then
+	CCROOT=.
+elif [ -x ../xcfront ]
+then
+	CCROOT=..
+elif [ -x ../../xcfront ]
+then
+	CCROOT=../..
+else
+	echo >&2 "can't find xcfront!\n"
+	exit 13
+fi
+TMPDIR=${TMPDIR-"/usr/tmp"}
+TEMPDIR=$TMPDIR/CC.$$
+LIB_ID=${LIB_ID-C}
+LIBRARY=${LIBRARY-$CCROOT/libC.a}
+NM=${nmC-nm}
+NMFLAGS=${NMFLAGS-}
+C= EE=0 FON= XON= O=
+PON= R= SUF= X= Y= DASHR= PLUSI=
+Z= E=0 OF= P=
+NOLOAD= NLO=
+CPLUS="-Dc_plusplus=1 -D__cplusplus=1"
+OO="a.out"
+I=${I-"$CCROOT/incl"}
+ISUF=".c"
+MVLIST= 
+ccC=${ccC-cc}
+cfrontC=${cfrontC-$CCROOT/xcfront}
+munchC=${munchC-$CCROOT/munch}
+cppC=${cppC-/lib/cpp}
+G=0
+
+rm -fr $TEMPDIR; mkdir $TEMPDIR
+for A do
+	case $A in
+	+V)	I="/usr/include"
+		O="$O $A"
+		;;
+	+i)	PLUSI=1
+		;;
+	+x)	XON=1
+		;;
+	+*)	O="$O $A"
+		;;
+	-E)	PON=1
+		;;
+	-F)	FON=1
+		;;
+	-Fc)	FON=1
+		O="$O +L"
+		;;
+	-C)	Y="$Y $A"
+		O="$O +C"
+		;;
+	-S*)	NOLOAD=".s"
+		NLO="$A"
+		;;
+	-P*)	NOLOAD=".i"
+		NLO="-P"
+		;;
+	-c*)	NOLOAD=".o"
+		NLO="-c"
+		;;
+	-I*) 	if [ "$A" != "-I" ]
+		then
+                  	Y="$Y $A"
+		else
+			ION=1
+                fi
+		;;
+	-D*)	Y="$Y $A"
+		;;
+	-U*)	Y="$Y $A"
+		;;
+	-p)	P="-p"
+		;;
+	-r)	DASHR=1
+		Z="$Z $A"
+		;;
+	-o*)	if [ "$A" != "-o" ]
+		then
+		  	OO=`echo $A | cut -d"o" -f2-`
+                  	A="-o $OO"
+		else
+			OX=1
+                fi
+		OF="$OF $A"
+		Z="$Z $A"
+		;;
+	-.c)	echo "bad suffix option: -.c" 1>&2
+		;;
+	-.*)	SUF=`expr "$A" : '-\(.*\)'`
+		;;
+	*.[Cc])	if	test -f $A
+		then
+
+			case $A in
+				*.c) B=`basename $A .c` ;;
+				*.C) B=`basename $A .C` ;;
+			esac
+
+			if	test $PON
+			then
+				if test $SUF
+				then
+					echo "$cppC $O  $A > $B$SUF:" 1>&2
+					$cppC $Y $CPLUS -I$I  $A >$B$SUF
+					E=$?
+				else
+					$cppC $Y $CPLUS -I$I  $A
+					E=$?
+				fi
+				case $E in
+				0)	;;
+				*)	G=0; break
+					;;
+				esac
+			elif	test $FON
+			then
+				if test $SUF
+				then
+					echo "$cfrontC $O  $A > $B$SUF:" 1>&2
+					$cppC -C $Y $CPLUS -I$I  $A >$TEMPDIR/cpptmp
+					E=$?
+					if test $E -ne 0
+					then
+						echo "CC: cpp failure: $E" 1>&2
+						G=0; break
+					fi
+					$cfrontC +L +f$A $O <$TEMPDIR/cpptmp >$B$SUF
+					E=$?
+				else	
+					$cppC -C $Y $CPLUS -I$I  $A >$TEMPDIR/cpptmp
+					E=$?
+					if test $E -ne 0
+					then
+						echo "CC: cpp failure: $E" 1>&2
+						G=0; break
+					fi
+					$cfrontC +L +f$A $O <$TEMPDIR/cpptmp 
+					E=$?
+				fi
+				case $E in
+				0)	;;
+				*)	G=0; break
+					;;
+				esac
+			else
+				echo "CC $O $A:" 1>&2
+				$cppC -C $Y $CPLUS -I$I  $A >$TEMPDIR/cpptmp
+				E=$?
+				if test $E -ne 0
+				then
+					echo "CC: cpp failure: $E" 1>&2
+					G=0; break
+				fi
+				$cfrontC +L +f$A $O <$TEMPDIR/cpptmp >$TEMPDIR/$B$ISUF
+				E=$?
+				R=1
+				C="$C $TEMPDIR/$B$ISUF"
+				case $E in
+				0)	X="$X $B$ISUF"
+					Z="$Z $B.o"
+					MVLIST="$MVLIST $B"
+					G=1
+					;;
+				127)    echo "Too many compilation errors" 1>&2
+					G=0
+					;;
+				999)	echo "CC argument error" 1>&2
+					G=0
+					;;
+				1)	echo "1 error" 1>&2
+					G=0
+					;;
+				*)	echo "$E errors" 1>&2
+					G=0
+					;;
+				esac
+			fi
+		else
+			echo "$A not found" 1>&2
+			EE=1
+		fi
+		;;
+	*.i)    if test -f $A
+		then
+
+		if test $PON
+		then
+			echo "CC -E $A incompatible: ignoring $A" 1>&2
+	        elif test $FON
+		then
+			echo "CC -F $A incompatible: ignoring $A" 1>&2
+  		else	
+			B=`basename $A .i`
+			echo "CC $O $A:" 1>&2
+			$cfrontC +L +f$A $O < $A > $TEMPDIR/$B$ISUF
+			E=$?
+			R=1
+			C="$C $TEMPDIR/$B$ISUF"
+			case $E in
+			0)	X="$X $B$ISUF"
+				Z="$Z $B.o"
+				MVLIST="$MVLIST $B"
+				G=1
+				;;
+			*)	G=0
+				;;
+			esac
+		fi
+
+		else
+			echo "$A not found" 1>&2
+			EE=1
+		fi
+		;;
+	*)	if test $XON
+		then	
+			O="$O +x$A"
+			XON=""
+		elif test $ION
+		then
+			Y="$Y -I$A"
+			ION=""
+		else
+			Z="$Z $A"
+			if test $OX
+			then
+				OO=$A
+				OF="$OF $A"
+				OX=""
+			else
+                           case $A in
+                               *.[os]) B=`basename $A`
+                                       cp $A $TEMPDIR/$B
+                                       G=1
+                                       X="$X $B"
+                                       # mvlist for -c option on .s files
+                                       NAMEBASE=`basename $B .s`
+                                       MVLIST="$MVLIST $NAMEBASE"
+                                       ;;
+                                    *) G=1
+                                       X="$X $A"
+                                       ;;
+                           esac
+			fi
+		fi
+		;;
+	esac
+done
+
+case $G in
+0)	;;
+*)							# generate code
+	if test "$PLUSI"	#leave ..c's lying around
+	then
+					#remove #line's from the ..c's for sdb
+		for f in $C
+		do
+			sed "/^#/d" $f >$TEMPDIR/temp
+			mv $TEMPDIR/temp $f
+		done
+	fi
+
+        if test "$NOLOAD"
+        then
+		echo "$ccC $P $NLO $X" 1>&2
+		# contortions to cope with bug handling path in cc
+		(cd $TEMPDIR; $ccC $P $NLO $X >__err 2>__err2)		# compile, no load
+		EE=$?
+		sed '/warning: syntax/d' $TEMPDIR/__err2
+		if test $EE = 0
+		then
+			for A in $MVLIST
+			do
+				mv $TEMPDIR/$A$NOLOAD .
+			done
+		fi
+	else
+		echo "$ccC $P $OF $X $LIBRARY" 1>&2
+		(cd $TEMPDIR; $ccC $P -c $X >__err 2>__err2)		# compile, no load
+		EE=$?
+		sed '/warning: syntax/d' $TEMPDIR/__err2
+		if test $EE = 0; then mv $TEMPDIR/*.o .; fi
+		case $EE in
+			0)	# load 
+			$ccC $P $Z $LIBRARY > $TEMPDIR/__err		
+			EE=$?
+			if test $EE != 0 -o -s $TEMPDIR/__err
+			then
+				cat $TEMPDIR/__err
+			elif test  "$DASHR" != 1		# find ctors/dtors
+			then
+				echo >&2 "$NM $NMFLAGS $OO | $munchC $P >__ctdt$$.c"
+				$NM $NMFLAGS $OO | $munchC $P >$TEMPDIR/__ctdt$$.c
+				case $? in
+				1)	echo >&2 $ccC -c __ctdt$$.c
+					$ccC -c $TEMPDIR/__ctdt$$.c >/dev/null
+					# reload 
+					echo >&2 "$ccC $P __ctdt$$.o $Z  $LIBRARY"
+					$ccC $P __ctdt$$.o $Z  $LIBRARY		
+					rm __ctdt$$.o
+					EE=$?
+					;;
+				esac
+			fi
+			;;
+		esac
+	fi
+esac
+
+if	test "$R" 
+then
+	if test "$PLUSI"
+	then
+		for A in $MVLIST
+		do
+			mv $TEMPDIR/$A.c $A..c
+		done
+	fi
+fi
+
+rm -fr $TEMPDIR
+case $E in
+0)	exit $EE
+	;;
+*)	exit $E
+esac
+

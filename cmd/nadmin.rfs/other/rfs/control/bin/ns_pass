@@ -1,0 +1,11 @@
+#ident	"@(#)nadmin.rfs:other/rfs/control/bin/ns_pass	1.2"
+# Passes name server responsibility back to primary on transports specified
+# by NETSPECS
+
+/usr/bin/rfadmin -p -t $NETSPECS 2>/usr/tmp/pass$$
+if [ $? -eq 0 ]
+then
+	echo "Remote File Sharing domain name servers responsibilities have been passed back to the primary name server on the following transport providers: $NETSPECS">/usr/tmp/pass$$
+fi
+
+echo $$

@@ -1,0 +1,87 @@
+#ident	"@(#)lp.admin:printers/reports/Help	1.2.2.1"
+ABSTRACT:
+	[GENERAL]
+	The "status" menu gives you tasks for examining various
+	aspects of the print service. You can see what print wheels
+	and character sets are available, what forms are mounted,
+	what printers are active, and what print requests are
+	pending.
+
+reports:L1:forms
+	You use the "forms" task to get a
+	list of all forms you have defined in the print service.
+	The report will include an indication of which printers the
+	forms are currently mounted on.
+
+reports:L2:printers
+	You use the "status" task to get a quick list of the
+	printers available, and to check whether they are
+	currently printing a request, or are disabled or are
+	rejecting requests.
+	
+	If you want to get a listing of the complete configuration
+	of a printer, use the "display" task in the "configure" menu.
+	
+reports:L3:requests
+	Use the "requests" task to get a list of print requests
+	currently in the queue. This is a good way to find out the
+	IDs needed to cancel, hold, resume, or modify a print
+	request. The status listed will show when the print request
+	was submitted, how big it is (the number of bytes in the
+	files), and whether it is printing.
+	
+	If you have the IDs of the requests, you can get the status
+	on just them. If you don't know the IDs, you can get the
+	status on all requests submitted by a particular user or for
+	a particular printer or class of printers.
+
+requests:F1:Request-ids:
+	[IDs of the print requests ...]
+	You are expected to enter a print request ID.
+	You can enter a list of
+	IDs by separating them with a comma. You
+	will be shown the status of the requests you identify,
+	including the request IDs, total file sizes (in bytes), when
+	submitted, and whether printing.
+	
+requests:F2:Printers/Classes:
+	[Names of printers/classes ...]
+	You are expected to enter a printer or class of
+	printers.  You can enter a list of
+	names by separating them with a comma. You
+	will be shown the status of the requests you identify,
+	including the request IDs, total file sizes (in bytes), when
+	submitted, and whether printing.
+	
+requests:F3:User names:
+	[User names submitting print requests ...]
+	You are expected to enter a user (his or
+	her login name, not proper name). You can enter a list of
+	names by separating them with a comma. You
+	will be shown the status of the requests you identify,
+	including the request IDs, total file sizes (in bytes), when
+	submitted, and whether printing.
+
+reports:L4:wheels
+	You use the "wheels" task to get a
+	list of print wheels and character sets
+	that you have defined on your system. This will
+	be a summary report made by examining all the printers for
+	which you've defined these. The report will include an
+	indication of which printers the print wheels or character 
+	sets are currently mounted on.
+
+wheels:F1:Printwheels or Character sets:
+	[Printwheels or Character sets...]
+	You are expected to enter a list of print wheels or 
+	character sets that you have defined on your system. 
+
+stforms:F1:Forms
+	[Forms...]
+	You are expected to enter a list of forms that you
+	have defined on your system. 
+
+stprinters:F1:Printers
+	[Printers...]
+	You are expected to enter a list of printers that you
+	have defined on your system. 

@@ -1,0 +1,6 @@
+#ident	"@(#)devintf:groups/Help	1.2"
+
+ABSTRACT:
+	The "groups" menu provides access to tasks that administer device
+	groups in the Device Management feature.  Tasks available through this
+	menu list and administer device groups and their membership lists.

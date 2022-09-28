@@ -1,0 +1,15 @@
+#ident	"@(#)bnu:Dialcodes	2.3"
+#
+#	The Dialcodes file contains dial-code abbreviations
+#	that can be used in the 'Phone' field of the Systems
+#	file. Each entry has the format:
+#
+#		abbr	dial-seq
+#
+#	where 'abbr' is the abbreviation used in the Systems
+#	file 'Phone' field, and 'dial-seq' is the dial sequence
+#	that is passed to the dialer when that particular Systems
+#	file entry is accessed.
+#
+#	Example 1:	chicago	1312
+#	Example 2:	chicago 9=1312

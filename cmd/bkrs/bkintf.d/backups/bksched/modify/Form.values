@@ -1,0 +1,128 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksched/modify/Form.values	1.5"
+# Form displays contents of requested entry from backup schedule.
+
+form="Contents of Entry $ARG2"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`sed -e "$ARG2!d" $ARG1 | cron_parse -m bksched -h -f: | set -l VALS; message "Modify field values and press [SAVE] to modify the entry."`
+
+done=`message -w "Trying to modify entry.";
+	set -l ERR=/tmp/$VPID.bea;
+	chgscd $ARG1 $ARG2 $F1 $F2 $F3 $F4 $F5 $F6 >$ERR 2>$ERR;
+	if [ $RET -eq 0 ] ;
+	then
+		getfrm | set -l FNUM;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.modok $FNUM";
+	else
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.modnok";
+	fi`$!CMD
+
+begrow=any
+begcol=any
+
+# Time field - F1
+name=Time:
+lininfo=values:F1
+nrow=2
+ncol=2
+
+value=`echo $VALS | fmlcut -f3,2 -d:`
+
+frow=2
+fcol=9
+rows=1
+columns=5
+
+choicemsg="Enter a time string hh:mm, where hh is 00-23, mm is 00-59."
+valid=`valtime "$F1"`
+invalidmsg="Error - enter a time hh:mm, where hh is 00-23, mm is 00-59."
+
+# Days of week field - F2
+name=Day(s):
+lininfo=values:F2
+nrow=4
+ncol=2
+
+frow=4
+fcol=10
+rows=1
+columns=53
+
+value=`echo $VALS | fmlcut -f4 -d: | regex '\*' 'all' '^(.*)$0' '$m0'`
+choicemsg="Enter a list of weekdays (0=Sun to 6=Sat) on which to run this backup or 'all'."
+valid=`valdays "$F2" all`
+invalidmsg=`errdays all`
+
+# Months field - F3
+name=Month(s):
+lininfo=values:F3
+nrow=6
+ncol=2
+
+frow=6
+fcol=12
+rows=1
+columns=59
+
+value=`echo $VALS | fmlcut -f5 -d: | regex  '\*' 'all' '^(.*)$0' '$m0'`
+
+choicemsg="Enter a list of months (1-12) in which to run this backup or 'all'."
+
+valid=`valmonths "$F3"`
+
+invalidmsg="Error - enter a list of months (1-12) or 'all'."
+
+# Table field - F4
+name=Table:
+lininfo=values:F4
+nrow=8
+ncol=2
+
+frow=8
+fcol=10
+rows=1
+columns=60
+scroll=true
+
+value=`echo $VALS | fmlcut -f8 -d:`
+
+choicemsg="Enter the path to the backup register table for this backup."
+
+valid=`valpath -gor "$F4"`
+
+invalidmsg=`errpath -gor`
+
+# Mode field - F5
+name=Mode:
+lininfo=values:F5
+nrow=10
+ncol=2
+
+frow=10
+fcol=10
+rows=1
+columns=10
+
+value=`echo $VALS | fmlcut -f6 -d: | regex 'auto' 'automated' 'back' 'background'`
+choicemsg="Enter the mode of execution for this backup ('background' or 'automated')."
+invalidmsg="You must enter either 'background' or 'automated'."
+rmenu={ background automated }
+menuonly
+
+# Notify field - F6
+name=Notify:
+lininfo=values:F6
+nrow=12
+ncol=2
+
+frow=12
+fcol=10
+rows=1
+columns=3
+
+value=`echo $VALS | fmlcut -f7 -d:`
+choicemsg="Enter 'yes' to get mail when backup job has completed."
+invalidmsg="You must enter either 'yes' or 'no'."
+rmenu={ yes no }
+menuonly

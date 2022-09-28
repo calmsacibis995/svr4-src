@@ -1,0 +1,165 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/add/Form.add2	1.9.2.1"
+form="Add a New Backup Table Entry (Additional Options)"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+life=shortterm
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+`set -l CMD=""`
+done=`message -w;
+	set -l ERR=/tmp/$VPID.bea;
+	message -w "Trying to add new entry.";
+	add "$ARG1" "$ARG2" "$F5" "$ARG3" "$ARG4" "$F7" "$ARG7" "$ARG8" "$ARG6" "$F1" "$F6" "" "$ARG5" "$F3" "$F4" >$ERR 2>$ERR;
+	if [ $RET -eq 0 ] ;
+	then
+		set -l LIFE=shortterm;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.addok $ARG1 $ARG9 $PID";
+	else
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.addnok $ARG1";
+	fi`$!CMD
+
+begrow=any
+begcol=any
+
+# Method Options field - F1
+name=Method options:
+lininfo=add2:F1
+nrow=1
+ncol=2
+
+frow=1
+fcol=18
+rows=1
+columns=59
+scroll=true
+
+choicemsg="Enter the options to be passed to the backup method."
+
+valid=`regex -v "$F1" '^.*'`
+
+# Exception List field - F2
+name=Exception list:
+lininfo=add2:F2
+nrow=2
+ncol=2
+
+frow=2
+fcol=18
+rows=1
+columns=59
+scroll=true
+
+choicemsg="Enter the alternate name for the exception list file."
+
+valid=`valpath -gw "$F2";
+	if [ $F2 ];
+	then
+		set -l F1="$F1 -m $F2";
+	fi`
+
+invalidmsg=`errpath -gw`
+
+# Destination characteristics field - F3
+name=Destination characteristics:
+lininfo=add2:F3
+nrow=3
+ncol=2
+
+frow=3
+fcol=31
+rows=1
+columns=44
+scroll=true
+
+choicemsg="Enter device characteristics to override device table defaults."
+
+valid=`regex -v "$F3" '^.*'`
+
+# Destination volume labels field - F4
+name=Destination volume label(s):
+lininfo=add2:F4
+nrow=4
+ncol=2
+
+frow=4
+fcol=31
+rows=1
+columns=46
+scroll=true
+
+choicemsg="Enter a list of volume labels for the destination volumes."
+
+valid=`regex -v "$F4" '^.*'`
+
+# Priority - F5
+name=Priority:
+lininfo=add2:F5
+nrow=5
+ncol=2
+
+frow=5
+fcol=12
+rows=1
+columns=3
+
+value=0
+
+
+choicemsg="Enter the priority (range 0 to 100) for this backup request"
+
+valid=`valrange -l 0 -u 100 "$F5"`
+
+invalidmsg=`errange -l 0 -u 100`
+
+# Dependencies field - F6
+name=Dependencies:
+lininfo=add2:F6
+nrow=6
+ncol=2
+
+frow=6
+fcol=16
+rows=1
+columns=51
+scroll=true
+
+choicemsg="Enter the tags of backups on which this one depends."
+
+valid=`regex -v "$F6" '^.*'`
+
+# Originating volume label field - F7
+# For the time being, no validation is done on this field, other than that
+# the name cannot be longer than 6 characters, which is restricted by the field
+# length.
+name=Originating volume label:
+lininfo=add2:F7
+nrow=7
+ncol=2
+
+frow=7
+fcol=28
+rows=1
+columns=6
+
+choicemsg="Enter the volume label for the object to be backed up."
+
+valid=`regex -v "$F7" '^.*'`
+
+# Destination group field - F7
+#name=Destination group:
+#lininfo=add2:F7
+#nrow=8
+#ncol=2
+#
+#frow=8
+#fcol=21
+#rows=1
+#columns=14
+#
+#choicemsg="Enter the group name for the device that is the destination for the backup."
+#valid=`regex -v "$F7" '^..*'`
+#
+#invalidmsg="Enter the name of the device group for the destination device."
+

@@ -1,0 +1,24 @@
+#ident	"@(#)oamintf:xx/FACE3.2/OBJECTS/PS/FILTER/Menu.filter	1.1"
+menu="Filters"
+#help=open text $VMSYS/OBJECTS/Text.h "Filters" PS/FILTER/T.hfilter
+
+name=Add
+action=open form /usr/vmsys/OBJECTS/PS/FILTER/Form.fadd
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+name=Change
+action=`/usr/vmsys/admin/PS/FILTER/seek $VPID| regex
+			0 "open form /usr/vmsys/OBJECTS/PS/FILTER/Form.cd c /usr/tmp/tab.$VPID"
+			1 "open text /usr/vmsys/OBJECTS/PS/FILTER/Text.nofltr"`
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+name=Delete
+action=`/usr/vmsys/admin/PS/FILTER/seek $VPID d |regex
+			0 "open menu /usr/vmsys/OBJECTS/PS/FILTER/Menu.del /usr/tmp/tab.$VPID"
+			1 "open text /usr/vmsys/OBJECTS/PS/FILTER/Text.nofltr"`
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+
+name=Display
+action=`cut -d: -f5 /usr/spool/lp/admins/lp/filter.table > /usr/tmp/fname.$VPID`open form /usr/vmsys/OBJECTS/PS/FILTER/Form.cd d /usr/tmp/fname.$VPID
+itemmsg=const "Move to an item with the arrow keys and strike ENTER to select."
+`indicator -w`

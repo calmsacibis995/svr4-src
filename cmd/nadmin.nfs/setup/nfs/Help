@@ -1,0 +1,16 @@
+#ident	"@(#)nadmin.nfs:setup/nfs/Help	1.1"
+share:TITLE:Shares a Local Resource Automatically-Immediately via NFS
+mount:TITLE:Mounts a Remote Resource Automatically-Immediately via NFS
+
+setup:share:
+	The nfs_share task allows you to make
+	local resources available to remote systems
+	via the Network File System.  You may set 
+	up automatic sharing, share resources 
+	immediately, or both.
+
+setup:mount:
+	The nfs_mount task allows you to make remote
+	resources available ato your local users via
+	Network File system.  You may set up automatic
+	mounting, mount resources imediately, or both.

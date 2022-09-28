@@ -1,0 +1,18 @@
+#ident	"@(#)nadmin.rfs:other/rfs/net/Text.display	1.4"
+###############################################################################
+#    Module Name:  Text.display
+#    Description:  
+#     Lists Netwks supporting RFS  
+#	(get netspecs of transport providers supporting RFS - dname -n
+#	 get description/comment from /etc/netconfig
+#
+###############################################################################
+title="Networks Supporting Remote File Sharing"
+close=/bin/rm /var/tmp/trans$PID 2>/dev/null;unset -l PID
+columns=60
+
+`readfile $INTFBASE/display.msg | message -p`
+
+`"$INTFBASE/netservices/remote_files/other/rfs/net/bin/rfs_net" | set -l PID`
+text="
+`readfile /var/tmp/trans$PID`"

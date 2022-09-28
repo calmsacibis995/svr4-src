@@ -1,0 +1,65 @@
+#ident	"@(#)lp:filter/postscript/buildtables/devpost.data/GR	1.1"
+
+/unitwidth 10 def
+/resolution 720 def
+/font /Symbol def
+
+/ascenderstring (\150\162) def
+
+/encoding [
+	(# Greek\n)
+	(name GR\n)
+	(internalname 33\n)
+	(special\n)
+	(charset\n)
+	(*a)	97
+	(*b)	98
+	(*g)	103
+	(*d)	100
+	(*e)	101
+	(*z)	122
+	(*y)	104
+	(*h)	113
+	(*i)	105
+	(*k)	107
+	(*l)	108
+	(*m)	109
+	(*n)	110
+	(*c)	120
+	(*o)	111
+	(*p)	112
+	(*r)	114
+	(*s)	115
+	(*t)	116
+	(*u)	117
+	(*f)	102
+	(*x)	99
+	(*q)	121
+	(*w)	119
+	(*A)	65
+	(*B)	66
+	(*G)	71
+	(*D)	68
+	(*E)	69
+	(*Z)	90
+	(*Y)	72
+	(*H)	81
+	(*R)	82
+	(*I)	73
+	(*K)	75
+	(*L)	76
+	(*M)	77
+	(*N)	78
+	(*C)	88
+	(*O)	79
+	(*P)	80
+	(*S)	83
+	(*T)	84
+	(*U)	85
+	(*F)	70
+	(*X)	67
+	(*Q)	89
+	(*W)	87
+] def
+
+buildfontfile

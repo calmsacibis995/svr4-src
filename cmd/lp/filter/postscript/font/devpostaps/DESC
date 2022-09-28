@@ -1,0 +1,35 @@
+%ident	"@(#)lp:filter/postscript/font/devpostaps/DESC	1.1.2.1"
+fonts 8 R I B H CW S S1 GR
+spare2 8
+sizes 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 22 24 26 28 30 32 34 36 40 44 48 0
+res 723
+hor 1
+vert 1
+unitwidth 10
+paperwidth 6120
+biggestfont 130
+charset
+\- \_ \' \` \e \| \^
+** *A *B *C *D *E *F *G *H *I *K *L *M *N *O *P *Q *R *S
+*T *U *W *X *Y *Z *a *b *c *d *e *f *g *h *i
+*k *l *m *n *o *p *q *r *s *t *u
+*w *x *y *z +- -> <- <=
+== >=  aa
+LH LV LA L1 L2 LB
+ap br bu bv ca
+ci co ct cu dd de dg di em
+eq es fm ga gr hy
+ib if ip is lh mi mo
+mu no or pd pl pt rg rh ru
+sb sc sl sp sq sr tm ts
+~= ul rn en
+lf rf lc rc lt rt lb rb
+lk rk !=
+ua da 12 
+bx 14 34
+ff fi fl Fi Fl
+ps !< !> as os tf bc ld rd pp ra an =. 4d =:
+-+ gp =p cy
+le ge el eg LE GE EL EG <> ><
+RC TR RB CB Sl
+xe xh xk cs vs

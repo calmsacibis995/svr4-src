@@ -1,0 +1,212 @@
+#ident	"@(#)oamintf:softwaremgmt/list/Form.list	1.3.2.6"
+
+form="List Information about Software Packages"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+framemsg="`readfile $INTFBASE/form.msg`"
+
+`readfile $INTFBASE/form.msg | set -l MSG2`
+`set -l PKGBIN="/usr/sadm/install/bin"`
+
+done=`
+	message -w ;
+	set -l TMP="/tmp/list$VPID" ;
+	set -l opts="" ;
+	[ $F1 != installed ] &&
+		set -l opts="$opts -d $F1" ;
+	[ $F3 != all ] &&
+		set -l opts="$opts -c $F3" ;
+
+	if [ $F4 = medium ] ;
+	then
+		set -l opts="$opts -x" ;
+	elif [ $F4 = long ] ;
+	then
+		set -l opts="$opts -l" ;
+		message -w "Processing may consume time ..." ;
+	fi ;
+
+
+	if [ $DEVTYPE = online ] ;
+	then
+		shell "
+			set -f
+			pkginfo $opts \`echo \"$F2\" | 
+			sed 's/[ ,]/ /g\` >$TMP 2>&1
+		" ;
+		if [ $F1 = installed ] ;
+		then
+			set -l TITLE="Packages Installed on the System" ;
+		else
+			set -l TITLE="Packages Spooled on $F1" ;
+		fi ;
+		if [ -s "$TMP" ];
+		then
+			set -l CMD='OPEN TEXT $OBJ_DIR/Text.list $TMP' ;
+		else
+			message "No packages for $F3 category.";
+			set -l CMD="echo FALSE";
+		fi;
+	else
+		message -w "$MSG2";
+		run sh -cf "
+			pkginfo $opts \`echo \"$F2\" | sed 's/[ ,]/ /g\` > $TMP
+			more -d $TMP
+			rm $TMP
+		" ;
+		set -l CMD="echo FALSE" ;
+	fi`$CMD
+
+name=Location of the software:
+lininfo=pkgloc
+scroll=TRUE
+nrow=1
+ncol=2
+frow=1
+fcol=29
+rows=1
+columns=21
+value=installed
+rmenu={ installed `getdev 'mountpt:*' 'pathname:*'` }
+choicemsg=Select package location and press ENTER.
+# can't use devattr to check pathnames since it always
+# returns a zero for a pathname attribute request
+valid=`
+	message -w;
+	if [ -z $F1 ] ;
+	then
+		set -l DEVTYPE="" ;
+		echo FALSE ;
+	elif [ $F1 = installed ] || [ $F1 = spool ] || valpath -aoy $F1 ;
+	then
+		set -l DEVTYPE="online" ;
+	elif devattr $F1 mountpt || devattr $F1 norewind ;
+	then
+		set -l DEVTYPE="offline" ;
+	else
+		set -l DEVTYPE="" ;
+		echo FALSE ;
+	fi
+`
+invalidmsg=Error - must be an absolute directory/device pathname, or valid device alias.
+
+name=Package name(s):
+lininfo=pkgid
+scroll=TRUE
+nrow=2
+ncol=2
+frow=2
+fcol=20
+rows=1
+columns=30
+value=all
+rmenu=vary ` 
+	if [ $DEVTYPE = online ] ;
+	then
+		if [ $F1 = installed ] ;
+		then
+			set -l CMD="OPEN MENU $OBJ_DIR/../Menu.pkg -N" ;
+		else
+			set -l CMD="OPEN MENU $OBJ_DIR/../Menu.pkg -d$F1" ;
+		fi ;
+	else
+		set -l CMD="" ;
+	fi`$CMD
+choicemsg=vary `
+	message -w ;
+	if [ $DEVTYPE = offline ] ;
+	then
+		echo "No choices available for off-line devices" ;
+	else
+		if [ $DEVTYPE = online ] ;
+		then
+			$OBJ_DIR/../pkg $F1 ;
+			if [ $RET = 1 ];
+			then
+				echo "MARK the items you want and press ENTER to select them." ;
+			else
+				echo "No choices available" ;
+			fi ;
+		else
+			echo "No choices available" ;
+		fi ;
+	fi ;
+`
+valid=`
+	message -w;
+	if [ -z $F2 ] ;
+	then
+		echo FALSE ;
+	else 
+		if [ $DEVTYPE = online ] ;
+		then
+			shell "	
+				for arg in \`echo \"$F2\" | sed 's/,/ /g'\`
+				do
+					$OBJ_DIR/../pkg $F1 \"\$arg\" >/dev/null 2>&1 
+					if [ \"\$?\" -eq 0 ]
+					then
+						exit 1
+					fi
+				done
+				exit 0
+			" ;
+		else
+			echo TRUE ;
+		fi ;
+	fi
+`
+invalidmsg=Error - invalid package instance identifier.
+
+name=Category of packages:
+lininfo=catg
+scroll=TRUE
+nrow=4
+ncol=2
+frow=4
+fcol=25
+rows=1
+columns=25
+value=all
+rmenu=vary { `
+	message -w;
+	if [ $DEVTYPE = online ] ;
+	then
+		if [ $F1 = installed ] ;
+		then
+			pkginfo | sed 's/ .*//' | sort -u ;
+		else
+			pkginfo -d $F1 | sed 's/ .*//' | sort -u ;
+		fi ;
+	fi ;
+` }
+choicemsg=vary `
+	message -w ;
+	if [ $DEVTYPE = online ] ;
+	then
+		echo "Select a category and press ENTER." ;
+	elif [ $DEVTYPE = offline ] ;
+	then
+		echo "No choices available for off-line devices" ;
+	else
+		echo "No choices available" ;
+	fi
+`
+valid=`[ -n $F3 ]`
+invalidmsg=Error - input is required.
+
+name=Amount of information to display:
+lininfo=dispopt
+nrow=5
+ncol=2
+frow=5
+fcol=37
+rows=1
+columns=6
+rmenu={ short medium long }
+choicemsg=Select report format and press ENTER.
+menuonly=TRUE
+value=short
+
+name=RESET
+button=8
+action=reset

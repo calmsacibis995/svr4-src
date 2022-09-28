@@ -1,0 +1,267 @@
+
+/unitwidth 10 def
+/resolution 720 def
+/font /Symbol def
+
+/ascenderstring (\150\162) def
+
+%
+% Stuff borrowed from dpost.ps. If you make changes to Sdefs make the same
+% changes here.
+%
+
+/cf {
+    dup length 2 idiv
+    /entries exch def
+    /chtab exch def
+    /newfont exch def
+
+    findfont dup length 1 add dict
+    /newdict exch def
+
+    {
+	1 index /FID ne
+	    {newdict 3 1 roll put}
+	    {pop pop}
+	ifelse
+    } forall
+
+    newdict /Metrics entries dict put
+    newdict /Metrics get
+    begin
+	chtab aload pop
+	1 1 entries {pop def} for
+	newfont newdict definefont pop
+    end
+} def
+
+/Sdefs [
+    /bracketlefttp	[220 500]
+    /bracketleftbt	[220 500]
+    /bracketrighttp	[-70 380]
+    /bracketrightbt	[-70 380]
+    /braceleftbt	[220 490]
+    /bracketrightex	[220 -125 500 0]
+    /radical		[0 0 550 0]
+    /radicalex		[-50 0 500 0]
+    /parenleftex	[-20 -170 0 0]
+    /integral		[100 -50 500 0]
+    /infinity		[10 -75 730 0]
+] def
+
+font /S Sdefs cf
+/font /S def
+
+/encoding [
+	(# Symbol\n)
+	(name S\n)
+	(internalname 33\n)
+	(special\n)
+	(charset\n)
+	(bx)	50	2	1
+	(ci)	75	0	1
+	(sq)	50	2	1
+	(~=)	55	0	1
+	(L1)	110	1	2
+	(LA)	110	1	2
+	(LV)	110	3	2
+	(LH)	210	1	2
+	(Lb	"\n)
+	(lh)	100	0	2
+	(rh)	100	0	2
+	(---)	32
+	(---)	33
+	(fa)	34
+	(---)	35
+	(te)	36
+	(---)	37
+	(---)	38
+	(---)	39
+	(---)	40
+	(---)	41
+	(**)	42
+	(pl)	43
+	(---)	44
+	(mi)	45
+	(---)	46
+	(---)	47
+	(---)	48
+	(---)	49
+	(---)	50
+	(---)	51
+	(---)	52
+	(---)	53
+	(---)	54
+	(---)	55
+	(---)	56
+	(---)	57
+	(---)	58
+	(---)	59
+	(<)	60
+	(eq)	61
+	(>)	62
+	(---)	63
+	(*A)	65
+	(*B)	66
+	(*X)	67
+	(*D)	68
+	(*E)	69
+	(*F)	70
+	(*G)	71
+	(*Y)	72
+	(*I)	73
+	(---)	74
+	(*K)	75
+	(*L)	76
+	(*M)	77
+	(*N)	78
+	(*O)	79
+	(*P)	80
+	(*H)	81
+	(*R)	82
+	(*S)	83
+	(*T)	84
+	(*U)	85
+	(---)	86
+	(ts)	86
+	(*W)	87
+	(*C)	88
+	(*Q)	89
+	(*Z)	90
+	(---)	91
+	(---)	92
+	(---)	93
+	(---)	94
+	(ul)	95
+	(_	"\n)
+	(rn)	96
+	(*a)	97
+	(*b)	98
+	(*x)	99
+	(*d)	100
+	(*e)	101
+	(*f)	102
+	(*g)	103
+	(*y)	104
+	(*i)	105
+	(---)	106
+	(*k)	107
+	(*l)	108
+	(*m)	109
+	(*n)	110
+	(*o)	111
+	(*p)	112
+	(*h)	113
+	(*r)	114
+	(*s)	115
+	(*t)	116
+	(*u)	117
+	(---)	118
+	(*w)	119
+	(*c)	120
+	(*q)	121
+	(*z)	122
+	({)	123
+	(or)	124
+	(})	125
+	(ap)	126
+	(---)	161
+	(fm)	162
+	(<=)	163
+	(sl)	164
+	(if)	165
+	(---)	166
+	(---)	167
+	(---)	168
+	(---)	169
+	(---)	170
+	(---)	171
+	(<-)	172
+	(ua)	173
+	(->)	174
+	(da)	175
+	(de)	176
+	(+-)	177
+	(---)	178
+	(>=)	179
+	(mu)	180
+	(pt)	181
+	(pd)	182
+	(bu)	183
+	(di)	184
+	(!=)	185
+	(==)	186
+	(~~)	187
+	(---)	188
+	(---)	189
+	(---)	190
+	(---)	191
+	(al)	192
+	(---)	193
+	(---)	194
+	(---)	195
+	(Ox)	196
+	(O+)	197
+	(es)	198
+	(ca)	199
+	(cu)	200
+	(sp)	201
+	(ip)	202
+	(---)	203
+	(sb)	204
+	(ib)	205
+	(mo)	206
+	(---)	207
+	(---)	208
+	(gr)	209
+	(rg)	210
+	(co)	211
+	(tm)	212
+	(---)	213
+	(sr)	214
+	(---)	215
+	(no)	216
+	(^)	217
+	(or)	218
+	(---)	219
+	(---)	220
+	(---)	221
+	(---)	222
+	(---)	223
+	(---)	224
+	(---)	225
+	(---)	226
+	(---)	227
+	(---)	228
+	(---)	229
+	(---)	230
+	(---)	231
+	(br)	231
+	(---)	232
+	(lc)	233
+	(---)	234
+	(lf)	235
+	(lt)	236
+	(lk)	237
+	(lb)	238
+	(bv)	239
+	(---)	240
+	(---)	241
+	(is)	242
+	(---)	243
+	(---)	244
+	(---)	245
+	(---)	246
+	(---)	247
+	(---)	248
+	(rc)	249
+	(---)	250
+	(|)	250
+	(rf)	251
+	(rt)	252
+	(rk)	253
+	(rb)	254
+] def
+
+buildfontfile
+

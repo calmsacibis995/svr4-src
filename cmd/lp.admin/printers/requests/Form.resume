@@ -1,0 +1,24 @@
+#ident	"@(#)lp.admin:printers/requests/Form.resume	1.2"
+
+#######################################################
+#
+#       Module Name: printers/requests/Form.resume
+#
+#######################################################
+
+form=Allow a Held Job to Resume printing
+
+#help=OPEN TEXT $INTFBASE/Text.oamhelp $PRINTSERV/HELP/status/requests.help "Displays Status of Print Requests"
+
+name=Request ID number(s):
+nrow=2
+ncol=1
+frow=2
+fcol=24
+rows=1
+columns=51
+
+#choicemsg="A list of the printers known to the system."
+#invalidmsg="A list of the printers known to the system."
+fieldmsg="Enter the ID number of the request you would like to release."
+

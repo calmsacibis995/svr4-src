@@ -1,0 +1,51 @@
+#ident	"@(#)oamintf:syssetup/Text.nodenotok	1.3"
+################################################################################
+#	Module Name: Text.nodenotok
+#	Calling Sequence:
+#	Functional Description: This Text object displays a generic error
+#				screen when the user is unable to set 
+#				the Node Name.
+#	How:
+#	Inputs: System name $ARG1 Network node name $ARG2
+#	Functions Called:
+#	Issues:
+################################################################################
+
+Title=Unable to Set System Name and Network Node Name
+
+framemsg=`readfile $INTFBASE/trept.msg`
+
+`cat /tmp/node.set | set -l ERRTEXT ;
+uname -s | set -l SYSNM ;
+uname -n | set -l NODENM`
+
+#begrow=1
+#begcol=1
+rows=18
+columns=72
+
+text="                                                                 
+
+   Unable to Set System Name and/or Network Node Name.
+
+   Error: $ERRTEXT
+
+   Current System name :	$SYSNM 
+   
+   Current Network node name :	$NODENM
+   "
+
+altslks
+# for a CONF test object
+#	(This is for confirmation, warning and repetition text screens
+
+altslks
+
+name=CONT
+button=11
+action=`rmfile 'node.set'`CLOSE
+
+name=CANCEL
+button=14
+action=`rmfile 'node.set'`CLEANUP
+

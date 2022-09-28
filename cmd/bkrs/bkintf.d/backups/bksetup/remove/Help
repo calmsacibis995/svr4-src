@@ -1,0 +1,65 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/remove/Help	1.2.1.1"
+
+ABSTRACT: Remove Entries in Backup Table
+	The "remove" task allows you to remove an entry from a backup
+	register table.  When you have specified the table and the entry,
+	the current field values for that entry will be displayed.  You
+	will be asked to verify that you want the entry removed.
+
+TITLE: Remove Entries in Backup Table
+	
+values:
+	This display shows the current field values in the entry you want to
+	remove.  After you have verified that this is indeed the entry you
+	want to remove, enter "yes" in the prompt field and press [SAVE].  If
+	you decide you do not want to remove the entry, either press [CANCEL]
+	or enter "no" in the prompt field and press [SAVE].
+
+remove:F1:Table Field
+	"Table:"  Enter the name of the backup register table from which
+	you want to remove an entry.  You must enter a path to an existing
+	file.
+
+remove:F2:Tag Field
+	"Tag:"  Enter the tag that identifies the entry you want to remove.
+	The tag must exist in the table you entered in the previous field.
+
+values:F1:
+	"Originating Name: "
+
+values:F2:
+	"Originating Device: "
+
+values:F3:
+	"Destination Device: "
+
+values:F4:
+	"Method: "
+
+values:F5:
+	"Week(s): "
+
+values:F6:
+	"Day(s): "
+
+values:F7:
+	"Method Option(s): "
+
+values:F8:
+	"Destination Characteristic(s): "
+
+values:F9:
+	"Destination Volume Label(s): "
+
+values:F10:
+	"Priority: "
+
+values:F11:
+	"Dependencies: "
+
+values:F12:
+	"Originating Volume Label: "
+
+values:F13:
+	"Do you want to remove this entry from the table?" Enter "yes" or
+	"no" (the [CHOICES] key toggles between them) and press [SAVE].

@@ -1,0 +1,26 @@
+#ident	"@(#)oamintf:usermgmt/Menu.logins	1.3"
+
+################################################################################
+#	Module Name: Menu.logins
+#	Description: This menu provides the user with a pop-up menu for
+#		     login selection.  /etc/passwd is sorted and piped
+#		     through regex to set the name and description fields.
+#		     Selecting only logins with user ids of 100 or greater.
+#		     Form_Choice is set to the item the user selects.
+################################################################################
+menu="Valid User Logins"
+
+framemsg=`readfile $INTFBASE/ssmenu.msg`
+
+`sort +0 -1 -t: /etc/passwd |  regex '^([^:][^:]*)$0:[^:]*:([0-9][0-9][0-9][0-9]*)$1:.*$' 'name="$m0"
+description="$m1"
+action=`set -l "Form_Choice=$m0"`CLOSE'`
+
+name=
+button=1
+action=
+
+name=
+button=7
+action=
+

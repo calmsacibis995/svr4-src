@@ -1,0 +1,17 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkrem/remove/Help	1.2.1.1"
+
+ABSTRACT: Remove Entries from Backup Reminder Schedule
+	The "remove" task allows you to remove entries from the backup
+	reminder schedule.  Press the [CHOICES] key to display the current
+	backup reminder schedule, then write down or remember the line
+	numbers corresponding to the entries you want to remove.  Press
+	[CANCEL] to return to the line number form, then enter the list of
+	line numbers you want removed from the backup reminder schedule.
+	You may separate line numbers by spaces or commas.  Press [SAVE]
+	to remove the lines or, if you decide not to remove the lines,
+	press [CANCEL] to leave the backup reminder schedule as it is.
+
+TITLE: Remove Entries from Backup Reminder Schedule
+
+F1:
+	"Line Number(s): " Enter the list of line numbers to be removed.

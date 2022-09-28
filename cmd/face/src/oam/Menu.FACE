@@ -1,0 +1,40 @@
+#ident	"@(#)face:src/oam/Menu.FACE	1.4"
+
+menu="Framed Access Command Environment Administration"
+
+framemsg="Move the cursor to the item you want and press ENTER to select it."
+
+help=OPEN TEXT $INTFBASE/Text.oamhelp $!LININFO 
+
+`echo $VMSYS | set -l OVMSYS;
+fmlgrep '^vmsys:' /etc/passwd | fmlcut -f6 -d: | set -l VMSYS;
+echo $VMSYS | set -e VMSYS`
+
+close=`set -l VMSYS=$OVMSYS -e VMSYS=$OVMSYS`close
+
+name=mail_services
+description=Mail Services Administration
+lininfo="/usr/sadm/sysadm/add-ons/face/applmgmt/FACE/mail_services \"Mail Services Administration\"" mail_services
+action=OPEN MENU $INTFBASE/Menu.interface /usr/sadm/sysadm/add-ons/face/applmgmt/FACE/mail_services Menu.mail
+
+name=programs
+description=Global Program Administration
+lininfo="/usr/sadm/sysadm/add-ons/face/applmgmt/FACE/programs \"Global Program Administration\"" programs
+action=OPEN MENU $INTFBASE/Menu.interface /usr/sadm/sysadm/add-ons/face/applmgmt/FACE/programs Menu.programs
+
+name=dos_programs
+description=Global MS-DOS Program Administration
+lininfo="/usr/sadm/sysadm/add-ons/face/applmgmt/FACE/dos_programs \"Global MS-DOS Program Administration\"" dos_programs
+action=OPEN MENU $INTFBASE/Menu.interface /usr/sadm/sysadm/add-ons/face/applmgmt/FACE/dos_programs Menu.dos
+show=`test -f /usr/vpix/dosinst`
+
+name=spell_checker
+description=Spell Checker Administration
+lininfo="/usr/sadm/sysadm/add-ons/face/applmgmt/FACE/spell_checker \"Spell Checker Administration\"" spell_checker
+action=OPEN MENU $INTFBASE/Menu.interface /usr/sadm/sysadm/add-ons/face/applmgmt/FACE/spell_checker Menu.spell
+
+name=users
+description=FACE User Administration
+lininfo="/usr/sadm/sysadm/add-ons/face/applmgmt/FACE/users \"FACE User Administration\"" users
+action=OPEN MENU $INTFBASE/Menu.interface /usr/sadm/sysadm/add-ons/face/applmgmt/FACE/users Menu.users
+

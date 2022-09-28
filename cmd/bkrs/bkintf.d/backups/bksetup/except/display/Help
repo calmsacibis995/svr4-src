@@ -1,0 +1,21 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bksetup/except/display/Help	1.2.1.1"
+
+ABSTRACT: Display Entries in Backup Exception List
+	The "display" task displays all or selected entries in the backup
+	exception list.
+
+TITLE: Display Entries in Backup Exception List
+
+F1:
+	"File Name:" Enter the exception list file name.
+
+F2:Patterns Field
+	"Patterns:"  Enter a list of patterns for entries you want to
+	display or the keyword "all" to see the entire exception list.
+	A pattern that begins with "/" specifies that entries in the
+	list beginning with that pattern should be displayed.  A
+	pattern that does not begin with "/" will cause any entries
+	containing it to be displayed.  For example, to display
+	exception list entries that begin with "/usr", specify the
+	pattern "/usr".  To display entries that contain the string
+	"usr", specify "usr" as the pattern.

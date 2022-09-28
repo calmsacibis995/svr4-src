@@ -1,0 +1,61 @@
+#ident	"@(#)oamintf:xx/FACE3.2/README	1.1"
+
+# This directory is required to maintain pre-SVR4 compatibility
+# between the 4.0 OA&M and preSVR4 FACE style add-on packages.
+#
+# Add-ons which include preSVR4 FACE type Forms and Menus install via
+# installpkg(1M) and cpio(1). The Forms, Menus and Text files all install
+# relative to /usr/vmsys for preSVR4 releases. Some packages update menus
+# via shells as opposed to menu_add/menu_del. In addition, OPEN directives
+# are sometimes issued via the $VMSYS environment variable and other times
+# are hard coded into the Forms/Menus/Text files. Since we wish to support
+# the installation and function of preSVR4 user interfaces that are not being
+# re-released in 4.0, we are required to maintain the /usr/vmsys directory
+# structure into 4.0. All new and re-released packages are required to
+# follow the new user interface and install/remove format.
+#
+# Several 3.2 top level Menu and Help files have been installed under this
+# directory.  The OBJECTS directory is symbolically linked into
+# /usr/sadm/sysadm/menu/<path> where <path> translates to several OAM
+# directories requiring backwards compatibility. This will allow
+# allow existing add-on packages to install and modify the top-level Menus
+# as they did pre SVR4. Each of the top level 4.0 menu items have a
+# corresponding menu entry. These entries are identified via the express
+# mode keyword string "preSVR4".
+#
+# The object generator (/usr/sadm/sysadm/bin/object_gen) recognizes "preSVR4"
+# as a special case and expands the cooresponding menu item in-line with
+# the menu being generated. The description field becomes the title for the
+# corresponding menu. The menu title matches the pre-SVR4 instance.
+#
+# In some cases, the preSVR4 keyword has a space character pad at the end
+# of the string for the .menu files.  In these cases, the in-line expansion
+# does not occur. This was done in order to post warning frames informing
+# the user that they are entering the preSVR4 realm with a pointer to the
+# corresponding 4.0 menu items.
+#
+# If you install a preSVR4 package with interface scripts, and those scripts
+# are not accessible through OA&M, add an entry of the form:
+#
+#	preSVR4^<your description>^OBJECTS/....
+#  ( where "...." completes the pathname to your top level Menu entry )
+#
+# within the object_gen type OA&M menu that you would like to access your
+# application through. Next, type:
+# 		ln -s /usr/vmsys/OBJECTS OBJECTS
+# within the same directory. This will link you into the preSVR4 structure.
+# Finally, add a menu entry within the OBJECTS/.... file. In most cases,
+# this was already performed for you by the add-on application at install
+# time. When you enter # the appropriate directory within sysadm, your 3.2
+# entry should expand in-line along with any/all 4.0 entries.
+#
+# We suggest that you link into preSVR4 menus from within "applications"
+# but the strategy will work for any existing OA&M object_gen menu files.
+# 
+# It is worth mentioning that if you install an item within a menu file
+# that is part of the "extended" interface and the "extended" interface
+# is removed, your interface will not be accessible via OA&M until extended
+# is re-installed. For the cases where you've manually added a "preSVR4"
+# menu entry, you may additionally need to recreate this entry. Aside from
+# this fact, removing and then re-installing any part of OA&M will not affect
+# your ability to access your application interface.

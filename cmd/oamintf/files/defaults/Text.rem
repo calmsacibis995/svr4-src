@@ -1,0 +1,31 @@
+#ident	"@(#)oamintf:files/defaults/Text.rem	1.1"
+
+Title="Remove Defaults"
+lifetime=shortterm
+
+framemsg=`readfile $INTFBASE/trept.msg`
+#`readfile $INTFBASE/trept.msg | message `
+
+close='rm /tmp/remove.${VPID}; CLOSE $OBJ_DIR/Text.remok $OBJ_DIR/Form.remove'
+
+begrow=distinct
+begcol=distinct
+rows=7
+columns=60
+
+text="
+`readfile /tmp/remove.${VPID}`
+"
+altslks
+
+name=""
+button=9
+action=nop
+
+name=CONT
+button=11
+action=CLOSE $OBJ_DIR/Text.rem
+
+name=CANCEL
+button=14
+action=`/bin/rm -f remove.${VPID}`CLEANUP

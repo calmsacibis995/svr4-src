@@ -1,0 +1,31 @@
+#ident	"@(#)oamintf:edsysadm/Text.ok	1.2"
+
+################################################################################
+#	Module Name: Text.ok
+#	Date: August 1987
+################################################################################
+title="Package Verified"
+
+framemsg=`readfile $INTFBASE/conf.msg`
+
+begrow=any
+begcol=any
+
+text="
+  The menu information file and prototype file have been verified.
+
+  The top level prototype MUST be edited to include the prototype
+  file that is in this directory."
+
+rows=4
+columns=75
+
+altslks
+
+name=CONT
+button=11
+action=CLOSE
+
+name=CANCEL
+button=14
+action=CLEANUP

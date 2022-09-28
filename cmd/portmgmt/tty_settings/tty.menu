@@ -1,0 +1,7 @@
+#ident	"@(#)portmgmt:tty_settings/tty.menu	1.3.1.1"
+#menu#Terminal Line Setting Management
+#life#permanent
+
+add^Create Line Settings and Hunt Sequences^add/Form.tty_add
+list^List Line Settings and Hunt Sequences^list/Menu.tty_list
+remove^Remove Line Settings and Hunt Sequences^remove/Menu.tty_rm

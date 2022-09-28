@@ -1,0 +1,70 @@
+#ident	"@(#)lp.admin:printers/classes/Form.mod.rempr	1.1.1.1"
+
+form='Remove printers from the Class' $ARG1
+
+#help=$OAMBASE/itemhelp classes.add $LININFO
+
+
+framemsg='Enter printers then press [SAVE] to remove from class'
+
+`indicator -w; set -l name_2="/tmp/lp.cl$VPID";
+cat /etc/lp/classes/$ARG1 > $name_2;
+if [ -s "$name_2" ];
+then
+	echo "init=true";
+else
+	echo "init=false";
+	message -b "There are no printers available";
+fi`
+
+
+close=`/usr/bin/rm  $name_2;
+	unset -l do_all -l name_2 -l name_valid -l bad_one -l list`
+
+
+done=`message -w "Removing printers from class $ARG1";
+	if [ $F1 = "all" ];
+	then
+	if [ -n "$TFADMIN" ]; then $TFADMIN lpadmin -x $ARG1;
+		else lpadmin -x $ARG1; fi;
+	else
+	echo "$F1" | tr "," " " | set -l list;
+	shell "
+	for p in $list
+	do
+	$TFADMIN lpadmin -r$ARG1 -p \$p;
+	done
+	" > $error;
+	fi;
+	message"";
+	`close
+
+name='Printers:'
+nrow=1
+ncol=1
+frow=1
+fcol=10
+rows=1
+columns=30
+fieldmsg='Enter printers then press [SAVE] to remove from class'
+rmenu=OPEN MENU $OBJ_DIR/Menu.pr.cl.ch "$ARG1"
+choicemsg="MARK printers then press [ENTER]"
+
+valid=`indicator -w;
+	unset -l bad_one;
+	cat /etc/lp/classes/$ARG1 > $name_2;
+	if [ -z "$F1" ];
+	then
+		set -l no_value=true -l name_valid=false;
+	else
+	echo "all" >> $name_2;
+		set -l no_value=false -l name_valid=true;
+	fi;
+	echo "$F1" | tr " ," "[\012*]" | regex -e '^(.*)$0$'
+	'`fmlgrep "^$m0$" $name_2 || set -l bad_one="$m0" -l name_valid=false`' > /dev/null`$name_valid
+invalidmsg=`if [ "$no_value" = "true" ];
+	then
+		echo "You must enter a value for this field.";
+	else
+		echo "$bad_one not a printer in this class - press [CHOICES] to make selection";
+	fi`

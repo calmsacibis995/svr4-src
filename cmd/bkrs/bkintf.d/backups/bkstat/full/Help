@@ -1,0 +1,23 @@
+#ident	"@(#)bkrs:bkintf.d/backups/bkstat/full/Help	1.2.1.1"
+
+ABSTRACT: Full Display of Backup Status Log
+	The "full" task displays the entire contents of the backup status
+	log.  The information displayed is: the backup jobid, the tag of
+	each backup operation listed, the login of the user who started
+	the backup, the name of the originating object, the originating
+	device name, the time the operation started (or a - if it has not
+	yet started), the destination device type and the current status
+	of the operation.  This listing includes information about jobs
+	which are in any of the possible states: waiting, pending, active,
+	suspended, completed or failed.
+
+TITLE: Full Display of Backup Status Log
+
+full: Full Display of Backup Status Log
+	The entire contents of the backup status log has been
+	displayed.  The information displayed is: the backup jobid,
+	the tag of each backup operation listed, the login of the user
+	who started the backup, the name of the originating object,
+	the originating device name, the time the operation started,
+	the destination device type and the current status of the
+	operation.

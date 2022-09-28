@@ -1,0 +1,14 @@
+#ident	"@(#)nadmin.rfs:other/rfs/net/Help	1.1"
+net:display:Displays Networks Supporting Remote File Sharing
+	The display task allows you to list all of the
+	transport providers that support Remote File
+	Sharing.
+
+net:set:Sets Network Support for Remote File Sharing
+	The set task allows you to add (remove) a transport
+	provider to (from) the list of transport providers
+	that support Remote File Sharing.
+
+set:mark:Sets Network Support for Remote File Sharing
+	Mark each transport provider that you want
+	to support Remote File Sharing.

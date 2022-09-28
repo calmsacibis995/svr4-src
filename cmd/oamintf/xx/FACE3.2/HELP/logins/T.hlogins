@@ -1,0 +1,28 @@
+The User Logins Menu enables you to add, change, delete, or display
+user logins. This includes providing the user with system
+administration privileges.
+
+You must have system administration privileges to add, change, or
+delete user logins.
+
+A login identifies the user and prevents unauthorized use of the
+computer. To insure the security of your computer, all logins must
+also be given a password. If you do not provide a password, the
+login will not be valid.
+
+The items on the User Logins Menu are:
+
+   Add: Adds a user login to the system to provide the user access.
+
+   Change:  Changes the user login name, the user's full name, and/or
+   the user's system administration privileges.
+
+   Delete:  When a login name is no longer needed, it should be
+   removed.  When you remove a login, you will be asked if you want
+   the files in the login directory removed. To save these files
+   before you delete them, back them up with the Backup to Removable
+   Media function available on the System Administration Menu.
+
+   Display:  Displays the user login name, full name, login ID
+   number, HOME directory, and system administration privileges.
+   

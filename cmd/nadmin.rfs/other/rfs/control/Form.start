@@ -1,0 +1,57 @@
+#ident	"@(#)nadmin.rfs:other/rfs/control/Form.start	1.5"
+form="Starts Remote File Sharing"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=`unset -l KEYCMD -l VFLAG -l RRET`
+
+`readfile $INTFBASE/fcontmsg | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/rfs/control`
+
+done=`indicator -w;
+	unset -l VFLAG;
+	if [ "$F1" = "yes" ];
+	then
+		set -l VFLAG="-v";
+	fi;
+	"$INTFBASE/netservices/remote_files/other/rfs/control/bin/rfs_run" | set -l RRET;
+	if [ "$RRET" = "0" ];
+	then
+		message "RFS is already running. Press CANCEL to return to the menu.";
+		set -l KEYCMD="CLOSE";
+	else 
+		if [ "$VFLAG" ];
+		then
+			set -l RUNCMD="run /usr/bin/rfstart $VFLAG";
+		else
+			set -l RUNCMD="run /usr/bin/rfstart";
+		fi;
+		message -p "Please wait while rfs is started...";
+		$!RUNCMD;
+		"$INTFBASE/netservices/remote_files/other/rfs/control/bin/rfs_run" | set -l RRET;
+		if [ "$RRET" = "0" ];
+		then
+			set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/control/Form.start2";
+		else
+			message "RFS has not been started. Consult the System Administrator's Guide for details.";
+			set -l KEYCMD="NOP";
+		fi;
+	fi;
+	if [ "$ARG1" ];
+	then
+		set -l KEYCMD="CLOSE";
+		set -l SET_SEQ=8;
+	fi;
+`$KEYCMD
+
+
+name="Verify client identities:"
+nrow=1
+ncol=1
+frow=1
+fcol=27
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="no"
+invalidmsg="Press CHOICES to select valid response."
+lininfo=start:verify

@@ -1,0 +1,108 @@
+#ident	"@(#)oamintf:sched/Form.add	1.1.2.1"
+
+form="Schedule a Task"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+done=`regex -e -v "$F6" 
+	'^$' '`message "\"Task\" is a mandatory field. Type the task you want to schedule."`'
+	'^.*$' "open $OBJ_DIR/Text.addcfm \"$Month\" \"$Day\" \"$WeekN\" \"$Hour\" \"$Minute\" \"$WeekD\""`
+
+`set -l Day=all -l WeekN=all -l Hour=all -l Minute=all -l WeekD=*`
+
+name=Month(s) of the Year:
+lininfo=Form.add:month
+nrow=1
+ncol=2
+rows=1
+columns=26
+frow=1
+fcol=24
+rmenu=open menu $OBJ_DIR/Menu.month
+valid=`ts_valid 1 12 "$F1" | set -l Month; regex -v "$Month" '^[^ENR].*$'`
+invalidmsg=`regex -v "$Month" 
+		'^E(.*)$0$' '"$m0" is not a valid month. Strike CHOICES for valid choices.'
+		'^R(.*)$0$' '"$m0" is a redundant input.'
+		'^Nul$' '"Month of the Year" is a mandatory field. Strike CHOICES for choices.'`
+fieldmsg=`set -l TITLE="Month(s) of the Year" -l ITEM=1`"Strike the CHOICES function key. Strike SAVE when you complete the form."
+
+name=Day(s) of the Month:
+lininfo=Form.add:daym
+nrow=3
+ncol=2
+rows=3
+columns=27
+frow=3
+fcol=23
+wrap=true
+rmenu=open menu $OBJ_DIR/Menu.day
+valid=`ts_valid 1 31 "$F2" | set -l Day; regex -v "$Day" '^[^ER].*$'`
+invalidmsg=`regex -v "$Day" 
+		'^R(.*)$0$' '"$m0" is a redundant input.'
+		'^E(.*)$0$' '"$m0" is not a valid day of the month. Strike CHOICES for valid choices.'`
+fieldmsg=`set -l TITLE="Day(s) of the Month" -l ITEM=2`"Strike the CHOICES function key. Strike TAB to go to next field.."
+
+name=Day(s) of the Week:
+lininfo=Form.add:dayw
+nrow=7
+ncol=2
+rows=1
+columns=18
+frow=7
+fcol=22
+rmenu=open menu $OBJ_DIR/Menu.week
+valid=`ts_valid 0 6 "$F3" | set -l WEEK; regex -e -v "$WEEK"
+		'^N(.*)$0 D(.*)$1$' '`set -l WeekN=$m0 -l WeekD=$m1`'
+		'^all$' '`set -l WeekN=all -l WeekD=\*`'`
+invalidmsg=`regex -v "$WEEK" 
+		'^R(.*)$0$' '"$m0" is a redundant input.'
+		'^E(.*)$0$' '"$m0" is not a valid day of the week. Strike CHOICES for valid choices.'`
+fieldmsg=`set -l TITLE="Day(s) of the Week" -l ITEM=3`"Strike the CHOICES function key. Strike SAVE when you complete the form."
+
+name=Hour(s) of the Day:
+lininfo=Form.add:hour
+nrow=9
+ncol=2
+rows=1
+columns=28
+frow=9
+fcol=22
+rmenu=open menu $OBJ_DIR/Menu.hour
+fieldmsg=`set -l TITLE="Hour(s) of the Day" -l ITEM=4`"Strike the CHOICES function key. Strike SAVE when you complete the form."
+valid=`ts_valid 0 23 "$F4" | set -l Hour; regex -v "$Hour" '^[^ER].*$'`
+invalidmsg=`regex -v "$Hour" 
+		'^R(.*)$0$' '"$m0" is a redundant input.'
+		'^E(.*)$0$' '"$m0" is not a valid choice. Strike CHOICES for valid choices.'`
+
+name=Minute(s) past the Hour:
+lininfo=Form.add:minute
+nrow=11
+ncol=2
+rows=1
+columns=23
+frow=11
+fcol=27
+rmenu=open menu $OBJ_DIR/Menu.minute
+fieldmsg=`set -l TITLE="Minute(s) past the Hour" -l ITEM=5`"Strike the CHOICES function key. Strike SAVE when you complete the form."
+valid=`ts_valid 0 59 "$F5" | set -l Minute; regex -v "$Minute" '^[^ER].*$'`
+invalidmsg=`regex -v "$Minute" 
+		'^R(.*)$0$' '"$m0" is a redundant input.'
+		'^E(.*)$0$' '"$m0" is not a valid choice. Strike CHOICES for valid choices.'`
+
+name=Task:
+lininfo=Form.add:task
+nrow=13
+ncol=2
+rows=1
+columns=42
+frow=13
+fcol=8
+fieldmsg=`set -l TITLE="Task" -l ITEM=6`"Type the task to schedule. Strike SAVE when you complete the form."
+valid=`regex -v "$F6" '^.' && echo "$F6" > /tmp/task.$VPID`
+invalidmsg=\"Task\" is a mandatory field. Type the task you want to schedule.
+
+name=""
+button=8
+action=nop
+
+`indicator -w`

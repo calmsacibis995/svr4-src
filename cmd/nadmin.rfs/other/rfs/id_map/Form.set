@@ -1,0 +1,33 @@
+#ident	"@(#)nadmin.rfs:other/rfs/id_map/Form.set	1.6"
+###############################################################################
+#    Module Name:  Form.set
+#    Description:  
+###############################################################################
+form="Sets Current User ID Mappings"
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`echo "Fill in the form and press SAVE to continue." | message -p`
+`set -l OBJ_DIR=$INTFBASE/netservices/remote_files/other/rfs/id_map`
+
+done=`if [ "$F1" = "yes" ];
+	then
+		getfrm | set -l FRM;
+		set -l KEYCMD="OPEN FORM $INTFBASE/netservices/remote_files/other/rfs/id_map/Form.set2 $FRM" ;
+	else
+		set -l KEYCMD="CLOSE";
+	fi;			
+	set -l SET_SEQ=6;
+	`$KEYCMD
+
+name="Set user id mapping?"
+nrow=1
+ncol=1
+frow=1
+fcol=22
+rows=1
+columns=3
+rmenu={ yes no }
+menuonly=true
+value="yes"
+lininfo=set:setuid  
+invalidmsg="Press CHOICES to select valid response."

@@ -1,0 +1,95 @@
+#ident	"@(#)filemgmt:make/Form.s5	1.1.3.1"
+Form="Create An s5 File System (make)"
+lifetime=shortterm
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+close=unset -l PROTO -l BLOCKSIZE -l BLOCKS -l INODES -l RVAL -l NFILES
+
+framemsg=`readfile $INTFBASE/form.msg`
+
+done=` indicator -w;
+	if [ "$F1" ];
+	then
+		set -l PROTO="$F1";
+	else
+		set -l PROTO="NULL";
+	fi;
+	set -l BLOCKSIZE="$F2" -l BLOCKS="$F3" -l INODES="$F4";
+
+	$OAMBASE/bin/ifdiskette $DEVICE | set -l RVAL;
+	if [ "$RVAL" = "true" ];
+	then
+		set -l CMD="OPEN FORM $OBJ_DIR/Form.mkinsert";
+	else
+		message -f "Creating an s5 file system on $DEVICE. Please Wait...";
+		$OAMBASE/bin/mkfs_s5 $PROTO $BLOCKSIZE $DEVICE $BLOCKS $INODES $LABEL $MNTPT 2>\&1 >/dev/null;
+		set -l CMD="OPEN TEXT $OBJ_DIR/Text.make";
+	fi;
+	`$!CMD
+
+name="Name of prototype file:"
+lininfo=Form.s5:F1
+nrow=1
+ncol=1
+frow=1
+fcol=25
+rows=1
+columns=20
+valid=` [  ! "$F1" -o -f "$F1" ]`
+invalidmsg="Error - $F1 is not a valid prototype file"
+
+name="Block Size in Bytes:"
+lininfo=Form.s52:F1
+nrow=2
+ncol=1
+frow=2
+fcol=22
+rows=1
+columns=10
+rmenu={ 512 1024 2048 }
+menuonly=true
+value=1024
+#show=`[ ! "$F1" -o ! -f "$F1" ]`
+invalidmsg="Press CHOICES to select valid response."
+
+name="Number of Blocks:"
+lininfo=Form.s52:F2
+nrow=3
+ncol=1
+frow=3
+fcol=19
+rows=1
+columns=10
+show=`[ ! "$F1" -o ! -f "$F1" ]`
+value=`if [ "$DEVICE" ];
+	then
+		$OAMBASE/bin/numblocks "$DEVICE";
+	fi;`
+valid=`[ "$F3" -gt 0 ]`
+invalidmsg="Error - invalid number of blocks."
+
+name="Number of Files:"
+lininfo=Form.s52:F3
+nrow=4
+ncol=1
+frow=4
+fcol=18
+rows=1
+columns=10
+show=`[ ! "$F1" -o ! -f "$F1" ]`
+value=`if [ "$F2" = "1024" ];
+	then
+ 		/bin/expr  $F3 / 8;
+	else
+		if [ "$F2" = "2048" ];
+		then
+ 			/bin/expr  $F3 / 16;
+		else
+ 			/bin/expr  $F3 / 4;
+		fi;
+	fi`
+valid=`if [ "$F3" ];
+then
+	/bin/expr $F3 / 4 | set -l NFILES;
+	[ $F4 -le $NFILES ];
+fi`
+invalidmsg="Error - number of files, $F4, is too large."

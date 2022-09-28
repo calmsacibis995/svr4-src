@@ -1,0 +1,78 @@
+idmap:display:
+	The display task allows you to see the current id
+	mapping information for Remote File Sharing.
+
+
+display:gid:
+	Choose "yes" to see the mapping of remote
+	group ids to local group ids.
+
+set4:gmap:
+	Choose "allguest" if every remote
+	group should have the privileges of "other"
+	on your local system.
+
+	Choose "0guest" if every system has
+	the same group file but for greater
+	security you want the privileged group "root"
+	on every remote system to have the
+	privileges of "other" on your local system.
+
+	Choose "0to9guest" if every system has the
+	same group file but for greater
+	security you want the privileged system groups
+	on every remote system to have the
+	privileges of "other" on your local system.
+
+	Choose "mapbyname" if you want remote groups
+	to have the same group names on your local
+	system as they do on the remote systems.
+	(This mapping requires that your local system
+	have the remote systems' group files.)
+
+set3:setgid:
+	Choose "yes" to setup the mapping of remote
+	group ids to local group ids.  Choose "no"
+	to quit id mapping.
+
+uidmap:set:
+	The set task allows you to setup some simple
+	user id mappings for Remote File
+	Sharing.
+
+gidmap:set:
+	The set task allows you to setup some simple
+	group id mappings for Remote File
+	Sharing.
+
+display:uid:
+	Choose "yes" to see the mapping of 
+	remote user ids to local user ids.
+
+set2:umap:
+	Choose "allguest" if every remote
+	user should have the privileges of "other"
+	on your local system.
+	
+	Choose "0guest" if every system has
+	the saem password file but for greater
+	security you want the privileged user "root"
+	on every remote system to have the
+	privileges of "other" on your local system.
+	
+	Choose "0to99guest" if every system has the
+	same password file but for greater
+	security you want the privileged system users
+	on every remote system to have the
+	privilegwes of "other" on your local system.
+	
+	Choose "mapbyname" if you want remote users
+	to have the same user names on your local
+	system as they do on the remote systems.
+	(This mapping requires that your local system
+	have the remote systems' password files.)
+
+set:setuid:
+	Choose "yes" to setup the mapping of remote
+	user ids to local user ids.  Choose "no"
+	to go on to group id mapping.

@@ -1,0 +1,94 @@
+#ident	"@(#)lp.admin:printers/printers/add/Form.conf.rmt	1.5.2.1"
+
+form="Configure New Printer, \"${lp_printer}\" - Remote Printer Subtask"
+
+help=OPEN TEXT $INTFBASE/Text.itemhelp $LININFO
+
+`indicator -w; set -l name_2="/tmp/lp.n2$VPID";`
+
+done=`
+	set -e toclose="$toclose $OAMBASE/add-ons/lp/printers/printers/add/Form.conf.rmt";
+	message -w "Adding printer, please wait.";
+ 	if [ "$F1" = "none" -o "$F1" = "" ];
+	then
+		set -f$datafile description="";
+	else
+		set -f$datafile description="-D\"$F1\"";
+	fi;
+
+ 	if [ "$F3" = "" -o "$F3" = "none" ];
+	then
+		set -f$datafile Content="";
+	else
+		echo "$F3" | sed 's/, /,/gp' | tr -s " " "," | set -l tmp;
+		set -f$datafile Content="-I$tmp";
+	fi;
+ 
+	shell "LD_BIND_NOW=1 lpadmin -p $lp_printer -s $lp_fldsys!$lp_printer ${($datafile)description} ${($datafile)Prtype} ${($datafile)Content} > /dev/null 2> $error";
+	if [ "$RET" != "0" -a -s $error ];
+	then
+		echo "OPEN TEXT $OAMBASE/add-ons/lp/printers/printers/add/Text.error";
+	else
+		echo "OPEN TEXT $OAMBASE/add-ons/lp/printers/printers/add/Text.confirm";
+	fi;
+`
+
+close=`
+	rm -f $name_2;
+	rm -f $datafile;
+	codestroy -R printers.add.lpcf lpdata;
+	unset	-l lp_errtmp
+		-f$datafile classes
+		-f$datafile description
+		-f$datafile Content
+		-f$datafile cpi
+		-f$datafile lpi
+		-f$datafile width
+		-f$datafile length;
+`
+
+#F1
+name='Description of the printer:'
+lininfo="conf.lcl:F2"
+nrow=1
+ncol=1
+frow=1
+fcol=29
+rows=1
+columns=46
+scroll=true
+value=${($datafile)Description:-none}
+fieldmsg="You may enter a single line of text that will be displayed when requested."
+
+#F2
+name='Printer type:'
+lininfo="conf.lcl:F3"
+nrow=2
+ncol=1
+frow=2
+fcol=15
+rows=1
+columns=14
+show=false
+
+#F3
+name='File types printable without filtering:'
+lininfo="conf.lcl:F4"
+nrow=3
+ncol=1
+frow=3
+fcol=41
+rows=1
+columns=14
+value=${($datafile)content:-simple}
+scroll=true
+valid=`
+	indicator -w;
+	echo "$F3" | tr " " "," | sed 's/,,/,/gp' | set -l types;
+	regex -v "$types"
+	'^[_a-zA-Z0-9]{1,14}$' 			   'true'
+	'^[_a-zA-Z0-9]{1,14}(,[_a-zA-Z0-9]{1,14})*$' 'true'
+	'^.*$'			'false'`
+invalidmsg="Invalid Entry: File types are limited to 14 letters, numbers, and underscores."
+
+

@@ -1,0 +1,36 @@
+#ident	"@(#)oamintf:softwaremgmt/interact/Help	1.1.1.1"
+
+ABSTRACT:
+	This task allows the user to store interactions with software 
+	packages for later use during unattended installation.
+
+pkgloc: Software Location
+	Enter the device on which the software resides (e.g., "diskette1"
+	or "9track1"), or enter the pathname to a directory where the 
+	software is spooled.  To indicate the default spool directory, 
+	enter "spool".
+
+pkgid: Package Selection
+	Enter the word "all" to interact with all packages which reside 
+	on the device.  If you wish to interact with a specific package, 
+	enter the package instance identifier (e.g., "spell" or "rfs").  
+	You may enter multiple package identifiers by separating each one 
+	with a comma (e.g., "spell,rfs,windowing"), but these packages
+	must all be available on the same volume.  If you are not sure
+	which packages you want to interact from the indicated device,
+	leave this field blank and you will be prompted to select from
+	the list of available packages.
+
+rspfile: Response File Selection
+	The results of interaction with a package is file which has one
+	or more entries of the form
+		VARIABLE=value
+	These package parameters have a meaning which is defined by the
+	package and is interpreted during package installation and/or
+	removal.  This task stores these values in the filename which
+	you provide; this file cannot already exist.  If you have chosen
+	to interact with more than one package, you must provide the
+	name of a directory where these response files may be created.
+	In this case, they will be created with names that correspond
+	to the package from which the interaction was taken.  In either
+	case, this field may not be left blank.

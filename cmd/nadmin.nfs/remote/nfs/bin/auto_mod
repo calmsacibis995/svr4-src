@@ -1,0 +1,20 @@
+#ident	"@(#)nadmin.nfs:remote/nfs/bin/auto_mod	1.1"
+
+# if the new mount point has been changed, then check to see if it is already
+# being used as a mntpoint in the vfstab
+
+if [ "$AMNT" != "$NMNT" ]
+then
+	/usr/bin/egrep "[ 	]+$NMNT[	 ]+" /etc/vfstab  1>/dev/null
+	if [ $? -eq 0 ]
+	then
+		echo "$NMNT already a mountpoint. Automatic mounting not modified." >>/var/tmp/nfs_$$
+		echo $$
+		exit
+	fi
+fi
+/usr/bin/egrep -v "^$SRV:$RPATH[ 	]+-[ 	]+.*[ 	]+nfs[ 	]+-[ 	]+yes" /etc/vfstab > /var/tmp/vfstab$$
+echo "$SRV:$RPATH\t-\t\t$NMNT\tnfs\t-\tyes\t$ACC$SUID$RMNT$RTRY$MTRIES$TIMEO$SEC" >>/var/tmp/vfstab$$
+mv /var/tmp/vfstab$$ /etc/vfstab
+echo "Mounting of $SRV:$RPATH has been successfully modified." >>/var/tmp/nfs_$$
+echo $$

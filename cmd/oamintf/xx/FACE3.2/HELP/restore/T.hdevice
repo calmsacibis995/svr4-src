@@ -1,0 +1,17 @@
+The Select Removable Media Menu allows you to select the appropriate
+medium for restoring your data.
+
+Depending on what configurations are available and your needs,
+highlight one of the choices displayed on this menu.
+
+      Floppy Drive 0:  Select this item if you want to restore from
+      the floppy that is inserted in the top floppy drive.
+
+      Floppy Drive 1:  Select this item if a second floppy drive
+      exists and you want to restore from the floppy that is
+      inserted in the second floppy drive.
+
+      Cartridge Tape:  If the Cartridge Tape Utilities are installed
+      on your system and a cartridge tape driver is installed, select
+      this item to restore from a cartridge tape.
+

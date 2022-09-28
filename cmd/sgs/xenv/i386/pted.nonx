@@ -1,0 +1,261 @@
+#ident	"@(#)xenv:i386/pted.nonx	1.1.1.3"
+#
+#	Cross Pathedit for iAPX386 nonunix SGS
+#
+#
+#	This script is executed by master pathedit when building
+#	SGS for non-Unix target.
+#
+
+mach=i386
+echo "exit 255" >i386
+echo "exit 255" >vax
+echo "exit 255" >u3b
+echo "exit 255" >u370
+echo "exit 255" >u3b15
+echo "exit 255" >u3b5
+echo "exit 255" >u3b2
+chmod 755 i386 vax u3b u370 u3b15 u3b5 u3b2
+eval `id | sed 's/([^)]*)//gp'`
+
+__MACH=nomach
+
+BASE=`cd ../../../../../..; pwd`
+
+__PROOT=""
+__INCDIR=/tmp
+__TMPDIR=/usr/tmp
+__DBO=FBO
+
+cont="T"
+echo "Do you want the SGS built with the default parameters? (y or n): \c"
+while [ "$cont" = "T" ]
+do
+	x=`line`
+	if [ "$x" = "y" ]
+	then
+		stdparam="T"
+		cont="F"
+	elif [ "$x" = "n" ]
+	then
+		stdparam="F"
+		cont="F"
+	else
+		echo "Please type 'y' or 'n': \c"
+	
+	fi
+done
+
+mkmachdir="F"
+mkmusrdir="F"
+if [ "$stdparam" = "T" ]
+then
+	__BINDIR=$BASE/$mach/bin
+	__LIBDIR=$BASE/$mach/lib
+	__USRINC=$BASE/$mach/usr/include
+	__PREFIX=$mach
+	__MAC=
+	__OWN=$uid
+	__GRP=$gid
+	mkmachdir="T"
+	mkmusrdir="T"
+else
+
+	echo "Enter generic prefix for names:  \c"
+	x=`line`
+	__PREFIX=${x:=$mach}
+	mach=$__PREFIX
+
+	echo "Enter absolute directory for run-time binaries:  \c"
+	__BINDIR=`line`
+	if [ -z "$__BINDIR" ]
+	then
+		__BINDIR=$BASE/$mach/bin
+		mkmachdir="T"
+	fi
+
+	echo "Enter absolute directory for run-time libraries:  \c"
+	__LIBDIR=`line`
+	if [ -z "$__LIBDIR" ]
+	then
+		__LIBDIR=$BASE/$mach/lib
+		mkmachdir="T"
+	fi
+
+	echo "Enter absolute directory for header files:  \c"
+	__USRINC=`line`
+	if [ -z "$__USRINC" ]
+	then
+		__USRINC=$BASE/$mach/usr/include
+		mkmachdir="T"
+		mkmusrdir="T"
+	fi
+
+	echo "Enter owner of executables:  \c"
+	x=`line`
+	__OWN=${x:=$uid}
+
+	echo "Enter group of executables:  \c"
+	x=`line`
+	__GRP=${x:=$gid}
+fi
+if [ ! -d $BASE/$mach -a "$mkmachdir" = "T" ]
+then
+	mkdir $BASE/$mach
+fi
+if [ ! -d $BASE/$mach/usr -a "$mkmusrdir" = "T" ]
+then
+	mkdir $BASE/$mach/usr
+fi
+if [ ! -d $__BINDIR ]
+then
+	mkdir $__BINDIR
+fi
+if [ ! -d $__LIBDIR ]
+then
+	mkdir $__LIBDIR
+fi
+if [ ! -d $__USRINC ]
+then
+	mkdir $__USRINC
+fi
+
+if /bin/vax || /bin/i386
+then
+	__ARCH=AR32WR
+else
+	__ARCH=AR32W
+fi
+
+__CPP=$__LIBDIR/cpp
+
+echo "\n These parameters are used for your SGS:\n"
+echo "BINDIR:		$__BINDIR"
+echo "LIBDIR:		$__LIBDIR"
+echo "USRINC:		$__USRINC"
+echo "PREFIX:		$__PREFIX"
+echo "MAC:		$__MAC"
+echo "OWN:		$__OWN"
+echo "GRP:		$__GRP"
+
+echo "Do you want the CCS built with these parameters (y or n): \c"
+x=`line`
+if [ "$x" != "y" ]
+then
+	echo "run pathedit again."
+	exit
+fi
+
+cp paths.h ../../inc/i386/paths.h
+cp sgs.h ../../inc/i386/sgs.h
+chmod 0644 ../../inc/i386/paths.h ../../inc/i386/sgs.h
+echo "\n ******** Making paths.h ********"
+ed ../../inc/i386/paths.h <<!
+1,\$s|SGS|$__PREFIX|g
+1,\$s|I386BINDIR|$__BINDIR|
+1,\$s|I386LIBDIR|$__LIBDIR|
+1,\$s|I386INCDIR|$__INCDIR|
+1,\$s|I386TMPDIR|$__TMPDIR|
+1,\$s|I386CPP|$__CPP|
+w
+q
+!
+echo "\n ******** Making sgs.h ********"
+ed ../../inc/i386/sgs.h <<Y
+g|SGS|s|".*"|"$__PREFIX"|
+1,\$s|FBOMAGIC|${__DBO}MAGIC|
+w
+q
+Y
+
+echo "\n ******** Making SGS makefile ********"
+ed template.mk <<X
+1,\$s|^BINDIR.*|BINDIR=$__BINDIR|
+1,\$s|^LIBDIR.*|LIBDIR=$__LIBDIR|
+1,\$s|^INCDIR.*|INCDIR=$__INCDIR|
+1,\$s|^SGS.*|SGS=$__PREFIX|
+1,\$s|^ARCH.*|ARCH=$__ARCH|
+1,\$s|^DBO.*|DBO=$__DBO|
+1,\$s|^ROOT.*|ROOT=$__PROOT|
+1,\$s|^MAC=.*|MAC=$__MAC|
+1,\$s|^MACH.*|MACH=$__MACH|
+1,\$s|^USRINC.*|USRINC=$__USRINC|
+1,\$s|^MAKE.*|MAKE=make|
+1,\$s|^OWN.*|OWN=$__OWN|
+1,\$s|^GRP.*|GRP=$__GRP|
+w makefile
+q
+X
+chmod 0644 makefile
+#
+# The optimizer makefile is modified to prevent optimizing
+#    the optimizer on VAX running UNIX 5.0
+#    and allow optimisation of the optimizer on all other hosts.
+#
+#
+echo "\n ******** Modifying optimizer makefile ********"
+OP=`uname -r | fgrep 5.0`
+if /bin/vax && [ "$OP" ]
+then
+echo "Your optimizer will not be optimized \n"
+ed ../../optim/i386/makefile <<Z
+1,\$s|^CFLAGS=.*|CFLAGS=-c|
+w
+q
+Z
+else echo "Your optimizer will be optimized \n"
+ed ../../optim/i386/makefile <<W
+1,\$s|^CFLAGS=.*|CFLAGS=-c -O|
+w
+q
+W
+fi
+
+echo "\n ******** Making front-end to make ********"
+ed make-i386 <<X
+1,\$s|xxx|$__PREFIX|g
+1,\$s|^MAKECMD=.*|MAKECMD=$__BINDIR/i386make|
+w make.tmp
+q
+X
+chmod 777 make.tmp
+
+echo "\n ******** Making cross environment script ********"
+chmod 777 env-i386
+ed env-i386 <<X
+1,\$s|^ROOT.*|ROOT=$BASE|
+1,\$s|^PATH.*|PATH=$__BINDIR:\$PATH|
+1,\$s|^INC=.*|INC=$__USRINC|
+1,\$s|^INCSYS=.*|INCSYS=$__USRINC/sys|
+1,\$s|^PS1=.*|PS1="${mach}crossenv: "|
+w
+q
+X
+
+echo "\n ******** Installing header files ********"
+cd $BASE/usr/include
+
+if [ "$__USRINC" != "$BASE/usr/include" ]
+then
+	for i in *
+	do
+		if [ ! -d $i ]
+		then
+			rm -f $__USRINC/$i
+			cp $i $__USRINC
+		fi
+	done
+else
+	if /bin/vax && [ ! -s values.hi386 ]
+	then
+		cp values.h values.hi386
+		cp math.h math.hi386
+	fi
+fi
+
+if /bin/vax
+then
+	rm -f $__USRINC/values.h $__USRINC/math.h
+	cp values.hi386 $__USRINC/values.h
+	cp math.hi386 $__USRINC/math.h
+fi

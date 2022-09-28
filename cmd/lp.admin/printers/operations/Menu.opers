@@ -1,0 +1,163 @@
+#ident	"@(#)lp.admin:printers/operations/Menu.opers	1.3.1.1"
+menu="Perform Daily Printer Service Operations"
+
+help=open TEXT $INTFBASE/Text.itemhelp $LININFO
+
+name=accept
+lininfo="menu:L1"
+description="Allow Class(es) and/or Printer(s) to Accept Print Requests"
+action=OPEN FORM $OBJ_DIR/Form.accept
+inactive=$lp_is_down
+
+name=control
+lininfo=`
+    if [ "$lp_is_down" = 'false' ];
+    then
+	echo 'menu:L2b';
+    else
+	echo 'menu:L2a';
+    fi`
+description=`
+    if [ "$lp_is_down" = 'false' ];
+    then
+	echo 'Stop the Printer Service';
+    else
+	echo 'Start the Printer Service';
+    fi`
+action=`
+    if [ "$lp_is_down" = 'false' ];
+    then
+	message -w "Printer service shutting down, please wait...";
+	lpshut > /dev/null 2> /dev/null;
+	sleep 5;
+    else
+	message -w "Printer service starting, please wait...";
+	if [ -n "$TFADMIN" ]; then $TFADMIN lpsched > /dev/null 2> /dev/null;
+	else /usr/lib/lp/lpsched > /dev/null 2> /dev/null; fi;
+	sleep 5;
+    fi;
+
+if [ -n "$TFADMIN" ];
+then
+	if $TFADMIN lpstat -r | fmlgrep 'scheduler is running' > /dev/null;
+	then
+		if [ "$lp_is_down" = 'false' ];
+		then
+	    		echo "OPEN TEXT $OBJ_DIR/Text.stopfail";
+		else
+	    		echo 'update';
+	    		message 'The printer service has been started.';
+		fi;
+		set -l lp_is_down=false;
+    	else
+		if [ "$lp_is_down" = 'false' ];
+		then
+	    		echo 'update';
+	    		message 'The printer service has been stopped.';
+		else
+	    		echo "OPEN TEXT $OBJ_DIR/Text.startfail";
+		fi;
+		set -l lp_is_down=true;
+	fi;
+else
+	if lpstat -r | fmlgrep 'scheduler is running' > /dev/null;
+	then
+		if [ "$lp_is_down" = 'false' ];
+		then
+	    		echo "OPEN TEXT $OBJ_DIR/Text.stopfail";
+		else
+	    	echo 'update';
+	    	message 'The printer service has been started.';
+		fi;
+		set -l lp_is_down=false;
+    	else
+		if [ "$lp_is_down" = 'false' ];
+		then
+	    		echo 'update';
+	    		message 'The printer service has been stopped.';
+		else
+	    		echo "OPEN TEXT $OBJ_DIR/Text.startfail";
+		fi;
+		set -l lp_is_down=true;
+	fi;
+fi`
+
+name=disable
+lininfo="menu:L3"
+description=Disable Printer from Printing
+action=OPEN FORM $OBJ_DIR/Form.disable
+inactive=$lp_is_down
+
+name=enable
+lininfo="menu:L4"
+description=Enable Printer for Printing
+action=OPEN FORM $OBJ_DIR/Form.enable
+inactive=$lp_is_down
+
+name=lp_copy
+show=`
+    indicator -w;
+	if [ -f /usr/lib/lp/lpNet ];
+    then
+	false;
+    else
+	true;
+    fi;
+`
+lininfo="menu:L3a"
+description=`
+    if [  -f /etc/lp/defaults ];
+    then
+    	if fmlgrep 'nocopy' /etc/lp/defaults > /dev/null;
+    	then
+		echo 'Set Lp to Always Copy Print Request Files';
+    	else
+		echo 'Set Lp to Optionally Copy Print Request Files';
+	fi;
+    else
+	echo 'Set Lp to Always Copy Print Request Files';
+    fi`
+action=`
+    if [  -f /etc/lp/defaults ];
+    then
+    	if fmlgrep 'nocopy' /etc/lp/defaults > /dev/null;
+    	then
+		if [ -n "$TFADMIN" ]; then $TFADMIN lpadmin -O copy;
+		else lpadmin -O copy; fi;
+		message "Lp has been set to always copy print request files";
+    	else
+		if [ -n "$TFADMIN" ]; then $TFADMIN lpadmin -O nocopy;
+		else lpadmin -O nocopy; fi;
+		message "Lp has been set to optionally copy print request files";
+	fi;
+    else
+		if [ -n "$TFADMIN" ]; then $TFADMIN lpadmin -O copy;
+		else lpadmin -O copy; fi;
+		message "Lp has been set to always copy print request files";
+    fi;
+    echo 'update'`
+inactive=$lp_is_down
+
+name=mount
+lininfo="menu:L5"
+description=Mount a Form or Font On a Printer
+action=OPEN FORM $OBJ_DIR/Form.mount
+inactive=$lp_is_down
+
+name=reject
+lininfo="menu:L6"
+description=Stop Printer From Accepting Print Requests
+action=OPEN FORM $OBJ_DIR/Form.reject
+inactive=$lp_is_down
+
+name=set default
+lininfo="menu:L7"
+description=Set Default Print Destination
+action=OPEN FORM $OBJ_DIR/Form.default
+inactive=$lp_is_down
+
+name=unmount
+lininfo="menu:L8"
+description=Unmount a Form or Printwheel From a Printer
+action=OPEN FORM $OBJ_DIR/Form.unmount
+inactive=$lp_is_down
