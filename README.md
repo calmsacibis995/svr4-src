@@ -1,11 +1,13 @@
 # svr4-src
 The UNIX System V Release 4 source code
 
-This repository contains the UNIX System V Release 4 source code. The following scripts are used to build the source code, as there is no central Makefile.
+This repository contains the UNIX System V Release 4 Version 3 source code. The following scripts are used to build the source code, as there is no central Makefile.
+
+Build instructions are located in `proto/i386/README`.
 
 `:mk` - Builds everything. (commands, libraries, kernel, the `/usr/ucb` BSD-compatibility commands, etc.)
 
-`mk.add-on` - I don't really have an idea for which purpose this is. Looking at the script it seems to be for a cross-compiler environment.
+`mk.add-on` - Builds all the addons. (e.g. Remote File Sharing addon)
 
 `:mk.arch` - Some machine-dependant code.
 
