@@ -5,6 +5,9 @@ This repository contains the UNIX System V Release 4 Version 3 source code. The 
 
 Build instructions are located in `proto/i386/README`.
 
+For the lazy, installation media, built by me, can be downloaded from [here.](https://archive.org/details/svr4-v3.7z)
+
+## Build script description
 `:mk` - Builds everything. (commands, libraries, kernel, the `/usr/ucb` BSD-compatibility commands, etc.)
 
 `mk.add-on` - Builds all the addons. (e.g. Remote File Sharing addon)
